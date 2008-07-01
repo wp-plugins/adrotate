@@ -28,10 +28,11 @@ Add and manage the code from the dashboard and show a random banner, or multiple
 
 = Quick start =
 
-Unzip the file and upload it to your /wp-content/plugins/ folder.
-Activate from the plugins page and manage your ads from the manage > banner page.
+1. Unzip the file and upload it to your /wp-content/plugins/ folder.
+1. Activate from the plugins page and manage your ads from the manage > banner page.
+1. Add `<?php adrotate_banner('1'); ?>` in the theme to show banners from group 1.
 
-= Detailed instructions =
+= Detailed/additional instructions =
 
 [Install guide](http://meandmymac.net/plugins/adrotate/#install)
 
@@ -44,3 +45,5 @@ Visit here for the FAQ and support:
 
 1. Add/edit your ads and stuff here
 2. Manage and oversee the ads from here.
+
+[More screenshots](http://meandmymac.net/plugins/adrotate/#screens)
