@@ -5,12 +5,13 @@ Tags: ads, banner, commercial, admin, plugin, random, rotator
 Requires at least: 2.5
 Tested up to: 2.5.1
 Stable tag: 0.6
-
-A really simple way of putting ads on your website.
+ 
+A really simple way of putting ads on your website. As many as you want... Make making money easy!
 
 == Description ==
 
-Add and manage the code from the dashboard and show a random banner, or multiple, on your site. The plugin supports groups for banners allowing the different sizes to show up where they fit and not a vertical banner in the content or header and so on. Easy management from the dashboard allows you to quickly oversee, add and edit banner code.
+Add and manage the code from the dashboard and show a random banner, or multiple, on your site. The plugin supports groups for banners allowing to tie certain banners to different areas of the website. Easy management from the dashboard allows you to quickly oversee, add and edit banner code.
+Previewing of banners when editing them.
 
 **Features**
 
