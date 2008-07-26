@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: A simple way of showing random banners on your site with a user friendly panel to manage them.
 Author: Arnan de Gans
-Version: 0.6
+Version: 0.7
 Author URI: http://meandmymac.net
 */ 
 
@@ -13,6 +13,7 @@ Author URI: http://meandmymac.net
 #---------------------------------------------------
 if(adrotate_mysql_install()) {
 
+	add_shortcode('adrotate', 'adrotate_shortcode');
 	add_action('admin_menu', 'adrotate_add_pages'); //Add page menu links
 	
 	if(isset($_POST['adrotate_submit'])) {
@@ -31,11 +32,11 @@ if(adrotate_mysql_install()) {
 /*-------------------------------------------------------------
  Name:      adrotate_banner
 
- Purpose:   Show a banner as requested in the WP Theme
- Receive:   $group_ids, $banner_id, $preview
+ Purpose:   Show a banner as requested in the WP Theme or post
+ Receive:   $group_ids, $banner_id, $preview, $shortcode
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_banner($group_ids, $banner_id = 0, $preview = false) {
+function adrotate_banner($group_ids, $banner_id = 0, $preview = false, $shortcode = false) {
 	global $wpdb;
 
 	if($group_ids) {
@@ -53,14 +54,14 @@ function adrotate_banner($group_ids, $banner_id = 0, $preview = false) {
 			$active_banner = " `active` = 'yes' AND";
 		}
 		
-		$SQL = "SELECT bannercode, image FROM ".$wpdb->prefix."adrotate 
+		$SQL = "SELECT `bannercode`, `image` FROM `".$wpdb->prefix."adrotate` 
 			WHERE ".$active_banner." `group` = '".$group_ids[$x]."' ".$select_banner." LIMIT 1";
 		
 		if($banner = $wpdb->get_row($SQL)) {
 			$output = $banner->bannercode;
 			$output = str_replace('%image%', '<img src="'.get_option('siteurl').'/wp-content/banners/'.$banner->image.'" />', $output);
 		} else { 
-			$output = '<span style="color: #F00; font-style: italic; font-weight: bold;">The group is empty or the current (randomly picked) banner ID is not in this group! Please contact the administrator!</span>';
+			$output = '<span style="color: #F00; font-style: italic; font-weight: bold;">The group is empty or the current (randomly picked) banner ID is not in this group!</span>';
 		}
 		
 	} else {
@@ -69,8 +70,32 @@ function adrotate_banner($group_ids, $banner_id = 0, $preview = false) {
 	
 	}
 	
-	echo stripslashes(html_entity_decode($output));
+	$output = stripslashes(html_entity_decode($output));
+	
+	if($shortcode != false) {
+		return $output;
+	} else {
+		echo $output;
+	}
 
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_shortcode
+
+ Purpose:   Show a banner as requested in a post using shortcodes
+ Receive:   $atts, $content
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_shortcode($atts, $content = null) {
+
+	if(!empty($atts['group'])) $group_ids = $atts['group'];
+		else $group_ids = ''; 
+	if(!empty($atts['banner'])) $banner_id = $atts['banner']; 
+		else $banner_id = 0;
+		
+	return adrotate_banner($group_ids, $banner_id, false, true);
+	
 }
 
 /*-------------------------------------------------------------
