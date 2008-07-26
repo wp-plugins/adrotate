@@ -3,7 +3,7 @@ Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator
 Requires at least: 2.5
-Tested up to: 2.5.1
+Tested up to: 2.6
 Stable tag: 0.6
  
 A really simple way of putting ads on your website. As many as you want... Make making money easy!
