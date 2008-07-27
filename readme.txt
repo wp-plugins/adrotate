@@ -41,7 +41,7 @@ Previewing of banners when editing them.
 == Frequently Asked Questions ==
 
 Visit here for the FAQ and support:
-[AdRotate support page](http://meandmymac.net/contact-and-support/adrotate/)
+[AdRotate support page](http://forum.at.meandmymac.net/)
 
 == Screenshots ==
 
