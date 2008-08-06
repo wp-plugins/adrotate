@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: A simple way of showing random banners on your site with a user friendly panel to manage them.
 Author: Arnan de Gans
-Version: 0.7
+Version: 0.7.1
 Author URI: http://meandmymac.net
 */ 
 
@@ -638,7 +638,7 @@ function adrotate_mysql_install() {
 	  		PRIMARY KEY  (`id`)
 			);";
 	
-		if($wpdb->query($add1) === true) {
+		if(mysql_query($add1) === true) {
 			$table1 = 1;
 		}
 	} else {
@@ -652,7 +652,7 @@ function adrotate_mysql_install() {
 	  		PRIMARY KEY  (`id`)
 			);";
 			
-		if($wpdb->query($add2) === true ) {
+		if(mysql_query($add2) === true ) {
 			$table2 = 1;
 		}
 	} else {
