@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator
 Requires at least: 2.5
 Tested up to: 2.6
-Stable tag: 0.7.1
+Stable tag: 0.8
  
 A really simple way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -24,6 +24,7 @@ Previewing of banners when editing them.
 * Multiple groups per banner location
 * Works with Google Ads
 * Easy in use
+* Widget included
 * Integrates with WordPress dashboard, yet allows you to completely style to your own need
 
 == Installation ==
