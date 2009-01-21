@@ -58,7 +58,7 @@ function adrotate_widget_init() {
 	}
 
 
-	$widget_ops = array('classname' => 'adrotate_widget', 'description' => "[AdRotate] Add 1 banner in the sidebar." );
+	$widget_ops = array('classname' => 'adrotate_widget', 'description' => "Add banners in the sidebar." );
 	wp_register_sidebar_widget('AdRotate', 'AdRotate', 'adrotate_widget', $widget_ops);
 	wp_register_widget_control('AdRotate', 'AdRotate', 'adrotate_widget_control' );
 }
