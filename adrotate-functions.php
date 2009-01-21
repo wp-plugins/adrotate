@@ -112,7 +112,7 @@ function adrotate_send_data($action) {
 	$adrotate_tracker = get_option('adrotate_tracker');
 
 	// Prepare data
-	$date			= current_time('timestamp');
+	$date			= date('U');
 	$plugin			= 'AdRotate';
 	$version		= '2.0';
 	//$action -> pulled from function args
