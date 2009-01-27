@@ -139,7 +139,6 @@ function adrotate_activate() {
 
 	if($mysql == true) {
 		adrotate_send_data('Activate');
-		return true; //tables exist or are added/updates successfully!
 	} else {
 		adrotate_mysql_warning();
 	}

@@ -29,7 +29,6 @@ function adrotate_folder_contents($current) {
 	return $output;
 }
 
-
 /*-------------------------------------------------------------
  Name:      adrotate_insert_input
 

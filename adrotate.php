@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: A simple way of showing random banners on your site with a user friendly panel to manage them.
 Author: Arnan de Gans
-Version: 2.0
+Version: 2.0.1
 Author URI: http://meandmymac.net/
 */
 
@@ -29,11 +29,11 @@ if(isset($_POST['adrotate_submit'])) {
 	add_action('init', 'adrotate_insert_input'); //Save banner
 }
 
-if(isset($_POST['add_group_submit'])) {
+if(isset($_POST['adrotate_group_submit'])) {
 	add_action('init', 'adrotate_insert_group'); //Add a group
 }
 
-if(isset($_POST['delete_banners']) OR isset($_POST['delete_groups'])) {
+if(isset($_POST['adrotate_delete_banners']) OR isset($_POST['adrotate_delete_groups'])) {
 	add_action('init', 'adrotate_request_delete'); //Delete banners/groups
 }
 
@@ -89,7 +89,7 @@ function adrotate_manage() {
 			<div class="tablenav">
 
 				<div class="alignleft actions">
-					<input onclick="return confirm('You are about to delete one or more banners!\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Delete banner(s)" name="delete_banners" class="button-secondary delete" />
+					<input onclick="return confirm('You are about to delete one or more banners!\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Delete banner(s)" name="adrotate_delete_banners" class="button-secondary delete" />
 					Sort by <select name='order' id='cat' class='postform' >
 				        <option value="startshow ASC" <?php if($order == "startshow ASC") { echo 'selected'; } ?>>start date (ascending)</option>
 				        <option value="startshow DESC" <?php if($order == "startshow DESC") { echo 'selected'; } ?>>start date (descending)</option>
@@ -108,9 +108,8 @@ function adrotate_manage() {
 				<br class="clear" />
 			</div>
 
-			<br class="clear" />
-		<table class="widefat">
-  			<thead>
+		   	<table class="widefat" style="margin-top: .5em">
+ 			<thead>
   				<tr>
 					<th scope="col" class="check-column">&nbsp;</th>
 					<th scope="col" width="2%"><center>ID</center></th>
@@ -165,32 +164,34 @@ function adrotate_manage() {
 		<div class="tablenav">
 
 			<div class="alignleft">
-				<input onclick="return confirm('You are about to delete one or more groups!\n\nMake sure there are no banners in those groups or they will not show on the website.\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Delete group(s)" name="delete_groups" class="button-secondary delete" />
+				<input onclick="return confirm('You are about to delete one or more groups!\n\nMake sure there are no banners in those groups or they will not show on the website.\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Delete group(s)" name="adrotate_delete_groups" class="button-secondary delete" />
 			</div>
 
 			<br class="clear" />
 		</div>
 
-		<br class="clear" />
-		<table class="widefat">
+	   	<table class="widefat" style="margin-top: .5em">
   			<thead>
   				<tr>
 					<th scope="col" class="check-column">&nbsp;</th>
-					<th scope="col" width="5%">ID</th>
+					<th scope="col" width="5%"><center>ID</center></th>
 					<th scope="col">Name</th>
+					<th scope="col" width="10%"><center>Banners</center></th>
 				</tr>
   			</thead>
   			<tbody>
 		<?php
 		if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups')) {
-			$groups = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "adrotate_groups ORDER BY id");
+			$groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` ORDER BY `id`");
 			if ($groups) {
 				foreach($groups as $group) {
+					$banners_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `" . $wpdb->prefix . "adrotate` WHERE `group` = $group->id");
 					$class = ('alternate' != $class) ? 'alternate' : ''; ?>
 				    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
 						<th scope="row" class="check-column"><input type="checkbox" name="groupcheck[]" value="<?php echo $group->id; ?>" /></th>
-						<td><?php echo $group->id;?></td>
+						<td><center><?php echo $group->id;?></center></td>
 						<td><?php echo $group->name;?></td>
+						<td><center><?php echo $banners_in_group;?></center></td>
 					</tr>
 	 			<?php } ?>
 			<?php }
@@ -199,11 +200,33 @@ function adrotate_manage() {
 		<?php }	?>
 			    <tr id='group-new'>
 					<th scope="row" class="check-column">&nbsp;</th>
-					<td colspan="2"><input name="adrotate_group" type="text" size="40" value="" /> <input type="submit" id="post-query-submit" name="add_group_submit" value="Add" class="button-secondary" /></td>
+					<td colspan="2"><input name="adrotate_group" type="text" class="search-input" size="40" value="" /> <input type="submit" id="post-query-submit" name="adrotate_group_submit" value="Add" class="button-secondary" /></td>
 				</tr>
  			</tbody>
 		</table>
 		</form>
+
+		<br class="clear" />
+    	<table class="widefat" style="margin-top: .5em">
+    	
+			<thead>
+			<tr valign="top">
+				<th colspan="4">AdRotate for Awesome!</th>
+			</tr>
+			</thead>
+
+			<tbody>
+	      	<tr>
+		        <td colspan="4">Find me on <a href="http://meandmymac" target="_blank">meandmymac.net</a>.<br />
+		        Need help? <a href="http://forum.at.meandmymac.net" target="_blank">forum.at.meandmymac.net</a>.<br />
+		        Subscribed to the Meandmymac Data Project? Curious? <a href="http://meandmymac.net/plugins/data-project/" target="_blank">More information</a>. <br />
+		        Want to see your stats? <a href="http://meandmymac.net/wp-admin/" target="_blank">Plugin statistics</a>.<br />
+		        Like my software? <a href="http://meandmymac.net/donate/" target="_blank">Show your appreciation</a>. Thanks!</td>
+	      	</tr>
+	      	</tbody>
+
+		</table>
+
 	</div>
 	<?php
 }
@@ -256,8 +279,7 @@ function adrotate_edit() {
 
 					<thead>
 					<tr valign="top">
-						<th colspan="4" bgcolor="#DDD">Fill in the title so you can recognize the banner from management.
-						<br />Paste the banner code in the code field this can be any HTML/JavaScript.</th>
+						<th colspan="4" bgcolor="#DDD">Create your banner, all fields are required!</th>
 					</tr>
 					</thead>
 
@@ -269,8 +291,28 @@ function adrotate_edit() {
 			      	<tr>
 				        <th scope="row" width="25%">Code:</th>
 				        <td colspan="3"><textarea tabindex="2" name="adrotate_bannercode" cols="70" rows="10"><?php echo stripslashes($edit_banner->bannercode); ?></textarea>
-				        <br /><em>Options: %image%, %link%. HTML allowed, use with care!</em></td>
+				        <br /><em>Options: %image%, %link%. HTML/JavaScript allowed, use with care!</em></td>
 			      	</tr>
+			      	<tr>
+					    <th scope="row">Group:</th>
+				        <td colspan="3">
+				        <select tabindex="9" name='adrotate_group' id='cat' class='postform'>
+						<?php foreach($groups as $group) {
+							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
+						    <option value="<?php echo $group->id; ?>" <?php if($group->id == $edit_banner->group) { echo 'selected'; } ?>><?php echo $group->name; ?></option>
+				    	<?php } ?>
+				    	</select>
+						</td>
+					</tr>
+					</tbody>
+					
+					<thead>
+					<tr valign="top">
+						<th colspan="4" bgcolor="#DDD">Advanced (Everything below is optional)</th>
+					</tr>
+					</thead>
+
+					<tbody>
 			      	<tr>
 				        <th scope="row">Display From:</th>
 				        <td>
@@ -312,26 +354,6 @@ function adrotate_edit() {
 						</td>
 			      	</tr>
 			      	<tr>
-					    <th scope="row">Group:</th>
-				        <td colspan="3">
-				        <select tabindex="9" name='adrotate_group' id='cat' class='postform'>
-						<?php foreach($groups as $group) {
-							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
-						    <option value="<?php echo $group->id; ?>" <?php if($group->id == $edit_banner->group) { echo 'selected'; } ?>><?php echo $group->name; ?></option>
-				    	<?php } ?>
-				    	</select>
-						</td>
-					</tr>
-					</tbody>
-					
-					<thead>
-					<tr valign="top">
-						<th colspan="4" bgcolor="#DDD">Advanced (optional)</th>
-					</tr>
-					</thead>
-
-					<tbody>
-			      	<tr>
 				        <th scope="row">Banner image:</th>
 				        <td colspan="3"><select tabindex="10" name="adrotate_image" style="min-width: 200px;">
        						<option value="none">No image or remote</option>
@@ -365,38 +387,48 @@ function adrotate_edit() {
 			      	</tr>
 			      	<tr>
 				        <th scope="row">Clicked:</th>
-				        <td width="25%"><?php if($banner->tracker == "Y") { echo $banner->clicks; } else { echo 'N/A'; } ?></td>
+				        <td width="25%"><?php if($edit_banner->tracker == "Y") { echo $edit_banner->clicks; } else { echo 'N/A'; } ?></td>
 				        <th scope="row">Shown:</th>
 				        <td width="25%"><?php echo $edit_banner->shown; ?></td>
 			      	</tr>
 				<?php } ?>
 					</tbody>
-		    	</table>
-
 
 	      		<?php if($banner_edit_id) { ?>
-				<br class="clear" />
-				
-				<h3>Preview</h3>
-				
-		    	<table class="widefat" style="margin-top: .5em">
 
 					<thead>
 					<tr valign="top">
-						<th>Note: While this preview is an accurate one, it might look different then it does on the website.
-						<br />This is because of CSS differences. Your themes CSS file is not active here!</th>
+						<th colspan="4">Preview</th>
 					</tr>
 					</thead>
 
 					<tbody>
 			      	<tr>
-				        <td><?php adrotate_banner($edit_banner->group, $banner_edit_id, true); ?></td>
+				        <td colspan="4"><?php adrotate_banner($edit_banner->group, $banner_edit_id, true); ?>
+				        <br /><em>Note: While this preview is an accurate one, it might look different then it does on the website.
+						<br />This is because of CSS differences. Your themes CSS file is not active here!</em></td>
 			      	</tr>
 			      	</tbody>
 			      	
-				</table>
 				<?php } ?>
 
+					<thead>
+					<tr valign="top">
+						<th colspan="4">AdRotate for Awesome!</th>
+					</tr>
+					</thead>
+
+					<tbody>
+			      	<tr>
+				        <td colspan="4">Find me on <a href="http://meandmymac" target="_blank">meandmymac.net</a>.<br />
+				        Need help? <a href="http://forum.at.meandmymac.net" target="_blank">forum.at.meandmymac.net</a>.<br />
+				        Subscribed to the Meandmymac Data Project? Curious? <a href="http://meandmymac.net/plugins/data-project/" target="_blank">More information</a>. <br />
+				        Want to see your stats? <a href="http://meandmymac.net/wp-admin/" target="_blank">Plugin statistics</a>.<br />
+				        Like my software? <a href="http://meandmymac.net/donate/" target="_blank">Show your appreciation</a>. Thanks!</td>
+			      	</tr>
+			      	</tbody>
+
+				</table>
 
 		    	<p class="submit">
 					<input tabindex="14" type="submit" name="Submit" class="button-primary" value="Save banner &raquo;" />

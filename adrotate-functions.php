@@ -114,7 +114,7 @@ function adrotate_send_data($action) {
 	// Prepare data
 	$date			= date('U');
 	$plugin			= 'AdRotate';
-	$version		= '2.0';
+	$version		= '2.0.1';
 	//$action -> pulled from function args
 
 	// User choose anonymous?
