@@ -173,12 +173,16 @@ function adrotate_check_config() {
  Receive:   $_POST
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_options_submit() {	
+function adrotate_options_submit() {
+	$buffer = get_option('adrotate_tracker');
+	
 	// Prepare Tracker settings
 	if(isset($_POST['adrotate_register'])) $tracker['register'] = 'Y';			
 		else $tracker['register'] = 'N';
 	if(isset($_POST['adrotate_anonymous'])) $tracker['anonymous'] = 'Y';			
 		else $tracker['anonymous'] = 'N';
+	if($tracker['register'] == 'N' AND $buffer['register'] == 'Y') { adrotate_send_data('Opt-out'); }
+		
 	update_option('adrotate_tracker', $tracker);
 }
 ?>
