@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: A simple way of showing random banners on your site with a user friendly panel to manage them.
 Author: Arnan de Gans
-Version: 2.0.1
+Version: 2.1
 Author URI: http://meandmymac.net/
 */
 
@@ -24,6 +24,7 @@ adrotate_clean_trackerdata();
 add_shortcode('adrotate', 'adrotate_shortcode');
 add_action('admin_menu', 'adrotate_dashboard',1);
 add_action('widgets_init', 'adrotate_widget_init');
+add_action('wp_dashboard_setup', 'adrotate_dashboard_widget'); //Initialize dashboard widget
 
 if(isset($_POST['adrotate_submit'])) {
 	add_action('init', 'adrotate_insert_input'); //Save banner
@@ -51,9 +52,11 @@ $adrotate_tracker = get_option('adrotate_tracker');
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_dashboard() {
-	add_submenu_page('edit.php', 'AdRotate > Add/Edit', 'Write Banner', 'manage_options', 'adrotate', 'adrotate_edit');
-	add_submenu_page('plugins.php', 'AdRotate > Manage', 'Manage Banners', 'manage_options', 'adrotate2', 'adrotate_manage');
-	add_submenu_page('options-general.php', 'AdRotate > Settings', 'AdRotate', 'manage_options', 'adrotate3', 'adrotate_options');
+	add_object_page('AdRotate', 'AdRotate', 'manage_options', 'adrotate', 'adrotate_edit');
+		add_submenu_page('adrotate', 'AdRotate > Add/Edit', 'Add|Edit Banner', 'manage_options', 'adrotate', 'adrotate_edit');
+		add_submenu_page('adrotate', 'AdRotate > Manage', 'Manage Banners', 'manage_options', 'adrotate2', 'adrotate_manage');
+
+	add_options_page('AdRotate', 'AdRotate', 'manage_options', 'adrotate3', 'adrotate_options');
 }
 
 /*-------------------------------------------------------------
@@ -71,21 +74,21 @@ function adrotate_manage() {
 	?>
 
 	<div class="wrap">
-		<h2>Manage Banners (<a href="edit.php?page=adrotate">add new</a>)</h2>
+		<h2>Manage Banners (<a href="admin.php?page=adrotate">add new</a>)</h2>
 
 		<?php if ($action == 'deleted') { ?>
 			<div id="message" class="updated fade"><p>Banner/group <strong>deleted</strong></p></div>
 		<?php } else if ($action == 'updated') { ?>
 			<div id="message" class="updated fade"><p>Banner <strong>updated</strong></p></div>
 		<?php } else if ($action == 'group_new') { ?>
-			<div id="message" class="updated fade"><p>Group <strong>created</strong> | <a href="edit.php?page=adrotate">add banners now</a></p></div>
+			<div id="message" class="updated fade"><p>Group <strong>created</strong> | <a href="admin.php?page=adrotate">add banners now</a></p></div>
 		<?php } else if ($action == 'group_field_error') { ?>
 			<div id="message" class="updated fade"><p>Check the group name</p></div>
 		<?php } else if ($action == 'no_access') { ?>
 			<div id="message" class="updated fade"><p>Action prohibited</p></div>
 		<?php } ?>
 
-		<form name="banners" id="post" method="post" action="plugins.php?page=adrotate2">
+		<form name="banners" id="post" method="post" action="admin.php?page=adrotate2">
 			<div class="tablenav">
 
 				<div class="alignleft actions">
@@ -138,10 +141,11 @@ function adrotate_manage() {
 						<td><?php echo date("F d Y", $banner->endshow);?></td>
 						<td><center><?php if($banner->active == "yes") { echo '<span style="color:#0F0; font-weight:bold;">'.$banner->active.'</span>'; } else { echo '<span style="color:#F00; font-weight:bold;">'.$banner->active.'</span>'; }?></center></td>
 						<td><?php echo $group->name;?></td>
-						<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/edit.php?page=adrotate&amp;edit_banner='.$banner->id;?>" title="Edit"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong></td>
+						<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&amp;edit_banner='.$banner->id;?>" title="Edit"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong></td>
 						<td><center><?php echo $banner->shown;?></center></td>
 						<?php if($banner->tracker == "Y") { ?>
 						<td><center><?php echo $banner->clicks;?></center></td>
+						<?php if($banner->shown == 0) $banner->shown = 1; ?>
 						<td><center><?php echo round((100/$banner->shown)*$banner->clicks,2);?> %</center></td>
 						<?php } else { ?>
 						<td colspan="2"><center>N/A</center></td>
@@ -160,14 +164,12 @@ function adrotate_manage() {
 
 		<h2>Banner groups</h2>
 
-		<form name="groups" id="post" method="post" action="plugins.php?page=adrotate2">
+		<form name="groups" id="post" method="post" action="admin.php?page=adrotate2">
 		<div class="tablenav">
 
 			<div class="alignleft">
 				<input onclick="return confirm('You are about to delete one or more groups!\n\nMake sure there are no banners in those groups or they will not show on the website.\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Delete group(s)" name="adrotate_delete_groups" class="button-secondary delete" />
 			</div>
-
-			<br class="clear" />
 		</div>
 
 	   	<table class="widefat" style="margin-top: .5em">
@@ -196,11 +198,11 @@ function adrotate_manage() {
 	 			<?php } ?>
 			<?php }
 		} else { ?>
-			<tr id='no-id'><td scope="row" colspan="3"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a></span></td></tr>
+			<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a></span></td></tr>
 		<?php }	?>
 			    <tr id='group-new'>
 					<th scope="row" class="check-column">&nbsp;</th>
-					<td colspan="2"><input name="adrotate_group" type="text" class="search-input" size="40" value="" /> <input type="submit" id="post-query-submit" name="adrotate_group_submit" value="Add" class="button-secondary" /></td>
+					<td colspan="3"><input name="adrotate_group" type="text" class="search-input" size="40" value="" /> <input type="submit" id="post-query-submit" name="adrotate_group_submit" value="Add" class="button-secondary" /></td>
 				</tr>
  			</tbody>
 		</table>
@@ -260,7 +262,7 @@ function adrotate_edit() {
 		}
 
 		if ($action == 'created') { ?>
-			<div id="message" class="updated fade"><p>Banner <strong>created</strong> | <a href="plugins.php?page=adrotate2">manage banners</a></p></div>
+			<div id="message" class="updated fade"><p>Banner <strong>created</strong> | <a href="admin.php?page=adrotate2">manage banners</a></p></div>
 		<?php } else if ($action == 'no_access') { ?>
 			<div id="message" class="updated fade"><p>Action prohibited</p></div>
 		<?php } else if ($action == 'field_error') { ?>
@@ -270,7 +272,7 @@ function adrotate_edit() {
 		$SQL2 = "SELECT * FROM ".$wpdb->prefix."adrotate_groups ORDER BY id";
 		$groups = $wpdb->get_results($SQL2);
 		if($groups) { ?>
-		  	<form method="post" action="edit.php?page=adrotate">
+		  	<form method="post" action="admin.php?page=adrotate">
 		  	   	<input type="hidden" name="adrotate_submit" value="true" />
 		    	<input type="hidden" name="adrotate_username" value="<?php echo $userdata->display_name;?>" />
 		    	<input type="hidden" name="adrotate_edit_id" value="<?php echo $banner_edit_id;?>" />
@@ -404,7 +406,7 @@ function adrotate_edit() {
 
 					<tbody>
 			      	<tr>
-				        <td colspan="4"><?php adrotate_banner($edit_banner->group, $banner_edit_id, true); ?>
+				        <td colspan="4"><?php adrotate_banner($edit_banner->group, null,  $banner_edit_id, true); ?>
 				        <br /><em>Note: While this preview is an accurate one, it might look different then it does on the website.
 						<br />This is because of CSS differences. Your themes CSS file is not active here!</em></td>
 			      	</tr>

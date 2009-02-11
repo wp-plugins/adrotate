@@ -133,6 +133,25 @@ function adrotate_activate() {
 		} else {
 			$mysql = false;
 		}
+	} else if(adrotate_mysql_table_exists($table_name3)) { // Upgrade table if it is incomplete
+		if (!$result = mysql_query("SHOW COLUMNS FROM `$table_name3`")) {
+		    echo 'Could not run query: ' . mysql_error();
+		}
+		$i = 0;
+	    while ($row = mysql_fetch_assoc($result)) {
+			$field_array[] = mysql_field_name($row, $i);
+        	$i++;
+		}
+		
+		if (!in_array('startshow', $field_array)) {
+			if(mysql_query("ALTER TABLE `$table_name3` ADD `bannerid` INT( 15 ) NOT NULL DEFAULT '0' AFTER `timer`;") === true) {
+				$myqsl = true;
+			} else {
+				$mysql = false;
+			}
+		} else {
+			$mysql = true;
+		}
 	} else {
 		$mysql = true;
 	}

@@ -58,12 +58,12 @@ function adrotate_insert_input() {
 
 	
 	if (strlen($title)!=0 AND strlen($bannercode)!=0) {
-		if(strlen($smonth) == 0) 	date('m');
-		if(strlen($sday) == 0) 		date('d');
-		if(strlen($syear) == 0) 	date('Y');
-		if(strlen($emonth) == 0) 	$emonth = $smonth;
-		if(strlen($eday) == 0) 		$eday = $sday;
-		if(strlen($eyear) == 0) 	$eyear = $syear+1;
+		if(strlen($smonth) == 0) 	$smonth 	= date('m');
+		if(strlen($sday) == 0) 		$sday 		= date('d');
+		if(strlen($syear) == 0) 	$syear 		= date('Y');
+		if(strlen($emonth) == 0) 	$emonth 	= $smonth;
+		if(strlen($eday) == 0) 		$eday 		= $sday;
+		if(strlen($eyear) == 0) 	$eyear 		= $syear+1;
 		
 		$startdate 	= gmmktime($shour, $sminute, 0, $smonth, $sday, $syear);
 		$enddate 	= gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear);
@@ -225,35 +225,35 @@ function adrotate_delete($id, $what) {
 function adrotate_return($action) {
 	switch($action) {
 		case "new" :
-			wp_redirect('plugins.php?page=adrotate2&action=created');
+			wp_redirect('admin.php?page=adrotate&action=created');
 		break;
 		
 		case "group_new" :
-			wp_redirect('plugins.php?page=adrotate2&action=group_new');
+			wp_redirect('admin.php?page=adrotate2&action=group_new');
 		break;
 		
 		case "update" :
-			wp_redirect('plugins.php?page=adrotate2&action=updated');
+			wp_redirect('admin.php?page=adrotate2&action=updated');
 		break;
 		
 		case "group_field_error" :
-			wp_redirect('edit.php?page=adrotate&action=group_field_error');
+			wp_redirect('admin.php?page=adrotate&action=group_field_error');
 		break;
 		
 		case "field_error" :
-			wp_redirect('edit.php?page=adrotate&action=field_error');
+			wp_redirect('admin.php?page=adrotate&action=field_error');
 		break;
 		
 		case "no_access" :
-			wp_redirect('plugins.php?page=adrotate2&action=no_access');
+			wp_redirect('admin.php?page=adrotate2&action=no_access');
 		break;
 		
 		case "delete" :
-			wp_redirect('plugins.php?page=adrotate2&action=deleted');
+			wp_redirect('admin.php?page=adrotate2&action=deleted');
 		break;
 		
 		case "error" :
-			wp_redirect('plugins.php?page=adrotate2&action=error');
+			wp_redirect('admin.php?page=adrotate2&action=error');
 		break;
 	}
 }
