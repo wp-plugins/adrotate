@@ -59,7 +59,7 @@ function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $preview = fals
 
 	$output = stripslashes(html_entity_decode($output, ENT_QUOTES));
 
-	echo $output;
+	return $output;
 }
 
 /*-------------------------------------------------------------
@@ -102,6 +102,27 @@ function adrotate_clean_trackerdata() {
 
 	$removeme = current_time('timestamp') - 86400;
 	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `timer` < ".$removeme." AND `ipaddress` = '$buffer[0]'");
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_expired_banners
+
+ Purpose:   Notify user of expired banners
+ Receive:   -none-
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_expired_banners() {
+	global $wpdb;
+
+	$now = current_time('timestamp');
+	$count = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $now");
+	
+	if($count > 0) {
+		if($count == 1) $tell = '1 banner is';
+		 	else $tell = $count.' banners are';
+		
+		echo '<div class="error"><p>NOTICE: '.$tell.' expired. <a href="admin.php?page=adrotate2">Take action</a>!</p></div>';
+	}
 }
 
 /*-------------------------------------------------------------
