@@ -14,6 +14,13 @@ function adrotate_activate() {
 	$table_name2 = $wpdb->prefix . "adrotate_groups";
 	$table_name3 = $wpdb->prefix . "adrotate_tracker";
 	
+	if ( $wpdb->has_cap( 'collation' ) ) {
+		if ( ! empty($wpdb->charset) )
+			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+		if ( ! empty($wpdb->collate) )
+			$charset_collate .= " COLLATE $wpdb->collate";
+	}
+	
 	if(!adrotate_mysql_table_exists($table_name1)) { // Add table if it's not there
 		$add1 = "CREATE TABLE ".$table_name1." (
 			  `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -32,7 +39,7 @@ function adrotate_activate() {
 			  `clicks` int(15) NOT NULL default '0',
 			  `shown` int(15) NOT NULL default '0',
 	  		PRIMARY KEY  (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+			) ".$charset_collate;
 		if(mysql_query($add1) === true) {
 			$myqsl = true;
 		} else {
@@ -111,7 +118,7 @@ function adrotate_activate() {
 				`id` mediumint(8) unsigned NOT NULL auto_increment, 
 				`name` varchar(255) NOT NULL, 
 				PRIMARY KEY  (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+			) ".$charset_collate;
 		if(mysql_query($add2) === true ) {
 			$myqsl = true;
 		} else {
@@ -128,7 +135,7 @@ function adrotate_activate() {
 				`timer` int(15) NOT NULL default '0',
 				`bannerid` int(15) NOT NULL default '0', 
 				PRIMARY KEY  (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+			) ".$charset_collate;
 		if(mysql_query($add3) === true ) {
 			$myqsl = true;
 		} else {
