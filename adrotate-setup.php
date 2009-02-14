@@ -32,7 +32,7 @@ function adrotate_activate() {
 			  `clicks` int(15) NOT NULL default '0',
 			  `shown` int(15) NOT NULL default '0',
 	  		PRIMARY KEY  (`id`)
-			);";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		if(mysql_query($add1) === true) {
 			$myqsl = true;
 		} else {
@@ -111,7 +111,7 @@ function adrotate_activate() {
 				`id` mediumint(8) unsigned NOT NULL auto_increment, 
 				`name` varchar(255) NOT NULL, 
 				PRIMARY KEY  (`id`)
-			);";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		if(mysql_query($add2) === true ) {
 			$myqsl = true;
 		} else {
@@ -125,9 +125,10 @@ function adrotate_activate() {
 		$add3 = "CREATE TABLE ".$table_name3." (
 				`id` mediumint(8) unsigned NOT NULL auto_increment, 
 				`ipaddress` varchar(255) NOT NULL, 
-				`timer` int(15) NOT NULL default '0', 
+				`timer` int(15) NOT NULL default '0',
+				`bannerid` int(15) NOT NULL default '0', 
 				PRIMARY KEY  (`id`)
-			);";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		if(mysql_query($add3) === true ) {
 			$myqsl = true;
 		} else {
@@ -143,7 +144,7 @@ function adrotate_activate() {
         	$i++;
 		}
 		
-		if (!in_array('startshow', $field_array)) {
+		if (!in_array('bannerid', $field_array)) {
 			if(mysql_query("ALTER TABLE `$table_name3` ADD `bannerid` INT( 15 ) NOT NULL DEFAULT '0' AFTER `timer`;") === true) {
 				$myqsl = true;
 			} else {
