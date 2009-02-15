@@ -19,7 +19,7 @@ function adrotate_widget_init() {
 
 		echo $before_widget . '<h2 class="widgettitle">' . $options['title'] . '</h2>';
 		$url_parts = parse_url(get_bloginfo('home'));
-		adrotate_banner($options['group'], $options['block'], $options['banner'], false, false);
+		echo adrotate_banner($options['group'], $options['banner'], $options['block'], false);
 		echo $after_widget;
 	}
 	
@@ -137,20 +137,28 @@ function adrotate_stats_widget() {
 			<?php
 			$clicks = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y'");
 			$banners = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y'");
-			$average = $clicks / $banners;
 			?>
 			<div class="text-wrap">
-				<?php echo round($average, 2); ?> clicks on all banners.
+				<?php if($banners < 1 OR $clicks < 1) { 
+					echo '0'; 
+				} else { 
+					$average = $clicks / $banners;
+					echo round($average, 2); 
+				} ?> clicks on all banners.
 			</div>
 
 			<h4><label for="More">More...</label></h4>
 			<?php 
 			$impressions = $wpdb->get_var("SELECT SUM(shown) FROM `".$wpdb->prefix."adrotate`");
-			$clicks = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate`");
-			$ctr = round((100/$impressions)*$clicks,2);
+			$clicks2 = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate`");
 			?>
 			<div class="text-wrap">
-				<?php echo $impressions; ?> impressions and <?php echo $clicks; ?> clicks. CTR of <?php echo $ctr; ?>%.
+				<?php if($impressions > 0 OR $clicks2 > 0) { 
+					$ctr = round((100/$impressions)*$clicks2, 2);
+				} else {
+					$ctr = 0;
+				}
+				echo $impressions.' impressions and '.$clicks2.' clicks. CTR of '.$ctr.'%.'; ?>
 			</div>
 
 			<h4><label for="Last5">The last 5</label></h4>

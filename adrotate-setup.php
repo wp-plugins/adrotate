@@ -10,9 +10,12 @@ function adrotate_activate() {
 	global $wpdb;
 
 	$mysql = false;
-	$table_name1 = $wpdb->prefix . "adrotate";
-	$table_name2 = $wpdb->prefix . "adrotate_groups";
-	$table_name3 = $wpdb->prefix . "adrotate_tracker";
+
+	$tables = array(
+		$wpdb->prefix . "adrotate", 
+		$wpdb->prefix . "adrotate_groups", 
+		$wpdb->prefix . "adrotate_tracker",
+	);
 	
 	if ( $wpdb->has_cap( 'collation' ) ) {
 		if ( ! empty($wpdb->charset) )
@@ -21,8 +24,8 @@ function adrotate_activate() {
 			$charset_collate .= " COLLATE $wpdb->collate";
 	}
 	
-	if(!adrotate_mysql_table_exists($table_name1)) { // Add table if it's not there
-		$add1 = "CREATE TABLE ".$table_name1." (
+	if(!adrotate_mysql_table_exists($tables[0])) { // Add table if it's not there
+		$add1 = "CREATE TABLE ".$tables[0]." (
 			  `id` mediumint(8) unsigned NOT NULL auto_increment,
 			  `title` longtext NOT NULL,
 			  `bannercode` longtext NOT NULL,
@@ -45,76 +48,12 @@ function adrotate_activate() {
 		} else {
 			$mysql = false;
 		}
-	} else if(adrotate_mysql_table_exists($table_name1)) { // Upgrade table if it is incomplete
-		if (!$result = mysql_query("SHOW COLUMNS FROM `$table_name1`")) {
-		    echo 'Could not run query: ' . mysql_error();
-		}
-		$i = 0;
-	    while ($row = mysql_fetch_assoc($result)) {
-			$field_array[] = mysql_field_name($row, $i);
-        	$i++;
-		}
-		
-		if (!in_array('startshow', $field_array)) {
-			if(mysql_query("ALTER TABLE  `$table_name1` ADD `startshow` INT( 15 ) NOT NULL DEFAULT '0' AFTER `active`;") === true) {
-				$myqsl = true;
-			} else {
-				$mysql = false;
-			}
-		} else {
-			$mysql = true;
-		}
-		if (!in_array('endshow', $field_array)) {
-			if(mysql_query("ALTER TABLE  `$table_name1` ADD `endshow` INT( 15 ) NOT NULL DEFAULT '0' AFTER `startshow`;") === true) {
-				$myqsl = true;
-			} else {
-				$mysql = false;
-			}
-		} else {
-			$mysql = true;
-		}
-		if (!in_array('link', $field_array)) {
-			if(mysql_query("ALTER TABLE  `$table_name1` ADD `link` LONGTEXT NOT NULL AFTER `image`;") === true) {
-				$myqsl = true;
-			} else {
-				$mysql = false;
-			}
-		} else {
-			$mysql = true;
-		}
-		if (!in_array('tracker', $field_array)) {
-			if(mysql_query("ALTER TABLE  `$table_name1` ADD `tracker` VARCHAR( 5 ) NOT NULL DEFAULT 'N' AFTER `link`;") === true) {
-				$myqsl = true;
-			} else {
-				$mysql = false;
-			}
-		} else {
-			$mysql = true;
-		}
-		if (!in_array('clicks', $field_array)) {
-			if(mysql_query("ALTER TABLE  `$table_name1` ADD `clicks` INT( 15 ) NOT NULL DEFAULT '0' AFTER `tracker`;") === true) {
-				$myqsl = true;
-			} else {
-				$mysql = false;
-			}
-		} else {
-			$mysql = true;
-		}
-		if (!in_array('shown', $field_array)) {
-			if(mysql_query("ALTER TABLE  `$table_name1` ADD `shown` INT( 15 ) NOT NULL DEFAULT '0' AFTER `clicks`;") === true) {
-				$myqsl = true;
-			} else {
-				$mysql = false;
-			}
-		} else {
-			$mysql = true;
-		}
 	} else { // Or send out epic fail!
 		$mysql = false;
 	}
 
-	if(!adrotate_mysql_table_exists($table_name2)) {
-		$add2 = "CREATE TABLE ".$table_name2." (
+	if(!adrotate_mysql_table_exists($tables[1])) {
+		$add2 = "CREATE TABLE ".$tables[1]." (
 				`id` mediumint(8) unsigned NOT NULL auto_increment, 
 				`name` varchar(255) NOT NULL, 
 				PRIMARY KEY  (`id`)
@@ -128,8 +67,8 @@ function adrotate_activate() {
 		$mysql = true;
 	}
 
-	if(!adrotate_mysql_table_exists($table_name3)) {
-		$add3 = "CREATE TABLE ".$table_name3." (
+	if(!adrotate_mysql_table_exists($tables[2])) {
+		$add3 = "CREATE TABLE ".$tables[2]." (
 				`id` mediumint(8) unsigned NOT NULL auto_increment, 
 				`ipaddress` varchar(255) NOT NULL, 
 				`timer` int(15) NOT NULL default '0',
@@ -141,30 +80,17 @@ function adrotate_activate() {
 		} else {
 			$mysql = false;
 		}
-	} else if(adrotate_mysql_table_exists($table_name3)) { // Upgrade table if it is incomplete
-		if (!$result = mysql_query("SHOW COLUMNS FROM `$table_name3`")) {
-		    echo 'Could not run query: ' . mysql_error();
-		}
-		$i = 0;
-	    while ($row = mysql_fetch_assoc($result)) {
-			$field_array[] = mysql_field_name($row, $i);
-        	$i++;
-		}
-		
-		if (!in_array('bannerid', $field_array)) {
-			if(mysql_query("ALTER TABLE `$table_name3` ADD `bannerid` INT( 15 ) NOT NULL DEFAULT '0' AFTER `timer`;") === true) {
-				$myqsl = true;
-			} else {
-				$mysql = false;
-			}
-		} else {
-			$mysql = true;
-		}
 	} else {
 		$mysql = true;
 	}
+	
+	$upgrade = adrotate_upgrade($tables);
+	
+	if(!is_dir(ABSPATH.'/wp-content/banners')) {
+		mkdir(ABSPATH.'/wp-content/banners', 0755);
+	}
 
-	if($mysql == true) {
+	if($mysql == true AND $upgrade == true) {
 		adrotate_send_data('Activate');
 	} else {
 		adrotate_mysql_warning();
@@ -180,6 +106,112 @@ function adrotate_activate() {
 -------------------------------------------------------------*/
 function adrotate_deactivate() {
 	adrotate_send_data('Deactivate');
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_upgrade
+
+ Purpose:   Upgrade script
+ Receive:   -none-
+ Return:	boolean
+-------------------------------------------------------------*/
+function adrotate_upgrade($tables) {
+	global $wpdb;
+	
+	$upgrade = false;
+
+	if(adrotate_mysql_table_exists($tables[0])) { // Upgrade table if it is incomplete
+		if (!$result = mysql_query("SHOW COLUMNS FROM `$table_name1`")) {
+		    echo 'Could not run query: ' . mysql_error();
+		}
+		$i = 0;
+	    while ($row = mysql_fetch_assoc($result)) {
+			$field_array[] = mysql_field_name($row, $i);
+        	$i++;
+		}
+		
+		if (!in_array('startshow', $field_array)) {
+			if(mysql_query("ALTER TABLE  `$tables[0]` ADD `startshow` INT( 15 ) NOT NULL DEFAULT '0' AFTER `active`;") === true) {
+				$upgrade = true;
+			} else {
+				$upgrade = false;
+			}
+		} else {
+			$upgrade = true;
+		}
+		if (!in_array('endshow', $field_array)) {
+			if(mysql_query("ALTER TABLE  `$tables[0]` ADD `endshow` INT( 15 ) NOT NULL DEFAULT '0' AFTER `startshow`;") === true) {
+				$upgrade = true;
+			} else {
+				$upgrade = false;
+			}
+		} else {
+			$upgrade = true;
+		}
+		if (!in_array('link', $field_array)) {
+			if(mysql_query("ALTER TABLE  `$tables[0]` ADD `link` LONGTEXT NOT NULL AFTER `image`;") === true) {
+				$upgrade = true;
+			} else {
+				$upgrade = false;
+			}
+		} else {
+			$upgrade = true;
+		}
+		if (!in_array('tracker', $field_array)) {
+			if(mysql_query("ALTER TABLE  `$tables[0]` ADD `tracker` VARCHAR( 5 ) NOT NULL DEFAULT 'N' AFTER `link`;") === true) {
+				$upgrade = true;
+			} else {
+				$upgrade = false;
+			}
+		} else {
+			$upgrade = true;
+		}
+		if (!in_array('clicks', $field_array)) {
+			if(mysql_query("ALTER TABLE  `$tables[0]` ADD `clicks` INT( 15 ) NOT NULL DEFAULT '0' AFTER `tracker`;") === true) {
+				$upgrade = true;
+			} else {
+				$upgrade = false;
+			}
+		} else {
+			$upgrade = true;
+		}
+		if (!in_array('shown', $field_array)) {
+			if(mysql_query("ALTER TABLE  `$tables[0]` ADD `shown` INT( 15 ) NOT NULL DEFAULT '0' AFTER `clicks`;") === true) {
+				$upgrade = true;
+			} else {
+				$upgrade = false;
+			}
+		} else {
+			$upgrade = true;
+		}
+	} else { // Or send out epic fail!
+		$upgrade = false;
+	}
+
+	if(adrotate_mysql_table_exists($tables[3])) { // Upgrade table if it is incomplete
+		if (!$result = mysql_query("SHOW COLUMNS FROM `$tables[2]`")) {
+		    echo 'Could not run query: ' . mysql_error();
+		}
+		$i = 0;
+	    while ($row = mysql_fetch_assoc($result)) {
+			$field_array[] = mysql_field_name($row, $i);
+        	$i++;
+		}
+		
+		if (!in_array('bannerid', $field_array)) {
+			if(mysql_query("ALTER TABLE `$tables[2]` ADD `bannerid` INT( 15 ) NOT NULL DEFAULT '0' AFTER `timer`;") === true) {
+				$upgrade = true;
+			} else {
+				$upgrade = false;
+			}
+		} else {
+			$upgrade = true;
+		}
+	} else { // Or send out epic fail!
+		$upgrade = false;
+	}
+
+	return $upgrade;
 }
 
 /*-------------------------------------------------------------

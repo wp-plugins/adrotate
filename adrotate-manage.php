@@ -1,35 +1,5 @@
 <?php
 /*-------------------------------------------------------------
- Name:      adrotate_folder_contents
-
- Purpose:   List folder contents
- Receive:   -None-
- Return:	-None-
--------------------------------------------------------------*/
-function adrotate_folder_contents($current) {
-	global $wpdb;
-	
-	if ($handle = opendir(ABSPATH.'/wp-content/banners/')) {
-		$output = '';
-	    while (false !== ($file = readdir($handle))) {
-			$fileinfo = pathinfo($file);
-	
-	        if ($file != "." && $file != ".." 
-	        AND (strtolower($fileinfo['extension']) == "jpg" OR strtolower($fileinfo['extension']) == "gif" 
-	        OR strtolower($fileinfo['extension']) == "png" OR strtolower($fileinfo['extension']) == "jpeg"
-	        OR strtolower($fileinfo['extension']) == "swf" OR strtolower($fileinfo['extension']) == "flv")) {
-	            $output .= "<option ";
-	            if($current == $file) { $output .= "selected"; }
-	            $output .= ">".$file."</option>";
-	        }
-	    }
-	    closedir($handle);
-	}
-	
-	return $output;
-}
-
-/*-------------------------------------------------------------
  Name:      adrotate_insert_input
 
  Purpose:   Prepare input form on saving new or updated banners
@@ -39,7 +9,7 @@ function adrotate_folder_contents($current) {
 function adrotate_insert_input() {
 	global $wpdb, $adrotate_tracker;
 	
-	$banner_id 			= $_POST['adrotate_edit_id'];
+	$banner_id 			= $_POST['adrotate_id'];
 	$author 			= $_POST['adrotate_username'];
 	$title	 			= htmlspecialchars(trim($_POST['adrotate_title'], "\t\n "), ENT_QUOTES);
 	$bannercode			= htmlspecialchars(trim($_POST['adrotate_bannercode'], "\t\n "), ENT_QUOTES);
@@ -141,22 +111,38 @@ function adrotate_insert_group() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_request_delete
+ Name:      adrotate_request_action
 
- Purpose:   Prepare removal of banner or group from database
+ Purpose:   Prepare action of banner or group from database
  Receive:   -none-
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_request_delete() {
-	global $userdata, $wpdb, $adrotate_tracker;
+function adrotate_request_action() {
+	global $wpdb, $adrotate_tracker;
 
-	$banner_ids = $_POST['bannercheck'];
+	if(isset($_POST['bannercheck'])) $banner_ids = $_POST['bannercheck'];
+	if(isset($_POST['adrotate_id'])) $banner_ids = array($_POST['adrotate_id']);
 	$group_ids = $_POST['groupcheck'];
+	$action = strtolower($_POST['adrotate_action']);
 
 	if($banner_ids != '') {
 		foreach($banner_ids as $banner_id) {
-			adrotate_delete($banner_id, 'banner');
-			if($adrotate_tracker['register'] == 'Y') { adrotate_send_data('Delete Banner'); }
+			if($action == 'deactivate') {
+				adrotate_active($banner_id, 'deactivate');
+				if($adrotate_tracker['register'] == 'Y') { adrotate_send_data('Deactivate Banner'); }
+			}
+			if($action == 'activate') {
+				adrotate_active($banner_id, 'activate');
+				if($adrotate_tracker['register'] == 'Y') { adrotate_send_data('Activate Banner'); }
+			}
+			if($action == 'delete') {
+				adrotate_delete($banner_id, 'banner');
+				if($adrotate_tracker['register'] == 'Y') { adrotate_send_data('Delete Banner'); }
+			}
+			if($action == 'reset' OR $action == 'resetmultiple') {
+				adrotate_reset($banner_id);
+				if($adrotate_tracker['register'] == 'Y') { adrotate_send_data('Reset Banner'); }
+			}
 		}
 	}
 	if($group_ids != '') {
@@ -165,7 +151,7 @@ function adrotate_request_delete() {
 			if($adrotate_tracker['register'] == 'Y') { adrotate_send_data('Delete Group'); }
 		}
 	}
-	adrotate_return('delete');
+	adrotate_return($action, $banner_id);
 	exit;
 }
 
@@ -174,7 +160,7 @@ function adrotate_request_delete() {
 
  Purpose:   Remove banner or group from database
  Receive:   $id, $what
- Return:    boolean
+ Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_delete($id, $what) {
 	global $wpdb;
@@ -216,45 +202,38 @@ function adrotate_delete($id, $what) {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_return
+ Name:      adrotate_active
 
- Purpose:   Redirect to various pages
- Receive:   $action
+ Purpose:   Activate or Deactivate a banner
+ Receive:   $id, $what
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_return($action) {
-	switch($action) {
-		case "new" :
-			wp_redirect('admin.php?page=adrotate&action=created');
-		break;
-		
-		case "group_new" :
-			wp_redirect('admin.php?page=adrotate2&action=group_new');
-		break;
-		
-		case "update" :
-			wp_redirect('admin.php?page=adrotate2&action=updated');
-		break;
-		
-		case "group_field_error" :
-			wp_redirect('admin.php?page=adrotate&action=group_field_error');
-		break;
-		
-		case "field_error" :
-			wp_redirect('admin.php?page=adrotate&action=field_error');
-		break;
-		
-		case "no_access" :
-			wp_redirect('admin.php?page=adrotate2&action=no_access');
-		break;
-		
-		case "delete" :
-			wp_redirect('admin.php?page=adrotate2&action=deleted');
-		break;
-		
-		case "error" :
-			wp_redirect('admin.php?page=adrotate2&action=error');
-		break;
+function adrotate_active($id, $what) {
+	global $wpdb;
+
+	if($id > 0) {
+		if($what == 'deactivate') {	
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `active` = 'no' WHERE `id` = '$id'");
+		}
+		if ($what == 'activate') {
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `active` = 'yes' WHERE `id` = '$id'");
+		}
+	}
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_reset
+
+ Purpose:   Reset statistics for a banner
+ Receive:   $id
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_reset($id) {
+	global $wpdb;
+
+	if($id > 0) {
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `clicks` = '0', `shown` = '0' WHERE `id` = '$id'");
+		$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `bannerid` = $id");
 	}
 }
 ?>

@@ -121,7 +121,7 @@ function adrotate_expired_banners() {
 		if($count == 1) $tell = '1 banner is';
 		 	else $tell = $count.' banners are';
 		
-		echo '<div class="error"><p>NOTICE: '.$tell.' expired. <a href="admin.php?page=adrotate2">Take action</a>!</p></div>';
+		echo '<div class="updated fade"><p>'.$tell.' expired. <a href="admin.php?page=adrotate2">Take action</a>!</p></div>';
 	}
 }
 
@@ -138,7 +138,7 @@ function adrotate_send_data($action) {
 	// Prepare data
 	$date			= date('U');
 	$plugin			= 'AdRotate';
-	$version		= '2.1';
+	$version		= '2.2';
 	//$action -> pulled from function args
 
 	// User choose anonymous?
@@ -208,5 +208,94 @@ function adrotate_options_submit() {
 	if($tracker['register'] == 'N' AND $buffer['register'] == 'Y') { adrotate_send_data('Opt-out'); }
 
 	update_option('adrotate_tracker', $tracker);
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_folder_contents
+
+ Purpose:   List folder contents
+ Receive:   -None-
+ Return:	-None-
+-------------------------------------------------------------*/
+function adrotate_folder_contents($current) {
+	global $wpdb;
+	
+	if ($handle = opendir(ABSPATH.'/wp-content/banners/')) {
+		$output = '';
+	    while (false !== ($file = readdir($handle))) {
+			$fileinfo = pathinfo($file);
+	
+	        if ($file != "." && $file != ".." 
+	        AND (strtolower($fileinfo['extension']) == "jpg" OR strtolower($fileinfo['extension']) == "gif" 
+	        OR strtolower($fileinfo['extension']) == "png" OR strtolower($fileinfo['extension']) == "jpeg"
+	        OR strtolower($fileinfo['extension']) == "swf" OR strtolower($fileinfo['extension']) == "flv")) {
+	            $output .= "<option ";
+	            if($current == $file) { $output .= "selected"; }
+	            $output .= ">".$file."</option>";
+	        }
+	    }
+	    closedir($handle);
+	}
+	
+	return $output;
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_return
+
+ Purpose:   Redirect to various pages
+ Receive:   $action
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_return($action, $id = null) {
+	switch($action) {
+		case "new" :
+			wp_redirect('admin.php?page=adrotate&message=created');
+		break;
+		
+		case "group_new" :
+			wp_redirect('admin.php?page=adrotate2&message=group_new');
+		break;
+		
+		case "update" :
+			wp_redirect('admin.php?page=adrotate2&message=updated');
+		break;
+		
+		case "group_field_error" :
+			wp_redirect('admin.php?page=adrotate&message=group_field_error');
+		break;
+		
+		case "field_error" :
+			wp_redirect('admin.php?page=adrotate&message=field_error');
+		break;
+		
+		case "no_access" :
+			wp_redirect('admin.php?page=adrotate2&message=no_access');
+		break;
+		
+		case "deactivate" :
+			wp_redirect('admin.php?page=adrotate2&message=deactivate');
+		break;
+		
+		case "activate" :
+			wp_redirect('admin.php?page=adrotate2&message=activate');
+		break;
+		
+		case "reset" :
+			wp_redirect('admin.php?page=adrotate&message=reset&edit_banner='.$id);
+		break;
+		
+		case "resetmultiple" :
+			wp_redirect('admin.php?page=adrotate2&message=reset');
+		break;
+		
+		case "delete" :
+			wp_redirect('admin.php?page=adrotate2&message=deleted');
+		break;
+		
+		case "error" :
+			wp_redirect('admin.php?page=adrotate2&message=error');
+		break;
+	}
 }
 ?>
