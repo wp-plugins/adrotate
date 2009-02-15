@@ -69,7 +69,7 @@ function adrotate_insert_input() {
 					adrotate_send_data('Update Banner');
 				}
 			}
-			adrotate_return($action);
+			adrotate_return($action, $banner_id);
 			exit;
 		} else {
 			die('[MySQL error] '.mysql_error());
