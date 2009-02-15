@@ -258,7 +258,7 @@ function adrotate_return($action, $id = null) {
 		break;
 		
 		case "update" :
-			wp_redirect('admin.php?page=adrotate2&message=updated');
+			wp_redirect('admin.php?page=adrotate&message=updated&edit_banner='.$id);
 		break;
 		
 		case "group_field_error" :

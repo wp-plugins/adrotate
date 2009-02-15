@@ -313,7 +313,7 @@ function adrotate_edit() {
 					<tbody>
 			      	<tr>
 				        <th scope="row" width="25%">Title:</th>
-				        <td colspan="3"><input tabindex="1" name="adrotate_title" type="text" size="67" class="search-input" value="<?php echo $edit_banner->title;?>" /></td>
+				        <td colspan="3"><input tabindex="1" name="adrotate_title" type="text" size="67" class="search-input" autocomplete="off" value="<?php echo $edit_banner->title;?>" /></td>
 			      	</tr>
 			      	<tr>
 				        <th scope="row" width="25%">Code:</th>
@@ -405,8 +405,21 @@ function adrotate_edit() {
 						<?php } ?>
 						</select></td>
 			      	</tr>
-				<?php if($banner_edit_id) { ?>
 					</tbody>
+				<?php if($banner_edit_id) { ?>
+					<thead>
+					<tr valign="top">
+						<th colspan="4">Preview</th>
+					</tr>
+					</thead>
+
+					<tbody>
+			      	<tr>
+				        <td colspan="4"><?php echo adrotate_banner($edit_banner->group,  $banner_edit_id, null, true); ?>
+				        <br /><em>Note: While this preview is an accurate one, it might look different then it does on the website.
+						<br />This is because of CSS differences. Your themes CSS file is not active here!</em></td>
+			      	</tr>
+			      	</tbody>
 
 					<thead>
 					<tr valign="top">
@@ -434,25 +447,7 @@ function adrotate_edit() {
 				        <th scope="row">Reset stats:</th>
 				        <td width="25%"><input onclick="return confirm('You are about to reset the stats for this banner!\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Reset" name="adrotate_action" class="button-secondary delete" /></td>
 			      	</tr>
-				<?php } ?>
 					</tbody>
-
-	      		<?php if($banner_edit_id) { ?>
-
-					<thead>
-					<tr valign="top">
-						<th colspan="4">Preview</th>
-					</tr>
-					</thead>
-
-					<tbody>
-			      	<tr>
-				        <td colspan="4"><?php echo adrotate_banner($edit_banner->group,  $banner_edit_id, null, true); ?>
-				        <br /><em>Note: While this preview is an accurate one, it might look different then it does on the website.
-						<br />This is because of CSS differences. Your themes CSS file is not active here!</em></td>
-			      	</tr>
-			      	</tbody>
-
 				<?php } ?>
 
 					<thead>
