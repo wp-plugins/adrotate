@@ -41,6 +41,7 @@ function adrotate_activate() {
 			  `tracker` varchar(5) NOT NULL default 'N',
 			  `clicks` int(15) NOT NULL default '0',
 			  `shown` int(15) NOT NULL default '0',
+			  `magic` int(1) NOT NULL default '0',
 	  		PRIMARY KEY  (`id`)
 			) ".$charset_collate;
 		if(mysql_query($add1) === true) {
@@ -148,6 +149,15 @@ function adrotate_activate() {
 		} else {
 			$mysql = true;
 		}
+		if (!in_array('magic', $field_array)) {
+			if(mysql_query("ALTER TABLE  `$tables[0]` ADD `magic` INT( 1 ) NOT NULL DEFAULT '0' AFTER `shown`;") === true) {
+				$upgrade = true;
+			} else {
+				$upgrade = false;
+			}
+		} else {
+			$mysql = true;
+		}
 	} else { // Or send out epic fail!
 		$upgrade = false;
 	}
@@ -179,10 +189,10 @@ function adrotate_activate() {
 		mkdir(ABSPATH.'/wp-content/banners', 0755);
 	}
 
-	if($mysql == true) {
-		adrotate_send_data('Activate');
-	} else if($mysql == true AND $upgrade == true) {
+	if($mysql == true AND $upgrade == true) {
 		adrotate_send_data('Upgrade');
+	} else if($mysql == true) {
+		adrotate_send_data('Activate');
 	} else {
 		adrotate_mysql_warning();
 	}

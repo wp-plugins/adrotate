@@ -1,17 +1,17 @@
 === Plugin Name ===
 Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
-Tags: ads, banner, commercial, admin, plugin, random, rotator
+Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
 Requires at least: 2.7
 Tested up to: 2.7.1
-Stable tag: 2.2
+Stable tag: 2.3
  
 A really simple way of putting ads on your website. As many as you want... Make making money easy!
 
 == Description ==
 
 Add and manage the code from the dashboard and show a random banner, or multiple, on your site. The plugin supports groups for banners allowing to tie certain banners to different areas of the website. Easy management from the dashboard allows you to quickly oversee, add and edit banner code.
-Previewing of banners when editing them.
+Previewing of banners when editing them. And even some statistical values.
 
 **Features**
 
@@ -30,13 +30,13 @@ Previewing of banners when editing them.
 
 == Installation ==
 
-= Quick start =
+= Quick start manual installation =
 
 1. Unzip the file and upload the adrotate folder to your /wp-content/plugins/ folder.
 1. Activate from the plugins page and manage your ads from the Plugins > Manage Banners page.
 1. Add `<?php adrotate_banner('1'); ?>` in the theme to show banners from group 1.
 
-= Detailed/additional instructions =
+= The actual manual =
 
 Find out how it all works, more options and various way to implement this thing.
 [Install guide](http://meandmymac.net/plugins/adrotate/2/)

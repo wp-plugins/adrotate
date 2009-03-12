@@ -17,10 +17,12 @@ function adrotate_widget_init() {
 		$options = get_option('widget_adrotate');
 		extract($args);
 
-		echo $before_widget . '<h2 class="widgettitle">' . $options['title'] . '</h2>';
-		$url_parts = parse_url(get_bloginfo('home'));
-		echo adrotate_banner($options['group'], $options['banner'], $options['block'], false);
+		echo $before_widget . $before_title . $options['title'] . $after_title;
+		echo '<ul><li>';
+			echo adrotate_banner($options['group'], $options['banner'], $options['block'], false);
+		echo '</li></ul>';
 		echo $after_widget;
+
 	}
 	
 	function adrotate_widget_control() {
@@ -66,8 +68,8 @@ function adrotate_widget_init() {
 
 
 	$widget_ops = array('classname' => 'adrotate_widget', 'description' => "Add banners in the sidebar." );
-	wp_register_sidebar_widget('AdRotate', 'AdRotate', 'adrotate_widget', $widget_ops);
-	wp_register_widget_control('AdRotate', 'AdRotate', 'adrotate_widget_control' );
+	wp_register_sidebar_widget('AdRotate Pro', 'AdRotate Pro', 'adrotate_widget', $widget_ops);
+	wp_register_widget_control('AdRotate Pro', 'AdRotate Pro', 'adrotate_widget_control' );
 }
 
 /*-------------------------------------------------------------
@@ -115,11 +117,12 @@ function adrotate_stats_widget() {
 		#adrotate_stats_widget .text-wrap {
 			padding-top: 5px;
 			margin: 0 0 1em 5em;
+			display: block;
 		}
 		</style>
 	<?php
 	
-	$banners = $wpdb->get_var("SELECT COUNT(*) FROM ".$wpdb->prefix."adrotate ORDER BY id");
+	$banners = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` ORDER BY `id`");
 	if($banners > 0) { ?>
 			<?php $thebest = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` ORDER BY `clicks` DESC LIMIT 1"); ?>
 			<h4><label for="Best">The best</label></h4>
@@ -179,11 +182,11 @@ function adrotate_stats_widget() {
 			</div>
 			
 			<div style="padding-top: .5em">
-				<p><a href="admin.php?page=adrotate2" class="button">Manage Banners</a>&nbsp;&nbsp;<a href="admin.php?page=adrotate" class="button">Add Banner</a></p>
+				<p><a href="admin.php?page=adrotate" class="button">Manage Banners</a>&nbsp;&nbsp;<a href="admin.php?page=adrotate2" class="button">Add Banner</a></p>
 			</div>
 								
 	<?php } else { ?>	
-		<span style="font-style: italic;">There are no banners yet. <a href="admin.php?page=adrotate">Add some banners now</a>!</span>
+		<span style="font-style: italic;">There are no banners yet. <a href="admin.php?page=adrotate2">Add some banners now</a>!</span>
 	<?php } ?>
 <?php 
 }

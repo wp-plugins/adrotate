@@ -37,7 +37,7 @@ function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $preview = fals
 			foreach($banners as $banner) {
 				$banner_output = $banner->bannercode;
 				if($banner->tracker == "Y") {
-					$banner_output = str_replace('%link%', get_option('siteurl').'/wp-content/plugins/adrotate/adrotate-out.php?trackerid='.$banner->id, $banner_output);
+					$banner_output = str_replace('%link%', get_option('siteurl').'/wp-content/plugins/adrotate-pro/adrotate-out.php?trackerid='.$banner->id, $banner_output);
 				} else {
 					$banner_output = str_replace('%link%', $banner->link, $banner_output);
 				}
@@ -79,7 +79,6 @@ function adrotate_shortcode($atts, $content = null) {
 		else $banner_id = 0;
 
 	return adrotate_banner($group_ids, $block, $banner_id, false);
-
 }
 
 /*-------------------------------------------------------------
@@ -121,10 +120,38 @@ function adrotate_expired_banners() {
 		if($count == 1) $tell = '1 banner is';
 		 	else $tell = $count.' banners are';
 		
-		echo '<div class="updated fade"><p>'.$tell.' expired. <a href="admin.php?page=adrotate2">Take action</a>!</p></div>';
+		echo '<div class="updated fade"><p>'.$tell.' expired. <a href="admin.php?page=adrotate">Take action</a>!</p></div>';
 	}
 }
 
+/*-------------------------------------------------------------
+ Name:      adrotate_credits
+
+ Purpose:   Credits
+ Receive:   -none-
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_credits() {
+	echo '<table class="widefat" style="margin-top: .5em">';
+	
+	echo '<thead>';
+	echo '<tr valign="top">';
+	echo '	<th>AdRotate for Awesome!</th>';
+	echo '</tr>';
+	echo '</thead>';
+
+	echo '<tbody>';
+	echo '<tr>';
+	echo '	<td>Find me on <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.<br />';
+	echo '	Need help? <a href="http://forum.at.meandmymac.net" target="_blank">forum.at.meandmymac.net</a>.<br />';
+	echo '	Subscribed to the Meandmymac Data Project? Curious? <a href="http://meandmymac.net/plugins/data-project/" target="_blank">More information</a>.<br />';
+	echo '	Want to see your stats? <a href="http://meandmymac.net/wp-admin/" target="_blank">Plugin statistics</a>.<br />';
+	echo '	Like my software? <a href="http://meandmymac.net/donate/" target="_blank">Show your appreciation</a>. Thanks!</td>';
+	echo '</tr>';
+	echo '</tbody>';
+	
+	echo '</table';
+}
 /*-------------------------------------------------------------
  Name:      adrotate_send_data
 
@@ -137,8 +164,8 @@ function adrotate_send_data($action) {
 
 	// Prepare data
 	$date			= date('U');
-	$plugin			= 'AdRotate';
-	$version		= '2.2';
+	$plugin			= 'AdRotate Pro';
+	$version		= '2.3';
 	//$action -> pulled from function args
 
 	// User choose anonymous?
@@ -244,57 +271,77 @@ function adrotate_folder_contents($current) {
  Name:      adrotate_return
 
  Purpose:   Redirect to various pages
- Receive:   $action
+ Receive:   $action, $arg
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_return($action, $id = null) {
+function adrotate_return($action, $arg = null) {
 	switch($action) {
 		case "new" :
+			wp_redirect('admin.php?page=adrotate3&message=created');
+		break;
+		
+		case "magic_new" :
 			wp_redirect('admin.php?page=adrotate&message=created');
 		break;
 		
 		case "group_new" :
-			wp_redirect('admin.php?page=adrotate2&message=group_new');
+			wp_redirect('admin.php?page=adrotate4&message=created');
+		break;
+		
+		case "group_edit" :
+			wp_redirect('admin.php?page=adrotate4&message=updated');
 		break;
 		
 		case "update" :
-			wp_redirect('admin.php?page=adrotate&message=updated&edit_banner='.$id);
+			wp_redirect('admin.php?page=adrotate3&message=updated&edit_banner='.$arg[0]);
 		break;
 		
 		case "group_field_error" :
-			wp_redirect('admin.php?page=adrotate&message=group_field_error');
+			wp_redirect('admin.php?page=adrotate4&message=field_error&edit_group='.$arg[0]);
+		break;
+		
+		case "magic_field_error" :
+			wp_redirect('admin.php?page=adrotate2&message=field_error&step='.$arg[0].'&magic_id='.$arg[1]);
 		break;
 		
 		case "field_error" :
-			wp_redirect('admin.php?page=adrotate&message=field_error');
+			wp_redirect('admin.php?page=adrotate3&message=field_error');
 		break;
 		
 		case "no_access" :
-			wp_redirect('admin.php?page=adrotate2&message=no_access');
+			wp_redirect('admin.php?page=adrotate&message=no_access');
 		break;
 		
 		case "deactivate" :
-			wp_redirect('admin.php?page=adrotate2&message=deactivate');
+			wp_redirect('admin.php?page=adrotate&message=deactivate');
 		break;
 		
 		case "activate" :
-			wp_redirect('admin.php?page=adrotate2&message=activate');
+			wp_redirect('admin.php?page=adrotate&message=activate');
 		break;
 		
 		case "reset" :
-			wp_redirect('admin.php?page=adrotate&message=reset&edit_banner='.$id);
+			wp_redirect('admin.php?page=adrotate3&message=reset&edit_banner='.$arg[0]);
 		break;
 		
 		case "resetmultiple" :
-			wp_redirect('admin.php?page=adrotate2&message=reset');
+			wp_redirect('admin.php?page=adrotate&message=reset');
 		break;
 		
 		case "delete" :
-			wp_redirect('admin.php?page=adrotate2&message=deleted');
+			wp_redirect('admin.php?page=adrotate&message=deleted');
+		break;
+		
+		case "group_delete" :
+			wp_redirect('admin.php?page=adrotate4&message=deleted');
 		break;
 		
 		case "error" :
-			wp_redirect('admin.php?page=adrotate2&message=error');
+			wp_redirect('admin.php?page=adrotate&message=error');
+		break;
+		
+		case "magic_error" :
+			wp_redirect('admin.php?page=adrotate2&step='.$arg[0].'&message=error');
 		break;
 	}
 }
