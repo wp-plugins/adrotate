@@ -1,4 +1,4 @@
-<?php
+<?php    
 /*
 Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
