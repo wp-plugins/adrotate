@@ -1,4 +1,4 @@
-<?php
+<?php  
 /*-------------------------------------------------------------
  Name:      adrotate_banner
 
@@ -143,6 +143,7 @@ function adrotate_credits() {
 	echo '<tbody>';
 	echo '<tr>';
 	echo '	<td>Find me on <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.<br />';
+	echo '	Read about updates! <a href="http://meandmymac.net/tag/adrotate/" target="_blank">http://meandmymac.net/tag/adrotate/</a>.<br />';
 	echo '	Need help? <a href="http://forum.at.meandmymac.net" target="_blank">forum.at.meandmymac.net</a>.<br />';
 	echo '	Subscribed to the Meandmymac Data Project? Curious? <a href="http://meandmymac.net/plugins/data-project/" target="_blank">More information</a>.<br />';
 	echo '	Want to see your stats? <a href="http://meandmymac.net/wp-admin/" target="_blank">Plugin statistics</a>.<br />';
