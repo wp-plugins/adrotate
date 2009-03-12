@@ -12,21 +12,23 @@ A really simple way of putting ads on your website. As many as you want... Make 
 
 Add and manage the code from the dashboard and show a random banner, or multiple, on your site. The plugin supports groups for banners allowing to tie certain banners to different areas of the website. Easy management from the dashboard allows you to quickly oversee, add and edit banner code.
 Previewing of banners when editing them. And even some statistical values.
+[Details](http://meandmymac.net/plugins/adrotate/)
+[Manual](http://meandmymac.net/plugins/adrotate/2/)
+[Forum](http://forum.at.meandmymac.net/)
 
-**Features**
+**Some Features**
 
-* Show random banners
+* Easy management of banners and banner groups
+* Edit/update banners
+* Integrates with WordPress dashboard and has a user friendly, easy to manage dashboard
 * Review which banner is shown the most
 * Track how many a banner is clicked and show it's Cick-Through-Ratio
 * Put random, or selected, banners in pages or posts
-* Activate or de-activate banners at will
-* Edit/update banners
 * Preview banners on edit
-* Per banner/function to set a specific banner or keep it random
 * Multiple groups per banner location
 * Works with Google Ads and other referrer/ad programs
-* Widget for the sidebar included
-* Integrates with WordPress dashboard, yet allows you to completely style to your own need
+* Widget for the sidebar
+* AD-Blocks (blocks of small banners)
 
 == Installation ==
 
@@ -38,17 +40,18 @@ Previewing of banners when editing them. And even some statistical values.
 
 = The actual manual =
 
-Find out how it all works, more options and various way to implement this thing.
-[Install guide](http://meandmymac.net/plugins/adrotate/2/)
+Find out how it all works, more options and various ways to implement this thing.
+[User guide](http://meandmymac.net/plugins/adrotate/2/)
+
+= Support? = 
+[AdRotate support page](http://forum.at.meandmymac.net/)
 
 == Frequently Asked Questions ==
 
-Visit here for support:
+Go here for support:
 [AdRotate support page](http://forum.at.meandmymac.net/)
 
 == Screenshots ==
 
 1. Add/edit your ads and stuff here
 2. Manage and oversee the ads from here.
-
-[More screenshots](http://meandmymac.net/plugins/adrotate/#screens)
