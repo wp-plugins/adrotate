@@ -1,4 +1,4 @@
-<?php  
+<?php
 include('../../../wp-blog-header.php');
 global $wpdb;
 

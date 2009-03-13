@@ -1,10 +1,10 @@
-<?php    
+<?php
 /*
 Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: Make making money easy with AdRotate. Add advanced banners to your website using the simplest interface available!
 Author: Arnan de Gans
-Version: 2.3
+Version: 2.3.1
 Author URI: http://meandmymac.net/
 */
 
