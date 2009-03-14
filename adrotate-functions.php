@@ -37,7 +37,7 @@ function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $preview = fals
 			foreach($banners as $banner) {
 				$banner_output = $banner->bannercode;
 				if($banner->tracker == "Y") {
-					$banner_output = str_replace('%link%', get_option('siteurl').'/wp-content/plugins/adrotate-pro/adrotate-out.php?trackerid='.$banner->id, $banner_output);
+					$banner_output = str_replace('%link%', get_option('siteurl').'/wp-content/plugins/adrotate/adrotate-out.php?trackerid='.$banner->id, $banner_output);
 				} else {
 					$banner_output = str_replace('%link%', $banner->link, $banner_output);
 				}
