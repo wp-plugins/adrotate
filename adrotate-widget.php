@@ -156,7 +156,7 @@ function adrotate_stats_widget() {
 			$clicks2 = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate`");
 			?>
 			<div class="text-wrap">
-				<?php if($impressions > 0 OR $clicks2 > 0) { 
+				<?php if($impressions > 0 AND $clicks2 > 0) { 
 					$ctr = round((100/$impressions)*$clicks2, 2);
 				} else {
 					$ctr = 0;
