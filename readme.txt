@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
 Requires at least: 2.7, PHP5
 Tested up to: 2.7.1
-Stable tag: 2.3.1
+Stable tag: 2.4
  
 A really simple way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -15,7 +15,7 @@ Previewing of banners when editing them. And even some statistical values.
 
 **Important links**
 
-* [Details](http://meandmymac.net/plugins/adrotate/) - Additional plugin information
+* [Details](http://meandmymac.net/plugins/adrotate/) - Lots of Additional plugin information
 * [Manual](http://meandmymac.net/plugins/adrotate/2/) - Get started, user guide, step by step setup!
 * [Forum](http://forum.at.meandmymac.net/) - For if the manual fails you or you just don't get it
 
@@ -32,6 +32,7 @@ Previewing of banners when editing them. And even some statistical values.
 * Works with Google Ads and other referrer/ad programs
 * Widget for the sidebar
 * AD-Blocks (blocks of small banners)
+* Auto disable ads after X views / clicks
 
 == Installation ==
 

@@ -22,7 +22,7 @@ if($banner = $wpdb->get_row($SQL)) {
 		$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`) VALUES ('$buffer[0]', '$now', '$id')");
 	}
 	wp_redirect(htmlspecialchars_decode($banner->link));
-} else { 
+} else {
 	echo '<span style="color: #F00; font-style: italic; font-weight: bold;">There was an error retrieving the banner! Contact an administrator!</span>';
 }
 ?>

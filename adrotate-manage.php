@@ -8,7 +8,7 @@
 -------------------------------------------------------------*/
 function adrotate_insert_input() {
 	global $wpdb, $adrotate_tracker;
-	
+
 	$banner_id 			= $_POST['adrotate_id'];
 	$author 			= $_POST['adrotate_username'];
 	$title	 			= htmlspecialchars(trim($_POST['adrotate_title'], "\t\n "), ENT_QUOTES);
@@ -25,8 +25,10 @@ function adrotate_insert_input() {
 	$eday 				= htmlspecialchars(trim($_POST['adrotate_eday'], "\t\n "), ENT_QUOTES);
 	$emonth 			= htmlspecialchars(trim($_POST['adrotate_emonth'], "\t\n "), ENT_QUOTES);
 	$eyear 				= htmlspecialchars(trim($_POST['adrotate_eyear'], "\t\n "), ENT_QUOTES);
+	$maxclicks			= htmlspecialchars(trim($_POST['adrotate_maxclicks'], "\t\n "), ENT_QUOTES);
+	$maxshown			= htmlspecialchars(trim($_POST['adrotate_maxshown'], "\t\n "), ENT_QUOTES);
 
-	
+
 	if (strlen($title)!=0 AND strlen($bannercode)!=0) {
 		if(strlen($smonth) == 0) 	$smonth 	= date('m');
 		if(strlen($sday) == 0) 		$sday 		= date('d');
@@ -34,41 +36,36 @@ function adrotate_insert_input() {
 		if(strlen($emonth) == 0) 	$emonth 	= $smonth;
 		if(strlen($eday) == 0) 		$eday 		= $sday;
 		if(strlen($eyear) == 0) 	$eyear 		= $syear+1;
-		
+
+		if(strlen($maxclicks) < 1)	$maxclicks	= 0;
+
 		$startdate 	= gmmktime($shour, $sminute, 0, $smonth, $sday, $syear);
 		$enddate 	= gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear);
 
-		if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';			
+		if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';
 			else $tracker = 'N';
 
 		/* Check if you need to update or insert a new record */
 		if(strlen($banner_id) != 0) {
 			/* Update */
-			$postquery = "UPDATE 
-			`".$wpdb->prefix."adrotate` 
+			$postquery = "UPDATE
+			`".$wpdb->prefix."adrotate`
 			SET
-			`title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author', 
-			`active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `group` = '$group', 
-			`image` = '$image', `link` = '$link', `tracker` = '$tracker'
-			WHERE 
+			`title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author',
+			`active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `group` = '$group',
+			`image` = '$image', `link` = '$link', `tracker` = '$tracker', `maxclicks` = '$maxclicks', `maxshown` = '$maxshown'
+			WHERE
 			`id` = '$banner_id'";
 			$action = "update";
 		} else {
 			/* New */
 			$postquery = "INSERT INTO `".$wpdb->prefix."adrotate`
-			(`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `group`, `image`, `link`, `tracker`, `clicks`, `shown`,`magic`) 
-			VALUES 
-			('$title', '$bannercode', '$thetime', '$thetime', '$author', '$active', '$startdate', '$enddate', '$group', '$image', '$link', '$tracker', 0, 0, 0)";
+			(`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `group`, `image`, `link`, `tracker`, `clicks`, `maxclicks`, `shown`, `maxshown` ,`magic`)
+			VALUES
+			('$title', '$bannercode', '$thetime', '$thetime', '$author', '$active', '$startdate', '$enddate', '$group', '$image', '$link', '$tracker', 0, 0, 0, 0, 0)";
 			$action = "new";
 		}
 		if($wpdb->query($postquery) !== FALSE) {
-			if($adrotate_tracker['register'] == 'Y') { 
-				if($action == 'new'){ 
-					adrotate_send_data('New Banner'); 
-				} else {
-					adrotate_send_data('Update Banner');
-				}
-			}
 			adrotate_return($action, $banner_id);
 			exit;
 		} else {
@@ -89,22 +86,22 @@ function adrotate_insert_input() {
 -------------------------------------------------------------*/
 function adrotate_insert_magic() {
 	global $wpdb, $adrotate_tracker;
-	
+
 	$step	 			= $_POST['adrotate_step'];
 	$banner_id 			= $_POST['adrotate_magic_id'];
-	
+
 	$checkup = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$banner_id'");
-	
+
 	if($step == 1) {
 		$title	 			= htmlspecialchars(trim($_POST['adrotate_title'], "\t\n "), ENT_QUOTES);
 		$bannercode			= htmlspecialchars(trim($_POST['adrotate_bannercode'], "\t\n "), ENT_QUOTES);
-		
-		if(strlen($title) > 0 AND strlen($bannercode) > 0) {	
+
+		if(strlen($title) > 0 AND strlen($bannercode) > 0) {
 			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `title` = '$title', `bannercode` = '$bannercode' WHERE `id` = '$banner_id'");
 			wp_redirect('admin.php?page=adrotate2&magic_id='.$banner_id.'&step=2');
 		} else {
 			adrotate_return('magic_field_error', array(1,$banner_id));
-		}		
+		}
 	} else if($step == 2) {
 		if(strlen($checkup->title) > 0 AND strlen($checkup->bannercode) > 0) {
 			$group				= $_POST['adrotate_group'];
@@ -115,44 +112,47 @@ function adrotate_insert_magic() {
 			$eday 				= htmlspecialchars(trim($_POST['adrotate_eday'], "\t\n "), ENT_QUOTES);
 			$emonth 			= $_POST['adrotate_emonth'];
 			$eyear 				= htmlspecialchars(trim($_POST['adrotate_eyear'], "\t\n "), ENT_QUOTES);
-			
+			$maxclicks			= htmlspecialchars(trim($_POST['adrotate_maxclicks'], "\t\n "), ENT_QUOTES);
+			$maxshown			= htmlspecialchars(trim($_POST['adrotate_maxshown'], "\t\n "), ENT_QUOTES);
+
 			if(strlen($smonth) == 0) 	$smonth 	= date('m');
 			if(strlen($sday) == 0) 		$sday 		= date('d');
 			if(strlen($syear) == 0) 	$syear 		= date('Y');
 			if(strlen($emonth) == 0) 	$emonth 	= $smonth;
 			if(strlen($eday) == 0) 		$eday 		= $sday;
 			if(strlen($eyear) == 0) 	$eyear 		= $syear+1;
-			
+
+			if(strlen($maxclicks) < 1)	$maxclicks	= 0;
+
 			if(strlen($group) > 0 OR strlen($newgroup) > 0) {
 				$startdate 	= gmmktime($shour, $sminute, 0, $smonth, $sday, $syear);
 				$enddate 	= gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear);
-				
+
 				if(strlen($newgroup) > 0) {
 					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_groups` (`name`) VALUES ('$newgroup')");
 					$group = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` = '$newgroup' LIMIT 1");
 				}
-				$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `startshow` = '$startdate', `endshow` = '$enddate', `group` = '$group' WHERE `id` = '$banner_id'");
+				$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `startshow` = '$startdate', `endshow` = '$enddate', `group` = '$group', `maxclicks` = '$maxclicks' WHERE `id` = '$banner_id'");
 				wp_redirect('admin.php?page=adrotate2&magic_id='.$banner_id.'&step=3');
 			} else {
-				adrotate_return('magic_field_error', array(2,$banner_id));			
+				adrotate_return('magic_field_error', array(2,$banner_id));
 			}
 		} else {
 			adrotate_return('magic_field_error', array(2,$banner_id));
-		}			
+		}
 	} else if($step == 3) {
 		if(strlen($checkup->title) > 0 AND strlen($checkup->bannercode) > 0) {
 			if(strlen($checkup->group) > 0 AND strlen($checkup->startshow) > 0 AND strlen($checkup->endshow) > 0) {
-				$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `active` = 'yes', `magic` = '1' WHERE `id` = '$banner_id'");	
-				if($adrotate_tracker['register'] == 'Y') { adrotate_send_data('New Magic Banner'); }
-				adrotate_return('magic_new');	
+				$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `active` = 'yes', `magic` = '1' WHERE `id` = '$banner_id'");
+				adrotate_return('magic_new');
 			} else {
 				adrotate_return('magic_field_error', array(2,$banner_id));
-			}			
+			}
 		} else {
 			adrotate_return('magic_field_error', array(2,$banner_id));
-		}			
+		}
 	} else {
-		adrotate_return('magic_error', array(1));		
+		adrotate_return('magic_error', array(1));
 	}
 }
 
@@ -165,16 +165,16 @@ function adrotate_insert_magic() {
 -------------------------------------------------------------*/
 function adrotate_insert_group() {
 	global $wpdb, $adrotate_tracker;
-	
+
 	$id 	= $_POST['adrotate_id'];
 	$name 	= $_POST['adrotate_group'];
-	
+
 	if (strlen($name) != 0) {
 		if($id > 0) {
-			$postquery = "UPDATE `".$wpdb->prefix."adrotate_groups` SET `name` = '$name' WHERE `id` = '$id'";		
+			$postquery = "UPDATE `".$wpdb->prefix."adrotate_groups` SET `name` = '$name' WHERE `id` = '$id'";
 			$action = "group_edit";
 		} else {
-			$postquery = "INSERT INTO `".$wpdb->prefix."adrotate_groups` (`name`) VALUES ('$name')";		
+			$postquery = "INSERT INTO `".$wpdb->prefix."adrotate_groups` (`name`) VALUES ('$name')";
 			$action = "group_new";
 		}
 		if($wpdb->query($postquery) !== FALSE) {
@@ -269,7 +269,7 @@ function adrotate_active($id, $what) {
 	global $wpdb;
 
 	if($id > 0) {
-		if($what == 'deactivate') {	
+		if($what == 'deactivate') {
 			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `active` = 'no' WHERE `id` = '$id'");
 		}
 		if ($what == 'activate') {
