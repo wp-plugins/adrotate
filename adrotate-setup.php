@@ -178,11 +178,7 @@ function adrotate_activate() {
 
 	delete_option('adrotate_tracker');
 
-	if($mysql == true AND $upgrade == true) {
-		adrotate_send_data('Upgrade');
-	} else if($mysql == true) {
-		adrotate_send_data('Activate');
-	} else {
+	if($mysql == false OR $upgrade == false) {
 		adrotate_mysql_warning();
 	}
 }
@@ -214,7 +210,7 @@ function adrotate_update_table($action, $tablename, $field_to_add, $specs, $afte
  Return:	-none-
 -------------------------------------------------------------*/
 function adrotate_deactivate() {
-	adrotate_send_data('Deactivate');
+	continue;
 }
 
 /*-------------------------------------------------------------

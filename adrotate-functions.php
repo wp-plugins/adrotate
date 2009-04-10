@@ -15,7 +15,7 @@ function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $preview = fals
 		$now = current_time('timestamp');
 
 		if($banner_id > 0 AND $block < 1) {
-			$select_banner = " AND `id` = '".$banner_id."'";
+			$select_banner = " AND `id` = '$banner_id'";
 		} else {
 			$select_banner = "";
 		}
@@ -186,47 +186,11 @@ function adrotate_credits() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_meta() {
-	echo "<li>I'm using <a href=\"http://meandmymac.net/plugins/adrotate/\" target=\"_blank\" title=\"AdRotate\">AdRotate</a></li>\n";
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_send_data
-
- Purpose:   Register events at meandmymac.net's database
- Receive:   $action
- Return:    -none-
--------------------------------------------------------------*/
-function adrotate_send_data($action) {
-	// Prepare data
-	$date			= date('U');
-	$plugin			= 'AdRotate';
-	$version		= '2.4';
-	//$action -> pulled from function args
-
-	$ident 		= md5(get_option('siteurl'));
-	$blogname	= get_option('blogname');
-	$blogurl	= get_option('siteurl');
-	$email		= get_option('admin_email');
-
-	// Build array of data
-	$post_data = array (
-		'headers'	=> null,
-		'body'		=> array(
-			'ident'		=> $ident,
-			'blogname' 	=> base64_encode($blogname),
-			'blogurl'	=> base64_encode($blogurl),
-			'email'		=> base64_encode($email),
-			'date'		=> $date,
-			'plugin'	=> $plugin,
-			'version'	=> $version,
-			'action'	=> $action,
-		),
-	);
-
-	// Destination
-	$url = 'http://stats.meandmymac.net/receiver.php';
-
-	wp_remote_post($url, $post_data);
+	global $adrotate_config;
+	
+	if($adrotate_config['credits'] == "Y") {
+		echo "<li>I'm using <a href=\"http://meandmymac.net/plugins/adrotate/\" target=\"_blank\" title=\"AdRotate\">AdRotate</a></li>\n";
+	}
 }
 
 /*-------------------------------------------------------------
