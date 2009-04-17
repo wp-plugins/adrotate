@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
 Requires at least: 2.7, PHP5
 Tested up to: 2.7.1
-Stable tag: 2.4.1
+Stable tag: 2.4.2
  
 A really simple way of putting ads on your website. As many as you want... Make making money easy!
 

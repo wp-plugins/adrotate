@@ -328,6 +328,7 @@ function adrotate_return($action, $arg = null) {
 		case "magic_error" :
 			wp_redirect('admin.php?page=adrotate2&step='.$arg[0].'&message=error');
 		break;
+
 	}
 }
 ?>

@@ -210,7 +210,6 @@ function adrotate_update_table($action, $tablename, $field_to_add, $specs, $afte
  Return:	-none-
 -------------------------------------------------------------*/
 function adrotate_deactivate() {
-	continue;
 }
 
 /*-------------------------------------------------------------
@@ -251,5 +250,34 @@ function adrotate_mysql_warning() {
 -------------------------------------------------------------*/
 function adrotate_mysql_upgrade_error() {
 	echo '<div class="updated"><h3>WARNING! The MySQL table was not properly upgraded! AdRotate cannot work properly without this upgrade. Check your MySQL permissions and see if you have ALTER rights (rights to alter existing tables) contact your webhost/sysadmin if you must. If this brings no answers seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a> and mention any errors you saw/got and explain what you were doing!</h3></div>';
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_plugin_uninstall
+
+ Purpose:   Delete the entire database table and remove the options on uninstall.
+ Receive:   -none-
+ Return:	-none-
+-------------------------------------------------------------*/
+function adrotate_plugin_uninstall() {
+	global $wpdb;
+
+	// Deactivate Plugin
+	$current = get_settings('active_plugins');
+    array_splice($current, array_search( "adrotate/adrotate.php", $current), 1 );
+	update_option('active_plugins', $current);
+	do_action('deactivate_' . trim( $_GET['plugin'] ));
+
+	// Drop MySQL Tables
+	mysql_query("DROP TABLE `".$wpdb->prefix."adrotate`") or die("An unexpected error occured.<br />".mysql_error());
+	mysql_query("DROP TABLE `".$wpdb->prefix."adrotate_groups`") or die("An unexpected error occured.<br />".mysql_error());
+	mysql_query("DROP TABLE `".$wpdb->prefix."adrotate_tracker`") or die("An unexpected error occured.<br />".mysql_error());
+
+	// Delete Options
+	delete_option('adrotate_config');
+	delete_option('widget_adrotate_1');
+	delete_option('widget_adrotate_2');
+
+	wp_redirect(get_option('siteurl').'/wp-admin/plugins.php?deactivate=true');
 }
 ?>

@@ -53,7 +53,7 @@ function adrotate_widget_init_1() {
 				<small>Group IDs. If multiple, separate them with commas (ie. 2,3,12,5).</small>
 			</p>
 			<p>
-				<label for="adrotate-block">Block: <input  class="widefat" id="adrotate-block" name="adrotate-block-1" type="text" value="<?php echo $block; ?>" /></label>
+				<label for="adrotate-block">Block (Optional): <input  class="widefat" id="adrotate-block" name="adrotate-block-1" type="text" value="<?php echo $block; ?>" /></label>
 				<br />
 				<small>Sets the amount of banners in a block.</small>
 			</p>
@@ -126,7 +126,7 @@ function adrotate_widget_init_2() {
 				<small>Group IDs. If multiple, separate them with commas (ie. 2,3,12,5).</small>
 			</p>
 			<p>
-				<label for="adrotate-block">Block: <input  class="widefat" id="adrotate-block" name="adrotate-block-2" type="text" value="<?php echo $block; ?>" /></label>
+				<label for="adrotate-block">Block (Optional): <input  class="widefat" id="adrotate-block" name="adrotate-block-2" type="text" value="<?php echo $block; ?>" /></label>
 				<br />
 				<small>Sets the amount of banners in a block.</small>
 			</p>

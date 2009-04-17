@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: Make making money easy with AdRotate. Add advanced banners to your website using the simplest interface available!
 Author: Arnan de Gans
-Version: 2.4.1
+Version: 2.4.2
 Author URI: http://meandmymac.net/
 */
 
@@ -47,6 +47,10 @@ if(isset($_POST['adrotate_action'])) {
 
 if(isset($_POST['adrotate_submit_options'])) {
 	add_action('init', 'adrotate_options_submit'); //Update Options
+}
+
+if(isset($_POST['adrotate_uninstall'])) {
+	add_action('init', 'adrotate_plugin_uninstall'); //Uninstall
 }
 
 $adrotate_config = get_option('adrotate_config');
@@ -588,6 +592,7 @@ function adrotate_wizard() {
 	global $wpdb, $userdata;
 
 	$thetime 	= current_time('timestamp');
+	$endtime 	= $thetime + 31536000;
 	$step 		= $_GET['step'];
 	$message	= $_GET['message'];
 	$back 		= $_GET['back'];
@@ -606,7 +611,7 @@ function adrotate_wizard() {
 			$SQL = "SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE (`title` = '' AND `bannercode` = '') OR `magic` = 2 ORDER BY `id` DESC LIMIT 1";
 			$empty = $wpdb->get_var($SQL);
 			if($empty == 0) {
-				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `group`, `image`, `link`, `tracker`, `clicks`, `maxclicks`, `shown`, `magic`) VALUES ('', '', '$thetime', '$thetime', '$userdata->display_name', 'no', '', '', '', 'none', '', 'N', 0, 0, 0, 2)");
+				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `group`, `image`, `link`, `tracker`, `clicks`, `maxclicks`, `shown`, `magic`) VALUES ('', '', '$thetime', '$thetime', '$userdata->display_name', 'no', '$thetime', '$endtime', '', 'none', '', 'N', 0, 0, 0, 2)");
 			}
 			$magic_id = $wpdb->get_var($SQL);
 		} else {
@@ -790,20 +795,20 @@ function adrotate_wizard() {
 
 				<thead>
 			      	<tr valign="top">
-				        <th bgcolor="#DDD" colspan="4">How do i use this banner? Paste the following code where you want the ad to show:</th>
+				        <th bgcolor="#DDD" colspan="4">How do i use this banner? Paste the following example code where you want the ad to show:</th>
 			      	</tr>
 				</thead>
 
 				<tbody>
 			      	<tr>
 				        <th>In a post or page:</th>
-				        <td>[adrotate_show group="<?php echo $edit->group; ?>" banner="<?php echo $edit->id; ?>"]</td>
+				        <td>[adrotate group="<?php echo $edit->group; ?>" banner="<?php echo $edit->id; ?>"]</td>
 				        <th>Directly in a theme:</th>
 				        <td>&lt;?php echo adrotate_banner('<?php echo $edit->group; ?>', '<?php echo $edit->id; ?>'); ?&gt;</td>
 			      	</tr>
 			      	<tr>
 				        <th>&nbsp;</th>
-				        <td>[adrotate_show group="<?php echo $edit->group; ?>"]</td>
+				        <td>[adrotate group="<?php echo $edit->group; ?>"]</td>
 				        <th>&nbsp;</th>
 				        <td>&lt;?php echo adrotate_banner('<?php echo $edit->group; ?>'); ?&gt;</td>
 			      	</tr>
@@ -891,5 +896,23 @@ function adrotate_options() {
 		      	<input type="submit" name="Submit" class="button-primary" value="Update Options &raquo;" />
 		    </p>
 		</form>
+		
+	  	<h2>AdRotate Uninstall</h2>
+
+    	<form method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="adrotate_uninstall">
+	    	<table class="form-table">
+				<tr valign="top">
+					<td colspan="2">AdRotate installs a few tables in MySQL. When you disable the plugin the tables (and contents) will not be deleted. To delete the tables use the button below.</td>
+				</tr>
+		      	<tr valign="top">
+			        <th scope="row">WARNING!</th>
+			        <td><b style="color: #f00;">This process is irreversible and will delete ALL ads and stats related to AdRotate!</b></td>
+				</tr>
+			</table>
+	  		<p class="submit">
+		    	<input type="hidden" name="adrotate_uninstall" value="true" />
+		    	<input onclick="return confirm('You are about to uninstall the AdRotate plugin\n  All related content will be lost!\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" name="Submit" class="button-secondary" value="Uninstall Plugin &raquo;" />
+	  		</p>
+	  	</form>
 	</div>
 <?php } ?>
