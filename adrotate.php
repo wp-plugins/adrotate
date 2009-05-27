@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: Make making money easy with AdRotate. Add advanced banners to your website using the simplest interface available!
 Author: Arnan de Gans
-Version: 2.4.2
+Version: 2.4.3
 Author URI: http://meandmymac.net/
 */
 
@@ -67,7 +67,7 @@ function adrotate_dashboard() {
 		add_submenu_page('adrotate', 'AdRotate > Manage', 'Manage Banners', 'manage_options', 'adrotate', 'adrotate_manage');
 		add_submenu_page('adrotate', 'AdRotate > Banner Wizard', 'Banner Wizard', 'manage_options', 'adrotate2', 'adrotate_wizard');
 		add_submenu_page('adrotate', 'AdRotate > Add/Edit (Advanced)', 'Add|Edit Banner', 'manage_options', 'adrotate3', 'adrotate_edit');
-		add_submenu_page('adrotate', 'AdRotate > Groups', 'manage Groups', 'manage_options', 'adrotate4', 'adrotate_manage_group');
+		add_submenu_page('adrotate', 'AdRotate > Groups', 'Manage Groups', 'manage_options', 'adrotate4', 'adrotate_manage_group');
 
 	add_options_page('AdRotate', 'AdRotate', 'manage_options', 'adrotate5', 'adrotate_options');
 }
@@ -98,6 +98,8 @@ function adrotate_manage() {
 			<div id="message" class="updated fade"><p>Banner <strong>created</strong></p></div>
 		<?php } else if ($message == 'reset') { ?>
 			<div id="message" class="updated fade"><p>Banner(s) statistics <strong>reset</strong></p></div>
+		<?php } else if ($message == 'renew') { ?>
+			<div id="message" class="updated fade"><p>Banner(s) <strong>renewed</strong> for 1 more year</p></div>
 		<?php } else if ($message == 'deactivate') { ?>
 			<div id="message" class="updated fade"><p>Banner(s) <strong>deactivated</strong></p></div>
 		<?php } else if ($message == 'activate') { ?>
@@ -116,6 +118,7 @@ function adrotate_manage() {
 				        <option value="activate">Activate</option>
 				        <option value="delete">Delete</option>
 				        <option value="resetmultiple">Reset stats</option>
+				        <option value="renewmultiple">Renew banner for 1 year</option>
 					</select>
 					<input type="submit" id="post-action-submit" value="Go" class="button-secondary" />
 					Sort by <select name='adrotate_order' id='cat' class='postform' >
@@ -141,14 +144,15 @@ function adrotate_manage() {
   				<tr>
 					<th scope="col" class="check-column">&nbsp;</th>
 					<th scope="col" width="2%"><center>ID</center></th>
-					<th scope="col" width="15%">Show from</th>
-					<th scope="col" width="15%">Show until</th>
+					<th scope="col" width="10%">Show from</th>
+					<th scope="col" width="10%">Show until</th>
 					<th scope="col" width="5%"><center>Active</center></th>
 					<th scope="col" width="15%">Group</th>
 					<th scope="col">Title</th>
 					<th scope="col" width="5%"><center>Shown</center></th>
 					<th scope="col" width="5%"><center>Clicks</center></th>
 					<th scope="col" width="8%"><center>CTR</center></th>
+					<th scope="col" width="5%"><center>How</center></th>
 				</tr>
   			</thead>
   			<tbody>
@@ -188,6 +192,13 @@ function adrotate_manage() {
 						<td><center><?php echo round((100/$banner->shown)*$banner->clicks,2);?> %</center></td>
 						<?php } else { ?>
 						<td colspan="2"><center>N/A</center></td>
+						<?php } ?>
+						<?php if($banner->magic == 1) { ?>
+						<td><center>Wizard</center></td>
+						<?php } else if($banner->magic == 0) { ?>
+						<td><center>Manual</center></td>
+						<?php } else { ?>
+						<td><center>Error</center></td>
 						<?php } ?>
 					</tr>
 	 			<?php } ?>
@@ -249,6 +260,8 @@ function adrotate_edit() {
 			<div id="message" class="updated fade"><p>Not all fields met the requirements</p></div>
 		<?php } else if ($message == 'reset') { ?>
 			<div id="message" class="updated fade"><p>banner statistics reset</p></div>
+		<?php } else if ($message == 'renew') { ?>
+			<div id="message" class="updated fade"><p>banner renewed for 1 more year</p></div>
 		<?php }
 
 		$groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` ORDER BY `id`");
@@ -410,8 +423,9 @@ function adrotate_edit() {
 				        <th scope="row">CTR:</th>
    						<?php if($banner->shown == 0) $edit_banner->shown = 1; ?>
 				        <td width="25%"><?php if($edit_banner->tracker == "Y") { echo round((100/$edit_banner->shown)*$edit_banner->clicks,2).' %'; } else { echo 'N/A'; } ?></td>
-				        <th scope="row">Reset stats:</th>
-				        <td width="25%"><input onclick="return confirm('You are about to reset the stats for this banner!\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Reset" name="adrotate_action" class="button-secondary delete" /></td>
+				        <th scope="row">Actions:</th>
+				        <td width="25%"><input onclick="return confirm('You are about to reset the stats for this banner!\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Reset" name="adrotate_action" class="button-secondary delete" />
+				        <input onclick="return confirm('Renew this banner for 1 more year?\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Renew" name="adrotate_action" class="button-secondary delete" /></td>
 			      	</tr>
 					</tbody>
 				<?php } ?>

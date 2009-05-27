@@ -6,7 +6,7 @@
  Receive:   $group_ids, $banner_id, $block, $preview
  Return:    $output
 -------------------------------------------------------------*/
-function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $preview = false) {
+function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $column = 0, $preview = false) {
 	global $wpdb;
 
 	if($group_ids) {
@@ -54,6 +54,7 @@ function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $preview = fals
 
 			if(count($selected) > 0) {
 				$output = '';
+				$cutoff = 1;
 				for($i=0;$i<$limit;$i++) {
 					$banner = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `id` = '".$chosen[$i]."'");
 
@@ -67,6 +68,12 @@ function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $preview = fals
 					$banner_output = str_replace('%image%', get_option('siteurl').'/wp-content/banners/'.$banner->image, $banner_output);
 
 					$output .= $banner_output;
+					if($column > 0 AND $cutoff == $column) {
+						$output .= '<br style="height:none; width:none;" />';
+						$cutoff = 1;
+					} else {
+						$cutoff++;
+					}
 
 					if($preview == false) {
 						$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `shown` = `shown` + 1 WHERE `id` = '$banner->id'");
@@ -96,14 +103,12 @@ function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $preview = fals
 -------------------------------------------------------------*/
 function adrotate_shortcode($atts, $content = null) {
 
-	if(!empty($atts['group'])) $group_ids = $atts['group'];
-		else $group_ids = '';
-	if(!empty($atts['block'])) $block = $atts['block'];
-		else $block = 0;
+	if(!empty($atts['group'])) 	$group_ids = $atts['group'];
+	if(!empty($atts['block']))	$block = $atts['block'];
+	if(!empty($atts['column'])) $column = $atts['column'];
 	if(!empty($atts['banner'])) $banner_id = $atts['banner'];
-		else $banner_id = 0;
 
-	return adrotate_banner($group_ids, $banner_id, $block, false);
+	return adrotate_banner($group_ids, $banner_id, $block, $column, false);
 }
 
 /*-------------------------------------------------------------
@@ -168,14 +173,68 @@ function adrotate_credits() {
 	echo '<tbody>';
 	echo '<tr>';
 	echo '	<td>Find me on <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.<br />';
-	echo '	The plugin homepage is at <a href="http://meandmymac.net/plugins/adrotate/" target="_blank">http://meandmymac.net/plugins/adrotate/</a>.<br />';
+	echo '	The plugin homepage is at <a href="http://meandmymac.net/plugins/adrotate/" target="_blank">http://meandmymac.net/plugins/adrotate/</a>. For information, usage and manuals on AdRotate!<br />';
 	echo '	Read about updates! <a href="http://meandmymac.net/tag/adrotate/" target="_blank">http://meandmymac.net/tag/adrotate/</a>.<br />';
-	echo '	Need help? <a href="http://forum.at.meandmymac.net" target="_blank">forum.at.meandmymac.net</a>.<br />';
+	echo '	Need help? <a href="http://forum.at.meandmymac.net" target="_blank">forum.at.meandmymac.net</a>. Please browse the forum for a bit before posting. Changes are you can help yourself!<br />';
 	echo '	Like my software? Did i help you? <a href="http://meandmymac.net/donate/" target="_blank">Show your appreciation</a>. Thanks!</td>';
 	echo '</tr>';
 	echo '</tbody>';
 
 	echo '</table';
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_rss
+
+ Purpose:   A very simple RSS parser for Meandmymac.net
+ Receive:   $rss, $count
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_rss($rss, $count = 10) {
+	if ( is_string( $rss ) ) {
+		require_once(ABSPATH . WPINC . '/rss.php');
+		if ( !$rss = fetch_rss($rss) )
+			return;
+	}
+
+	if ( is_array( $rss->items ) && !empty( $rss->items ) ) {
+		$rss->items = array_slice($rss->items, 0, $count);
+		$loop = 1;
+		foreach ( (array) $rss->items as $item ) {
+			while ( strstr($item['link'], 'http') != $item['link'] )
+				$item['link'] = substr($item['link'], 1);
+
+			$link = clean_url(strip_tags($item['link']));
+			$desc = attribute_escape(strip_tags( $item['description']));
+			$title = attribute_escape(strip_tags($item['title']));
+			if ( empty($title) )
+				$title = __('Untitled');
+				
+			if (isset($item['pubdate']))
+				$date = $item['pubdate'];
+			elseif (isset($item['published']))
+				$date = $item['published'];
+
+			if ($date) {
+				if ($date_stamp = strtotime($date)) {
+					$date = date_i18n( get_option('date_format'), $date_stamp);
+				} else {
+					$date = '';
+				}
+			}				
+				
+			if ( $link == '' ) {
+				$array[$loop] = array ('title' => $title, 'desc' => $desc, 'link' => '', 'date' => $date);
+			} else {
+				$array[$loop] = array ('title' => $title, 'desc' => $desc, 'link' => $link, 'date' => $date);
+			}
+			$loop++;
+		}
+	} else {
+		$array[1] = array('title' => 'An error has occurred; the feed is probably down. Try again later.');
+	}
+	
+	return $array;
 }
 
 /*-------------------------------------------------------------
@@ -309,8 +368,16 @@ function adrotate_return($action, $arg = null) {
 			wp_redirect('admin.php?page=adrotate3&message=reset&edit_banner='.$arg[0]);
 		break;
 
+		case "renew" :
+			wp_redirect('admin.php?page=adrotate3&message=renew&edit_banner='.$arg[0]);
+		break;
+
 		case "resetmultiple" :
 			wp_redirect('admin.php?page=adrotate&message=reset');
+		break;
+
+		case "renewmultiple" :
+			wp_redirect('admin.php?page=adrotate&message=renew');
 		break;
 
 		case "delete" :

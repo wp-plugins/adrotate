@@ -19,7 +19,7 @@ function adrotate_widget_init_1() {
 
 		echo $before_widget . $before_title . $options['title'] . $after_title;
 		echo '<ul><li>';
-			echo adrotate_banner($options['group'], $options['banner'], $options['block'], false);
+			echo adrotate_banner($options['group'], $options['banner'], $options['block'], $options['column'], false);
 		echo '</li></ul>';
 		echo $after_widget;
 
@@ -31,6 +31,7 @@ function adrotate_widget_init_1() {
 			$newoptions['title'] = strip_tags(stripslashes($_POST['adrotate-title-1']));
 			$newoptions['group'] = strip_tags(stripslashes($_POST['adrotate-group-1']));
 			$newoptions['block'] = strip_tags(stripslashes($_POST['adrotate-block-1']));
+			$newoptions['column'] = strip_tags(stripslashes($_POST['adrotate-column-1']));
 			$newoptions['banner'] = strip_tags(stripslashes($_POST['adrotate-banner-1']));
 		}
 		if ( $options != $newoptions ) {
@@ -40,27 +41,33 @@ function adrotate_widget_init_1() {
 		$title = attribute_escape($options['title']);
 		$group = attribute_escape($options['group']);
 		$block = attribute_escape($options['block']);
+		$column = attribute_escape($options['column']);
 		$banner = attribute_escape($options['banner']);
 	?>
 			<p>
-				<label for="adrotate-title">Title: <input class="widefat" id="adrotate-title" name="adrotate-title-1" type="text" value="<?php echo $title; ?>" /></label>
+				<label for="adrotate-title-1">Title: <input class="widefat" id="adrotate-title-1" name="adrotate-title-1" type="text" value="<?php echo $title; ?>" /></label>
 				<br />
 				<small>HTML will be stripped out.</small>
 			</p>
 			<p>
-				<label for="adrotate-group">Group: <input  class="widefat" id="adrotate-group" name="adrotate-group-1" type="text" value="<?php echo $group; ?>" /></label>
+				<label for="adrotate-group-1">Group: <input  class="widefat" id="adrotate-group-1" name="adrotate-group-1" type="text" value="<?php echo $group; ?>" /></label>
 				<br />
 				<small>Group IDs. If multiple, separate them with commas (ie. 2,3,12,5).</small>
 			</p>
 			<p>
-				<label for="adrotate-block">Block (Optional): <input  class="widefat" id="adrotate-block" name="adrotate-block-1" type="text" value="<?php echo $block; ?>" /></label>
+				<label for="adrotate-banner-1">Banner (Optional): <input class="widefat" id="adrotate-banner-1" name="adrotate-banner-1" type="text" value="<?php echo $banner; ?>" /></label>
+				<br />
+				<small>Leave empty for multiple groups or when using a block! Do NOT enter multiple numbers here!</small>
+			</p>
+			<p>
+				<label for="adrotate-block-1">Block (Optional): <input  class="widefat" id="adrotate-block-1" name="adrotate-block-1" type="text" value="<?php echo $block; ?>" /></label>
 				<br />
 				<small>Sets the amount of banners in a block.</small>
 			</p>
 			<p>
-				<label for="adrotate-banner">Banner (Optional): <input class="widefat" id="adrotate-banner" name="adrotate-banner-1" type="text" value="<?php echo $banner; ?>" /></label>
+				<label for="adrotate-column-1">Columns (Optional): <input  class="widefat" id="adrotate-column-1" name="adrotate-column-1" type="text" value="<?php echo $column; ?>" /></label>
 				<br />
-				<small>Leave empty for multiple groups or when using a block! Do NOT enter multiple numbers here!</small>
+				<small>Define how many columns your ad-block has.</small>
 			</p>
 			<input type="hidden" id="adrotate-submit" name="adrotate-submit-1" value="1" />
 	<?php
@@ -92,7 +99,7 @@ function adrotate_widget_init_2() {
 
 		echo $before_widget . $before_title . $options['title'] . $after_title;
 		echo '<ul><li>';
-			echo adrotate_banner($options['group'], $options['banner'], $options['block'], false);
+			echo adrotate_banner($options['group'], $options['banner'], $options['block'], $options['column'], false);
 		echo '</li></ul>';
 		echo $after_widget;
 
@@ -104,6 +111,7 @@ function adrotate_widget_init_2() {
 			$newoptions['title'] = strip_tags(stripslashes($_POST['adrotate-title-2']));
 			$newoptions['group'] = strip_tags(stripslashes($_POST['adrotate-group-2']));
 			$newoptions['block'] = strip_tags(stripslashes($_POST['adrotate-block-2']));
+			$newoptions['column'] = strip_tags(stripslashes($_POST['adrotate-column-2']));
 			$newoptions['banner'] = strip_tags(stripslashes($_POST['adrotate-banner-2']));
 		}
 		if ( $options != $newoptions ) {
@@ -113,27 +121,33 @@ function adrotate_widget_init_2() {
 		$title = attribute_escape($options['title']);
 		$group = attribute_escape($options['group']);
 		$block = attribute_escape($options['block']);
+		$column = attribute_escape($options['column']);
 		$banner = attribute_escape($options['banner']);
 	?>
 			<p>
-				<label for="adrotate-title">Title: <input class="widefat" id="adrotate-title" name="adrotate-title-2" type="text" value="<?php echo $title; ?>" /></label>
+				<label for="adrotate-title-2">Title: <input class="widefat" id="adrotate-title-2" name="adrotate-title-2" type="text" value="<?php echo $title; ?>" /></label>
 				<br />
 				<small>HTML will be stripped out.</small>
 			</p>
 			<p>
-				<label for="adrotate-group">Group: <input  class="widefat" id="adrotate-group" name="adrotate-group-2" type="text" value="<?php echo $group; ?>" /></label>
+				<label for="adrotate-group-2">Group: <input  class="widefat" id="adrotate-group-2" name="adrotate-group-2" type="text" value="<?php echo $group; ?>" /></label>
 				<br />
 				<small>Group IDs. If multiple, separate them with commas (ie. 2,3,12,5).</small>
 			</p>
 			<p>
-				<label for="adrotate-block">Block (Optional): <input  class="widefat" id="adrotate-block" name="adrotate-block-2" type="text" value="<?php echo $block; ?>" /></label>
+				<label for="adrotate-banner-2">Banner (Optional): <input class="widefat" id="adrotate-banner-2" name="adrotate-banner-2" type="text" value="<?php echo $banner; ?>" /></label>
+				<br />
+				<small>Leave empty for multiple groups or when using a block! Do NOT enter multiple numbers here!</small>
+			</p>
+			<p>
+				<label for="adrotate-block-2">Block (Optional): <input  class="widefat" id="adrotate-block-2" name="adrotate-block-2" type="text" value="<?php echo $block; ?>" /></label>
 				<br />
 				<small>Sets the amount of banners in a block.</small>
 			</p>
 			<p>
-				<label for="adrotate-banner">Banner (Optional): <input class="widefat" id="adrotate-banner" name="adrotate-banner-2" type="text" value="<?php echo $banner; ?>" /></label>
+				<label for="adrotate-column-2">Columns (Optional): <input  class="widefat" id="adrotate-column-2" name="adrotate-column-2" type="text" value="<?php echo $column; ?>" /></label>
 				<br />
-				<small>Leave empty for multiple groups or when using a block! Do NOT enter multiple numbers here!</small>
+				<small>Define how many columns your ad-block has.</small>
 			</p>
 			<input type="hidden" id="adrotate-submit" name="adrotate-submit-2" value="1" />
 	<?php
@@ -154,6 +168,7 @@ function adrotate_widget_init_2() {
 -------------------------------------------------------------*/
 function adrotate_dashboard_widget() {
 	wp_add_dashboard_widget( 'adrotate_stats_widget', 'Adrotate', 'adrotate_stats_widget' );
+	wp_add_dashboard_widget( 'adrotate_rss_widget', 'Meandmymac.net RSS Feed', 'adrotate_rss_widget' );
 }
 
 
@@ -197,14 +212,14 @@ function adrotate_stats_widget() {
 
 	$banners = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` ORDER BY `id`");
 	if($banners > 0) { ?>
-			<?php $thebest = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` ORDER BY `clicks` DESC LIMIT 1"); ?>
+			<?php $thebest = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' ORDER BY `clicks` DESC LIMIT 1"); ?>
 			<h4><label for="Best">The best</label></h4>
 			<div class="text-wrap">
 				<?php echo $thebest->title; ?> with <?php echo $thebest->clicks; ?> clicks.
 			</div>
 
 			<h4><label for="Worst">The worst</label></h4>
-			<?php $theworst = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` ORDER BY `clicks` ASC LIMIT 1"); ?>
+			<?php $theworst = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' ORDER BY `clicks` ASC LIMIT 1"); ?>
 			<div class="text-wrap">
 				<?php echo $theworst->title; ?> with <?php echo $theworst->clicks; ?> clicks.
 			</div>
@@ -226,7 +241,7 @@ function adrotate_stats_widget() {
 			<h4><label for="More">More...</label></h4>
 			<?php
 			$impressions = $wpdb->get_var("SELECT SUM(shown) FROM `".$wpdb->prefix."adrotate`");
-			$clicks2 = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate`");
+			$clicks2 = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y'");
 			?>
 			<div class="text-wrap">
 				<?php if($impressions > 0 AND $clicks2 > 0) {
@@ -239,7 +254,7 @@ function adrotate_stats_widget() {
 
 			<h4><label for="Last5">The last 5</label></h4>
 			<?php
-			$lastfive = $wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` ORDER BY `timer` DESC LIMIT 5");
+			$lastfive = $wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `tracker` = 'Y' ORDER BY `timer` DESC LIMIT 5");
 			?>
 			<div class="text-wrap">
 				<?php
@@ -262,5 +277,35 @@ function adrotate_stats_widget() {
 		<span style="font-style: italic;">There are no banners yet. <a href="admin.php?page=adrotate2">Add some banners now</a>!</span>
 	<?php } ?>
 <?php
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_rss_widget
+
+ Purpose:   AdRotate stats
+ Receive:   -none-
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_rss_widget() {
+	global $wpdb;
+
+	?>
+		<style type="text/css" media="screen">
+		#adrotate_rss_widget .text-wrap {
+			padding-top: 5px;
+			margin: 0.5em;
+			display: block;
+		}
+		</style>
+	<?php
+	$rss = adrotate_rss('http://meandmymac.net/feed/', 5);
+	$loop = 1;
+	foreach($rss as $key => $item) { ?>
+			<div class="text-wrap">
+				<a href="<?php echo $item['link']; ?>" target="_blank"><?php echo $item['title']; ?></a> on <?php echo $item['date']; ?>.
+			</div>
+<?php
+		$loop++;
+	}
 }
 ?>

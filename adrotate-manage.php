@@ -121,7 +121,6 @@ function adrotate_insert_magic() {
 			if(strlen($emonth) == 0) 	$emonth 	= $smonth;
 			if(strlen($eday) == 0) 		$eday 		= $sday;
 			if(strlen($eyear) == 0) 	$eyear 		= $syear+1;
-
 			if(strlen($maxclicks) < 1)	$maxclicks	= 0;
 
 			if(strlen($group) > 0 OR strlen($newgroup) > 0) {
@@ -219,6 +218,9 @@ function adrotate_request_action() {
 				if($action == 'reset' OR $action == 'resetmultiple') {
 					adrotate_reset($banner_id);
 				}
+				if($action == 'renew' OR $action == 'renewmultiple') {
+					adrotate_renew($banner_id);
+				}
 			}
 		}
 		if($group_ids != '') {
@@ -291,6 +293,21 @@ function adrotate_reset($id) {
 	if($id > 0) {
 		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `clicks` = '0', `shown` = '0' WHERE `id` = '$id'");
 		$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `bannerid` = $id");
+	}
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_renew
+
+ Purpose:   Renew the end date of a banner
+ Receive:   $id
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_renew($id) {
+	global $wpdb;
+
+	if($id > 0) {
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `endshow` = `endshow` + 31536000 WHERE `id` = '$id'");
 	}
 }
 ?>
