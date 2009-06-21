@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: Make making money easy with AdRotate. Add advanced banners to your website using the simplest interface available!
 Author: Arnan de Gans
-Version: 2.4.3
+Version: 2.4.4
 Author URI: http://meandmymac.net/
 */
 
@@ -26,7 +26,7 @@ add_action('admin_notices','adrotate_expired_banners');
 add_action('admin_menu', 'adrotate_dashboard');
 add_action('widgets_init', 'adrotate_widget_init_1');
 add_action('widgets_init', 'adrotate_widget_init_2');
-add_action('wp_dashboard_setup', 'adrotate_dashboard_widget'); //Initialize dashboard widget
+add_action('wp_dashboard_setup', 'adrotate_dashboard_widget');
 add_action('wp_meta', 'adrotate_meta');
 
 if(isset($_POST['adrotate_magic_submit'])) {
@@ -46,11 +46,11 @@ if(isset($_POST['adrotate_action'])) {
 }
 
 if(isset($_POST['adrotate_submit_options'])) {
-	add_action('init', 'adrotate_options_submit'); //Update Options
+	add_action('init', 'adrotate_options_submit');
 }
 
 if(isset($_POST['adrotate_uninstall'])) {
-	add_action('init', 'adrotate_plugin_uninstall'); //Uninstall
+	add_action('init', 'adrotate_plugin_uninstall');
 }
 
 $adrotate_config = get_option('adrotate_config');
@@ -147,12 +147,12 @@ function adrotate_manage() {
 					<th scope="col" width="10%">Show from</th>
 					<th scope="col" width="10%">Show until</th>
 					<th scope="col" width="5%"><center>Active</center></th>
+					<th scope="col" width="5%"><center>How</center></th>
 					<th scope="col" width="15%">Group</th>
 					<th scope="col">Title</th>
 					<th scope="col" width="5%"><center>Shown</center></th>
 					<th scope="col" width="5%"><center>Clicks</center></th>
 					<th scope="col" width="8%"><center>CTR</center></th>
-					<th scope="col" width="5%"><center>How</center></th>
 				</tr>
   			</thead>
   			<tbody>
@@ -180,9 +180,16 @@ function adrotate_manage() {
 				    <tr id='banner-<?php echo $banner->id; ?>' class='<?php echo $class.$expiredclass; ?>'>
 						<th scope="row" class="check-column"><input type="checkbox" name="bannercheck[]" value="<?php echo $banner->id; ?>" /></th>
 						<td><center><?php echo $banner->id;?></center></td>
-						<td><?php echo date("F d Y", $banner->startshow);?></td>
-						<td><?php echo date("F d Y", $banner->endshow);?></td>
+						<td><?php echo date("F d, Y", $banner->startshow);?></td>
+						<td><?php echo date("F d, Y", $banner->endshow);?></td>
 						<td><center><?php if($banner->active == "yes") { echo '<img src="'.get_option('siteurl').'/wp-content/plugins/adrotate/icons/tick.png" title="Active"/>'; } else { echo '<img src="'.get_option('siteurl').'/wp-content/plugins/adrotate/icons/cross.png" title="In-active"/>'; }?></center></td>
+						<?php if($banner->magic == 1) { ?>
+						<td><img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/adrotate/icons/wizard.png" title="Wizard"/></td>
+						<?php } else if($banner->magic == 0) { ?>
+						<td><img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/adrotate/icons/manual.png" title="Manual"/></td>
+						<?php } else { ?>
+						<td><center>Error</center></td>
+						<?php } ?>
 						<td><?php echo $group->name;?></td>
 						<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate3&amp;edit_banner='.$banner->id;?>" title="Edit"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong></td>
 						<td><center><?php echo $banner->shown;?></center></td>
@@ -192,13 +199,6 @@ function adrotate_manage() {
 						<td><center><?php echo round((100/$banner->shown)*$banner->clicks,2);?> %</center></td>
 						<?php } else { ?>
 						<td colspan="2"><center>N/A</center></td>
-						<?php } ?>
-						<?php if($banner->magic == 1) { ?>
-						<td><center>Wizard</center></td>
-						<?php } else if($banner->magic == 0) { ?>
-						<td><center>Manual</center></td>
-						<?php } else { ?>
-						<td><center>Error</center></td>
 						<?php } ?>
 					</tr>
 	 			<?php } ?>
@@ -393,7 +393,7 @@ function adrotate_edit() {
 
 					<tbody>
 			      	<tr>
-				        <td colspan="4"><?php echo adrotate_banner($edit_banner->group,  $banner_edit_id, null, true); ?>
+				        <td colspan="4"><?php echo adrotate_banner($edit_banner->group,  $banner_edit_id, null, null, true); ?>
 				        <br /><em>Note: While this preview is an accurate one, it might look different then it does on the website.
 						<br />This is because of CSS differences. Your themes CSS file is not active here!</em></td>
 			      	</tr>

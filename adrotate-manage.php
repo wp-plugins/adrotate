@@ -163,7 +163,7 @@ function adrotate_insert_magic() {
  Return:	-None-
 -------------------------------------------------------------*/
 function adrotate_insert_group() {
-	global $wpdb, $adrotate_tracker;
+	global $wpdb;
 
 	$id 	= $_POST['adrotate_id'];
 	$name 	= $_POST['adrotate_group'];

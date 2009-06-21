@@ -176,65 +176,12 @@ function adrotate_credits() {
 	echo '	The plugin homepage is at <a href="http://meandmymac.net/plugins/adrotate/" target="_blank">http://meandmymac.net/plugins/adrotate/</a>. For information, usage and manuals on AdRotate!<br />';
 	echo '	Read about updates! <a href="http://meandmymac.net/tag/adrotate/" target="_blank">http://meandmymac.net/tag/adrotate/</a>.<br />';
 	echo '	Need help? <a href="http://forum.at.meandmymac.net" target="_blank">forum.at.meandmymac.net</a>. Please browse the forum for a bit before posting. Changes are you can help yourself!<br />';
+	echo '	Do you require more help than the forum can offer? <a href="http://meandmymac.net/contact-and-support/premium-support/" target="_blank">Premium Support</a> is available!<br />';
 	echo '	Like my software? Did i help you? <a href="http://meandmymac.net/donate/" target="_blank">Show your appreciation</a>. Thanks!</td>';
 	echo '</tr>';
 	echo '</tbody>';
 
 	echo '</table';
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_rss
-
- Purpose:   A very simple RSS parser for Meandmymac.net
- Receive:   $rss, $count
- Return:    -none-
--------------------------------------------------------------*/
-function adrotate_rss($rss, $count = 10) {
-	if ( is_string( $rss ) ) {
-		require_once(ABSPATH . WPINC . '/rss.php');
-		if ( !$rss = fetch_rss($rss) )
-			return;
-	}
-
-	if ( is_array( $rss->items ) && !empty( $rss->items ) ) {
-		$rss->items = array_slice($rss->items, 0, $count);
-		$loop = 1;
-		foreach ( (array) $rss->items as $item ) {
-			while ( strstr($item['link'], 'http') != $item['link'] )
-				$item['link'] = substr($item['link'], 1);
-
-			$link = clean_url(strip_tags($item['link']));
-			$desc = attribute_escape(strip_tags( $item['description']));
-			$title = attribute_escape(strip_tags($item['title']));
-			if ( empty($title) )
-				$title = __('Untitled');
-				
-			if (isset($item['pubdate']))
-				$date = $item['pubdate'];
-			elseif (isset($item['published']))
-				$date = $item['published'];
-
-			if ($date) {
-				if ($date_stamp = strtotime($date)) {
-					$date = date_i18n( get_option('date_format'), $date_stamp);
-				} else {
-					$date = '';
-				}
-			}				
-				
-			if ( $link == '' ) {
-				$array[$loop] = array ('title' => $title, 'desc' => $desc, 'link' => '', 'date' => $date);
-			} else {
-				$array[$loop] = array ('title' => $title, 'desc' => $desc, 'link' => $link, 'date' => $date);
-			}
-			$loop++;
-		}
-	} else {
-		$array[1] = array('title' => 'An error has occurred; the feed is probably down. Try again later.');
-	}
-	
-	return $array;
 }
 
 /*-------------------------------------------------------------
@@ -396,6 +343,62 @@ function adrotate_return($action, $arg = null) {
 			wp_redirect('admin.php?page=adrotate2&step='.$arg[0].'&message=error');
 		break;
 
+	}
+}
+
+/*-------------------------------------------------------------
+ Name:      meandmymac_rss
+
+ Purpose:   A very simple RSS parser for Meandmymac.net
+ Receive:   $rss, $count
+ Return:    -none-
+-------------------------------------------------------------*/
+if(!function_exists('meandmymac_rss')) {
+	function meandmymac_rss($rss, $count = 10) {
+		if ( is_string( $rss ) ) {
+			require_once(ABSPATH . WPINC . '/rss.php');
+			if ( !$rss = fetch_rss($rss) )
+				return;
+		}
+	
+		if ( is_array( $rss->items ) && !empty( $rss->items ) ) {
+			$rss->items = array_slice($rss->items, 0, $count);
+			$loop = 1;
+			foreach ( (array) $rss->items as $item ) {
+				while ( strstr($item['link'], 'http') != $item['link'] )
+					$item['link'] = substr($item['link'], 1);
+	
+				$link = clean_url(strip_tags($item['link']));
+				$desc = attribute_escape(strip_tags( $item['description']));
+				$title = attribute_escape(strip_tags($item['title']));
+				if ( empty($title) )
+					$title = __('Untitled');
+					
+				if (isset($item['pubdate']))
+					$date = $item['pubdate'];
+				elseif (isset($item['published']))
+					$date = $item['published'];
+	
+				if ($date) {
+					if ($date_stamp = strtotime($date)) {
+						$date = date_i18n( get_option('date_format'), $date_stamp);
+					} else {
+						$date = '';
+					}
+				}				
+					
+				if ( $link == '' ) {
+					$array[$loop] = array ('title' => $title, 'desc' => $desc, 'link' => '', 'date' => $date);
+				} else {
+					$array[$loop] = array ('title' => $title, 'desc' => $desc, 'link' => $link, 'date' => $date);
+				}
+				$loop++;
+			}
+		} else {
+			$array[1] = array('title' => 'An error has occurred; the feed is probably down. Try again later.');
+		}
+		
+		return $array;
 	}
 }
 ?>

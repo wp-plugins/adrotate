@@ -168,7 +168,7 @@ function adrotate_widget_init_2() {
 -------------------------------------------------------------*/
 function adrotate_dashboard_widget() {
 	wp_add_dashboard_widget( 'adrotate_stats_widget', 'Adrotate', 'adrotate_stats_widget' );
-	wp_add_dashboard_widget( 'adrotate_rss_widget', 'Meandmymac.net RSS Feed', 'adrotate_rss_widget' );
+	wp_add_dashboard_widget( 'meandmymac_rss_widget', 'Meandmymac.net RSS Feed', 'meandmymac_rss_widget' );
 }
 
 
@@ -254,7 +254,7 @@ function adrotate_stats_widget() {
 
 			<h4><label for="Last5">The last 5</label></h4>
 			<?php
-			$lastfive = $wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `tracker` = 'Y' ORDER BY `timer` DESC LIMIT 5");
+			$lastfive = $wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` ORDER BY `timer` DESC LIMIT 5");
 			?>
 			<div class="text-wrap">
 				<?php
@@ -280,32 +280,32 @@ function adrotate_stats_widget() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_rss_widget
+ Name:      meandmymac_rss_widget
 
- Purpose:   AdRotate stats
+ Purpose:   Shows the Meandmymac RSS feed on the dashboard
  Receive:   -none-
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_rss_widget() {
-	global $wpdb;
-
-	?>
-		<style type="text/css" media="screen">
-		#adrotate_rss_widget .text-wrap {
-			padding-top: 5px;
-			margin: 0.5em;
-			display: block;
-		}
-		</style>
+if(!function_exists('meandmymac_rss_widget')) {
+	function meandmymac_rss_widget() {
+		?>
+			<style type="text/css" media="screen">
+			#meandmymac_rss_widget .text-wrap {
+				padding-top: 5px;
+				margin: 0.5em;
+				display: block;
+			}
+			</style>
+		<?php
+		$rss = meandmymac_rss('http://meandmymac.net/feed/');
+		$loop = 1;
+		foreach($rss as $key => $item) { ?>
+				<div class="text-wrap">
+					<a href="<?php echo $item['link']; ?>" target="_blank"><?php echo $item['title']; ?></a> on <?php echo $item['date']; ?>.
+				</div>
 	<?php
-	$rss = adrotate_rss('http://meandmymac.net/feed/', 5);
-	$loop = 1;
-	foreach($rss as $key => $item) { ?>
-			<div class="text-wrap">
-				<a href="<?php echo $item['link']; ?>" target="_blank"><?php echo $item['title']; ?></a> on <?php echo $item['date']; ?>.
-			</div>
-<?php
-		$loop++;
+			$loop++;
+		}
 	}
 }
 ?>
