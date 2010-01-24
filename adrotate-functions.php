@@ -144,13 +144,21 @@ function adrotate_expired_banners() {
 	global $wpdb;
 
 	$now = current_time('timestamp');
-	$count = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $now");
+	$in2days = $now + 172800;
+	
+	$alreadyexpired = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $now");
+	$expiressoon = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $in2days AND `endshow` >= $now");
 
+	$count = $alreadyexpired + $expiressoon;
+	
 	if($count > 0) {
-		if($count == 1) $tell = '1 banner is';
-		 	else $tell = $count.' banners are';
-
-		echo '<div class="updated fade"><p>'.$tell.' expired. <a href="admin.php?page=adrotate">Take action</a>!</p></div>';
+		if($alreadyexpired > 0 and $expiressoon == 0) {
+			echo '<div class="error"><p>'.$alreadyexpired.' banner(s) expired. <a href="admin.php?page=adrotate">Take action</a>!</p></div>';
+		} else if($alreadyexpired == 0 and $expiressoon > 0) {
+			echo '<div class="updated"><p>'.$expiressoon.' banner(s) are about to expire. <a href="admin.php?page=adrotate">Check it out</a>!</p></div>';
+		} else {
+			echo '<div class="error"><p>'.$count.' banners require your attention. <a href="admin.php?page=adrotate">Fix it</a>!</p></div>';
+		}
 	}
 }
 
@@ -176,7 +184,6 @@ function adrotate_credits() {
 	echo '	The plugin homepage is at <a href="http://meandmymac.net/plugins/adrotate/" target="_blank">http://meandmymac.net/plugins/adrotate/</a>. For information, usage and manuals on AdRotate!<br />';
 	echo '	Read about updates! <a href="http://meandmymac.net/tag/adrotate/" target="_blank">http://meandmymac.net/tag/adrotate/</a>.<br />';
 	echo '	Need help? <a href="http://forum.at.meandmymac.net" target="_blank">forum.at.meandmymac.net</a>. Please browse the forum for a bit before posting. Changes are you can help yourself!<br />';
-	echo '	Do you require more help than the forum can offer? <a href="http://meandmymac.net/contact-and-support/premium-support/" target="_blank">Premium Support</a> is available!<br />';
 	echo '	Like my software? Did i help you? <a href="http://meandmymac.net/donate/" target="_blank">Show your appreciation</a>. Thanks!</td>';
 	echo '</tr>';
 	echo '</tbody>';
@@ -193,7 +200,7 @@ function adrotate_credits() {
 -------------------------------------------------------------*/
 function adrotate_meta() {
 	global $adrotate_config;
-	
+
 	if($adrotate_config['credits'] == "Y") {
 		echo "<li>I'm using <a href=\"http://meandmymac.net/plugins/adrotate/\" target=\"_blank\" title=\"AdRotate\">AdRotate</a></li>\n";
 	}
@@ -221,7 +228,6 @@ function adrotate_check_config() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_options_submit() {
-	// Prepare Tracker settings
 	if(isset($_POST['adrotate_credits'])) $config['credits'] = 'Y';
 		else $config['credits'] = 'N';
 
@@ -231,15 +237,19 @@ function adrotate_options_submit() {
 /*-------------------------------------------------------------
  Name:      adrotate_folder_contents
 
- Purpose:   List folder contents
+ Purpose:   List folder contents of /wp-content/banners and /wp-content/uploads/
  Receive:   $current
  Return:	$output
 -------------------------------------------------------------*/
 function adrotate_folder_contents($current) {
-	global $wpdb;
+	global $wpdb, $adrotate_config;
 
+	$output = '';
+
+	// Read /wp-content/banners/
+	$output .= "<option disabled>-- Banners Folder --</option>";
 	if ($handle = opendir(ABSPATH.'/wp-content/banners/')) {
-		$output = '';
+		$i=0;
 	    while (false !== ($file = readdir($handle))) {
 			$fileinfo = pathinfo($file);
 
@@ -250,11 +260,36 @@ function adrotate_folder_contents($current) {
 	            $output .= "<option ";
 	            if($current == $file) { $output .= "selected"; }
 	            $output .= ">".$file."</option>";
+	        $i++;
 	        }
 	    }
 	    closedir($handle);
+	    if($i==0) {
+	    	$output .= "<option disabled>&nbsp;&nbsp;&nbsp;No banners found</option>";
+		}
 	}
 
+	if($adrotate_config['browser'] == 'Y') {
+		// Read /wp-content/uploads/ from the WP database
+		$uploadedmedia = $wpdb->get_results("SELECT `guid` FROM ".$wpdb->prefix."posts 
+			WHERE `post_type` = 'attachment' 
+			AND (`post_mime_type` = 'image/jpeg' 
+				OR `post_mime_type` = 'image/gif' 
+				OR `post_mime_type` = 'image/png'
+				OR `post_mime_type` = 'application/x-shockwave-flash')
+			ORDER BY `post_title` ASC");
+		
+		$output .= "<option disabled>-- Uploaded Media --</option>";
+		if($uploadedmedia) {
+			foreach($uploadedmedia as $media) {
+		        $output .= "<option ";
+		        if($current == basename($media->guid)) { $output .= "selected"; }
+		        $output .= ">".basename($media->guid)."</option>";
+			}
+		}
+		$output .= "<option disabled>&nbsp;&nbsp;&nbsp;No media found</option>";
+	}
+	
 	return $output;
 }
 
@@ -267,50 +302,24 @@ function adrotate_folder_contents($current) {
 -------------------------------------------------------------*/
 function adrotate_return($action, $arg = null) {
 	switch($action) {
+		// Regular actions
 		case "new" :
-			wp_redirect('admin.php?page=adrotate3&message=created');
-		break;
-
-		case "magic_new" :
 			wp_redirect('admin.php?page=adrotate&message=created');
-		break;
-
-		case "group_new" :
-			wp_redirect('admin.php?page=adrotate4&message=created');
-		break;
-
-		case "group_edit" :
-			wp_redirect('admin.php?page=adrotate4&message=updated');
 		break;
 
 		case "update" :
 			wp_redirect('admin.php?page=adrotate3&message=updated&edit_banner='.$arg[0]);
 		break;
 
-		case "group_field_error" :
-			wp_redirect('admin.php?page=adrotate4&message=field_error&edit_group='.$arg[0]);
+		case "delete" :
+			wp_redirect('admin.php?page=adrotate&message=deleted');
 		break;
 
-		case "magic_field_error" :
-			wp_redirect('admin.php?page=adrotate2&message=field_error&step='.$arg[0].'&magic_id='.$arg[1]);
+		case "move" :
+			wp_redirect('admin.php?page=adrotate&message=moved');
 		break;
 
-		case "field_error" :
-			wp_redirect('admin.php?page=adrotate3&message=field_error');
-		break;
-
-		case "no_access" :
-			wp_redirect('admin.php?page=adrotate&message=no_access');
-		break;
-
-		case "deactivate" :
-			wp_redirect('admin.php?page=adrotate&message=deactivate');
-		break;
-
-		case "activate" :
-			wp_redirect('admin.php?page=adrotate&message=activate');
-		break;
-
+		// Manage Events
 		case "reset" :
 			wp_redirect('admin.php?page=adrotate3&message=reset&edit_banner='.$arg[0]);
 		break;
@@ -327,20 +336,59 @@ function adrotate_return($action, $arg = null) {
 			wp_redirect('admin.php?page=adrotate&message=renew');
 		break;
 
-		case "delete" :
-			wp_redirect('admin.php?page=adrotate&message=deleted');
+		case "deactivate" :
+			wp_redirect('admin.php?page=adrotate&message=deactivate');
+		break;
+
+		case "activate" :
+			wp_redirect('admin.php?page=adrotate&message=activate');
+		break;
+
+		// Groups
+		case "group_new" :
+			wp_redirect('admin.php?page=adrotate4&message=created');
+		break;
+
+		case "group_edit" :
+			wp_redirect('admin.php?page=adrotate4&message=updated');
+		break;
+
+		case "group_field_error" :
+			wp_redirect('admin.php?page=adrotate4&message=field_error&edit_group='.$arg[0]);
 		break;
 
 		case "group_delete" :
 			wp_redirect('admin.php?page=adrotate4&message=deleted');
 		break;
 
-		case "error" :
-			wp_redirect('admin.php?page=adrotate&message=error');
+		case "group_delete_banners" :
+			wp_redirect('admin.php?page=adrotate4&message=deleted_banners');
+		break;
+
+		// Wizard
+		case "magic_new" :
+			wp_redirect('admin.php?page=adrotate&message=created');
+		break;
+
+		case "magic_field_error" :
+			wp_redirect('admin.php?page=adrotate2&message=field_error&step='.$arg[0].'&magic_id='.$arg[1]);
 		break;
 
 		case "magic_error" :
 			wp_redirect('admin.php?page=adrotate2&step='.$arg[0].'&message=error');
+		break;
+
+		// Misc plugin events
+		case "no_access" :
+			wp_redirect('admin.php?page=adrotate&message=no_access');
+		break;
+
+		case "field_error" :
+			wp_redirect('admin.php?page=adrotate3&message=field_error');
+		break;
+
+		case "error" :
+			wp_redirect('admin.php?page=adrotate&message=error');
 		break;
 
 	}
@@ -357,48 +405,49 @@ if(!function_exists('meandmymac_rss')) {
 	function meandmymac_rss($rss, $count = 10) {
 		if ( is_string( $rss ) ) {
 			require_once(ABSPATH . WPINC . '/rss.php');
-			if ( !$rss = fetch_rss($rss) )
+			if ( !$rss = fetch_rss($rss) ) {
+				echo '<div class="text-wrap"><span class="rsserror">The feed could not be fetched, try again later!</span></div>';
 				return;
+			}
 		}
-	
+
 		if ( is_array( $rss->items ) && !empty( $rss->items ) ) {
 			$rss->items = array_slice($rss->items, 0, $count);
-			$loop = 1;
 			foreach ( (array) $rss->items as $item ) {
-				while ( strstr($item['link'], 'http') != $item['link'] )
+				while ( strstr($item['link'], 'http') != $item['link'] ) {
 					$item['link'] = substr($item['link'], 1);
-	
+				}
+
 				$link = clean_url(strip_tags($item['link']));
 				$desc = attribute_escape(strip_tags( $item['description']));
 				$title = attribute_escape(strip_tags($item['title']));
-				if ( empty($title) )
+				if ( empty($title) ) {
 					$title = __('Untitled');
-					
-				if (isset($item['pubdate']))
+				}
+				
+				if ( empty($link) ) {
+					$link = "#";
+				}
+
+				if (isset($item['pubdate'])) {
 					$date = $item['pubdate'];
-				elseif (isset($item['published']))
+				} elseif (isset($item['published'])) {
 					$date = $item['published'];
-	
+				}
+
 				if ($date) {
 					if ($date_stamp = strtotime($date)) {
 						$date = date_i18n( get_option('date_format'), $date_stamp);
 					} else {
 						$date = '';
 					}
-				}				
-					
-				if ( $link == '' ) {
-					$array[$loop] = array ('title' => $title, 'desc' => $desc, 'link' => '', 'date' => $date);
-				} else {
-					$array[$loop] = array ('title' => $title, 'desc' => $desc, 'link' => $link, 'date' => $date);
 				}
-				$loop++;
+				echo '<div class="text-wrap"><a href="'.$link.'" target="_blank">'.$title.'</a> on '.$date.'</div>';
 			}
 		} else {
-			$array[1] = array('title' => 'An error has occurred; the feed is probably down. Try again later.');
+			echo '<div class="text-wrap"><span class="rsserror">The feed appears to be invalid or corrupt!</span></div>';
 		}
-		
-		return $array;
+		return;
 	}
 }
 ?>

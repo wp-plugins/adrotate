@@ -40,7 +40,9 @@ function adrotate_activate() {
 			  `link` longtext NOT NULL,
 			  `tracker` varchar(5) NOT NULL default 'N',
 			  `clicks` int(15) NOT NULL default '0',
+			  `maxclicks` int(15) NOT NULL default '0',
 			  `shown` int(15) NOT NULL default '0',
+			  `maxshown` int(15) NOT NULL default '0',			  
 			  `magic` int(1) NOT NULL default '0',
 	  		PRIMARY KEY  (`id`)
 			) ".$charset_collate;
@@ -144,10 +146,11 @@ function adrotate_activate() {
 		}
 
 		if (!in_array('magic', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'magic', 'VARCHAR( 1 ) NOT NULL DEFAULT \'0\'', 'shown');
+			$upgrade = adrotate_update_table('add', $tables[0], 'magic', 'VARCHAR( 1 ) NOT NULL DEFAULT \'0\'', 'maxshown');
 		} else {
 			$mysql = true;
 		}
+		
 	} else { // Or send out epic fail!
 		$upgrade = false;
 	}
@@ -238,7 +241,7 @@ function adrotate_mysql_table_exists($tablename) {
  Return:	-none-
 -------------------------------------------------------------*/
 function adrotate_mysql_warning() {
-	echo '<div class="updated"><h3>WARNING! There was an error with MySQL! One or more queries failed. This means the database has not been created or only partly. Seek support at the <a href="http://forum.at.meandmymac.net">meandmymac.net support forums</a>. Please include any errors you saw or anything that might have caused this issue . This helps speed up the process greatly!</h3></div>';
+	echo '<div class="updated"><h3>WARNING! There was an error with MySQL! One or more queries failed. This means the database has not been created or only partly. Seek support at the <a href="http://forum.at.meandmymac.net">meandmymac.net support forums</a>. Please include any errors you saw or anything that might have caused this issue. This helps speed up the process greatly!</h3></div>';
 }
 
 /*-------------------------------------------------------------
@@ -249,7 +252,7 @@ function adrotate_mysql_warning() {
  Return:	-none-
 -------------------------------------------------------------*/
 function adrotate_mysql_upgrade_error() {
-	echo '<div class="updated"><h3>WARNING! The MySQL table was not properly upgraded! AdRotate cannot work properly without this upgrade. Check your MySQL permissions and see if you have ALTER rights (rights to alter existing tables) contact your webhost/sysadmin if you must. If this brings no answers seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a> and mention any errors you saw/got and explain what you were doing!</h3></div>';
+	echo '<div class="updated"><h3>WARNING! The MySQL table was not properly upgraded! AdRotate cannot work without this upgrade. Check your MySQL permissions and see if you have ALTER rights (rights to alter existing tables) contact your webhost/sysadmin if you don\'t know. If this brings no answers seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a> and mention any errors you saw/got and explain what you were doing!</h3></div>';
 }
 
 /*-------------------------------------------------------------

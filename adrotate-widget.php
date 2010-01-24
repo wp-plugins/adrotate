@@ -18,9 +18,7 @@ function adrotate_widget_init_1() {
 		extract($args);
 
 		echo $before_widget . $before_title . $options['title'] . $after_title;
-		echo '<ul><li>';
-			echo adrotate_banner($options['group'], $options['banner'], $options['block'], $options['column'], false);
-		echo '</li></ul>';
+		echo adrotate_banner($options['group'], $options['banner'], $options['block'], $options['column'], false);
 		echo $after_widget;
 
 	}
@@ -98,9 +96,7 @@ function adrotate_widget_init_2() {
 		extract($args);
 
 		echo $before_widget . $before_title . $options['title'] . $after_title;
-		echo '<ul><li>';
-			echo adrotate_banner($options['group'], $options['banner'], $options['block'], $options['column'], false);
-		echo '</li></ul>';
+		echo adrotate_banner($options['group'], $options['banner'], $options['block'], $options['column'], false);
 		echo $after_widget;
 
 	}
@@ -295,17 +291,11 @@ if(!function_exists('meandmymac_rss_widget')) {
 				margin: 0.5em;
 				display: block;
 			}
+			#meandmymac_rss_widget .text-wrap .rsserror {
+				color: #f00;
+			}
 			</style>
-		<?php
-		$rss = meandmymac_rss('http://meandmymac.net/feed/');
-		$loop = 1;
-		foreach($rss as $key => $item) { ?>
-				<div class="text-wrap">
-					<a href="<?php echo $item['link']; ?>" target="_blank"><?php echo $item['title']; ?></a> on <?php echo $item['date']; ?>.
-				</div>
-	<?php
-			$loop++;
-		}
+		<?php meandmymac_rss('http://meandmymac.net/feed/');
 	}
 }
 ?>
