@@ -3,7 +3,7 @@
  Name:      adrotate_banner
 
  Purpose:   Show a banner as requested in the WP Theme or post
- Receive:   $group_ids, $banner_id, $block, $preview
+ Receive:   $group_ids, $banner_id, $block, $column, $preview
  Return:    $output
 -------------------------------------------------------------*/
 function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $column = 0, $preview = false) {
@@ -65,7 +65,8 @@ function adrotate_banner($group_ids, $banner_id = 0, $block = 0, $column = 0, $p
 					} else {
 						$banner_output = str_replace('%link%', $banner->link, $banner_output);
 					}
-					$banner_output = str_replace('%image%', get_option('siteurl').'/wp-content/banners/'.$banner->image, $banner_output);
+					$banner_output = str_replace('%image%', $banner->image, $banner_output);
+					$banner_output = str_replace('%id%', $banner->id, $banner_output);
 
 					$output .= $banner_output;
 					if($column > 0 AND $cutoff == $column) {
@@ -216,6 +217,7 @@ function adrotate_meta() {
 function adrotate_check_config() {
 	if ( !$config = get_option('adrotate_config') ) {
 		$config['credits']		 		= 'Y';
+		$config['browser']		 		= 'N';
 		update_option('adrotate_config', $config);
 	}
 }
@@ -230,6 +232,8 @@ function adrotate_check_config() {
 function adrotate_options_submit() {
 	if(isset($_POST['adrotate_credits'])) $config['credits'] = 'Y';
 		else $config['credits'] = 'N';
+	if(isset($_POST['adrotate_browser'])) $config['browser'] = 'Y';
+		else $config['browser'] = 'N';
 
 	update_option('adrotate_config', $config);
 }
@@ -257,7 +261,7 @@ function adrotate_folder_contents($current) {
 	        AND (strtolower($fileinfo['extension']) == "jpg" OR strtolower($fileinfo['extension']) == "gif"
 	        OR strtolower($fileinfo['extension']) == "png" OR strtolower($fileinfo['extension']) == "jpeg"
 	        OR strtolower($fileinfo['extension']) == "swf" OR strtolower($fileinfo['extension']) == "flv")) {
-	            $output .= "<option ";
+	            $output .= "<option value='banner|".$file."'";
 	            if($current == $file) { $output .= "selected"; }
 	            $output .= ">".$file."</option>";
 	        $i++;
@@ -269,8 +273,8 @@ function adrotate_folder_contents($current) {
 		}
 	}
 
+	// Read /wp-content/uploads/ from the WP database
 	if($adrotate_config['browser'] == 'Y') {
-		// Read /wp-content/uploads/ from the WP database
 		$uploadedmedia = $wpdb->get_results("SELECT `guid` FROM ".$wpdb->prefix."posts 
 			WHERE `post_type` = 'attachment' 
 			AND (`post_mime_type` = 'image/jpeg' 
@@ -282,7 +286,7 @@ function adrotate_folder_contents($current) {
 		$output .= "<option disabled>-- Uploaded Media --</option>";
 		if($uploadedmedia) {
 			foreach($uploadedmedia as $media) {
-		        $output .= "<option ";
+		        $output .= "<option value='media|".basename($media->guid)."'";
 		        if($current == basename($media->guid)) { $output .= "selected"; }
 		        $output .= ">".basename($media->guid)."</option>";
 			}

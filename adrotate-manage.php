@@ -16,7 +16,7 @@ function adrotate_insert_input() {
 	$thetime 			= date('U');
 	$active 			= $_POST['adrotate_active'];
 	$group				= $_POST['adrotate_group'];
-	$image				= $_POST['adrotate_image'];
+	$imageraw			= $_POST['adrotate_image'];
 	$link				= htmlspecialchars(trim($_POST['adrotate_link'], "\t\n "), ENT_QUOTES);
 	$tracker			= $_POST['adrotate_tracker'];
 	$sday 				= htmlspecialchars(trim($_POST['adrotate_sday'], "\t\n "), ENT_QUOTES);
@@ -41,6 +41,21 @@ function adrotate_insert_input() {
 
 		$startdate 	= gmmktime($shour, $sminute, 0, $smonth, $sday, $syear);
 		$enddate 	= gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear);
+
+		list($type, $file)	= explode("|", $imageraw, 2);
+		if($type == "banner") {
+			$image = get_option('siteurl').'/wp-content/banners/'.$file;
+		}
+		
+		if($type == "media") {
+			$image = $wpdb->get_var("SELECT `guid` FROM ".$wpdb->prefix."posts 
+			WHERE `post_type` = 'attachment' 
+			AND (`post_mime_type` = 'image/jpeg' 
+				OR `post_mime_type` = 'image/gif' 
+				OR `post_mime_type` = 'image/png'
+				OR `post_mime_type` = 'application/x-shockwave-flash')
+			AND `guid` LIKE '%".$file."' LIMIT 1");
+		}			
 
 		if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';
 			else $tracker = 'N';

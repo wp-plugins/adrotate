@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: Make making money easy with AdRotate. Add advanced banners to your website using the simplest interface available!
 Author: Arnan de Gans
-Version: 2.5
+Version: 2.5.1
 Author URI: http://meandmymac.net/
 */
 
@@ -41,7 +41,7 @@ if(isset($_POST['adrotate_group_submit'])) {
 	add_action('init', 'adrotate_insert_group');
 }
 
-if(isset($_POST['adrotate_action']) or isset($_POST['adrotate_move'])) {
+if(isset($_POST['adrotate_action'])) {
 	add_action('init', 'adrotate_request_action');
 }
 
@@ -272,6 +272,8 @@ function adrotate_edit() {
 
 		if ($message == 'no_access') { ?>
 			<div id="message" class="updated fade"><p>Action prohibited.</p></div>
+		<?php } else if ($message == 'updated') { ?>
+			<div id="message" class="updated fade"><p>Banner <strong>updated</strong>.</p></div>
 		<?php } else if ($message == 'field_error') { ?>
 			<div id="message" class="updated fade"><p>Not all fields met the requirements.</p></div>
 		<?php } else if ($message == 'reset') { ?>
@@ -302,7 +304,7 @@ function adrotate_edit() {
 			      	<tr>
 				        <th scope="row" width="25%">Code:</th>
 				        <td colspan="3"><textarea tabindex="2" name="adrotate_bannercode" cols="70" rows="10"><?php echo stripslashes($edit_banner->bannercode); ?></textarea>
-				        <br /><em><?php if($edit_banner->magic == 0) { ?>Options: %image%, %link%. <?php } ?>HTML/JavaScript allowed, use with care!</em></td>
+				        <br /><em>Options: %id%<?php if($edit_banner->magic == 0) { ?>, %image%, %link%<?php } ?>. HTML/JavaScript allowed, use with care!</em></td>
 			      	</tr>
 			      	<tr>
 					    <th scope="row">Group:</th>
@@ -461,8 +463,8 @@ function adrotate_edit() {
    						<?php if($banner->shown == 0) $edit_banner->shown = 1; ?>
 				        <td width="25%"><?php if($edit_banner->tracker == "Y") { echo round((100/$edit_banner->shown)*$edit_banner->clicks,2).' %'; } else { echo 'N/A'; } ?></td>
 				        <th scope="row">Actions:</th>
-				        <td width="25%"><input onclick="return confirm('You are about to reset the stats for this banner!\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Reset" name="adrotate_action" class="button-secondary delete" />
-				        <input onclick="return confirm('Renew this banner for 1 more year?\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="Renew" name="adrotate_action" class="button-secondary delete" /></td>
+				        <td width="25%"><input onclick="return confirm('You are about to reset the stats for this banner!\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="reset" name="adrotate_action" class="button-secondary delete" />
+				        <input onclick="return confirm('Renew this banner for 1 more year?\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="renew" name="adrotate_action" class="button-secondary delete" /></td>
 			      	</tr>
 					</tbody>
 				<?php } ?>
