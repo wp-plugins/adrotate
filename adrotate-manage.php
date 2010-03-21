@@ -167,15 +167,16 @@ function adrotate_insert_magic() {
 function adrotate_insert_group() {
 	global $wpdb;
 
-	$id 	= $_POST['adrotate_id'];
-	$name 	= $_POST['adrotate_group'];
+	$id 		= $_POST['adrotate_id'];
+	$name 		= $_POST['adrotate_group'];
+	$fallback 	= $_POST['adrotate_fallback'];
 
 	if (strlen($name) != 0) {
 		if($id > 0) {
-			$postquery = "UPDATE `".$wpdb->prefix."adrotate_groups` SET `name` = '$name' WHERE `id` = '$id'";
+			$postquery = "UPDATE `".$wpdb->prefix."adrotate_groups` SET `name` = '$name', `fallback` = '$fallback' WHERE `id` = '$id'";
 			$action = "group_edit";
 		} else {
-			$postquery = "INSERT INTO `".$wpdb->prefix."adrotate_groups` (`name`) VALUES ('$name')";
+			$postquery = "INSERT INTO `".$wpdb->prefix."adrotate_groups` (`name`, `fallback`) VALUES ('$name', '$fallback')";
 			$action = "group_new";
 		}
 		if($wpdb->query($postquery) !== FALSE) {

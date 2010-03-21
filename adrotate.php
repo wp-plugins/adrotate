@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: Make making money easy with AdRotate. Add advanced banners to your website using the simplest interface available!
 Author: Arnan de Gans
-Version: 2.5.1
+Version: 2.6
 Author URI: http://meandmymac.net/
 */
 
@@ -24,8 +24,7 @@ adrotate_clean_trackerdata();
 add_shortcode('adrotate', 'adrotate_shortcode');
 add_action('admin_notices','adrotate_expired_banners');
 add_action('admin_menu', 'adrotate_dashboard');
-add_action('widgets_init', 'adrotate_widget_init_1');
-add_action('widgets_init', 'adrotate_widget_init_2');
+add_action('widgets_init', 'adrotate_widget_init');
 add_action('wp_dashboard_setup', 'adrotate_dashboard_widget');
 add_action('wp_meta', 'adrotate_meta');
 
@@ -129,7 +128,7 @@ function adrotate_manage() {
 						<?php if ($groups) { ?>
 				        	<option disabled>Move selection to category</option>
 							<?php foreach($groups as $group) { ?>
-						        <option value="move-<?php echo $group->id;?>"><?php echo $group->name;?></option>
+						        <option value="move-<?php echo $group->id;?>"><?php echo $group->id;?> - <?php echo $group->name;?></option>
 				 			<?php } ?>
 						<?php } ?>
 					</select>
@@ -312,7 +311,7 @@ function adrotate_edit() {
 				        <select tabindex="3" name='adrotate_group' id='cat' class='postform'>
 						<?php foreach($groups as $group) {
 							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
-						    <option value="<?php echo $group->id; ?>" <?php if($group->id == $edit_banner->group) { echo 'selected'; } ?>><?php echo $group->name; ?></option>
+						    <option value="<?php echo $group->id; ?>" <?php if($group->id == $edit_banner->group) { echo 'selected'; } ?>><?php echo $group->id; ?> - <?php echo $group->name; ?></option>
 				    	<?php } ?>
 				    	</select>
 						</td>
@@ -548,13 +547,14 @@ function adrotate_manage_group() {
 						<th scope="col" class="check-column">&nbsp;</th>
 						<th scope="col" width="5%"><center>ID</center></th>
 						<th scope="col">Name</th>
+						<th scope="col" width="10%"><center>Fallback</center></th>
 						<th scope="col" width="10%"><center>Banners</center></th>
 					</tr>
 	  			</thead>
-	  			<tbody>
-			<?php
-			if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups')) {
-				$groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` ORDER BY `id`");
+				<tbody>
+	  			
+			<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups')) { ?>
+				<?php $groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` ORDER BY `id`");
 				if ($groups) {
 					foreach($groups as $group) {
 						$banners_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `" . $wpdb->prefix . "adrotate` WHERE `group` = $group->id");
@@ -563,19 +563,61 @@ function adrotate_manage_group() {
 							<th scope="row" class="check-column"><input type="checkbox" name="groupcheck[]" value="<?php echo $group->id; ?>" /></th>
 							<td><center><?php echo $group->id;?></center></td>
 							<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate4&amp;edit_group='.$group->id;?>" title="Edit"><?php echo $group->name;?></a></strong></td>
+							<td><center><?php if($group->fallback == 0) { echo "No"; } else { echo $group->fallback; } ?></center></td>
 							<td><center><?php echo $banners_in_group;?></center></td>
 						</tr>
 		 			<?php } ?>
-				<?php }
-			} else { ?>
+				<?php } else { ?>
+					<tr id='no-groups'>
+						<th scope="row" class="check-column">&nbsp;</th>
+						<td colspan="3"><em>No groups created yet!</em></td>
+					</tr>
+				<?php } ?>
+			<?php } else { ?>
 				<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a></span></td></tr>
 			<?php }	?>
-				    <tr id='group-new'>
-						<th scope="row" class="check-column">&nbsp;</th>
-						<td colspan="3"><input name="adrotate_group" type="text" class="search-input" size="40" value="" autocomplete="off" /> <input type="submit" id="post-query-submit" name="adrotate_group_submit" value="Add" class="button-secondary" /></td>
-					</tr>
 	 			</tbody>
 			</table>
+
+			<br class="clear" />
+
+		   	<table class="widefat" style="margin-top: .5em">
+	  			<thead>
+	  				<tr>
+						<th scope="col" colspan="2">Create a new group</th>
+					</tr>
+	  			</thead>
+				<tbody>
+	  			
+			<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups')) { ?>
+				<?php $groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` ORDER BY `id`"); ?>
+				    <tr id='group-new'>
+						<th scope="row">Name:</th>
+						<td><input tabindex="1" name="adrotate_group" type="text" class="search-input" size="40" value="" autocomplete="off" /></td>
+					</tr>
+				    <tr id='group-new'>
+						<th scope="row">Fallback ads?</th>
+						<td><select name="adrotate_fallback">
+				        <option value="0">No</option>
+					<?php if ($groups and count($groups) > 1) { ?>
+						<?php foreach($groups as $group) { ?>
+					        <option value="<?php echo $group->id;?>"><?php echo $group->id;?> - <?php echo $group->name;?></option>
+			 			<?php } ?>
+					<?php } ?>
+						</select> <em>You need atleast two groups to use this feature!</em></td>
+					</tr>
+					
+			<?php } else { ?>
+				<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a></span></td></tr>
+			<?php }	?>
+	 			</tbody>
+			</table>
+			
+	    	<p class="submit">
+				<input tabindex="3" type="submit" name="adrotate_group_submit" class="button-primary" value="Add Group" />
+				<a href="admin.php?page=adrotate4" class="button">Cancel</a>
+	    	</p>
+
 			</form>
 
 			<br class="clear" />
@@ -585,6 +627,7 @@ function adrotate_manage_group() {
 
 			<?php
 			$edit_group = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = '$group_edit_id'");
+			$groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` ORDER BY `id`");
 
 			if ($message == 'field_error') { ?>
 				<div id="message" class="updated fade"><p>Please fill in a name for your group!</p></div>
@@ -610,6 +653,18 @@ function adrotate_manage_group() {
 				      	<tr>
 					        <th scope="row" width="25%">Name:</th>
 					        <td><input tabindex="1" name="adrotate_group" type="text" size="67" class="search-input" autocomplete="off" value="<?php echo $edit_group->name;?>" /></td>
+				      	</tr>
+				      	<tr>
+					        <th scope="row" width="25%">Fallback ads:</th>
+					        <td><select name="adrotate_fallback">
+						        <option value="0">No</option>
+							<?php if ($groups and count($groups) > 1) { ?>
+								<?php foreach($groups as $group) { ?>
+							        <option value="<?php echo $group->id;?>" <?php if($group->id == $group_edit_id) { echo 'disabled'; } ?> <?php if($group->id == $edit_group->fallback) { echo 'selected'; } ?>><?php echo $group->id;?> - <?php echo $group->name;?></option>
+					 			<?php } ?>
+							<?php } ?>
+								</select> <em>You need atleast two groups to use this feature!</em>
+							</td>
 				      	</tr>
 				      	</tbody>
 
@@ -749,10 +804,10 @@ function adrotate_wizard() {
 				    <th scope="row">Select a group:</th>
 			        <td colspan="3">
 			        <select tabindex="1" name='adrotate_group' id='cat' class='postform'>
-			        	<option value="">Pick one ...</option>
+			        	<option value="" <?php if($edit->group == "") { echo 'selected'; } ?>>New Group</option>
 					<?php $groups = $wpdb->get_results("SELECT `id`, `name` FROM `".$wpdb->prefix."adrotate_groups` ORDER BY `name`");
 					foreach($groups as $group) { ?>
-					    <option value="<?php echo $group->id; ?>" <?php if($edit->group == $group->id) { echo 'selected'; } ?>><?php echo $group->name; ?></option>
+					    <option value="<?php echo $group->id; ?>" <?php if($edit->group == $group->id) { echo 'selected'; } ?>><?php echo $group->id; ?> - <?php echo $group->name; ?></option>
 			    	<?php } ?>
 			    	</select>
 					</td>
@@ -877,7 +932,7 @@ function adrotate_wizard() {
 				        <td colspan="4">This banner, '<strong><?php echo $edit->title; ?></strong>' (ID: <?php echo $edit->id; ?>)<br />
 				        Is to be shown from <strong><?php echo date('l j F, Y', $edit->startshow); ?></strong> to <strong><?php echo date('l j F, Y', $edit->endshow); ?></strong><br /> 
 				        Attached to group '<strong><?php echo $group; ?></strong>' (ID: <?php echo $edit->group; ?>).<br />
-				        The max clicks is set to <strong><?php echo $edit->maxclicks; ?></strong> and max views/shown to <strong><?php echo $edit->maxshown; ?></strong>. <em>0 means disabled!</em></td>
+				        </td>
 			      	</tr>
 				</tbody>
 
@@ -942,6 +997,10 @@ function adrotate_options() {
 			<tr>
 				<th scope="row" valign="top">Media Browser</th>
 				<td><input type="checkbox" name="adrotate_browser" <?php if($adrotate_config['browser'] == 'Y') { ?>checked="checked" <?php } ?> /> Include images and flash files from the media browser in the image selector.</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Widget alignment</th>
+				<td><input type="checkbox" name="adrotate_widgetalign" <?php if($adrotate_config['widgetalign'] == 'Y') { ?>checked="checked" <?php } ?> /> Check this box if your widgets do not align in your themes sidebar. (Does not always help!)</td>
 			</tr>
 			<tr>
 				<th scope="row" valign="top">Credits</th>

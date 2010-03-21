@@ -1,158 +1,105 @@
 <?php
 /*-------------------------------------------------------------
- Name:      adrotate_widget_init_1
+ Name:      adrotate_widget
 
- Purpose:   Widget for the sidebar
+ Purpose:   Unlimited widgets for the sidebar
  Receive:   -none-
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_widget_init_1() {
+class adrotate_widget extends WP_Widget {
 
-	if ( !function_exists('register_sidebar_widget') )
-		return;
-	if ( !function_exists('adrotate_banner') )
-		return;
+	function adrotate_widget() {
+		$widget_ops = array('classname' => 'adrotate_widget', 'description' => "Add banners in the sidebar." );
+		$this->WP_Widget('adrotate', __('AdRotate'), $widget_ops);
+	}
 
-	function adrotate_widget_1($args) {
-		$options = get_option('widget_adrotate_1');
-		extract($args);
+	function widget( $args, $instance ) {
+		extract( $args );
 
-		echo $before_widget . $before_title . $options['title'] . $after_title;
-		echo adrotate_banner($options['group'], $options['banner'], $options['block'], $options['column'], false);
+		$title = apply_filters('widget_title', empty( $instance['title'] ) ? '' : $instance['title']);
+
+		echo $before_widget;
+		if ($title)
+			echo $before_title . $title . $after_title;
+		
+		if($adrotate_config['widgetalign'] == 'Y')
+			echo '<ul><li>';
+			
+		echo adrotate_banner($instance['group'], $instance['banner'], $instance['block'], $instance['column'], false, $adrotate_config['fallbackads']);
+		
+		if($adrotate_config['widgetalign'] == 'Y')
+			echo '</li></ul>';
+		
 		echo $after_widget;
-
 	}
 
-	function adrotate_widget_control_1() {
-		$options = $newoptions = get_option('widget_adrotate_1');
-		if ( $_POST['adrotate-submit-1'] ) {
-			$newoptions['title'] = strip_tags(stripslashes($_POST['adrotate-title-1']));
-			$newoptions['group'] = strip_tags(stripslashes($_POST['adrotate-group-1']));
-			$newoptions['block'] = strip_tags(stripslashes($_POST['adrotate-block-1']));
-			$newoptions['column'] = strip_tags(stripslashes($_POST['adrotate-column-1']));
-			$newoptions['banner'] = strip_tags(stripslashes($_POST['adrotate-banner-1']));
-		}
-		if ( $options != $newoptions ) {
-			$options = $newoptions;
-			update_option('widget_adrotate_1', $options);
-		}
-		$title = attribute_escape($options['title']);
-		$group = attribute_escape($options['group']);
-		$block = attribute_escape($options['block']);
-		$column = attribute_escape($options['column']);
-		$banner = attribute_escape($options['banner']);
-	?>
-			<p>
-				<label for="adrotate-title-1">Title: <input class="widefat" id="adrotate-title-1" name="adrotate-title-1" type="text" value="<?php echo $title; ?>" /></label>
-				<br />
-				<small>HTML will be stripped out.</small>
-			</p>
-			<p>
-				<label for="adrotate-group-1">Group: <input  class="widefat" id="adrotate-group-1" name="adrotate-group-1" type="text" value="<?php echo $group; ?>" /></label>
-				<br />
-				<small>Group IDs. If multiple, separate them with commas (ie. 2,3,12,5).</small>
-			</p>
-			<p>
-				<label for="adrotate-banner-1">Banner (Optional): <input class="widefat" id="adrotate-banner-1" name="adrotate-banner-1" type="text" value="<?php echo $banner; ?>" /></label>
-				<br />
-				<small>Leave empty for multiple groups or when using a block! Do NOT enter multiple numbers here!</small>
-			</p>
-			<p>
-				<label for="adrotate-block-1">Block (Optional): <input  class="widefat" id="adrotate-block-1" name="adrotate-block-1" type="text" value="<?php echo $block; ?>" /></label>
-				<br />
-				<small>Sets the amount of banners in a block.</small>
-			</p>
-			<p>
-				<label for="adrotate-column-1">Columns (Optional): <input  class="widefat" id="adrotate-column-1" name="adrotate-column-1" type="text" value="<?php echo $column; ?>" /></label>
-				<br />
-				<small>Define how many columns your ad-block has.</small>
-			</p>
-			<input type="hidden" id="adrotate-submit" name="adrotate-submit-1" value="1" />
-	<?php
+	function update( $new_instance, $old_instance ) {
+		$new_instance['title'] = strip_tags($new_instance['title']);
+		$new_instance['group'] = strip_tags($new_instance['group']);
+		$new_instance['block'] = strip_tags($new_instance['block']);
+		$new_instance['column'] = strip_tags($new_instance['column']);
+		$new_instance['banner'] = strip_tags($new_instance['banner']);	
+
+		$instance=wp_parse_args($new_instance,$old_instance);
+		return $instance;
 	}
 
+	function form( $instance ) {
+		//Defaults
+		$defaults = array();
+		$instance = wp_parse_args( (array) $instance, $defaults );
+		extract($instance);
+		$title = esc_attr( $title );
+		$group = esc_attr( $group );
+		$block = esc_attr( $block );
+		$column = esc_attr( $column );
+		$banner = esc_attr( $banner );
 
-	$widget_ops = array('classname' => 'adrotate_widget_1', 'description' => "Add banners in the sidebar." );
-	wp_register_sidebar_widget('AdRotate_1', 'AdRotate 1', 'adrotate_widget_1', $widget_ops);
-	wp_register_widget_control('AdRotate_1', 'AdRotate 1', 'adrotate_widget_control_1' );
+?>
+		<p>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title (optional):' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
+			<br />
+			<small><?php _e( 'HTML will be stripped out.' ); ?></small>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id('group'); ?>"><?php _e( 'Group:' ); ?></label>
+			<input  class="widefat" id="<?php echo $this->get_field_id('group'); ?>" name="<?php echo $this->get_field_name('group'); ?>" type="text" value="<?php echo $group; ?>" />
+			<br />
+			<small><?php _e( 'Group IDs. If multiple, separate them with commas (ie. 2,3,12,5).' ); ?></small>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id('banner'); ?>"><?php _e( 'Banner (Optional):' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id('banner'); ?>" name="<?php echo $this->get_field_name('banner'); ?>" type="text" value="<?php echo $banner; ?>" />
+			<br />
+			<small><?php _e( 'Leave empty for multiple groups or when using a block! Do NOT enter multiple numbers here!' ); ?></small>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id('block'); ?>"><?php _e( 'Block (Optional):' ); ?></label>
+			<input  class="widefat" id="<?php echo $this->get_field_id('block'); ?>" name="<?php echo $this->get_field_name('block'); ?>" type="text" value="<?php echo $block; ?>" />
+			<br />
+			<small><?php _e( 'Sets the amount of banners in a block.' ); ?></small>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id('column'); ?>"><?php _e( 'Columns (Optional):' ); ?></label>
+			<input  class="widefat" id="<?php echo $this->get_field_id('column'); ?>" name="<?php echo $this->get_field_name('column'); ?>" type="text" value="<?php echo $column; ?>" />
+			<br />
+			<small><?php _e( 'Define how many columns your ad-block has.' ); ?></small>
+		</p>
+<?php
+	}
+
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_widget_init_2
+ Name:      adrotate_widget_init
 
- Purpose:   Widget for the sidebar
+ Purpose:   Initialize unlimited widgets for AdRotate
  Receive:   -none-
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_widget_init_2() {
-
-	if ( !function_exists('register_sidebar_widget') )
-		return;
-	if ( !function_exists('adrotate_banner') )
-		return;
-
-	function adrotate_widget_2($args) {
-		$options = get_option('widget_adrotate_2');
-		extract($args);
-
-		echo $before_widget . $before_title . $options['title'] . $after_title;
-		echo adrotate_banner($options['group'], $options['banner'], $options['block'], $options['column'], false);
-		echo $after_widget;
-
-	}
-
-	function adrotate_widget_control_2() {
-		$options = $newoptions = get_option('widget_adrotate_2');
-		if ( $_POST['adrotate-submit-2'] ) {
-			$newoptions['title'] = strip_tags(stripslashes($_POST['adrotate-title-2']));
-			$newoptions['group'] = strip_tags(stripslashes($_POST['adrotate-group-2']));
-			$newoptions['block'] = strip_tags(stripslashes($_POST['adrotate-block-2']));
-			$newoptions['column'] = strip_tags(stripslashes($_POST['adrotate-column-2']));
-			$newoptions['banner'] = strip_tags(stripslashes($_POST['adrotate-banner-2']));
-		}
-		if ( $options != $newoptions ) {
-			$options = $newoptions;
-			update_option('widget_adrotate_2', $options);
-		}
-		$title = attribute_escape($options['title']);
-		$group = attribute_escape($options['group']);
-		$block = attribute_escape($options['block']);
-		$column = attribute_escape($options['column']);
-		$banner = attribute_escape($options['banner']);
-	?>
-			<p>
-				<label for="adrotate-title-2">Title: <input class="widefat" id="adrotate-title-2" name="adrotate-title-2" type="text" value="<?php echo $title; ?>" /></label>
-				<br />
-				<small>HTML will be stripped out.</small>
-			</p>
-			<p>
-				<label for="adrotate-group-2">Group: <input  class="widefat" id="adrotate-group-2" name="adrotate-group-2" type="text" value="<?php echo $group; ?>" /></label>
-				<br />
-				<small>Group IDs. If multiple, separate them with commas (ie. 2,3,12,5).</small>
-			</p>
-			<p>
-				<label for="adrotate-banner-2">Banner (Optional): <input class="widefat" id="adrotate-banner-2" name="adrotate-banner-2" type="text" value="<?php echo $banner; ?>" /></label>
-				<br />
-				<small>Leave empty for multiple groups or when using a block! Do NOT enter multiple numbers here!</small>
-			</p>
-			<p>
-				<label for="adrotate-block-2">Block (Optional): <input  class="widefat" id="adrotate-block-2" name="adrotate-block-2" type="text" value="<?php echo $block; ?>" /></label>
-				<br />
-				<small>Sets the amount of banners in a block.</small>
-			</p>
-			<p>
-				<label for="adrotate-column-2">Columns (Optional): <input  class="widefat" id="adrotate-column-2" name="adrotate-column-2" type="text" value="<?php echo $column; ?>" /></label>
-				<br />
-				<small>Define how many columns your ad-block has.</small>
-			</p>
-			<input type="hidden" id="adrotate-submit" name="adrotate-submit-2" value="1" />
-	<?php
-	}
-
-
-	$widget_ops_2 = array('classname' => 'adrotate_widget_2', 'description' => "Add banners in the sidebar." );
-	wp_register_sidebar_widget('AdRotate_2', 'AdRotate 2', 'adrotate_widget_2', $widget_ops_2);
-	wp_register_widget_control('AdRotate_2', 'AdRotate 2', 'adrotate_widget_control_2' );
+function adrotate_widget_init() {
+	register_widget('adrotate_widget');
 }
 
 /*-------------------------------------------------------------
