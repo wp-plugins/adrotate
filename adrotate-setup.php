@@ -135,7 +135,7 @@ function adrotate_activate() {
 		}
 
 		if (!in_array('name', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[1], 'fallback', 'VARCHAR( 5 ) NOT NULL DEFAULT \'no\'', 'name');
+			$upgrade = adrotate_update_table('add', $tables[1], 'fallback', 'VARCHAR( 5 ) NOT NULL DEFAULT \'0\'', 'name');
 		}
 
 	} else { // Or send out epic fail!
