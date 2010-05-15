@@ -155,23 +155,26 @@ function adrotate_stats_widget() {
 
 	$banners = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` ORDER BY `id`");
 	if($banners > 0) { ?>
-			<?php $thebest = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' ORDER BY `clicks` DESC LIMIT 1"); ?>
+			<?php 
+			$clicks = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y'");
+			$thebest = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' AND `active` = 'yes' ORDER BY `clicks` DESC LIMIT 1");
+			$theworst = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' AND `active` = 'yes' ORDER BY `clicks` ASC LIMIT 1");
+			$banners = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y'");
+			$impressions = $wpdb->get_var("SELECT SUM(shown) FROM `".$wpdb->prefix."adrotate`");
+			$lastfive = $wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` ORDER BY `timer` DESC LIMIT 5"); 
+			?>
+			
 			<h4><label for="Best">The best</label></h4>
 			<div class="text-wrap">
 				<?php echo $thebest->title; ?> with <?php echo $thebest->clicks; ?> clicks.
 			</div>
 
 			<h4><label for="Worst">The worst</label></h4>
-			<?php $theworst = $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' ORDER BY `clicks` ASC LIMIT 1"); ?>
 			<div class="text-wrap">
 				<?php echo $theworst->title; ?> with <?php echo $theworst->clicks; ?> clicks.
 			</div>
 
 			<h4><label for="Average">Average</label></h4>
-			<?php
-			$clicks = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y'");
-			$banners = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y'");
-			?>
 			<div class="text-wrap">
 				<?php if($banners < 1 OR $clicks < 1) {
 					echo '0';
@@ -182,23 +185,16 @@ function adrotate_stats_widget() {
 			</div>
 
 			<h4><label for="More">More...</label></h4>
-			<?php
-			$impressions = $wpdb->get_var("SELECT SUM(shown) FROM `".$wpdb->prefix."adrotate`");
-			$clicks2 = $wpdb->get_var("SELECT SUM(clicks) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y'");
-			?>
 			<div class="text-wrap">
-				<?php if($impressions > 0 AND $clicks2 > 0) {
-					$ctr = round((100/$impressions)*$clicks2, 2);
+				<?php if($impressions > 0 AND $clicks > 0) {
+					$ctr = round((100/$impressions)*$clicks, 2);
 				} else {
 					$ctr = 0;
 				}
-				echo $impressions.' impressions and '.$clicks2.' clicks. CTR of '.$ctr.'%.'; ?>
+				echo $impressions.' impressions and '.$clicks.' clicks. CTR of '.$ctr.'%.'; ?>
 			</div>
 
 			<h4><label for="Last5">The last 5</label></h4>
-			<?php
-			$lastfive = $wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` ORDER BY `timer` DESC LIMIT 5");
-			?>
 			<div class="text-wrap">
 				<?php
 				if(count($lastfive) > 0) {

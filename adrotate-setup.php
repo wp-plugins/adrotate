@@ -223,7 +223,7 @@ function adrotate_mysql_table_exists($tablename) {
  Return:	-none-
 -------------------------------------------------------------*/
 function adrotate_mysql_warning() {
-	echo '<div class="updated"><h3>WARNING! There was an error with MySQL! One or more queries failed. This means the database has not been created or only partly. Seek support at the <a href="http://forum.at.meandmymac.net">meandmymac.net support forums</a>. Please include any errors you saw or anything that might have caused this issue. This helps speed up the process of solving your issue greatly!</h3></div>';
+	echo '<div class="updated"><h3>WARNING! There was an error with MySQL! One or more queries failed. This means the database has not been created or only partly. Seek support at <a href="http://meandmymac.net/support/">meandmymac.net support</a>. Please include any errors you saw or anything that might have caused this issue. This helps speed up the process of solving your issue greatly!</h3></div>';
 }
 
 /*-------------------------------------------------------------
@@ -234,7 +234,7 @@ function adrotate_mysql_warning() {
  Return:	-none-
 -------------------------------------------------------------*/
 function adrotate_mysql_upgrade_error() {
-	echo '<div class="updated"><h3>WARNING! The MySQL table was not properly upgraded! AdRotate cannot work without this upgrade. Check your MySQL permissions and see if you have ALTER rights (rights to alter existing tables) contact your webhost/sysadmin if you don\'t know or are unsure. If this brings no answers seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a> and mention any errors you saw/got and explain what you were doing!</h3></div>';
+	echo '<div class="updated"><h3>WARNING! The MySQL table was not properly upgraded! AdRotate cannot work without this upgrade. Check your MySQL permissions and see if you have ALTER rights (rights to alter existing tables) contact your webhost/sysadmin if you don\'t know or are unsure. If this brings no answers seek support at <a href="http://meandmymac.net/support/">http://meandmymac.net/support/</a> and mention any errors you saw/got and explain what you were doing!</h3></div>';
 }
 
 /*-------------------------------------------------------------

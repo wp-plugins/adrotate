@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
 Description: Make making money easy with AdRotate. Add advanced banners to your website using the simplest interface available!
 Author: Arnan de Gans
-Version: 2.6
+Version: 2.6.1
 Author URI: http://meandmymac.net/
 */
 
@@ -103,7 +103,7 @@ function adrotate_manage() {
 		<?php } else if ($message == 'reset') { ?>
 			<div id="message" class="updated fade"><p>Banner(s) statistics <strong>reset</strong>.</p></div>
 		<?php } else if ($message == 'renew') { ?>
-			<div id="message" class="updated fade"><p>Banner(s) <strong>renewed</strong> for 1 more year.</p></div>
+			<div id="message" class="updated fade"><p>Banner(s) <strong>renewed</strong>.</p></div>
 		<?php } else if ($message == 'deactivate') { ?>
 			<div id="message" class="updated fade"><p>Banner(s) <strong>deactivated</strong>.</p></div>
 		<?php } else if ($message == 'activate') { ?>
@@ -278,7 +278,7 @@ function adrotate_edit() {
 		<?php } else if ($message == 'reset') { ?>
 			<div id="message" class="updated fade"><p>banner statistics reset.</p></div>
 		<?php } else if ($message == 'renew') { ?>
-			<div id="message" class="updated fade"><p>banner renewed for 1 more year.</p></div>
+			<div id="message" class="updated fade"><p>banner renewed.</p></div>
 		<?php }
 
 		$groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` ORDER BY `id`");
@@ -522,7 +522,7 @@ function adrotate_manage_group() {
 		<?php } else if ($message == 'deleted') { ?>
 			<div id="message" class="updated fade"><p>Group <strong>deleted</strong>.</p></div>
 		<?php } else if ($message == 'deleted_banners') { ?>
-			<div id="message" class="updated fade"><p>Group <strong>deleted</strong>. Including all <strong>deleted</strong> that were in that group.</p></div>
+			<div id="message" class="updated fade"><p>Group <strong>deleted</strong>. Including all <strong>ads</strong> that were in that group.</p></div>
 		<?php } ?>
 
 		<?php if(!$group_edit_id) { ?>
@@ -574,7 +574,7 @@ function adrotate_manage_group() {
 					</tr>
 				<?php } ?>
 			<?php } else { ?>
-				<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a></span></td></tr>
+				<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://meandmymac.net/support/">http://meandmymac.net support</a></span></td></tr>
 			<?php }	?>
 	 			</tbody>
 			</table>
@@ -608,7 +608,7 @@ function adrotate_manage_group() {
 					</tr>
 					
 			<?php } else { ?>
-				<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a></span></td></tr>
+				<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://meandmymac.net/support/">http://meandmymac.net support</a></span></td></tr>
 			<?php }	?>
 	 			</tbody>
 			</table>

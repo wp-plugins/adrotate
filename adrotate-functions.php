@@ -209,9 +209,9 @@ function adrotate_credits() {
 	echo '<tbody>';
 	echo '<tr>';
 	echo '	<td>Find me on <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.<br />';
-	echo '	The plugin homepage is at <a href="http://meandmymac.net/plugins/adrotate/" target="_blank">http://meandmymac.net/plugins/adrotate/</a>. For information, usage and manuals on AdRotate!<br />';
+	echo '	The plugin homepage is at <a href="http://meandmymac.net/plugins/adrotate/" target="_blank">http://meandmymac.net/plugins/adrotate/</a>. For general information about AdRotate!<br />';
 	echo '	Read about updates! <a href="http://meandmymac.net/tag/adrotate/" target="_blank">http://meandmymac.net/tag/adrotate/</a>.<br />';
-	echo '	Need help? <a href="http://forum.at.meandmymac.net/" target="_blank">forum.at.meandmymac.net/</a>. Please browse the forum for a bit before posting. Changes are you can help yourself!<br />';
+	echo '	Need help? <a href="http://meandmymac.net/support/" target="_blank">ticket support</a> is available. Did you see the Knowledgebase?!<br />';
 	echo '	Like my software? Did i help you? <a href="http://meandmymac.net/donate/" target="_blank">Show your appreciation</a>. Thanks!</td>';
 	echo '</tr>';
 	echo '</tbody>';
