@@ -3,14 +3,14 @@ Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
 Requires at least: 2.7, PHP5
-Tested up to: 2.9
+Tested up to: 3.0.1
 Stable tag: 2.6.1
  
-A really simple way of putting ads on your website. As many as you want... Make making money easy!
+Simply the best and most flexible way of putting ads on your website.
 
 == Description ==
 
-Add and manage the code from the dashboard and show a random banner, or multiple, on your site. The plugin supports groups for banners allowing to tie certain banners to different areas of the website. Easy management from the dashboard allows you to quickly oversee, add and edit banner code.
+Add and manage the code from the dashboard and show a random banner, or multiple, on your site. As many as you want... Make making money easy! The plugin supports groups for banners allowing to tie certain banners to different areas of the website. Easy management from the dashboard allows you to quickly oversee, add and edit banner code. 
 Previewing of banners when editing them. And even some statistical values.
 
 **Important links**
