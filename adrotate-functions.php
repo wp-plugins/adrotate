@@ -17,25 +17,32 @@ along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses
  Name:      adrotate_ad
 
  Purpose:   Show requested ad
- Receive:   $banner_id
+ Receive:   $banner_id, $individual
  Return:    $output
  Since:		3.0
 -------------------------------------------------------------*/
-function adrotate_ad($banner_id) {
+function adrotate_ad($banner_id, $individual = true) {
 	global $wpdb;
 
 	/* Changelog:
 	// Nov 15 2010 - Moved ad formatting to new function adrotate_prepare_ad_output()
+	// Dec 10 2010 - Added check for single ad or not. Query updates for 3.0.1.
 	*/
 	
 	if($banner_id) {
-		$banner = $wpdb->get_row("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$banner_id';");
-	
+		if($individual == false) { 
+			// Coming from a group or block, no checks just load the ad
+			$banner = $wpdb->get_row("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$banner_id';");
+		} else { 
+			// Single ad, check if it's ok
+			$banner = $wpdb->get_row("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `startshow` <= '$now' AND `endshow` >= '$now' AND `id` = '$banner_id';");
+		}
+		
 		if($banner) {
 			$output = adrotate_prepare_ad_output($banner->id, $banner->bannercode, $banner->tracker, $banner->link, $banner->image);
 			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `shown` = `shown` + 1 WHERE `id` = '$banner->id'");
 		} else {
-			$output = '<span style="color: #F00; font-weight: bold;">Error, Ad (ID: '.$banner_id.') does not exist! Check your syntax!</span>';
+			$output = '<span style="color: #F00; font-weight: bold;">Error, Ad (ID: '.$banner_id.') is expired or does not exist!</span>';
 		}
 	} else {
 		$output = '<span style="color: #F00; font-weight: bold;">Error, no Ad ID set! Check your syntax!</span>';
@@ -55,13 +62,17 @@ function adrotate_ad($banner_id) {
 function adrotate_group($group_ids, $fallback = 0) {
 	global $wpdb;
 
+	/* Changelog:
+	// Dec 10 2010 - $fallback now works. Query updated.
+	*/
+
 	if($group_ids) {
 		$now = current_time('timestamp');
 		$group_array = explode(",", $group_ids);
 		$group_choice = array_rand($group_array, 1);
 		$prefix = $wpdb->prefix;
 		if($fallback == 0 OR $fallback == '')
-			$fallback = $wpdb->get_var("SELECT `fallback` FROM `".$prefix."adrotate_groups WHERE `id` = '$group_array[$group_choice]';");
+			$fallback = $wpdb->get_var("SELECT `fallback` FROM `".$prefix."adrotate_groups` WHERE `id` = '$group_array[$group_choice]';");
 	
 		$linkmeta = $wpdb->get_results("SELECT `".$prefix."adrotate`.`id`, `".$prefix."adrotate`.`clicks`, `".$prefix."adrotate`.`maxclicks`, `".$prefix."adrotate`.`shown`, `".$prefix."adrotate`.`maxshown`, `".$prefix."adrotate`.`tracker`
 										FROM `".$prefix."adrotate`, `".$prefix."adrotate_linkmeta` 
@@ -87,7 +98,7 @@ function adrotate_group($group_ids, $fallback = 0) {
 			}
 			if(count($selected) > 0) {
 				$banner_id = array_rand($selected, 1);
-				$output = adrotate_ad($selected[$banner_id]);
+				$output = adrotate_ad($selected[$banner_id], false);
 			} else {
 				$output = adrotate_fallback($fallback, 'expired');
 			}
@@ -112,6 +123,9 @@ function adrotate_group($group_ids, $fallback = 0) {
 function adrotate_block($block_id) {
 	global $wpdb;
 
+	/* Changelog:
+	// Dec 10 2010 - Query updates for 3.0.1.
+	*/
 	if($block_id) {
 		$now = current_time('timestamp');
 		$prefix = $wpdb->prefix;
@@ -123,8 +137,8 @@ function adrotate_block($block_id) {
 				$results = array();
 				foreach($groups as $group) {
 					$ads = $wpdb->get_results( // Carefull this is not a list of objects!!
-						"SELECT `".$prefix."adrotate`.`id`, ".$prefix."adrotate.clicks, ".$prefix."adrotate.maxclicks, ".$prefix."adrotate.shown, ".$prefix."adrotate.maxshown, ".$prefix."adrotate.tracker FROM ".$prefix."adrotate,".$prefix."adrotate_linkmeta 
-						WHERE ".$prefix."adrotate_linkmeta.group = '$group->group' 
+						"SELECT `".$prefix."adrotate`.`id`, `".$prefix."adrotate`.`clicks`, `".$prefix."adrotate`.`maxclicks`, `".$prefix."adrotate`.`shown`, `".$prefix."adrotate`.`maxshown`, `".$prefix."adrotate`.`tracker` FROM `".$prefix."adrotate`, `".$prefix."adrotate_linkmeta`
+						WHERE `".$prefix."adrotate_linkmeta`.`group` = '$group->group' 
 							AND `".$prefix."adrotate_linkmeta`.`block` = 0 
 							AND `".$prefix."adrotate_linkmeta`.`user` = 0 
 							AND `".$prefix."adrotate`.`id` = `".$prefix."adrotate_linkmeta`.`ad` 
@@ -166,7 +180,7 @@ function adrotate_block($block_id) {
 				for($i=0;$i<$block_count;$i++) {
 					if($block->wrapper_before != '')
 						$output .= stripslashes(html_entity_decode($block->wrapper_before, ENT_QUOTES));
-					$output .= adrotate_ad($selected[$chosen_few[$i]]);
+					$output .= adrotate_ad($selected[$chosen_few[$i]], false);
 					if($block->wrapper_after != '')
 						$output .= stripslashes(html_entity_decode($block->wrapper_after, ENT_QUOTES));
 					
@@ -231,12 +245,13 @@ function adrotate_preview($banner_id) {
  Added:		2.6
 -------------------------------------------------------------*/
 function adrotate_fallback($group, $case) {
-	global $wpdb;
 
-	$fallback = $wpdb->get_var("SELECT `fallback` FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = '$group' LIMIT 1");
+	/* Changelog:
+	// Dec 10 2010 - Update for 3.0.1, no longer double checks for $fallback values
+	*/
 
-	if($fallback > 0) {
-		$fallback_output = adrotate_group($fallback);
+	if($group > 0) {
+		$fallback_output = adrotate_group($group);
 	} else {
 		if($case == 'expired') {
 			$fallback_output = adrotate_error('ad_expired');

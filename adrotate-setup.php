@@ -22,7 +22,7 @@ along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses
  Since:		0.1
 -------------------------------------------------------------*/
 function adrotate_activate() {
-	global $wpdb, $wp_roles, $wp_rewrite;
+	global $wpdb, $wp_roles;
 
 	$tables = array(
 		$wpdb->prefix . "adrotate",				// Since 0.1
@@ -43,7 +43,7 @@ function adrotate_activate() {
 	// ---------------------------
 	// Add tables if non existant
 	if(!adrotate_mysql_table_exists($tables[0])) { // wp_adrotate
-		$add1 = "CREATE TABLE ".$tables[0]." (
+		$add1 = "CREATE TABLE `".$tables[0]."` (
 			  `id` mediumint(8) unsigned NOT NULL auto_increment,
 			  `title` longtext NOT NULL,
 			  `bannercode` longtext NOT NULL,
@@ -62,33 +62,33 @@ function adrotate_activate() {
 			  `maxshown` int(15) NOT NULL default '0',			  
 			  `type` varchar(10) NOT NULL default '0',
 	  		PRIMARY KEY  (`id`)
-			) ".$charset_collate;
-		$wpdb->query($add1);
+			) ".$charset_collate.";";
+		mysql_query($add1);
 	}
 
 	if(!adrotate_mysql_table_exists($tables[1])) { // wp_adrotate_groups
-		$add2 = "CREATE TABLE ".$tables[1]." (
+		$add2 = "CREATE TABLE `".$tables[1]."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`name` varchar(255) NOT NULL default 'group',
 				`fallback` varchar(5) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate;
-		$wpdb->query($add2);
+			) ".$charset_collate.";";
+		mysql_query($add2);
 	}
 
 	if(!adrotate_mysql_table_exists($tables[2])) { // wp_adrotate_tracker
-		$add3 = "CREATE TABLE ".$tables[2]." (
+		$add3 = "CREATE TABLE `".$tables[2]."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`ipaddress` varchar(255) NOT NULL default '0',
 				`timer` int(15) NOT NULL default '0',
 				`bannerid` int(15) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate;
-		$wpdb->query($add3);
+			) ".$charset_collate.";";
+		mysql_query($add3);
 	}
 
 	if(!adrotate_mysql_table_exists($tables[3])) { // wp_adrotate_blocks
-		$add4 = "CREATE TABLE ".$tables[3]." (
+		$add4 = "CREATE TABLE `".$tables[3]."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`name` varchar(255) NOT NULL default 'Block',
 				`adcount` int(3) NOT NULL default '1',
@@ -96,30 +96,30 @@ function adrotate_activate() {
 				`wrapper_before` longtext NOT NULL,
 				`wrapper_after` longtext NOT NULL,
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate;
-		$wpdb->query($add4);
+			) ".$charset_collate.";";
+		mysql_query($add4);
 	}
 	
 	if(!adrotate_mysql_table_exists($tables[4])) { // wp_adrotate_linkmeta
-		$add5 = "CREATE TABLE ".$tables[4]." (
+		$add5 = "CREATE TABLE `".$tables[4]."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`ad` int(5) NOT NULL default '0',
 				`group` int(5) NOT NULL default '0',
 				`block` int(5) NOT NULL default '0',
 				`user` int(5) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate;
-		$wpdb->query($add5);
+			) ".$charset_collate.";";
+		mysql_query($add5);
 	}
 	
 	if(!adrotate_mysql_table_exists($tables[5])) { // wp_adrotate_stats_cache
-		$add6 = "CREATE TABLE ".$tables[5]." (
+		$add6 = "CREATE TABLE `".$tables[5]."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`user` int(5) NOT NULL default '0',
 				`cache` longtext NOT NULL,
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate;
-		$wpdb->query($add6);
+			) ".$charset_collate.";";
+		mysql_query($add6);
 	}
 	
 	// END Add

@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: AdRotate
-Plugin URI: http://meandmymac.net/plugins/adrotate/
+Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.0
+Version: 3.0.1
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -242,7 +242,10 @@ function adrotate_manage() {
 						</tr>
 		 			<?php } ?>
 		 		<?php } else { ?>
-					<tr id='no-id'><td scope="row" colspan="9"><em>No banners yet!</em></td></tr>
+					<tr id='no-groups'>
+						<th scope="row" class="check-column">&nbsp;</th>
+						<td colspan="8"><em>No ads created yet!</em></td>
+					</tr>
 				<?php } ?>
 				</tbody>
 			</table>
