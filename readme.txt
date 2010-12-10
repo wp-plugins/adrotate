@@ -11,9 +11,9 @@ The very best way of putting ads on your website. As many as you want... Make ma
 == Description ==
 
 Get the most intuitive ad manager and start making money with your website.
-Add and manage the code from the dashboard and show a random banner, or multiple, on your site. 
-The plugin supports groups for banners allowing to tie certain banners to different areas of the website. 
-Easy management from the dashboard allows you to quickly oversee, add and edit banner code.
+Add and manage the ads from the dashboard and show a random banner, or multiple, on your site. 
+The plugin supports unlimited groups for banners allowing to tie certain banners to different areas of the website. 
+Easy management from the dashboard allows you to quickly oversee, add and edit banner code or renew/delete and add new ads.
 Previewing of banners when editing them. And even some statistical values.
 Receive a periodic email when banners are (about to) expire(d) informing you to take action.
 
@@ -21,18 +21,17 @@ Receive a periodic email when banners are (about to) expire(d) informing you to 
 
 This should solve all issues reported on december 10 2010!
 
-[fix] Fallback ads relied on wrong value causing in some cases the wrong group to be selected
-[fix] Fallback ads query is now correct and works
-[fix] Individual ads now also check if they are allowed to be shown
-[update] Several queries which worked but weren't up to standards
-[update] Several dashboard messages
-[update] AdRotate Upgrade / Installer no longer uses $wpdb for added reliability
+* [fix] Fallback ads relied on wrong value causing in some cases the wrong group to be selected
+* [fix] Fallback ads query is now correct and works
+* [fix] Individual ads now also check if they are allowed to be shown
+* [update] Several queries which worked but weren't up to standards
+* [update] Several dashboard messages
+* [update] AdRotate Upgrade / Installer no longer uses $wpdb for added reliability
 
 **Important links**
 
-* [Details](http://meandmymac.net/plugins/adrotate/) - Lots of Additional plugin information
-* [Manuals](http://meandmymac.net/support/knowledgebase.php?category=3) - Get started, user guide, step by step setup!
-* [Support](http://meandmymac.net/support/) - For if the manual fails you or you just don't get it
+* [Details](http://adrotateplugin.com) - Lots of Additional plugin information
+* [Manuals & Support](http://adrotateplugin.com/page/support.php) - Setup instructions and support
 
 **Some Features**
 
@@ -54,15 +53,15 @@ This should solve all issues reported on december 10 2010!
 == Installation ==
 
 Find out how AdRotate works, more options and various ways to implement your ads.
-[User guide](http://meandmymac.net/support/knowledgebase.php?category=3)
+[User guide](http://adrotateplugin.com/page/support.php)
 
 = Support? = 
-[AdRotate support](http://meandmymac.net/support/)
+[AdRotate support](http://adrotateplugin.com/page/support.php)
 
 == Frequently Asked Questions ==
 
 Go here for support/questions:
-[Knowledgebase](http://meandmymac.net/support/knowledgebase.php)
+[Knowledgebase](http://adrotateplugin.com/page/support.php)
 
 == Screenshots ==
 
