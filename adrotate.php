@@ -2,57 +2,72 @@
 /*
 Plugin Name: AdRotate
 Plugin URI: http://meandmymac.net/plugins/adrotate/
-Description: Make making money easy with AdRotate. Add advanced banners to your website using the simplest interface available!
+Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 2.6.1
+Version: 3.0
 Author URI: http://meandmymac.net/
+License: GPL2
 */
 
-#---------------------------------------------------
-# Load other plugin files and configuration
-#---------------------------------------------------
+/*  
+Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
+
+This program is free software; you can redistribute it and/or modify it under the terms of 
+the GNU General Public License, version 2, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+*/
+
+// Load plugin files
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-setup.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-manage.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-functions.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-widget.php');
+// wp-content/plugins/adrotate/adrotate-out.php
+// wp-content/plugins/adrotate/uninstall.php
+
+// Load functions
 register_activation_hook(__FILE__, 'adrotate_activate');
 register_deactivation_hook(__FILE__, 'adrotate_deactivate');
-
 adrotate_check_config();
 adrotate_clean_trackerdata();
 
+// Front end
 add_shortcode('adrotate', 'adrotate_shortcode');
-add_action('admin_notices','adrotate_expired_banners');
-add_action('admin_menu', 'adrotate_dashboard');
 add_action('widgets_init', 'adrotate_widget_init');
-add_action('wp_dashboard_setup', 'adrotate_dashboard_widget');
 add_action('wp_meta', 'adrotate_meta');
 
-if(isset($_POST['adrotate_magic_submit'])) {
-	add_action('init', 'adrotate_insert_magic');
-}
+// Dashboard
+add_action('admin_menu', 'adrotate_dashboard');
+add_action('admin_notices','adrotate_dashboard_notifications');
+add_action('wp_dashboard_setup', 'adrotate_dashboard_widget');
 
-if(isset($_POST['adrotate_submit'])) {
-	add_action('init', 'adrotate_insert_input');
-}
+// Core
+add_action('adrotate_ad_notification', 'adrotate_mail_notifications');
+add_action('adrotate_cache_statistics', 'adrotate_prepare_cache_statistics');
+add_filter('cron_schedules', 'adrotate_reccurences');
 
-if(isset($_POST['adrotate_group_submit'])) {
-	add_action('init', 'adrotate_insert_group');
-}
+// Internal redirects
+if(isset($_POST['adrotate_ad_submit'])) 				add_action('init', 'adrotate_insert_input');
+if(isset($_POST['adrotate_group_submit'])) 				add_action('init', 'adrotate_insert_group');
+if(isset($_POST['adrotate_block_submit'])) 				add_action('init', 'adrotate_insert_block');
+if(isset($_POST['adrotate_action_submit'])) 			add_action('init', 'adrotate_request_action');
+if(isset($_POST['adrotate_options_submit'])) 			add_action('init', 'adrotate_options_submit');
+if(isset($_POST['adrotate_testmail_submit'])) 			add_action('init', 'adrotate_mail_notifications');
+if(isset($_POST['adrotate_role_add_submit']) OR isset($_POST['adrotate_role_remove_submit'])) add_action('init', 'adrotate_prepare_roles');
+//if(isset($_POST['headers']) and isset($_POST['body'])) 	add_action('init', 'adrotate_receiver');
 
-if(isset($_POST['adrotate_action'])) {
-	add_action('init', 'adrotate_request_action');
-}
-
-if(isset($_POST['adrotate_submit_options'])) {
-	add_action('init', 'adrotate_options_submit');
-}
-
-if(isset($_POST['adrotate_uninstall'])) {
-	add_action('init', 'adrotate_plugin_uninstall');
-}
-
-$adrotate_config = get_option('adrotate_config');
+// Load config
+$adrotate_config 				= get_option('adrotate_config');
+$adrotate_notification_timer 	= get_option('adrotate_notification_timer');
+$adrotate_crawlers 				= get_option('adrotate_crawlers');
+$adrotate_stats 				= get_option('adrotate_stats');
+$adrotate_roles 				= get_option('adrotate_roles');
 
 /*-------------------------------------------------------------
  Name:      adrotate_dashboard
@@ -62,13 +77,16 @@ $adrotate_config = get_option('adrotate_config');
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_dashboard() {
-	add_object_page('AdRotate', 'AdRotate', 'manage_options', 'adrotate', 'adrotate_manage');
-		add_submenu_page('adrotate', 'AdRotate > Manage', 'Manage Banners', 'manage_options', 'adrotate', 'adrotate_manage');
-		add_submenu_page('adrotate', 'AdRotate > Banner Wizard', 'Banner Wizard', 'manage_options', 'adrotate2', 'adrotate_wizard');
-		add_submenu_page('adrotate', 'AdRotate > Add/Edit (Advanced)', 'Add|Edit Banner', 'manage_options', 'adrotate3', 'adrotate_edit');
-		add_submenu_page('adrotate', 'AdRotate > Groups', 'Manage Groups', 'manage_options', 'adrotate4', 'adrotate_manage_group');
+	global $adrotate_config;
 
-	add_options_page('AdRotate', 'AdRotate', 'manage_options', 'adrotate5', 'adrotate_options');
+	add_object_page('AdRotate', 'AdRotate', $adrotate_config['ad_manage'], 'adrotate', 'adrotate_manage');
+	add_submenu_page('adrotate', 'AdRotate > Manage Ads', 'Manage Ads', $adrotate_config['ad_manage'], 'adrotate', 'adrotate_manage');
+	add_submenu_page('adrotate', 'AdRotate > Groups', 'Manage Groups', $adrotate_config['group_manage'], 'adrotate-groups', 'adrotate_manage_group');
+	add_submenu_page('adrotate', 'AdRotate > Blocks', 'Manage Blocks', $adrotate_config['block_manage'], 'adrotate-blocks', 'adrotate_manage_block');
+//	add_submenu_page('adrotate', 'AdRotate > AdRollr', 'AdRollr', 'manage_options', 'adrotate-adrollr', 'adrotate_network');
+	add_submenu_page('adrotate', 'AdRotate > User Statistics', 'User Statistics', $adrotate_config['pagestatistics'], 'adrotate-userstatistics', 'adrotate_userstatistics');
+	add_submenu_page('adrotate', 'AdRotate > Admin Statistics', 'Admin Statistics', 'manage_options', 'adrotate-adminstatistics', 'adrotate_adminstatistics');
+	add_submenu_page('adrotate', 'AdRotate > Settings','Settings', 'manage_options', 'adrotate-settings', 'adrotate_options');
 }
 
 /*-------------------------------------------------------------
@@ -79,257 +97,228 @@ function adrotate_dashboard() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_manage() {
-	global $wpdb, $userdata;
+	global $wpdb, $current_user, $userdata;
 
-	$message = $_GET['message'];
-	$magic_id = $_GET['magic_id'];
-	$cancel = $_GET['cancel'];
-	if(isset($_POST['adrotate_order'])) { $order = $_POST['adrotate_order']; } else { $order = 'thetime ASC'; }
-	if($cancel AND $magic_id > 0) adrotate_delete($magic_id, 'banner');
-	$groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` ORDER BY `id`");
+	$message 		= $_GET['message'];
+	$view 			= $_GET['view'];
+	$ad_edit_id 	= $_GET['edit_ad'];
+	$now 			= current_time('timestamp');
+	$in2days 		= $now + 172800;
+	
+	if(isset($_POST['adrotate_order_submit'])) { 
+		$order = $_POST['adrotate_order']; 
+	} else { 
+		$order = 'thetime ASC'; 
+	}
 	?>
 
 	<div class="wrap">
-		<h2>Manage Banners</h2>
+		<h2>Ad Management</h2>
 
 		<?php if ($message == 'created') { ?>
-			<div id="message" class="updated fade"><p>Banner <strong>created</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Ad created</p></div>
 		<?php } else if ($message == 'updated') { ?>
-			<div id="message" class="updated fade"><p>Banner <strong>updated</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Ad updated</p></div>
 		<?php } else if ($message == 'deleted') { ?>
-			<div id="message" class="updated fade"><p>Banner(s) <strong>deleted</strong>.</p></div>
-		<?php } else if ($message == 'moved') { ?>
-			<div id="message" class="updated fade"><p>Banner(s) <strong>moved</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Ad(s) deleted</p></div>
 		<?php } else if ($message == 'reset') { ?>
-			<div id="message" class="updated fade"><p>Banner(s) statistics <strong>reset</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Ad(s) statistics reset</p></div>
 		<?php } else if ($message == 'renew') { ?>
-			<div id="message" class="updated fade"><p>Banner(s) <strong>renewed</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Ad(s) renewed</p></div>
 		<?php } else if ($message == 'deactivate') { ?>
-			<div id="message" class="updated fade"><p>Banner(s) <strong>deactivated</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Ad(s) deactivated</p></div>
 		<?php } else if ($message == 'activate') { ?>
-			<div id="message" class="updated fade"><p>Banner(s) <strong>activated</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Ad(s) activated</p></div>
 		<?php } else if ($message == 'no_access') { ?>
-			<div id="message" class="updated fade"><p>Action prohibited.</p></div>
+			<div id="message" class="updated fade"><p>Action prohibited</p></div>
+		<?php } else if ($message == 'field_error') { ?>
+			<div id="message" class="updated fade"><p>Not all fields met the requirements</p></div>
 		<?php } ?>
 
-		<form name="banners" id="post" method="post" action="admin.php?page=adrotate">
+		<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate') AND adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups') AND adrotate_mysql_table_exists($wpdb->prefix.'adrotate_linkmeta')) { ?>
 			<div class="tablenav">
-
 				<div class="alignleft actions">
-					<select name='adrotate_action' id='cat' class='postform' >
-				        <option disabled>Bulk Actions</option>
-				        <option value="deactivate">Deactivate</option>
-				        <option value="activate">Activate</option>
-				        <option value="delete">Delete</option>
-				        <option value="resetmultiple">Reset stats</option>
-				        <option value="renewmultiple-31536000">Renew for 1 year</option>
-				        <option value="renewmultiple-2592000">Renew for 30 days</option>
-				        <option value="renewmultiple-5184000">Renew for 180 days</option>
-						<?php if ($groups) { ?>
-				        	<option disabled>Move selection to category</option>
-							<?php foreach($groups as $group) { ?>
-						        <option value="move-<?php echo $group->id;?>"><?php echo $group->id;?> - <?php echo $group->name;?></option>
-				 			<?php } ?>
-						<?php } ?>
-					</select>
-					<input type="submit" id="post-action-submit" value="Go" class="button-secondary" />
-					
-					Sort by <select name='adrotate_order' id='cat' class='postform' >
-				        <option value="startshow ASC" <?php if($order == "startshow ASC") { echo 'selected'; } ?>>start date (ascending)</option>
-				        <option value="startshow DESC" <?php if($order == "startshow DESC") { echo 'selected'; } ?>>start date (descending)</option>
-				        <option value="endshow ASC" <?php if($order == "endshow ASC") { echo 'selected'; } ?>>end date (ascending)</option>
-				        <option value="endshow DESC" <?php if($order == "endshow DESC") { echo 'selected'; } ?>>end date (descending)</option>
-				        <option value="ID ASC" <?php if($order == "ID ASC") { echo 'selected'; } ?>>ID</option>
-				        <option value="ID DESC" <?php if($order == "ID DESC") { echo 'selected'; } ?>>ID reversed</option>
-				        <option value="title ASC" <?php if($order == "title ASC") { echo 'selected'; } ?>>title (A-Z)</option>
-				        <option value="title DESC" <?php if($order == "title DESC") { echo 'selected'; } ?>>title (Z-A)</option>
-				        <option value="clicks ASC" <?php if($order == "clicks ASC") { echo 'selected'; } ?>>clicks (A-Z)</option>
-				        <option value="clicks DESC" <?php if($order == "clicks DESC") { echo 'selected'; } ?>>clicks (Z-A)</option>
-					</select>
-					<input type="submit" id="post-query-submit" value="Sort" class="button-secondary" />
+					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=manage';?>">Manage</a> | 
+					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=addnew';?>">Add New</a>
 				</div>
-
-				<br class="clear" />
 			</div>
 
-		   	<table class="widefat" style="margin-top: .5em">
- 			<thead>
-  				<tr>
-					<th scope="col" class="check-column">&nbsp;</th>
-					<th scope="col" width="2%"><center>ID</center></th>
-					<th scope="col" width="10%">Show from</th>
-					<th scope="col" width="10%">Show until</th>
-					<th scope="col" width="5%"><center>Active</center></th>
-					<th scope="col" width="5%"><center>How</center></th>
-					<th scope="col" width="15%">Group</th>
-					<th scope="col">Title</th>
-					<th scope="col" width="5%"><center>Shown</center></th>
-					<th scope="col" width="5%"><center>Clicks</center></th>
-					<th scope="col" width="8%"><center>CTR</center></th>
-				</tr>
-  			</thead>
-  			<tbody>
-		<?php
-		if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate')) {
-			$now = current_time('timestamp');
-			$in2days = $now + 172800;
-			
-			$banners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `magic` < 2 ORDER BY ".$order);
-			if ($banners) {
-				foreach($banners as $banner) {
-					$group = $wpdb->get_row("SELECT `name` FROM `" . $wpdb->prefix . "adrotate_groups` WHERE `id` = '".$banner->group."'");
-					$expired = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE `id` = $banner->id AND `active` = 'yes' AND (`endshow` <= $now OR `endshow` <= $in2days)");
+	    	<?php if ($view == "" OR $view == "manage") { ?>
 
-					if($expired == $banner->id) {
-						$expiredclass = ' error';
-					} else {
-						$expiredclass = '';
-					}
+			<h3>Manage Ads</h3>
 
-					if($class != 'alternate') {
-						$class = 'alternate';
-					} else {
-						$class = '';
-					}
-					?>
-				    <tr id='banner-<?php echo $banner->id; ?>' class='<?php echo $class.$expiredclass; ?>'>
-						<th scope="row" class="check-column"><input type="checkbox" name="bannercheck[]" value="<?php echo $banner->id; ?>" /></th>
-						<td><center><?php echo $banner->id;?></center></td>
-						<td><?php echo date("F d, Y", $banner->startshow);?></td>
-						<td><?php echo date("F d, Y", $banner->endshow);?></td>
-						<td><center><?php if($banner->active == "yes") { echo '<img src="'.get_option('siteurl').'/wp-content/plugins/adrotate/icons/tick.png" title="Active"/>'; } else { echo '<img src="'.get_option('siteurl').'/wp-content/plugins/adrotate/icons/cross.png" title="In-active"/>'; }?></center></td>
-						<?php if($banner->magic == 1) { ?>
-						<td><img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/adrotate/icons/wizard.png" title="Wizard"/></td>
-						<?php } else if($banner->magic == 0) { ?>
-						<td><img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/adrotate/icons/manual.png" title="Manual"/></td>
-						<?php } else { ?>
-						<td><center>Error</center></td>
-						<?php } ?>
-						<?php if($group->name != '') { ?>
-						<td><?php echo $group->name;?></td>
-						<?php } else { ?>
-						<td><span style="font-weight:bold; color:red;">No Group Set!</span></td>
-						<?php } ?>
-						<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate3&amp;edit_banner='.$banner->id;?>" title="Edit"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong></td>
-						<td><center><?php echo $banner->shown;?></center></td>
-						<?php if($banner->tracker == "Y") { ?>
-						<td><center><?php echo $banner->clicks;?></center></td>
-						<?php if($banner->shown == 0) $banner->shown = 1; ?>
-						<td><center><?php echo round((100/$banner->shown)*$banner->clicks,2);?> %</center></td>
-						<?php } else { ?>
-						<td colspan="2"><center>N/A</center></td>
-						<?php } ?>
+			<form name="banners" id="post" method="post" action="admin.php?page=adrotate">
+				
+				<div class="tablenav">
+					<div class="alignleft actions">
+						<select name="adrotate_action" id="cat" class="postform">
+					        <option value="">Bulk Actions</option>
+					        <option value="deactivate">Deactivate</option>
+					        <option value="activate">Activate</option>
+					        <option value="delete">Delete</option>
+					        <option value="reset">Reset stats</option>
+					        <option value="renew-31536000">Renew for 1 year</option>
+					        <option value="renew-5184000">Renew for 180 days</option>
+					        <option value="renew-2592000">Renew for 30 days</option>
+					        <option value="renew-604800">Renew for 7 days</option>
+						</select>
+						<input type="submit" id="post-action-submit" name="adrotate_action_submit" value="Go" class="button-secondary" />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						Sort by <select name="adrotate_order" id="cat" class="postform">
+					        <option value="startshow ASC" <?php if($order == "startshow ASC") { echo 'selected'; } ?>>start date (ascending)</option>
+					        <option value="startshow DESC" <?php if($order == "startshow DESC") { echo 'selected'; } ?>>start date (descending)</option>
+					        <option value="endshow ASC" <?php if($order == "endshow ASC") { echo 'selected'; } ?>>end date (ascending)</option>
+					        <option value="endshow DESC" <?php if($order == "endshow DESC") { echo 'selected'; } ?>>end date (descending)</option>
+					        <option value="ID ASC" <?php if($order == "ID ASC") { echo 'selected'; } ?>>ID</option>
+					        <option value="ID DESC" <?php if($order == "ID DESC") { echo 'selected'; } ?>>ID reversed</option>
+					        <option value="title ASC" <?php if($order == "title ASC") { echo 'selected'; } ?>>title (A-Z)</option>
+					        <option value="title DESC" <?php if($order == "title DESC") { echo 'selected'; } ?>>title (Z-A)</option>
+					        <option value="clicks ASC" <?php if($order == "clicks ASC") { echo 'selected'; } ?>>clicks (Low to high)</option>
+					        <option value="clicks DESC" <?php if($order == "clicks DESC") { echo 'selected'; } ?>>clicks (High to low)</option>
+						</select>
+						<input type="submit" id="post-query-submit" name="adrotate_order_submit" value="Sort" class="button-secondary" />
+					</div>
+	
+					<br class="clear" />
+				</div>
+	
+			   	<table class="widefat" style="margin-top: .5em">
+	 			<thead>
+	  				<tr>
+						<th scope="col" class="check-column">&nbsp;</th>
+						<th scope="col" width="2%"><center>ID</center></th>
+						<th scope="col" width="10%">Show from</th>
+						<th scope="col" width="10%">Show until</th>
+						<th scope="col" width="5%"><center>Active</center></th>
+						<th scope="col">Title</th>
+						<th scope="col" width="5%"><center>Impressions</center></th>
+						<th scope="col" width="5%"><center>Clicks</center></th>
+						<th scope="col" width="8%"><center>CTR</center></th>
 					</tr>
-	 			<?php } ?>
-	 		<?php } else { ?>
-				<tr id='no-id'><td scope="row" colspan="7"><em>No banners yet!</em></td></tr>
-			<?php }
-		} else { ?>
-			<tr id='no-id'><td scope="row" colspan="7"><span style="font-weight: bold; color: #f00;">There was an error locating the main database table for AdRotate. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://forum.at.meandmymac.net">http://forum.at.meandmymac.net</a></span></td></tr>
-		<?php }	?>
-			</tbody>
-		</table>
-		</form>
+	  			</thead>
+	  			<tbody>
+				<?php
+				$banners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'manual' ORDER BY ".$order);
+				if ($banners) {
+					foreach($banners as $banner) {
+						$user_id = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = ".$banner->id." AND `group` = 0 AND `block` = 0 AND `user` > 0;");
+						if($banner->tracker == 'N' AND $user_id) {
+							$publisherror = ' updated';
+						} else {
+							$publisherror = '';
+						}
+	
+						if($banner->endshow <= $now OR $banner->endshow <= $in2days) {
+							$expiredclass = ' error';
+						} else {
+							$expiredclass = '';
+						}
+	
+						if($class != 'alternate') {
+							$class = 'alternate';
+						} else {
+							$class = '';
+						}
+						?>
+					    <tr id='banner-<?php echo $banner->id; ?>' class='<?php echo $class.$expiredclass.$publisherror; ?>'>
+							<th scope="row" class="check-column"><input type="checkbox" name="bannercheck[]" value="<?php echo $banner->id; ?>" /></th>
+							<td><center><?php echo $banner->id;?></center></td>
+							<td><?php echo date("F d, Y", $banner->startshow);?></td>
+							<td><span style="color: <?php echo adrotate_prepare_color($banner->endshow);?>;"><?php echo date("F d, Y", $banner->endshow);?></span></td>
+							<td><center><?php if($banner->active == "yes") { 
+								echo '<img src="'.get_option('siteurl').'/wp-content/plugins/adrotate/icons/tick.png" title="Active"/>'; 
+							} else { 
+								echo '<img src="'.get_option('siteurl').'/wp-content/plugins/adrotate/icons/cross.png" title="Inactive"/>'; 
+							}?></center></td>
+							<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=edit&edit_ad='.$banner->id;?>" title="Edit"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong></td>
+							<td><center><?php echo $banner->shown;?></center></td>
+							<?php if($banner->tracker == "Y") { ?>
+							<td><center><?php echo $banner->clicks;?></center></td>
+								<?php if($banner->shown == 0) $banner->shown = 1; ?>
+							<td><center><?php echo round((100/$banner->shown)*$banner->clicks,2);?> %</center></td>
+							<?php } else { ?>
+							<td colspan="2"><center>N/A</center></td>
+							<?php } ?>
+						</tr>
+		 			<?php } ?>
+		 		<?php } else { ?>
+					<tr id='no-id'><td scope="row" colspan="9"><em>No banners yet!</em></td></tr>
+				<?php } ?>
+				</tbody>
+			</table>
+			
+			</form>
 
-		<br class="clear" />
-		<?php adrotate_credits(); ?>
+			<br class="clear" />
+			
+		   	<?php } else if($view == "addnew" OR $view == "edit") { ?>
 
-	</div>
-	<?php
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_edit
-
- Purpose:   Create new/edit banners
- Receive:   -none-
- Return:    -none-
--------------------------------------------------------------*/
-function adrotate_edit() {
-	global $wpdb, $userdata;
-
-	$thetime 	= current_time('timestamp');
-	$message 	= $_GET['message'];
-	if($_GET['edit_banner']) $banner_edit_id = $_GET['edit_banner'];
-	?>
-
-	<div class="wrap">
-		<?php if(!$banner_edit_id) { ?>
-		<h2>Add banner</h2>
-		<?php
-			$startshow = $thetime;
-			$endshow = $thetime + 31536000;
-		} else { ?>
-		<h2>Edit banner</h2>
-		<?php
-			$edit_banner = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$banner_edit_id'");
-			$startshow = $edit_banner->startshow;
-			$endshow = $edit_banner->endshow;
-		}
-		list($sday, $smonth, $syear) = split(" ", gmdate("d m Y", $startshow));
-		list($eday, $emonth, $eyear) = split(" ", gmdate("d m Y", $endshow));
-
-		if ($message == 'no_access') { ?>
-			<div id="message" class="updated fade"><p>Action prohibited.</p></div>
-		<?php } else if ($message == 'updated') { ?>
-			<div id="message" class="updated fade"><p>Banner <strong>updated</strong>.</p></div>
-		<?php } else if ($message == 'field_error') { ?>
-			<div id="message" class="updated fade"><p>Not all fields met the requirements.</p></div>
-		<?php } else if ($message == 'reset') { ?>
-			<div id="message" class="updated fade"><p>banner statistics reset.</p></div>
-		<?php } else if ($message == 'renew') { ?>
-			<div id="message" class="updated fade"><p>banner renewed.</p></div>
-		<?php }
-
-		$groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` ORDER BY `id`");
-		if($groups) { ?>
-		  	<form method="post" action="admin.php?page=adrotate3">
-		    	<input type="hidden" name="adrotate_username" value="<?php echo $userdata->display_name;?>" />
-		    	<input type="hidden" name="adrotate_id" value="<?php echo $banner_edit_id;?>" />
-
+			<?php if(!$ad_edit_id) { ?>
+			<h3>New Ad</h3>
+			<?php
+				$action = "new";
+				$startshow = $now;
+				$endshow = $now + 31536000;
+				$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty' ORDER BY `id` DESC LIMIT 1;";
+				$edit_id = $wpdb->get_var($query);
+				if($edit_id == 0) {
+					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `image`, `link`, `tracker`, `clicks`, `maxclicks`, `shown`, `maxshown`, `type`) VALUES ('', '', '$startshow', '$startshow', '$userdata->user_login', 'no', '$startshow', '$endshow', '', '', 'N', 0, 0, 0, 0, 'empty');");
+					$edit_id = $wpdb->get_var($query);
+				}
+				$ad_edit_id = $edit_id;
+			} else { ?>
+			<h3>Edit Ad</h3>
+			<?php
+				$action = "update";
+			}
+			
+			$edit_banner 	= $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$ad_edit_id';");
+			$groups			= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' ORDER BY `id` ASC;"); 
+			$user_list		= $wpdb->get_results("SELECT `ID` FROM `$wpdb->users` ORDER BY `user_nicename` ASC;");
+			$saved_user 	= $wpdb->get_var("SELECT `user` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$edit_banner->id' AND `group` = 0 AND `block` = 0;");
+			$linkmeta		= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$edit_banner->id' AND `block` = 0 AND `user` = 0;");
+			foreach($linkmeta as $meta) {
+				$meta_array[] = $meta->group;
+			}
+			if(!is_array($meta_array)) $meta_array = array();
+			
+			list($sday, $smonth, $syear) = split(" ", gmdate("d m Y", $edit_banner->startshow));
+			list($eday, $emonth, $eyear) = split(" ", gmdate("d m Y", $edit_banner->endshow));
+			?>
+				
+		  	<form method="post" action="admin.php?page=adrotate">
+		    	<input type="hidden" name="adrotate_username" value="<?php echo $userdata->user_login;?>" />
+		    	<input type="hidden" name="adrotate_id" value="<?php echo $edit_banner->id;?>" />
+		    	<input type="hidden" name="adrotate_type" value="<?php echo $edit_banner->type;?>" />
+	
 		    	<table class="widefat" style="margin-top: .5em">
-
+	
 					<thead>
 					<tr valign="top">
 						<th colspan="4" bgcolor="#DDD">Create your banner, all fields are required!</th>
 					</tr>
 					</thead>
-
+	
 					<tbody>
 			      	<tr>
 				        <th scope="row" width="25%">Title:</th>
-				        <td colspan="3"><input tabindex="1" name="adrotate_title" type="text" size="67" class="search-input" autocomplete="off" value="<?php echo $edit_banner->title;?>" /></td>
+				        <td colspan="3"><input tabindex="1" name="adrotate_title" type="text" size="120" class="search-input" value="<?php echo $edit_banner->title;?>" autocomplete="off" /></td>
 			      	</tr>
 			      	<tr>
-				        <th scope="row" width="25%">Code:</th>
-				        <td colspan="3"><textarea tabindex="2" name="adrotate_bannercode" cols="70" rows="10"><?php echo stripslashes($edit_banner->bannercode); ?></textarea>
-				        <br /><em>Options: %id%<?php if($edit_banner->magic == 0) { ?>, %image%, %link%<?php } ?>. HTML/JavaScript allowed, use with care!</em></td>
+				        <th scope="row" width="25%" valign="top" style="border-bottom:none;">AdCode:</th>
+				        <td colspan="3" rowspan="2"><textarea tabindex="2" name="adrotate_bannercode" cols="90" rows="15"><?php echo stripslashes($edit_banner->bannercode); ?></textarea></td>
 			      	</tr>
 			      	<tr>
-					    <th scope="row">Group:</th>
-				        <td colspan="3">
-				        <select tabindex="3" name='adrotate_group' id='cat' class='postform'>
-						<?php foreach($groups as $group) {
-							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
-						    <option value="<?php echo $group->id; ?>" <?php if($group->id == $edit_banner->group) { echo 'selected'; } ?>><?php echo $group->id; ?> - <?php echo $group->name; ?></option>
-				    	<?php } ?>
-				    	</select>
-						</td>
-					</tr>
-					</tbody>
-
-					<thead>
-					<tr valign="top">
-						<th colspan="4" bgcolor="#DDD">Advanced (Everything below is optional)</th>
-					</tr>
-					</thead>
-
-					<tbody>
+				        <td><p><em>Options: %id%, %image%, %link%.<br />HTML/JavaScript allowed, use with care!</em></p>
+				        <p><strong>Examples:</strong></p>
+				        <p><em>Clicktracking: &lt;a href="%link%"&gt;This ad is great!&lt;/a&gt;</em></p>
+				        <p><em>Image: &lt;a href="http://example.com"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p></td>
+			      	</tr>
 			      	<tr>
 				        <th scope="row">Display From:</th>
 				        <td>
-				        	<input tabindex="4" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
-							<select tabindex="5" name="adrotate_smonth">
+				        	<input tabindex="3" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
+							<select tabindex="4" name="adrotate_smonth">
 								<option value="01" <?php if($smonth == "01") { echo 'selected'; } ?>>January</option>
 								<option value="02" <?php if($smonth == "02") { echo 'selected'; } ?>>February</option>
 								<option value="03" <?php if($smonth == "03") { echo 'selected'; } ?>>March</option>
@@ -343,12 +332,12 @@ function adrotate_edit() {
 								<option value="11" <?php if($smonth == "11") { echo 'selected'; } ?>>November</option>
 								<option value="12" <?php if($smonth == "12") { echo 'selected'; } ?>>December</option>
 							</select> /
-							<input tabindex="6" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />
+							<input tabindex="5" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />
 				        </td>
 				        <th scope="row">Until:</th>
 				        <td>
-				        	<input tabindex="7" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>"  /> /
-							<select tabindex="8" name="adrotate_emonth">
+				        	<input tabindex="6" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>"  /> /
+							<select tabindex="7" name="adrotate_emonth">
 								<option value="01" <?php if($emonth == "01") { echo 'selected'; } ?>>January</option>
 								<option value="02" <?php if($emonth == "02") { echo 'selected'; } ?>>February</option>
 								<option value="03" <?php if($emonth == "03") { echo 'selected'; } ?>>March</option>
@@ -362,138 +351,183 @@ function adrotate_edit() {
 								<option value="11" <?php if($emonth == "11") { echo 'selected'; } ?>>November</option>
 								<option value="12" <?php if($emonth == "12") { echo 'selected'; } ?>>December</option>
 							</select> /
-							<input tabindex="9" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />
+							<input tabindex="8" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />
 						</td>
 			      	</tr>
 			      	<tr>
-					    <th scope="row">Max Clicks:</th>
-				        <td colspan="3">Disable after <input tabindex="10" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> clicks! <em>Leave empty or 0 to skip this.</em></td>
-					</tr>
-			      	<tr>
-					    <th scope="row">Max Shown:</th>
-				        <td colspan="3">Disable after <input tabindex="11" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> views! <em>Leave empty or 0 to skip this.</em></td>
-					</tr>
-				<?php if($edit_banner->magic == 0) { ?>
-			      	<tr>
-				        <th scope="row">Banner image:</th>
-				        <td colspan="3"><select tabindex="12" name="adrotate_image" style="min-width: 200px;">
-       						<option value="none">No image or remote</option>
-							<?php echo adrotate_folder_contents($edit_banner->image); ?>
-						</select>
-						<br /><em>Use %image% in the code. Accepted files are: jpg, jpeg, gif, png, swf and flv.</em></td>
-			      	</tr>
-			      	<tr>
-				        <th scope="row" width="25%">Clicktracking:</th>
-				        <td colspan="3">Enable? <input tabindex="13" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> url: <input tabindex="14" name="adrotate_link" type="text" size="52" class="search-input" value="<?php echo $edit_banner->link;?>" />
-				        <br /><em>Use %link% in the code. Do not check the box if you cannot specify an url (eg, you do not use &lt;a href="http://somelink"&gt;).</em></td>
-			      	</tr>
-				<?php } ?>
-			      	<tr>
 				        <th scope="row">Activate the banner:</th>
-				        <td colspan="3"><select tabindex="15" name="adrotate_active">
+				        <td colspan="3"><select tabindex="9" name="adrotate_active">
 						<?php if($edit_banner->active == "no") { ?>
-						<option value="no">No! Do not show the banner anywhere.</option>
-						<option value="yes">Yes! The banner will be shown at random intervals.</option>
+							<?php if($edit_banner->type == "empty") { ?>
+						<option value="yes">YES! The banner will be included in the pool</option>
+						<option value="no">NO! Do not show the banner anywhere</option>
+							<?php } else {?>
+						<option value="no">NO! Do not show the banner anywhere</option>
+						<option value="yes">YES! The banner will be included in the pool</option>
+							<?php } ?>
 						<?php } else { ?>
-						<option value="yes">Yes! The banner will be shown at random intervals.</option>
-						<option value="no">No! Do not show the banner anywhere.</option>
+						<option value="yes">YES! The banner will be included in the pool</option>
+						<option value="no">NO! Do not show the banner anywhere</option>
 						<?php } ?>
 						</select></td>
 			      	</tr>
 					</tbody>
-				<?php if($banner_edit_id) { ?>
+	
+				<?php if($edit_banner->type != 'empty') { ?>
 					<thead>
 					<tr valign="top">
 						<th colspan="4">Preview</th>
 					</tr>
 					</thead>
-
+	
 					<tbody>
 			      	<tr>
-				        <td colspan="4"><?php echo adrotate_banner($edit_banner->group,  $banner_edit_id, null, null, true); ?>
+				        <td colspan="4"><?php echo adrotate_preview($edit_banner->id); ?>
 				        <br /><em>Note: While this preview is an accurate one, it might look different then it does on the website.
 						<br />This is because of CSS differences. Your themes CSS file is not active here!</em></td>
 			      	</tr>
 			      	</tbody>
-
+				<?php } ?>
+	
 					<thead>
 					<tr valign="top">
 						<th colspan="4">Ad Code</th>
 					</tr>
 					</thead>
-
+	
 					<tbody>
 			      	<tr>
 				        <th>In a post or page:</th>
-				        <td>[adrotate group="<?php echo $edit_banner->group; ?>" banner="<?php echo $banner_edit_id; ?>"]</td>
+				        <td>[adrotate banner="<?php echo $edit_banner->id; ?>"]</td>
 				        <th>Directly in a theme:</th>
-				        <td>&lt;?php echo adrotate_banner('<?php echo $edit_banner->group; ?>', '<?php echo $banner_edit_id; ?>'); ?&gt;</td>
-			      	</tr>
-			      	<tr>
-				        <th>&nbsp;</th>
-				        <td>[adrotate group="<?php echo $edit_banner->group; ?>"]</td>
-				        <th>&nbsp;</th>
-				        <td>&lt;?php echo adrotate_banner('<?php echo $edit_banner->group; ?>'); ?&gt;</td>
+				        <td>&lt;?php echo adrotate_ad(<?php echo $edit_banner->id; ?>); ?&gt;</td>
 			      	</tr>
 			      	</tbody>
+	
+					<thead>
+					<tr valign="top">
+						<th colspan="4" bgcolor="#DDD">Advanced (Everything below is optional)</th>
+					</tr>
+					</thead>
+	
+					<tbody>
+			      	<tr>
+				        <th scope="row" valign="top">Advertiser:</th>
+				        <td colspan="3">
+				        	<select tabindex="10" name="adrotate_advertiser" style="min-width: 200px;">
+								<option value="0" <?php if($saved_user == '0') { echo 'selected'; } ?>>Not specified</option>
+							<?php foreach($user_list as $id) {
+								$user = get_userdata($id->ID); 
+								if(strlen($user->first_name) < 1) $firstname = $user->user_login;
+									else $firstname = $user->first_name;
+								if(strlen($user->last_name) < 1) $lastname = ''; 
+									else $lastname = $user->last_name; ?>
+								<option value="<?php echo $id->ID; ?>"<?php if($saved_user == $id->ID) { echo ' selected'; } ?>><?php echo $firstname; ?> <?php echo $lastname; ?></option>
+							<?php } ?>
+							</select><br />
+							<em>Select the advertiser of the ad so he/she can follow stats on the statistics page. He/She has to have an WordPress account on your website and be assigned the proper access rights.</em>
+						</td>
+			      	</tr>
+			      	<tr>
+				        <th scope="row" valign="top">Clicktracking:</th>
+				        <td colspan="3">Enable? <input tabindex="10" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> url: <input tabindex="11" name="adrotate_link" type="text" size="120" class="search-input" value="<?php echo $edit_banner->link;?>" />
+				        <br /><em>Use %link% in the code. Do not check the box if you cannot specify an url (eg, you do not use &lt;a href="http://somelink"&gt;).</em></td>
+			      	</tr>
+			      	<tr>
+				        <th scope="row" valign="top">Banner image:</th>
+				        <td colspan="3"><select tabindex="12" name="adrotate_image" style="min-width: 200px;">
+	   						<option value="none">No image or remote</option>
+							<?php echo adrotate_folder_contents($edit_banner->image); ?>
+						</select>
+						<br /><em>Use %image% in the code. Accepted files are: jpg, jpeg, gif, png, swf and flv.</em></td>
+			      	</tr>
+			      	<tr>
+					    <th scope="row">Max Clicks:</th>
+				        <td colspan="3">Disable after <input tabindex="13" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> clicks! <em>Leave empty or 0 to skip this.</em></td>
+					</tr>
+			      	<tr>
+					    <th scope="row">Max Impressions:</th>
+				        <td colspan="3">Disable after <input tabindex="14" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> views! <em>Leave empty or 0 to skip this.</em></td>
+					</tr>
+					</tbody>
+				</table>
+	
+				<br class="clear" />
 
+				<?php if($groups) { ?>
+		    	<table class="widefat" style="margin-top: .5em">
+		  			<thead>
+		  				<tr>
+							<th scope="col" colspan="5">Select the group(s) this ad belongs to (Optional)</th>
+						</tr>
+		  			</thead>
+
+					<tbody>
+					<?php foreach($groups as $group) {
+						$ads_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = ".$group->id." AND `block` = 0;");
+						$class = ('alternate' != $class) ? 'alternate' : ''; ?>
+					    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
+							<th scope="row" class="check-column"><input type="checkbox" name="groupselect[]" value="<?php echo $group->id; ?>" <?php if(in_array($group->id, $meta_array)) echo "checked"; ?> /></th>
+							<td><?php echo $group->id; ?> - <strong><?php echo $group->name; ?></strong></td>
+							<td colspan="3"><?php echo $ads_in_group; ?> Ads</td>
+						</tr>
+		 			<?php } ?>
+					</tbody>					
+				</table>
+				<?php } ?>
+
+				<br class="clear" />
+
+		    	<table class="widefat" style="margin-top: .5em">
 					<thead>
 					<tr valign="top">
 						<th colspan="4" bgcolor="#DDD">Statistics</th>
 					</tr>
 					</thead>
-
+	
 					<tbody>
-
 			      	<tr>
 				        <th scope="row">Added:</th>
-				        <td width="25%"><?php echo date("F d Y H:i", $edit_banner->thetime); ?></td>
+				        <td width="25%"><?php echo date("F d, Y H:i", $edit_banner->thetime); ?></td>
 				        <th scope="row">Updated:</th>
-				        <td width="25%"><?php echo date("F d Y H:i", $edit_banner->updated); ?></td>
+				        <td width="25%"><?php echo date("F d, Y H:i", $edit_banner->updated); ?></td>
 			      	</tr>
 			      	<tr>
 				        <th scope="row">Clicked:</th>
 				        <td width="25%"><?php if($edit_banner->tracker == "Y") { echo $edit_banner->clicks; } else { echo 'N/A'; } ?></td>
-				        <th scope="row">Shown:</th>
+				        <th scope="row">Impressions:</th>
 				        <td width="25%"><?php echo $edit_banner->shown; ?></td>
 			      	</tr>
 			      	<tr>
 				        <th scope="row">CTR:</th>
-   						<?php if($banner->shown == 0) $edit_banner->shown = 1; ?>
+							<?php if($edit_banner->shown == 0) $edit_banner->shown = 1; ?>
 				        <td width="25%"><?php if($edit_banner->tracker == "Y") { echo round((100/$edit_banner->shown)*$edit_banner->clicks,2).' %'; } else { echo 'N/A'; } ?></td>
-				        <th scope="row">Actions:</th>
-				        <td width="25%"><input onclick="return confirm('You are about to reset the stats for this banner!\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="reset" name="adrotate_action" class="button-secondary delete" />
-				        <input onclick="return confirm('Renew this banner for 1 more year?\n\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" value="renew" name="adrotate_action" class="button-secondary delete" /></td>
+				        <th scope="row">&nbsp;</th>
+				        <td width="25%">&nbsp;</td>
+			      	</tr>
+			      	<tr>
+				        <th scope="row">Note:</th>
+							<?php if($edit_banner->shown == 0) $edit_banner->shown = 1; ?>
+				        <td colspan="3"><em>All statistics are indicative. They do not nessesarily reflect results counted by other parties.</em></td>
 			      	</tr>
 					</tbody>
-				<?php } ?>
-
 				</table>
-
-				<br class="clear" />
-				<?php adrotate_credits(); ?>
-
+	
 		    	<p class="submit">
-					<input tabindex="16" type="submit" name="adrotate_submit" class="button-primary" value="Save banner" />
-					<a href="admin.php?page=adrotate" class="button">Cancel</a>
+					<input tabindex="15" type="submit" name="adrotate_ad_submit" class="button-primary" value="Save ad" />
+					<a href="admin.php?page=adrotate&view=manage" class="button">Cancel</a>
 		    	</p>
+	
+			</form>
 
-		  	</form>
+		   	<?php } ?>
+
+			<?php adrotate_credits(); ?>
+
 		<?php } else { ?>
-		    <table class="form-table">
-		    	<thead>
-				<tr valign="top">
-					<th>Error!</th>
-				</tr>
-				</thead>
-
-				<tbody>
-		      	<tr>
-			        <td>You should create atleast one group before adding banners! <a href="admin.php?page=adrotate4">Add a group now</a>.</td>
-		      	</tr>
-		      	</tbody>
-			</table>
-		<?php } ?>
+			<?php echo adrotate_error('db_error'); ?>
+		<?php }	?>
+		<br class="clear" />
 	</div>
 <?php
 }
@@ -501,483 +535,682 @@ function adrotate_edit() {
 /*-------------------------------------------------------------
  Name:      adrotate_manage_group
 
- Purpose:   Edit a group
+ Purpose:   Manage groups
  Receive:   -none-
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_manage_group() {
-	global $wpdb, $userdata;
+	global $wpdb;
 
-	$message = $_GET['message'];
-	if($_GET['edit_group']) $group_edit_id = $_GET['edit_group'];
+	$message 		= $_GET['message'];
+	$view 			= $_GET['view'];
+	$group_edit_id 	= $_GET['edit_group'];
 	?>
 
 	<div class="wrap">
-		<h2>Banner groups</h2>
+		<h2>Group Management</h2>
 
 		<?php if ($message == 'created') { ?>
-			<div id="message" class="updated fade"><p>Group <strong>created</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Group created</p></div>
 		<?php } else if ($message == 'updated') { ?>
-			<div id="message" class="updated fade"><p>Group <strong>updated</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Group updated</p></div>
 		<?php } else if ($message == 'deleted') { ?>
-			<div id="message" class="updated fade"><p>Group <strong>deleted</strong>.</p></div>
+			<div id="message" class="updated fade"><p>Group deleted</p></div>
 		<?php } else if ($message == 'deleted_banners') { ?>
-			<div id="message" class="updated fade"><p>Group <strong>deleted</strong>. Including all <strong>ads</strong> that were in that group.</p></div>
+			<div id="message" class="updated fade"><p>Group including it's Ads deleted</p></div>
 		<?php } ?>
 
-		<?php if(!$group_edit_id) { ?>
-			<form name="groups" id="post" method="post" action="admin.php?page=adrotate4">
-	    	<input type="hidden" name="adrotate_action" value="group_delete" />
-
+		<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups') AND adrotate_mysql_table_exists($wpdb->prefix.'adrotate_linkmeta')) { ?>
 			<div class="tablenav">
-
-				<div class="alignleft">
-					<select name='adrotate_action' id='cat' class='postform' >
-				        <option value="">Bulk Actions</option>
-				        <option value="group_delete">Delete Group</option>
-				        <option value="group_delete_banners">Delete Group including ads</option>
-					</select>
-					<input type="submit" id="post-action-submit" value="Go" class="button-secondary" />
+				<div class="alignleft actions">
+					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=manage';?>">Manage</a> | 
+					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=addnew';?>">Add New</a>
 				</div>
 			</div>
 
-		   	<table class="widefat" style="margin-top: .5em">
-	  			<thead>
-	  				<tr>
-						<th scope="col" class="check-column">&nbsp;</th>
-						<th scope="col" width="5%"><center>ID</center></th>
-						<th scope="col">Name</th>
-						<th scope="col" width="10%"><center>Fallback</center></th>
-						<th scope="col" width="10%"><center>Banners</center></th>
-					</tr>
-	  			</thead>
-				<tbody>
-	  			
-			<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups')) { ?>
-				<?php $groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` ORDER BY `id`");
-				if ($groups) {
-					foreach($groups as $group) {
-						$banners_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `" . $wpdb->prefix . "adrotate` WHERE `group` = $group->id");
-						$class = ('alternate' != $class) ? 'alternate' : ''; ?>
-					    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
-							<th scope="row" class="check-column"><input type="checkbox" name="groupcheck[]" value="<?php echo $group->id; ?>" /></th>
-							<td><center><?php echo $group->id;?></center></td>
-							<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate4&amp;edit_group='.$group->id;?>" title="Edit"><?php echo $group->name;?></a></strong></td>
-							<td><center><?php if($group->fallback == 0) { echo "No"; } else { echo $group->fallback; } ?></center></td>
-							<td><center><?php echo $banners_in_group;?></center></td>
+	    	<?php if ($view == "" OR $view == "manage") { ?>
+
+			<h3>Manage Groups</h3>
+
+			<form name="groups" id="post" method="post" action="admin.php?page=adrotate-groups">
+	
+				<div class="tablenav">
+					<div class="alignleft">
+						<select name="adrotate_action" id="cat" class="postform">
+					        <option value="">Bulk Actions</option>
+					        <option value="group_delete">Delete Group</option>
+							<option value="group_delete_banners">Delete Group including ads</option>
+						</select>
+						<input onclick="return confirm('You are about to delete a group\nThis action can not be undone!\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" id="post-action-submit" name="adrotate_action_submit" value="Go" class="button-secondary" />
+					</div>
+				</div>
+			   	<table class="widefat" style="margin-top: .5em">
+		  			<thead>
+		  				<tr>
+							<th scope="col" class="check-column">&nbsp;</th>
+							<th scope="col" width="5%"><center>ID</center></th>
+							<th scope="col">Name</th>
+							<th scope="col" width="10%"><center>Ads</center></th>
+							<th scope="col" width="15%"><center>Code</center></th>
+							<th scope="col" width="10%"><center>Fallback</center></th>
 						</tr>
-		 			<?php } ?>
-				<?php } else { ?>
-					<tr id='no-groups'>
-						<th scope="row" class="check-column">&nbsp;</th>
-						<td colspan="3"><em>No groups created yet!</em></td>
-					</tr>
-				<?php } ?>
-			<?php } else { ?>
-				<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://meandmymac.net/support/">http://meandmymac.net support</a></span></td></tr>
-			<?php }	?>
-	 			</tbody>
-			</table>
-
-			<br class="clear" />
-
-		   	<table class="widefat" style="margin-top: .5em">
-	  			<thead>
-	  				<tr>
-						<th scope="col" colspan="2">Create a new group</th>
-					</tr>
-	  			</thead>
-				<tbody>
-	  			
-			<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups')) { ?>
-				<?php $groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` ORDER BY `id`"); ?>
-				    <tr id='group-new'>
-						<th scope="row">Name:</th>
-						<td><input tabindex="1" name="adrotate_group" type="text" class="search-input" size="40" value="" autocomplete="off" /></td>
-					</tr>
-				    <tr id='group-new'>
-						<th scope="row">Fallback ads?</th>
-						<td><select name="adrotate_fallback">
-				        <option value="0">No</option>
-					<?php if ($groups and count($groups) > 1) { ?>
-						<?php foreach($groups as $group) { ?>
-					        <option value="<?php echo $group->id;?>"><?php echo $group->id;?> - <?php echo $group->name;?></option>
+		  			</thead>
+					<tbody>
+		  			
+					<?php $groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` WHERE `name` != '' ORDER BY `id`;");
+					if ($groups) {
+						foreach($groups as $group) {
+							$ads_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = ".$group->id." AND `block` = 0;");
+							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
+						    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
+								<th scope="row" class="check-column"><input type="checkbox" name="groupcheck[]" value="<?php echo $group->id; ?>" /></th>
+								<td><center><?php echo $group->id;?></center></td>
+								<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=edit&edit_group='.$group->id;?>" title="Edit"><?php echo $group->name;?></a></strong></td>
+								<td><center><?php echo $ads_in_group;?></center></td>
+								<td><center>[adrotate group="<?php echo $group->id; ?>"]</center></td>
+								<td><center><?php if($group->fallback == 0) { echo "Not set"; } else { echo $group->fallback; } ?></center></td>
+							</tr>
 			 			<?php } ?>
+					<?php } else { ?>
+						<tr id='no-groups'>
+							<th scope="row" class="check-column">&nbsp;</th>
+							<td colspan="5"><em>No groups created!</em></td>
+						</tr>
 					<?php } ?>
-						</select> <em>You need atleast two groups to use this feature!</em></td>
-					</tr>
-					
-			<?php } else { ?>
-				<tr id='no-id'><td scope="row" colspan="4"><span style="font-weight: bold; color: #f00;">There was an error locating the database table for the AdRotate groups. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://meandmymac.net/support/">http://meandmymac.net support</a></span></td></tr>
-			<?php }	?>
-	 			</tbody>
-			</table>
-			
-	    	<p class="submit">
-				<input tabindex="3" type="submit" name="adrotate_group_submit" class="button-primary" value="Add Group" />
-				<a href="admin.php?page=adrotate4" class="button">Cancel</a>
-	    	</p>
-
+		 			</tbody>
+				</table>
 			</form>
 
 			<br class="clear" />
+
+		   	<?php } else if($view == "addnew" OR $view == "edit") { ?>
+		   	
+				<?php if(!$group_edit_id) { ?>
+				<h3>New group</h3>
+					<?php
+					$action = "group_new";
+					$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;";
+					$edit_id = $wpdb->get_var($query);
+					if($edit_id == 0) {
+						$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_groups` (`name`, `fallback`) VALUES ('', 0);");
+						$edit_id = $wpdb->get_var($query);
+					}
+					$group_edit_id = $edit_id;
+					?>
+				<?php } else { ?>
+				<h3>Edit Group</h3>
+				<?php 
+					$action = "group_edit";
+				}
+
+				$edit_group = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = '$group_edit_id';");
+				$groups		= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' ORDER BY `id` ASC;"); 
+				$ads		= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `type` != 'empty' AND `active` = 'yes' ORDER BY `id` ASC;"); 
+				$linkmeta	= $wpdb->get_results("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = '$group_edit_id' AND `block` = 0 AND `user` = 0;");
+				foreach($linkmeta as $meta) {
+					$meta_array[] = $meta->ad;
+				}
+				if(!is_array($meta_array)) $meta_array = array();
+				?>
+	
+				<form name="editgroup" id="post" method="post" action="admin.php?page=adrotate-groups">
+			    	<input type="hidden" name="adrotate_id" value="<?php echo $edit_group->id;?>" />
+			    	<input type="hidden" name="adrotate_action" value="<?php echo $action;?>" />
+	
+			   	<table class="widefat" style="margin-top: .5em">
+
+		  			<thead>
+		  				<tr>
+							<th scope="col" colspan="5">Fill in a name as reference and specify a fallback group</th>
+						</tr>
+		  			</thead>
+
+					<tbody>
+					    <tr id='group-new'>
+							<th scope="row">&nbsp;</th>
+							<td width="30%"><strong>ID:</strong></td>
+							<td colspan="3"><?php echo $edit_group->id; ?></td>
+						</tr>
+					    <tr id='group-new'>
+							<th scope="row">&nbsp;</th>
+							<td width="30%"><strong>Name:</strong></td>
+							<td colspan="3"><input tabindex="1" name="adrotate_groupname" type="text" class="search-input" size="40" value="<?php echo $edit_group->name; ?>" autocomplete="off" /></td>
+						</tr>
+					    <tr id='group-new'>
+							<th scope="row">&nbsp;</th>
+							<td><strong>Fallback group?</strong></td>
+							<td colspan="3"><select tabindex="2" name="adrotate_fallback">
+					        <option value="0">No</option>
+						<?php if ($groups and count($groups) > 1) { ?>
+							<?php foreach($groups as $group) { ?>
+						        <option value="<?php echo $group->id;?>" <?php if($edit_group->fallback == $group->id) { echo 'selected'; } ?>><?php echo $group->id;?> - <?php echo $group->name;?></option>
+				 			<?php } ?>
+						<?php } ?>
+							</select> <em>You need atleast two groups to use this feature!</em></td>
+						</tr>
+					<?php if($edit_group->name != '') { ?>
+				      	<tr>
+					        <th scope="row">&nbsp;</th>
+					        <th scope="row"><strong>This group is in the block(s):</strong></th>
+					        <td colspan="3"><?php echo adrotate_group_is_in_blocks($edit_group->id); ?></td>
+				      	</tr>
+					<?php } ?>
+					</tbody>
+
+					<thead>
+						<tr valign="top">
+							<th colspan="5">Group Code</th>
+						</tr>
+					</thead>
+	
+					<tbody>
+				      	<tr id='group-code'>
+							<th scope="row">&nbsp;</th>
+					        <th>In a post or page:</th>
+					        <td>[adrotate group="<?php echo $edit_group->id; ?>"]</td>
+					        <th>Directly in a theme:</th>
+					        <td>&lt;?php echo adrotate_group(<?php echo $edit_group->id; ?>); ?&gt;</td>
+				      	</tr>
+			      	</tbody>
+				
+		  			<thead>
+		  				<tr>
+							<th scope="col" colspan="3">Choose the ads to use in this group</th>
+							<th scope="col"><center>Impressions - Clicks</center></th>
+							<th scope="col">Visible until</th>
+						</tr>
+		  			</thead>
+
+					<tbody>
+					<?php if($ads) {
+						foreach($ads as $ad) {
+							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
+						    <tr id='ad-<?php echo $ad->id; ?>' class=' <?php echo $class; ?>'>
+								<th scope="row" class="check-column"><input type="checkbox" name="adselect[]" value="<?php echo $ad->id; ?>" <?php if(in_array($ad->id, $meta_array)) echo "checked"; ?> /></th>
+								<td colspan="2"><?php echo $ad->id; ?> - <strong><?php echo $ad->title; ?></strong></td>
+								<td><center><?php echo $ad->shown; ?> - <?php if($ad->tracker == 'Y') { echo $ad->clicks; } else { ?>N/A<?php } ?></center></td>
+								<td><span style="color: <?php echo adrotate_prepare_color($ad->endshow);?>;"><?php echo date("F d, Y", $ad->endshow); ?></span></td>
+							</tr>
+			 			<?php } ?>
+					<?php } else { ?>
+						<tr id='no-ads'>
+							<th scope="row" class="check-column">&nbsp;</th>
+							<td colspan="5"><em>No ads created!</em></td>
+						</tr>
+					<?php } ?>
+					</tbody>					
+		 		</table>
+				
+		    	<p class="submit">
+					<input tabindex="3" type="submit" name="adrotate_group_submit" class="button-primary" value="Save" />
+					<a href="admin.php?page=adrotate-groups&view=manage" class="button">Cancel</a>
+		    	</p>
+	
+				</form>
+
+		   	<?php } ?>
+	
 			<?php adrotate_credits(); ?>
 
 		<?php } else { ?>
-
-			<?php
-			$edit_group = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = '$group_edit_id'");
-			$groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` ORDER BY `id`");
-
-			if ($message == 'field_error') { ?>
-				<div id="message" class="updated fade"><p>Please fill in a name for your group!</p></div>
-			<?php }
-
-			if($group_edit_id > 0) { ?>
-			  	<form method="post" action="admin.php?page=adrotate4">
-			    	<input type="hidden" name="adrotate_id" value="<?php echo $group_edit_id;?>" />
-
-			    	<table class="widefat" style="margin-top: .5em">
-
-						<thead>
-						<tr valign="top">
-							<th colspan="2" bgcolor="#DDD">You can change the name of the group here. The ID stays the same!</th>
-						</tr>
-						</thead>
-
-						<tbody>
-				      	<tr>
-					        <th scope="row" width="25%">ID:</th>
-					        <td><?php echo $edit_group->id;?></td>
-				      	</tr>
-				      	<tr>
-					        <th scope="row" width="25%">Name:</th>
-					        <td><input tabindex="1" name="adrotate_group" type="text" size="67" class="search-input" autocomplete="off" value="<?php echo $edit_group->name;?>" /></td>
-				      	</tr>
-				      	<tr>
-					        <th scope="row" width="25%">Fallback ads:</th>
-					        <td><select name="adrotate_fallback">
-						        <option value="0">No</option>
-							<?php if ($groups and count($groups) > 1) { ?>
-								<?php foreach($groups as $group) { ?>
-							        <option value="<?php echo $group->id;?>" <?php if($group->id == $group_edit_id) { echo 'disabled'; } ?> <?php if($group->id == $edit_group->fallback) { echo 'selected'; } ?>><?php echo $group->id;?> - <?php echo $group->name;?></option>
-					 			<?php } ?>
-							<?php } ?>
-								</select> <em>You need atleast two groups to use this feature!</em>
-							</td>
-				      	</tr>
-				      	</tbody>
-
-					</table>
-
-			    	<p class="submit">
-						<input tabindex="2" type="submit" name="adrotate_group_submit" class="button-primary" value="Save Group" />
-						<a href="admin.php?page=adrotate4" class="button">Cancel</a>
-			    	</p>
-
-			  	</form>
-			<?php } else { ?>
-			    <table class="widefat" style="margin-top: .5em">
-			    	<thead>
-					<tr valign="top">
-						<th>Error!</th>
-					</tr>
-					</thead>
-
-					<tbody>
-			      	<tr>
-				        <td>No valid group ID specified! <a href="admin.php?page=adrotate4">Continue</a>.</td>
-			      	</tr>
-			      	</tbody>
-				</table>
-			<?php } ?>
-		<?php } ?>
+			<?php echo adrotate_error('db_error'); ?>
+		<?php }	?>
+		<br class="clear" />
 	</div>
 <?php
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_wizard
+ Name:      adrotate_manage_block
 
- Purpose:   Create new banners, the idiot way
+ Purpose:   Manage blocks of ads
  Receive:   -none-
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_wizard() {
+function adrotate_manage_block() {
 	global $wpdb, $userdata;
 
-	$thetime 	= current_time('timestamp');
-	$endtime 	= $thetime + 31536000;
-	$step 		= $_GET['step'];
-	$message	= $_GET['message'];
-	$back 		= $_GET['back'];
-	$magic_id	= $_GET['magic_id'];
+	$message 		= $_GET['message'];
+	$view 			= $_GET['view'];
+	$block_edit_id 	= $_GET['edit_block'];
+	if($_GET['edit_block']) $block_edit_id = $_GET['edit_block'];
+	?>
 
-?>
 	<div class="wrap">
-		<?php $groupcheck = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_groups`");
-		if($groupcheck > 0) { ?>
+		<h2>Block Management</h2>
 
-	  	<?php if($step == '' OR $step == 1) { ?>
-	  	<!-- Title and Code -->
-
-		<?php
-		if(strlen($magic_id) < 1 AND strlen($back) < 1) { // Try to re-use old records
-			$SQL = "SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE (`title` = '' AND `bannercode` = '') OR `magic` = 2 ORDER BY `id` DESC LIMIT 1";
-			$empty = $wpdb->get_var($SQL);
-			if($empty == 0) {
-				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `group`, `image`, `link`, `tracker`, `clicks`, `maxclicks`, `shown`, `magic`) VALUES ('', '', '$thetime', '$thetime', '$userdata->display_name', 'no', '$thetime', '$endtime', '', 'none', '', 'N', 0, 0, 0, 2)");
-			}
-			$magic_id = $wpdb->get_var($SQL);
-		} else {
-			$edit = $wpdb->get_row("SELECT `title`, `bannercode` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$magic_id'");
-		}
-		?>
-
-	  	<h2>Banner Wizard - Step 1 of 3 - Create the banner</h2>
-
-		<?php if ($message == 'field_error') { ?>
-			<div id="message" class="updated fade"><p>Not all fields met the requirements.</p></div>
+		<?php if ($message == 'created') { ?>
+			<div id="message" class="updated fade"><p>Block created</p></div>
+		<?php } else if ($message == 'updated') { ?>
+			<div id="message" class="updated fade"><p>Block updated</p></div>
+		<?php } else if ($message == 'deleted') { ?>
+			<div id="message" class="updated fade"><p>Block deleted</p></div>
 		<?php } ?>
 
-	  	<form method="post" action="admin.php?page=adrotate2">
-	    	<input type="hidden" name="adrotate_step" value="1" />
-	    	<input type="hidden" name="adrotate_magic_id" value="<?php echo $magic_id;?>" />
+		<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_blocks') AND adrotate_mysql_table_exists($wpdb->prefix.'adrotate_linkmeta')) { ?>
+			<div class="tablenav">
+				<div class="alignleft actions">
+					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=manage';?>">Manage</a> | 
+					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=addnew';?>">Add New</a>
+				</div>
+			</div>
 
-	    	<table class="widefat" style="margin-top: .5em">
+	    	<?php if ($view == "" OR $view == "manage") { ?>
 
-				<thead>
-				<tr valign="top">
-					<th colspan="2" bgcolor="#DDD">Use this step by step guide to create referrer banners, for example from Google AdSense.
-					<br />Fill in the title as a reference for the banner manager.
-					<br />The code field holds your referrer code. This can be a snippet of JavaScript or simply an HTML link. That depends on your banner program.</th>
-				</tr>
-				</thead>
+			<h3>Manage Blocks</h3>
 
-				<tbody>
-		      	<tr>
-			        <th scope="row" width="25%">Title:</th>
-			        <td><input tabindex="1" name="adrotate_title" type="text" size="67" class="search-input" autocomplete="off" value="<?php echo $edit->title;?>" /></td>
-		      	</tr>
-		      	<tr>
-			        <th scope="row" width="25%">Code:</th>
-			        <td><textarea tabindex="2" name="adrotate_bannercode" cols="70" rows="10"><?php echo stripslashes($edit->bannercode); ?></textarea>
-			        <br /><em>HTML/JavaScript allowed, use with care!</em></td>
-		      	</tr>
-			</table>
-	    	<p class="submit">
-				<input tabindex="3" type="submit" name="adrotate_magic_submit" class="button-primary" value="Continue" />
-				<a href="admin.php?page=adrotate&magic_id=<?php echo $magic_id; ?>&cancel=true" class="button">Cancel</a>
-	    	</p>
-		</form>
+			<form name="blocks" id="post" method="post" action="admin.php?page=adrotate-blocks">
+	
+				<div class="tablenav">
+					<div class="alignleft">
+						<select name='adrotate_action' id='cat' class='postform' >
+					        <option value="">Bulk Actions</option>
+					        <option value="block_delete">Delete Block(s)</option>
+						</select>
+						<input type="submit" id="post-action-submit" value="Go" class="button-secondary" />
+					</div>
+				</div>
+	
+			   	<table class="widefat" style="margin-top: .5em">
 
-	  	<?php } else if($step == 2) { ?>
-	  	<!-- Extra options (Timespan, group) -->
+		  			<thead>
+		  				<tr>
+							<th scope="col" class="check-column">&nbsp;</th>
+							<th scope="col" width="5%"><center>ID</center></th>
+							<th scope="col">Name</th>
+							<th scope="col" width="10%"><center>Groups</center></th>
+							<th scope="col" width="20%"><center>Code</center></th>
+						</tr>
+		  			</thead>
 
-		<?php
-		$edit = $wpdb->get_row("SELECT `id`, `group`, `startshow`, `endshow`, `maxclicks`, `maxshown` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$magic_id'");
-		list($sday, $smonth, $syear) = split(" ", gmdate("d m Y", $edit->startshow));
-		list($eday, $emonth, $eyear) = split(" ", gmdate("d m Y", $edit->endshow));
-		?>
+					<tbody>
+		  			
+					<?php $blocks = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_blocks` WHERE `name` != '' ORDER BY `id`;");
+					if ($blocks) {
+						foreach($blocks as $block) {
+							$groups_in_block = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `block` = ".$block->id.";");
+							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
+						    <tr id='group-<?php echo $block->id; ?>' class=' <?php echo $class; ?>'>
+								<th scope="row" class="check-column"><input type="checkbox" name="blockcheck[]" value="<?php echo $block->id; ?>" /></th>
+								<td><center><?php echo $block->id;?></center></td>
+								<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=edit&edit_block='.$block->id;?>" title="Edit"><?php echo $block->name;?></a></strong></td>
+								<td><center><?php echo $groups_in_block;?></center></td>
+								<td><center>[adrotate block="<?php echo $block->id; ?>"]</center></td>
+							</tr>
+			 			<?php } ?>
+					<?php } else { ?>
+						<tr id='no-groups'>
+							<th scope="row" class="check-column">&nbsp;</th>
+							<td colspan="4"><em>No blocks created yet!</em></td>
+						</tr>
+					<?php } ?>
+		 			</tbody>
 
-	  	<h2>Banner Wizard - Step 2 of 3 - Setting some options</h2>
+				</table>
+			</form>
 
-		<?php if ($message == 'field_error') { ?>
-			<div id="message" class="updated fade"><p>Not all fields met the requirements.</p></div>
-		<?php } ?>
+			<br class="clear" />
 
-	  	<form method="post" action="admin.php?page=adrotate2">
-	    	<input type="hidden" name="adrotate_step" value="2" />
-	    	<input type="hidden" name="adrotate_magic_id" value="<?php echo $magic_id;?>" />
+		   	<?php } else if($view == "addnew" OR $view == "edit") { ?>
+		   	
+				<?php if(!$block_edit_id) { ?>
+				<h3>New Block</h3>
+					<?php
+					$action = "block_new";
+					$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;";
+					$edit_id = $wpdb->get_var($query);
+					if($edit_id == 0) {
+						$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_blocks` (`name`, `adcount`, `columns`) VALUES ('', '', '');");
+						$edit_id = $wpdb->get_var($query);
+					}
+					$block_edit_id = $edit_id;
+					?>
+				<?php } else { ?>
+				<h3>Edit Block</h3>
+				<?php 
+					$action = "block_edit";
+				} 
+				
+				$edit_block = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '$block_edit_id';");
+				$groups		= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' ORDER BY `id` ASC;"); 
+				$linkmeta	= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = '$block_edit_id' AND `user` = 0;");
+				foreach($linkmeta as $meta) {
+					$meta_array[] = $meta->group;
+				}
+				if(!is_array($meta_array)) $meta_array = array();
+				?>
 
-	    	<table class="widefat" style="margin-top: .5em">
+				<form name="editblock" id="post" method="post" action="admin.php?page=adrotate-blocks">
+			    	<input type="hidden" name="adrotate_id" value="<?php echo $edit_block->id;?>" />
+			    	<input type="hidden" name="adrotate_action" value="<?php echo $action;?>" />
 
-				<thead>
-				<tr valign="top">
-					<th colspan="4" bgcolor="#DDD">Pick a group where you banner will be in. Groups of banners are useful and relate to locations on your website. You can put multiple banners in a group and show that group somewhere on your website. Thus restricting banners to that one location.
-					<br />Optionally, set a date from when to when the banner should be shown. You will be alerted when the time has run out.</th>
-				</tr>
-				</thead>
+			   	<table class="widefat" style="margin-top: .5em">
+			   	
+		  			<thead>
+		  				<tr>
+							<th scope="col" colspan="5">Fill in a name as reference, select how many ads and in how many columns you want to block to appear</th>
+						</tr>
+		  			</thead>
+		  			
+					<tbody>
+					    <tr id='block-new'>
+							<th scope="row">&nbsp;</th>
+							<td width="30%"><strong>ID:</strong></td>
+							<td colspan="3"><?php echo $edit_block->id; ?></td>
+						</tr>
+					    <tr id='block-new'>
+							<th scope="row">&nbsp;</th>
+							<td width="30%"><strong>Name / Reference:</strong></td>
+							<td colspan="3"><input tabindex="1" name="adrotate_blockname" type="text" class="search-input" size="80" value="<?php echo $edit_block->name; ?>" autocomplete="off" /></td>
+						</tr>
+					    <tr id='block-new'>
+							<th scope="row">&nbsp;</th>
+							<td><strong>How many ads and columns</strong></td>
+							<td colspan="3"><input tabindex="2" name="adrotate_adcount" type="text" class="search-input" size="5" value="<?php echo $edit_block->adcount; ?>" autocomplete="off" /> ads in <input tabindex="3" name="adrotate_columns" type="text" class="search-input" size="5" value="<?php echo $edit_block->columns; ?>" autocomplete="off" /> columns. (Example: 4 ads in 2 columns, makes a square block of 2x2 ads.)</td>
+						</tr>
+					</tbody>
+			   	
+		  			<thead>
+		  				<tr>
+							<th scope="col" colspan="5">Wrapper code (Optional) - Wraps around each ad to facilitate easy margins, paddings or borders around ads without making the ads ugly or unusable for other locations.</th>
+						</tr>
+		  			</thead>
+		  			
+					<tbody>
+					    <tr id='block-new'>
+							<th scope="row">&nbsp;</th>
+							<td><strong>Before ad</strong><br/>
+							Example: &lt;span style="margin: 2px;"&gt;<br />
+							<em>HTML/CSS/JavaScript allowed</em></td>
+							<td colspan="3"><textarea tabindex="4" name="adrotate_wrapper_before" cols="90" rows="3"><?php echo $edit_block->wrapper_before; ?></textarea></td>
+						</tr>
+					    <tr id='block-new'>
+							<th scope="row">&nbsp;</th>
+							<td><strong>After ad</strong><br/>
+							Example: &lt;/span&gt;<br />
+							<em>HTML/CSS/JavaScript allowed</em></td>
+							<td colspan="3"><textarea tabindex="5" name="adrotate_wrapper_after" cols="90" rows="3"><?php echo $edit_block->wrapper_after; ?></textarea></td>
 
-				<tbody>
-		      	<tr>
-				    <th scope="row">Select a group:</th>
-			        <td colspan="3">
-			        <select tabindex="1" name='adrotate_group' id='cat' class='postform'>
-			        	<option value="" <?php if($edit->group == "") { echo 'selected'; } ?>>New Group</option>
-					<?php $groups = $wpdb->get_results("SELECT `id`, `name` FROM `".$wpdb->prefix."adrotate_groups` ORDER BY `name`");
-					foreach($groups as $group) { ?>
-					    <option value="<?php echo $group->id; ?>" <?php if($edit->group == $group->id) { echo 'selected'; } ?>><?php echo $group->id; ?> - <?php echo $group->name; ?></option>
-			    	<?php } ?>
-			    	</select>
-					</td>
-				</tr>
-		      	<tr>
-				    <th scope="row">Or make a group:</th>
-			        <td colspan="3"><input tabindex="2" name="adrotate_newgroup" type="text" size="40" class="search-input" autocomplete="off" value="" /><br /><em>Leave this field empty if you select a group from the dropdown menu!</em></td>
-				</tr>
-		      	<tr>
-			        <th scope="row">Display From:</th>
-			        <td>
-			        	<input tabindex="3" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
-						<select tabindex="4" name="adrotate_smonth">
-							<option value="" <?php if($smonth == "") { echo 'selected'; } ?>>Pick month...</option>
-							<option value="01" <?php if($smonth == "01") { echo 'selected'; } ?>>January</option>
-							<option value="02" <?php if($smonth == "02") { echo 'selected'; } ?>>February</option>
-							<option value="03" <?php if($smonth == "03") { echo 'selected'; } ?>>March</option>
-							<option value="04" <?php if($smonth == "04") { echo 'selected'; } ?>>April</option>
-							<option value="05" <?php if($smonth == "05") { echo 'selected'; } ?>>May</option>
-							<option value="06" <?php if($smonth == "06") { echo 'selected'; } ?>>June</option>
-							<option value="07" <?php if($smonth == "07") { echo 'selected'; } ?>>July</option>
-							<option value="08" <?php if($smonth == "08") { echo 'selected'; } ?>>August</option>
-							<option value="09" <?php if($smonth == "09") { echo 'selected'; } ?>>September</option>
-							<option value="10" <?php if($smonth == "10") { echo 'selected'; } ?>>October</option>
-							<option value="11" <?php if($smonth == "11") { echo 'selected'; } ?>>November</option>
-							<option value="12" <?php if($smonth == "12") { echo 'selected'; } ?>>December</option>
-						</select> /
-						<input tabindex="5" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />
-			        </td>
-			        <th scope="row">Until:</th>
-			        <td>
-			        	<input tabindex="6" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>" /> /
-						<select tabindex="7" name="adrotate_emonth">
-							<option value="" <?php if($emonth == "") { echo 'selected'; } ?>>Pick month...</option>
-							<option value="01" <?php if($emonth == "01") { echo 'selected'; } ?>>January</option>
-							<option value="02" <?php if($emonth == "02") { echo 'selected'; } ?>>February</option>
-							<option value="03" <?php if($emonth == "03") { echo 'selected'; } ?>>March</option>
-							<option value="04" <?php if($emonth == "04") { echo 'selected'; } ?>>April</option>
-							<option value="05" <?php if($emonth == "05") { echo 'selected'; } ?>>May</option>
-							<option value="06" <?php if($emonth == "06") { echo 'selected'; } ?>>June</option>
-							<option value="07" <?php if($emonth == "07") { echo 'selected'; } ?>>July</option>
-							<option value="08" <?php if($emonth == "08") { echo 'selected'; } ?>>August</option>
-							<option value="09" <?php if($emonth == "09") { echo 'selected'; } ?>>September</option>
-							<option value="10" <?php if($emonth == "10") { echo 'selected'; } ?>>October</option>
-							<option value="11" <?php if($emonth == "11") { echo 'selected'; } ?>>November</option>
-							<option value="12" <?php if($emonth == "12") { echo 'selected'; } ?>>December</option>
-						</select> /
-						<input tabindex="8" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />
-					</td>
-		      	</tr>
-				</tbody>
+						</tr>
+					</tbody>
 
-			</table>
-	    	<p class="submit">
-				<input tabindex="11" type="submit" name="adrotate_magic_submit" class="button-primary" value="Continue" />
-				<a href="admin.php?page=adrotate2&magic_id=<?php echo $magic_id; ?>&step=1&back=true" class="button">Back</a>
-				<a href="admin.php?page=adrotate&magic_id=<?php echo $magic_id; ?>&cancel=true" class="button">Cancel</a>
-	    	</p>
-		</form>
+					<thead>
+						<tr valign="top">
+							<th colspan="5">Block Code</th>
+						</tr>
+					</thead>
+	
+					<tbody>
+				      	<tr id='group-code'>
+							<th scope="row">&nbsp;</th>
+					        <th>In a post or page:</th>
+					        <td>[adrotate block="<?php echo $edit_block->id; ?>"]</td>
+					        <th>Directly in a theme:</th>
+					        <td>&lt;?php echo adrotate_block(<?php echo $edit_block->id; ?>); ?&gt;</td>
+				      	</tr>
+			      	</tbody>
+				
+		  			<thead>
+		  				<tr>
+							<th scope="col" colspan="5">Choose the groups to use in this block</th>
+						</tr>
+		  			</thead>
 
-	  	<?php } else if($step == 3) { ?>
-	  	<!-- Preview and Confirm -->
-
-		<?php
-		$edit = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$magic_id'");
-		$group = $wpdb->get_var("SELECT `name` FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = '$edit->group'");
-		list($sday, $smonth, $syear) = split(" ", gmdate("d m Y", $edit->startshow));
-		list($eday, $emonth, $eyear) = split(" ", gmdate("d m Y", $edit->endshow));
-		?>
-
-	  	<h2>Banner Wizard - Step 3 of 3 - Preview and implement your banner</h2>
-
-	  	<form method="post" action="admin.php?page=adrotate2">
-	    	<input type="hidden" name="adrotate_step" value="3" />
-	    	<input type="hidden" name="adrotate_magic_id" value="<?php echo $magic_id;?>" />
-
-	    	<table class="widefat" style="margin-top: .5em">
-
-				<thead>
-				<tr valign="top">
-					<th bgcolor="#DDD" colspan="4">Note: While this preview is an accurate one, it might look different as it would on the website.
-					<br />This is because of CSS differences. Your themes CSS file is not active here!
-					<br />If you are not happy with the result just press back and edit the appropriate fields.</th>
-				</tr>
-				</thead>
-
-				<tbody>
-			      	<tr>
-				        <td colspan="4"><?php echo adrotate_banner($edit->group,  $edit->id, null, null, true); ?>
-			      	</tr>
-				</tbody>
-
-				<thead>
-			      	<tr valign="top">
-				        <th bgcolor="#DDD" colspan="4">How do i use this banner? Paste the following example code where you want the ad to show:</th>
-			      	</tr>
-				</thead>
-
-				<tbody>
-			      	<tr>
-				        <th>In a post or page:</th>
-				        <td>[adrotate group="<?php echo $edit->group; ?>" banner="<?php echo $edit->id; ?>"]</td>
-				        <th>Directly in a theme:</th>
-				        <td>&lt;?php echo adrotate_banner('<?php echo $edit->group; ?>', '<?php echo $edit->id; ?>'); ?&gt;</td>
-			      	</tr>
-			      	<tr>
-				        <th>&nbsp;</th>
-				        <td>[adrotate group="<?php echo $edit->group; ?>"]</td>
-				        <th>&nbsp;</th>
-				        <td>&lt;?php echo adrotate_banner('<?php echo $edit->group; ?>'); ?&gt;</td>
-			      	</tr>
-				</tbody>
-
-				<thead>
-			      	<tr valign="top">
-				        <th bgcolor="#DDD" colspan="4">Some specifications</th>
-			      	</tr>
-				</thead>
-
-				<tbody>
-			      	<tr>
-				        <td colspan="4">This banner, '<strong><?php echo $edit->title; ?></strong>' (ID: <?php echo $edit->id; ?>)<br />
-				        Is to be shown from <strong><?php echo date('l j F, Y', $edit->startshow); ?></strong> to <strong><?php echo date('l j F, Y', $edit->endshow); ?></strong><br /> 
-				        Attached to group '<strong><?php echo $group; ?></strong>' (ID: <?php echo $edit->group; ?>).<br />
-				        </td>
-			      	</tr>
-				</tbody>
-
-			</table>
-	    	<p class="submit">
-				<input tabindex="1" type="submit" name="adrotate_magic_submit" class="button-primary" value="Confirm and save" />
-				<a href="admin.php?page=adrotate2&magic_id=<?php echo $magic_id; ?>&step=2&back=true" class="button">Back</a>
-				<a href="admin.php?page=adrotate&magic_id=<?php echo $magic_id; ?>&cancel=true" class="button">Cancel</a>
-	    	</p>
-		</form>
-	  	<?php } else { ?>
-		    <table class="widefat" style="margin-top: .5em">
-		    	<thead>
-				<tr valign="top">
-					<th>Error!</th>
-				</tr>
-				</thead>
-
-				<tbody>
-		      	<tr>
-			        <td><strong>Stop messing about and follow the right procedure! <a href="admin.php?page=adrotate2&magic_id=<?php echo $magic_id; ?>">Try again</a>.</strong></td>
-		      	</tr>
-		      	</tbody>
-			</table>
-	  	<?php } ?>
+					<tbody>
+					<?php if($groups) {
+						foreach($groups as $group) {
+							$ads_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = ".$group->id." AND `block` = 0;");
+							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
+						    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
+								<th scope="row" class="check-column"><input type="checkbox" name="groupselect[]" value="<?php echo $group->id; ?>" <?php if(in_array($group->id, $meta_array)) echo "checked"; ?> /></th>
+								<td><?php echo $group->id; ?> - <strong><?php echo $group->name; ?></strong></td>
+								<td colspan="3"><?php echo $ads_in_group; ?> Ads</td>
+							</tr>
+			 			<?php } ?>
+					<?php } else { ?>
+						<tr id='no-groups'>
+							<th scope="row" class="check-column">&nbsp;</th>
+							<td colspan="4"><em>No groups created!</em></td>
+						</tr>
+					<?php } ?>
+					</tbody>					
+				</table>
+				
+		    	<p class="submit">
+					<input tabindex="6" type="submit" name="adrotate_block_submit" class="button-primary" value="Save" />
+					<a href="admin.php?page=adrotate-blocks&view=manage" class="button">Cancel</a>
+		    	</p>
+	
+				</form>
+	
+		   	<?php } ?>
+	
+			<?php adrotate_credits(); ?>
 
 		<?php } else { ?>
-		    <table class="widefat" style="margin-top: .5em">
-		    	<thead>
-				<tr valign="top">
-					<th>Error!</th>
-				</tr>
-				</thead>
-
-				<tbody>
-		      	<tr>
-			        <td><strong>You should create atleast one group before adding banners! <a href="admin.php?page=adrotate4">Add a group now</a>.</strong></td>
-		      	</tr>
-		      	</tbody>
-			</table>
-		<?php } ?>
-
+			<?php echo adrotate_error('db_error'); ?>
+		<?php }	?>
+		<br class="clear" />
 	</div>
 <?php
 }
+
+/*-------------------------------------------------------------
+ Name:      adrotate_userstatistics
+
+ Purpose:   User statistics page
+ Receive:   -none-
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_userstatistics() {
+	global $wpdb, $current_user;
+	
+	$user = wp_get_current_user();
+	$user_has_ads = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = 0 AND `block` = 0 AND `user` = ".$user->ID.";");
+	$now = current_time('timestamp');
+	$in2days = $now + 172800;
+?>
+	<div class="wrap">
+	  	<h2>User Statistics</h2>
+
+		<div class="text-wrap">
+		<?php 
+		adrotate_prepare_user_cache_statistics($user->ID); 
+		$result = $wpdb->get_var("SELECT `cache` FROM `".$wpdb->prefix."adrotate_stats_cache` WHERE `user` = ".$user->ID.";");
+		$result = unserialize($result);
+		?>
+		</div>
+	
+		<?php if($user_has_ads > 0) { ?>
+			<h4>General</h4>
+			
+			<?php 
+			if($result['ad_amount_tracker'] > 0 OR $result['total_clicks'] > 0) {
+				$clicks = round($result['total_clicks'] / $result['ad_amount_tracker'], 2); 
+			} else { 
+				$clicks = 0; 
+			}
+			
+			if($result['total_impressions'] > 0 AND $result['total_clicks'] > 0) {
+				$ctr = round((100/$result['total_impressions'])*$result['total_clicks'], 2);
+			} else {
+				$ctr = 0;
+			}
+			?>
+			<table class="widefat" style="margin-top: .5em">
+				<thead>
+				<tr>
+					<th scope="col" colspan="2">Overall statistics</th>
+					<th scope="col" colspan="2">The last 15 clicks in the past 24 hours</th>
+				</tr>
+				</thead>
+				<tbody>
+			    <tr>
+					<th width="10%">General</th>
+					<td width="40%"><?php echo $result['ad_amount']; ?> ads, sharing a total of <?php echo $result['total_impressions']; ?> impressions. <?php echo $result['ad_amount_tracker']; ?> ads have tracking enabled.</td>
+					<td rowspan="5" style="border-left:1px #EEE solid;">
+					<?php 
+					if($result['last_clicks']) {
+						foreach($result['last_clicks'] as $last) {
+							$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
+							echo '<strong>'.date('d-m-Y', $last['timer']) .'</strong> - '. $bannertitle .'<br />';
+						}
+					} else {
+						echo '<em>No recent clicks</em>';
+					} ?>
+					</td>
+				</tr>
+			    <tr>
+					<th>The best</th>
+					<td><?php if($result['thebest']) {?>'<?php echo $result['thebest']['title']; ?>' with <?php echo $result['thebest']['clicks']; ?> clicks.<?php } else { ?>No ad stands out at this time.<?php } ?></td>
+				</tr>
+			    <tr>
+					<th>The worst</th>
+					<td><?php if($result['theworst']) {?>'<?php echo $result['theworst']['title']; ?>' with <?php echo $result['theworst']['clicks']; ?> clicks.<?php } else { ?>All ads seem equally bad.<?php } ?></td>
+				</tr>
+			    <tr>
+					<th>Average on all ads</th>
+					<td><?php echo $clicks; ?> clicks.</td>
+				</tr>
+			    <tr>
+					<th>Click-Through-Rate</th>
+					<td><?php echo $ctr; ?>%, based on <?php echo $result['total_impressions']; ?> impressions and <?php echo $result['total_clicks']; ?> clicks.</td>
+				</tr>
+				</tbody>
+			</table>
+			
+			<h4>Your ads</h4>
+			
+				<table class="widefat" style="margin-top: .5em">
+				<thead>
+					<tr>
+					<th scope="col" width="2%"><center>ID</center></th>
+					<th scope="col" width="10%">Show from</th>
+					<th scope="col" width="10%">Show until</th>
+					<th scope="col">Title</th>
+					<th scope="col" width="10%"><center>Impressions</center></th>
+					<th scope="col" width="10%"><center>Clicks</center></th>
+					<th scope="col" width="10%"><center>CTR</center></th>
+				</tr>
+				</thead>
+				<tbody>
+			<?php
+			if($result['ads']) {
+				foreach($result['ads'] as $ad) {
+					$class 			= ('alternate' != $class) ? 'alternate' : '';
+					$expiredclass 	= ($ad['endshow'] <= $now OR $ad['endshow'] <= $in2days) ? ' error' : '';
+			?>
+				    <tr id='banner-<?php echo $ad['id']; ?>' class='<?php echo $class.$expiredclass; ?>'>
+						<td><center><?php echo $ad['id'];?></center></td>
+						<td><?php echo date("F d, Y", $ad['startshow']);?></td>
+						<td><span style="color: <?php echo adrotate_prepare_color($ad['endshow']);?>;"><?php echo date("F d, Y", $ad['endshow']);?></span></td>
+						<th><strong><?php echo stripslashes(html_entity_decode($ad['title']));?></strong></th>
+						<td><center><?php echo $ad['impressions'];?></center></td>
+						<td><center><?php echo $ad['clicks'];?></center></td>
+						<?php if($ad['impressions'] == 0) $ad['impressions'] = 1; ?>
+						<td><center><?php echo round((100/$ad['impressions']) * $ad['clicks'],2); ?> %</center></td>
+					</tr>
+					<?php } ?>
+			<?php } else { ?>
+				<tr id='no-ads'>
+					<th scope="row" class="check-column">&nbsp;</th>
+					<td colspan="4"><em>No adststats cached! If no stats show up after 24 hours, contact an administrator.</em></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+			</table>
+			
+			<br class="clear" />
+			<?php adrotate_user_credits(); ?>
+
+		<?php } ?>
+	</div>
+<?php 
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_adminstatistics
+
+ Purpose:   Admin statistics page
+ Receive:   -none-
+ Return:    -none-
+-------------------------------------------------------------*/
+function adrotate_adminstatistics() {
+	global $wpdb, $adrotate_stats;
+	
+?>
+	<div class="wrap">
+	  	<h2>Statistics</h2>
+
+		<h4>General</h4>
+		<div class="text-wrap">
+			<?php echo $adrotate_stats['banners']; ?> ads, sharing a total of <?php echo $adrotate_stats['total_impressions']; ?> impressions.<br />
+			<?php echo $adrotate_stats['tracker']; ?> ads have tracking enabled.<br />
+		</div>
+	
+		<h4>The best</h4>
+		<div class="text-wrap">
+			<?php if($adrotate_stats['thebest']) {?>
+			'<?php echo $adrotate_stats['thebest']['title']; ?>' with <?php echo $adrotate_stats['thebest']['clicks']; ?> clicks.
+			<?php } else {?>
+			No ad stands out at this time.
+			<?php } ?>
+		</div>
+	
+		<h4>The worst</h4>
+		<div class="text-wrap">
+			<?php if($adrotate_stats['theworst']) {?>
+			'<?php echo $adrotate_stats['theworst']['title']; ?>' with <?php echo $adrotate_stats['theworst']['clicks']; ?> clicks.
+			<?php } else {?>
+			All ads seem equally bad.
+			<?php } ?>
+		</div>
+	
+		<h4>Average</h4>
+		<div class="text-wrap">
+			<?php if($adrotate_stats['banners_tracker'] < 1 OR $adrotate_stats['clicks'] < 1) {
+				echo '0';
+			} else {
+				$average = $adrotate_stats['clicks'] / $adrotate_stats['banners_tracker'];
+				echo round($average, 2);
+			} ?> clicks on all banners.
+		</div>
+	
+		<h4>More... </h4>
+		<div class="text-wrap">
+			<?php if($adrotate_stats['impressions'] > 0 AND $adrotate_stats['clicks'] > 0) {
+				$ctr = round((100/$adrotate_stats['impressions'])*$adrotate_stats['clicks'], 2);
+			} else {
+				$ctr = $adrotate_stats['impressions'] = $adrotate_stats['clicks'] = 0;
+			}
+			echo $adrotate_stats['impressions'].' impressions and '.$adrotate_stats['clicks'].' clicks. CTR of '.$ctr.'%.'; ?>
+		</div>
+	
+		<h4>The last 5</h4>
+		<div class="text-wrap">
+			<?php
+			if($adrotate_stats['lastfive']) {
+				foreach($adrotate_stats['lastfive'] as $last) {
+					$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
+					echo date('d-m-Y', $last['timer']) .' - '. $bannertitle .'<br />';
+				}
+			} else { ?>
+			No recent clicks.
+			<?php } ?>
+		</div>
+			
+		<div class="text-wrap">
+			<br class="clear" />
+			<small>
+				<em>Cache is refreshed approximately every 6 hours.<br />
+					All statistics are indicative. They do not nessesarily reflect results counted by other parties.<br />
+<!-- 				AdRollr ads are NOT included in these stats!--></em>
+			</small>
+		</div>
+	</div>
+<?php 
+}
+
 /*-------------------------------------------------------------
  Name:      adrotate_options
 
@@ -986,14 +1219,159 @@ function adrotate_wizard() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_options() {
-	$adrotate_config = get_option('adrotate_config');
+	global $wpdb, $wp_roles, $adrotate_roles;
+
+	$adrotate_config 	= get_option('adrotate_config');
+	$adrotate_crawlers 	= get_option('adrotate_crawlers');
+    $all_roles 			= $wp_roles->roles;
+
+	$crawlers 		= implode(', ', $adrotate_crawlers);
+	$message 		= $_GET['message'];
+    $editable_roles = apply_filters('editable_roles', $all_roles);
 ?>
 	<div class="wrap">
-	  	<h2>AdRotate options</h2>
-	  	<form method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>&amp;updated=true">
-	    	<input type="hidden" name="adrotate_submit_options" value="true" />
+	  	<h2>Settings</h2>
+
+		<?php if ($message == 'updated') { ?>
+			<div id="message" class="updated fade"><p>Settings saved</p></div>
+		<?php } else if ($message == 'mail_sent') { ?>
+			<div id="message" class="updated fade"><p>Test notification sent</p></div>
+		<?php } else if ($message == 'mail_timer') { ?>
+			<div id="message" class="updated fade"><p>Hold on... You can sent a test email only once every 3 minutes</p></div>
+		<?php } else if ($message == 'role_add') { ?>
+			<div id="message" class="updated fade"><p>AdRotate client role added</p></div>
+		<?php } else if ($message == 'role_remove') { ?>
+			<div id="message" class="updated fade"><p>AdRotate client role removed</p></div>
+		<?php } ?>
+
+	  	<form name="settings" id="post" method="post" action="admin.php?page=adrotate-settings">
 
 	    	<table class="form-table">
+			<tr>
+				<td colspan="2"><h3>Access Rights</h3></td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Statistics Page</th>
+				<td>
+					<select name="adrotate_pagestatistics">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['pagestatistics'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	?>
+					</select> Minimum required userlevel to see the statistics page.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Statistics Widget</th>
+				<td>
+					<select name="adrotate_dashboardstatistics">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['dashboardstatistics'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	unset($role);?>
+					</select> Minimum required userlevel to see the dashboard widget.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Manage/Add/Edit Ads</th>
+				<td>
+					<select name="adrotate_ad_manage">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['ad_manage'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	unset($role); ?>
+					</select> Minimum required userlevel to see and add/edit ads.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Delete/Reset Ads</th>
+				<td>
+					<select name="adrotate_ad_delete">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['ad_delete'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	unset($role); ?>
+					</select> Minimum required userlevel to delete ads and reset stats.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Manage/Add/Edit Groups</th>
+				<td>
+					<select name="adrotate_group_manage">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['group_manage'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	unset($role); ?>
+					</select> Minimum required userlevel to see and add/edit groups.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Delete Groups</th>
+				<td>
+					<select name="adrotate_group_delete">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['group_delete'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	unset($role); ?>
+					</select> Minimum required userlevel to delete groups.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Manage/Add/Edit Blocks</th>
+				<td>
+					<select name="adrotate_block_manage">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['block_manage'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	unset($role); ?>
+					</select> Minimum required userlevel to see and add/edit blocks.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Delete Blocks</th>
+				<td>
+					<select name="adrotate_block_delete">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['block_delete'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	unset($role); ?>
+					</select> Minimum required userlevel to delete blocks.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">AdRotate Clients</th>
+				<td><?php if($adrotate_roles == 0) { ?>
+				<input type="submit" id="post-role-submit" name="adrotate_role_add_submit" value="Create Role" class="button-secondary" />
+				<?php } else { ?>
+				<input type="submit" id="post-role-submit" name="adrotate_role_remove_submit" value="Remove Role" class="button-secondary" />
+				<?php } ?><br />
+				This button creates or removes a role created especially for AdRotate to facilitate affiliates or advertisers who want to follow their ads performance.<br />
+				This role does the same as the Subscriber role but can also access his/her statistical overview. Normal Subscribers and Contributors will not be extended with AdRotate access.<br />
+				This type of user is NOT required to use AdRotate or it's stats. It merely helps you to seperate Publishers from regular users without giving them access to your dashboard.</td>
+			</tr>
+			<tr>
+				<td colspan="2"><h3>Email Notifications</h3></td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Send Email to</th>
+				<td><input name="adrotate_notification_email" type="text" class="search-input" size="45" value="<?php echo $adrotate_config['notification_email'];?>" autocomplete="off" /> Fill in one address. Message is sent once every 24 hours when needed.</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Test notification</th>
+				<td><input type="submit" name="adrotate_testmail_submit" class="button-secondary" value="Test" /> This sends a test email. Before you test, for example, with a new email address. Save the options first! If the email messages look garbled or riddled with code, enable HTML messages in your email client.</td>
+			</tr>
+			<tr>
+				<td colspan="2"><h3>User-Agent Filter</h3></td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">List of keywords to filter</th>
+				<td><textarea name="adrotate_crawlers" cols="90" rows="5"><?php echo $crawlers; ?></textarea><br />A comma separated list of keywords. Filter out bots/crawlers/user-agents.<br />
+				Keep in mind that this might give false positives. The word 'google' also matches 'googlebot', so be careful!<br />
+				Additionally to the list specified here, empty User-Agents are blocked as well. (Learn more about <a href="http://en.wikipedia.org/wiki/User_agent#User_agent_identification" title="User Agents" target="_blank">user-agents</a>.)</td>
+			</tr>
+			<tr>
+				<td colspan="2"><h3>Miscellaneous</h3></td>
+			</tr>
 			<tr>
 				<th scope="row" valign="top">Media Browser</th>
 				<td><input type="checkbox" name="adrotate_browser" <?php if($adrotate_config['browser'] == 'Y') { ?>checked="checked" <?php } ?> /> Include images and flash files from the media browser in the image selector.</td>
@@ -1007,27 +1385,12 @@ function adrotate_options() {
 				<td><input type="checkbox" name="adrotate_credits" <?php if($adrotate_config['credits'] == 'Y') { ?>checked="checked" <?php } ?> /> Show a simple token that you're using AdRotate in the themes Meta part.</td>
 			</tr>
 	    	</table>
+	    	
 		    <p class="submit">
-		      	<input type="submit" name="Submit" class="button-primary" value="Update Options &raquo;" />
+		      	<input type="submit" name="adrotate_options_submit" class="button-primary" value="Update Options" />
 		    </p>
 		</form>
-		
-	  	<h2>AdRotate Uninstall</h2>
-
-    	<form method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="adrotate_uninstall">
-	    	<table class="form-table">
-				<tr valign="top">
-					<td colspan="2">AdRotate installs a few tables in MySQL. When you disable the plugin the tables (and contents) will not be deleted. To delete the tables use the button below.</td>
-				</tr>
-		      	<tr valign="top">
-			        <th scope="row">WARNING!</th>
-			        <td><b style="color: #f00;">This process is irreversible and will delete ALL ads and stats related to AdRotate!</b></td>
-				</tr>
-			</table>
-	  		<p class="submit">
-		    	<input type="hidden" name="adrotate_uninstall" value="true" />
-		    	<input onclick="return confirm('You are about to uninstall the AdRotate plugin\n  All related content will be lost!\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" name="Submit" class="button-secondary" value="Uninstall Plugin &raquo;" />
-	  		</p>
-	  	</form>
 	</div>
-<?php } ?>
+<?php 
+}
+?>

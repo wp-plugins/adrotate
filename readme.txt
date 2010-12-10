@@ -2,61 +2,58 @@
 Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
-Requires at least: 2.7, PHP5
-Tested up to: 3.0.1
-Stable tag: 2.6.1
+Requires at least: 3.0, PHP5
+Tested up to: 3.0.3
+Stable tag: 3.0
  
-A really simple way of putting ads on your website. As many as you want... Make making money easy!
+The very best way of putting ads on your website. As many as you want... Make making money easy!
 
 == Description ==
 
-Add and manage the code from the dashboard and show a random banner, or multiple, on your site. The plugin supports groups for banners allowing to tie certain banners to different areas of the website. Easy management from the dashboard allows you to quickly oversee, add and edit banner code.
+Get the most intuitive ad manager and start making money with your website.
+Add and manage the ads from the dashboard and show a random banner, or multiple, on your site. 
+The plugin supports unlimited groups for banners allowing to tie certain banners to different areas of the website. 
+Easy management from the dashboard allows you to quickly oversee, add and edit banner code or renew/delete and add new ads.
 Previewing of banners when editing them. And even some statistical values.
+Receive a periodic email when banners are (about to) expire(d) informing you to take action.
 
 **Important links**
 
-* [Details](http://meandmymac.net/plugins/adrotate/) - Lots of Additional plugin information
-* [Manuals](http://meandmymac.net/support/knowledgebase.php?category=3) - Get started, user guide, step by step setup!
-* [Support](http://meandmymac.net/support/) - For if the manual fails you or you just don't get it
+* [Details](http://adrotateplugin.com) - Lots of Additional plugin information
+* [Manuals & Support](http://adrotateplugin.com/page/support.php) - Setup instructions and support
 
 **Some Features**
 
-* Easy management of banners and banner groups
-* Edit/update banners
-* Integrates with WordPress dashboard and has a user friendly, easy to manage dashboard
-* Review which banner is shown the most
+* Super easy management of ads, groups and blocks of ads
+* Get email notifications when your ads need you
+* Simple stats so you can follow which ad is working the best
+* Couple ads to users so that user can follow his personalized stats
 * Track how many a banner is clicked and show it's Cick-Through-Ratio
 * Put random, or selected, banners in pages or posts
 * Preview banners on edit
 * Multiple groups per banner location
-* Works with Google Ads and other referrer/ad programs
-* Widget for the sidebar
-* AD-Blocks (blocks of small banners)
-* Auto disable ads after X views / clicks
-* Warns you when ads are about to expire
+* Works with Google Ads and most other referrer/ad programs
+* Unlimited widgets
+* Adblocks (blocks of small banners)
+* Auto disable ads after X views / clicks / period of time
+* Warns you on the dashboard when ads are about to expire
+* Use shortcodes or PHP to put ads on your site
 
 == Installation ==
 
-= Quick start, manual installation =
-
-1. Unzip the file and upload the adrotate folder to your /wp-content/plugins/ folder.
-1. Activate from the plugins page and manage your ads from the Plugins > Manage Banners page.
-1. Add `<?php echo adrotate_banner('1'); ?>` in the theme to show banners from group 1.
-
-= The actual manual =
-
-Find out how AdRotate works, more options and various ways to implement this thing.
-[User guide](http://meandmymac.net/support/knowledgebase.php?category=3)
+Find out how AdRotate works, more options and various ways to implement your ads.
+[User guide](http://adrotateplugin.com/page/support.php)
 
 = Support? = 
-[AdRotate support](http://meandmymac.net/support/)
+[AdRotate support](http://adrotateplugin.com/page/support.php)
 
 == Frequently Asked Questions ==
 
-Go here for support:
-[Knowledgebase](http://meandmymac.net/support/knowledgebase.php)
+Go here for support/questions:
+[Knowledgebase](http://adrotateplugin.com/page/support.php)
 
 == Screenshots ==
 
-1. Add/edit your ads and stuff here
-2. Manage and oversee the ads from here.
+1. Manage ads from here, business as usual.
+2. Some ads need help.
+3. Create/Edit adblocks.

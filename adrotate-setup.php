@@ -1,28 +1,48 @@
 <?php
+/*  
+Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
+
+This program is free software; you can redistribute it and/or modify it under the terms of 
+the GNU General Public License, version 2, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+*/
+
 /*-------------------------------------------------------------
  Name:      adrotate_activate
 
  Purpose:   Creates database table if it doesnt exist
  Receive:   -none-
  Return:	-none-
+ Since:		0.1
 -------------------------------------------------------------*/
 function adrotate_activate() {
-	global $wpdb;
+	global $wpdb, $wp_roles, $wp_rewrite;
 
 	$tables = array(
-		$wpdb->prefix . "adrotate",
-		$wpdb->prefix . "adrotate_groups",
-		$wpdb->prefix . "adrotate_tracker",
+		$wpdb->prefix . "adrotate",				// Since 0.1
+		$wpdb->prefix . "adrotate_groups",		// Since 0.2
+		$wpdb->prefix . "adrotate_tracker",		// Since 2.0
+		$wpdb->prefix . "adrotate_blocks",		// Since 3.0
+		$wpdb->prefix . "adrotate_linkmeta",	// Since 3.0
+		$wpdb->prefix . "adrotate_stats_cache",	// Since 3.0
 	);
 
 	if ( $wpdb->has_cap( 'collation' ) ) {
 		if ( ! empty($wpdb->charset) )
 			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
 		if ( ! empty($wpdb->collate) )
-			$charset_collate .= " COLLATE $wpdb->collate";
+			$charset_collate .= "COLLATE $wpdb->collate";
 	}
 
-	if(!adrotate_mysql_table_exists($tables[0])) { // Add table if it's not there
+	// ---------------------------
+	// Add tables if non existant
+	if(!adrotate_mysql_table_exists($tables[0])) { // wp_adrotate
 		$add1 = "CREATE TABLE ".$tables[0]." (
 			  `id` mediumint(8) unsigned NOT NULL auto_increment,
 			  `title` longtext NOT NULL,
@@ -33,7 +53,6 @@ function adrotate_activate() {
 			  `active` varchar(4) NOT NULL default 'yes',
 			  `startshow` int(15) NOT NULL default '0',
 			  `endshow` int(15) NOT NULL default '0',
-			  `group` int(15) NOT NULL default '1',
 			  `image` varchar(255) NOT NULL,
 			  `link` longtext NOT NULL,
 			  `tracker` varchar(5) NOT NULL default 'N',
@@ -41,150 +60,195 @@ function adrotate_activate() {
 			  `maxclicks` int(15) NOT NULL default '0',
 			  `shown` int(15) NOT NULL default '0',
 			  `maxshown` int(15) NOT NULL default '0',			  
-			  `magic` int(1) NOT NULL default '0',
+			  `type` varchar(10) NOT NULL default '0',
 	  		PRIMARY KEY  (`id`)
 			) ".$charset_collate;
-		if(mysql_query($add1) !== true) {
-			adrotate_mysql_warning();
-		}
+		$wpdb->query($add1);
 	}
 
-	if(!adrotate_mysql_table_exists($tables[1])) {
+	if(!adrotate_mysql_table_exists($tables[1])) { // wp_adrotate_groups
 		$add2 = "CREATE TABLE ".$tables[1]." (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
-				`name` varchar(255) NOT NULL,
+				`name` varchar(255) NOT NULL default 'group',
 				`fallback` varchar(5) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
 			) ".$charset_collate;
-		if(mysql_query($add2) !== true ) {
-			adrotate_mysql_warning();
-		}
+		$wpdb->query($add2);
 	}
 
-	if(!adrotate_mysql_table_exists($tables[2])) {
+	if(!adrotate_mysql_table_exists($tables[2])) { // wp_adrotate_tracker
 		$add3 = "CREATE TABLE ".$tables[2]." (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
-				`ipaddress` varchar(255) NOT NULL,
+				`ipaddress` varchar(255) NOT NULL default '0',
 				`timer` int(15) NOT NULL default '0',
 				`bannerid` int(15) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
 			) ".$charset_collate;
-		if(mysql_query($add3) !== true ) {
-			adrotate_mysql_warning();
-		}
+		$wpdb->query($add3);
 	}
 
-	if(adrotate_mysql_table_exists($tables[0])) { // Upgrade table if it is incomplete
-		if (!$result = mysql_query("SHOW COLUMNS FROM `$tables[0]`")) {
-		    echo 'Could not run query: ' . mysql_error();
-		}
-		$i = 0;
-	    while ($row = mysql_fetch_assoc($result)) {
-			$field_array[] = mysql_field_name($row, $i);
-        	$i++;
-		}
+	if(!adrotate_mysql_table_exists($tables[3])) { // wp_adrotate_blocks
+		$add4 = "CREATE TABLE ".$tables[3]." (
+				`id` mediumint(8) unsigned NOT NULL auto_increment,
+				`name` varchar(255) NOT NULL default 'Block',
+				`adcount` int(3) NOT NULL default '1',
+				`columns` int(3) NOT NULL default '1',
+				`wrapper_before` longtext NOT NULL,
+				`wrapper_after` longtext NOT NULL,
+				PRIMARY KEY  (`id`)
+			) ".$charset_collate;
+		$wpdb->query($add4);
+	}
+	
+	if(!adrotate_mysql_table_exists($tables[4])) { // wp_adrotate_linkmeta
+		$add5 = "CREATE TABLE ".$tables[4]." (
+				`id` mediumint(8) unsigned NOT NULL auto_increment,
+				`ad` int(5) NOT NULL default '0',
+				`group` int(5) NOT NULL default '0',
+				`block` int(5) NOT NULL default '0',
+				`user` int(5) NOT NULL default '0',
+				PRIMARY KEY  (`id`)
+			) ".$charset_collate;
+		$wpdb->query($add5);
+	}
+	
+	if(!adrotate_mysql_table_exists($tables[5])) { // wp_adrotate_stats_cache
+		$add6 = "CREATE TABLE ".$tables[5]." (
+				`id` mediumint(8) unsigned NOT NULL auto_increment,
+				`user` int(5) NOT NULL default '0',
+				`cache` longtext NOT NULL,
+				PRIMARY KEY  (`id`)
+			) ".$charset_collate;
+		$wpdb->query($add6);
+	}
+	
+	// END Add
+	// ---------------------------
 
-		if (!in_array('startshow', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'startshow', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'active');
-		}
+	// ---------------------------
+	// Upgrade database if required
+	if(adrotate_mysql_table_exists($tables[0])) {
 
-		if (!in_array('endshow', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'endshow', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'startshow');
-		}
-
-		if (!in_array('link', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'link', 'LONGTEXT NOT NULL', 'image');
-		}
-
-		if (!in_array('tracker', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'tracker', 'VARCHAR( 5 ) NOT NULL DEFAULT \'N\'', 'link');
-		}
-
-		if (!in_array('clicks', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'clicks', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'tracker');
-		}
-
-		if (!in_array('maxclicks', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'maxclicks', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'clicks');
-		}
-
-		if (!in_array('shown', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'shown', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'maxclicks');
-		}
-
-		if (!in_array('maxshown', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'maxshown', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'shown');
-		}
-
-		if (!in_array('magic', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[0], 'magic', 'VARCHAR( 1 ) NOT NULL DEFAULT \'0\'', 'maxshown');
+		// Migrate group data - Nov 12 2010 - To accomodate version 3.0
+		$banners = $wpdb->get_results("SELECT `id`, `group` FROM ".$tables[0]." ORDER BY `id` ASC;");
+		foreach($banners as $banner) {
+			$count = $wpdb->get_var("SELECT COUNT(*) FROM ".$tables[4]." WHERE `ad` = ".$banner->id." ORDER BY `id` ASC;");
+			if($count == 0) {
+   				$wpdb->query("INSERT INTO `".$tables[4]."` (`ad`, `group`, `block`, `user`) VALUES (".$banner->id.", ".$banner->group.", 0, 0);");
+   			}
 		}
 		
-	} else { // Or send out epic fail!
-		adrotate_mysql_warning();
+		adrotate_alter_table('add', $tables[0], 'startshow', '', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'active');
+		adrotate_alter_table('add', $tables[0], 'endshow', '', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'startshow');
+		adrotate_alter_table('add', $tables[0], 'link', '', 'LONGTEXT NOT NULL', 'image');
+		adrotate_alter_table('add', $tables[0], 'tracker', '', 'VARCHAR( 5 ) NOT NULL DEFAULT \'N\'', 'link');
+		adrotate_alter_table('add', $tables[0], 'clicks', '', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'tracker');
+		adrotate_alter_table('add', $tables[0], 'maxclicks', '', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'clicks');
+		adrotate_alter_table('add', $tables[0], 'shown', '', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'maxclicks');
+		adrotate_alter_table('add', $tables[0], 'maxshown', '', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'shown');
+		adrotate_alter_table('add', $tables[0], 'type', '', 'VARCHAR( 10 ) NOT NULL DEFAULT \'manual\'', 'maxshown');
+		adrotate_alter_table('update_query', $tables[0], '', '', '`type` = \'manual\' WHERE `magic` = \'1\' AND `title` != \'\'', '');
+		adrotate_alter_table('update_query', $tables[0], '', '', '`type` = \'manual\' WHERE `magic` = \'2\' AND `title` != \'\'', '');
+		adrotate_alter_table('update_query', $tables[0], '', '', '`type` = \'empty\' WHERE `magic` = \'3\'', '');
+		adrotate_alter_table('delete', $tables[0], 'magic', '', '', '');		
+		adrotate_alter_table('delete', $tables[0], 'group', '', '', '');
 	}
 
-	if(adrotate_mysql_table_exists($tables[1])) { // Upgrade table if it is incomplete
-		if (!$result = mysql_query("SHOW COLUMNS FROM `$tables[1]`")) {
-		    echo 'Could not run query: ' . mysql_error();
-		}
-		$i = 0;
-	    while ($row = mysql_fetch_assoc($result)) {
-			$field_array[] = mysql_field_name($row, $i);
-        	$i++;
-		}
-
-		if (!in_array('name', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[1], 'fallback', 'VARCHAR( 5 ) NOT NULL DEFAULT \'0\'', 'name');
-		}
-
-	} else { // Or send out epic fail!
-		adrotate_mysql_warning();
+	if(adrotate_mysql_table_exists($tables[1])) {
+		adrotate_alter_table('add', $tables[1], 'fallback', '', 'VARCHAR( 5 ) NOT NULL DEFAULT \'0\'', 'name');
 	}
 
-	if(adrotate_mysql_table_exists($tables[2])) { // Upgrade table if it is incomplete
-		if (!$result = mysql_query("SHOW COLUMNS FROM `$tables[2]`")) {
-		    echo 'Could not run query: ' . mysql_error();
-		}
-		$i = 0;
-	    while ($row = mysql_fetch_assoc($result)) {
-			$field_array[] = mysql_field_name($row, $i);
-        	$i++;
-		}
+	if(adrotate_mysql_table_exists($tables[2])) {
+		adrotate_alter_table('add', $tables[2], 'bannerid', '', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'timer');
+		adrotate_alter_table('change', $tables[2], 'ipaddress', 'ipaddress', 'varchar(255) NOT NULL default \'0\'', '');
+	}
+	// END Upgrade
+	// ---------------------------
+	
+	// Run a schedule for email notifications
+	if (!wp_next_scheduled('adrotate_ad_notification')) wp_schedule_event(date('U'), '1day', 'adrotate_ad_notification');
 
-		if (!in_array('bannerid', $field_array)) {
-			$upgrade = adrotate_update_table('add', $tables[2], 'bannerid', 'INT( 15 ) NOT NULL DEFAULT \'0\'', 'timer');
-		}
+	// Run a schedule for caches
+	if (!wp_next_scheduled('adrotate_cache_statistics')) wp_schedule_event(date('U'), '6hour', 'adrotate_cache_statistics');
 
-	} else { // Or send out epic fail!
-		adrotate_mysql_warning();
+	// Create initial cache of statistics
+	adrotate_prepare_cache_statistics();
+
+	// Switch AdRotate roles on or off
+	$roles = get_option('adrotate_roles');
+	if($roles  = 1) {
+		adrotate_add_roles();
+	} else {
+		update_option('adrotate_roles', '0');
+	}
+	
+	// Sort out new default settings for version 3.0 (existing settings are lost)
+	$config = get_option('adrotate_config');
+	if (!isset($config['notification_email']) OR $config['notification_email'] == '') {
+		delete_option('adrotate_config');
+		adrotate_check_config();
 	}
 
+	// Attempt to make the banners/ folder
 	if(!is_dir(ABSPATH.'/wp-content/banners')) {
 		mkdir(ABSPATH.'/wp-content/banners', 0755);
 	}
-
-	delete_option('adrotate_tracker');
-
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_update_table
+ Name:      adrotate_alter_table
 
  Purpose:   Alter tables on demand, for upgrades
- Receive:   $action, $tablename, $field_to_add, $specs, $after_field
+ Receive:   $action, $table, $column, $newcolumnname, $attributes, $after
  Return:	Boolean
+ Since:		2.5
 -------------------------------------------------------------*/
-function adrotate_update_table($action, $tablename, $field_to_add, $specs, $after_field) {
+function adrotate_alter_table($action, $table, $column, $newcolumnname, $attributes, $after) {
+
+    $exists = false;
+    $columns = mysql_query("SHOW COLUMNS FROM $table");
+    while($result = mysql_fetch_assoc($columns)) {
+        if($result['Field'] == $column) {
+            $exists = true;
+            break;
+        }
+    }
+    
 	switch($action) {
 		case "add" :
-			if(mysql_query("ALTER TABLE `$tablename` ADD `$field_to_add` $specs AFTER `$after_field`;") === true) {
+		    if(!$exists) {
+				if(mysql_query("ALTER TABLE `$table` ADD `$column` $attributes AFTER `$after`;") === true) {
+					return true;
+				} else {
+					adrotate_mysql_upgrade_error();
+				}
+			}
+		break;
+			
+		case "change" :
+			if(mysql_query("ALTER TABLE `$table` CHANGE `$column` `$newcolumnname` $attributes;") === true) {
 				return true;
 			} else {
 				adrotate_mysql_upgrade_error();
 			}
 		break;
-	}
+		
+		case "delete" :
+			if(mysql_query("ALTER TABLE `$table` DROP `$column`;") === true) {
+				return true;
+			} else {
+				adrotate_mysql_upgrade_error();
+			}
+		break;
+		
+		case "update_query" :
+			if(mysql_query("UPDATE `$table` SET $attributes;") === true) {
+			return true;
+			} else {
+				adrotate_mysql_upgrade_error();
+			}
+		break;
+    }
 }
 
 /*-------------------------------------------------------------
@@ -193,8 +257,31 @@ function adrotate_update_table($action, $tablename, $field_to_add, $specs, $afte
  Purpose:   Deactivate script
  Receive:   -none-
  Return:	-none-
+ Since:		2.0
 -------------------------------------------------------------*/
 function adrotate_deactivate() {
+	global $wp_roles, $adrotate_roles;
+	
+	// Clear out roles
+	if($adrotate_roles == 1) {
+		adrotate_remove_roles();
+	}
+
+	// Clear out wp_cron
+	wp_clear_scheduled_hook('adrotate_ad_notification');
+	wp_clear_scheduled_hook('adrotate_cache_statistics');
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_mysql_upgrade_error
+
+ Purpose:   Error script
+ Receive:   -none-
+ Return:	-none-
+ Since:		0.1
+-------------------------------------------------------------*/
+function adrotate_mysql_upgrade_error() {
+	mysql_error();
 }
 
 /*-------------------------------------------------------------
@@ -203,6 +290,7 @@ function adrotate_deactivate() {
  Purpose:   Check if the table exists in the database
  Receive:   -none-
  Return:	-none-
+ Since:		0.1
 -------------------------------------------------------------*/
 function adrotate_mysql_table_exists($tablename) {
 	global $wpdb;
@@ -213,56 +301,5 @@ function adrotate_mysql_table_exists($tablename) {
 		}
 	}
 	return false;
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_mysql_warning
-
- Purpose:   Database errors if things go wrong
- Receive:   -none-
- Return:	-none-
--------------------------------------------------------------*/
-function adrotate_mysql_warning() {
-	echo '<div class="updated"><h3>WARNING! There was an error with MySQL! One or more queries failed. This means the database has not been created or only partly. Seek support at <a href="http://meandmymac.net/support/">meandmymac.net support</a>. Please include any errors you saw or anything that might have caused this issue. This helps speed up the process of solving your issue greatly!</h3></div>';
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_mysql_upgrade_error
-
- Purpose:   Database errors if things go wrong
- Receive:   -none-
- Return:	-none-
--------------------------------------------------------------*/
-function adrotate_mysql_upgrade_error() {
-	echo '<div class="updated"><h3>WARNING! The MySQL table was not properly upgraded! AdRotate cannot work without this upgrade. Check your MySQL permissions and see if you have ALTER rights (rights to alter existing tables) contact your webhost/sysadmin if you don\'t know or are unsure. If this brings no answers seek support at <a href="http://meandmymac.net/support/">http://meandmymac.net/support/</a> and mention any errors you saw/got and explain what you were doing!</h3></div>';
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_plugin_uninstall
-
- Purpose:   Delete the entire database table and remove the options on uninstall.
- Receive:   -none-
- Return:	-none-
--------------------------------------------------------------*/
-function adrotate_plugin_uninstall() {
-	global $wpdb;
-
-	// Deactivate Plugin
-	$current = get_settings('active_plugins');
-    array_splice($current, array_search( "adrotate/adrotate.php", $current), 1 );
-	update_option('active_plugins', $current);
-	do_action('deactivate_' . trim( $_GET['plugin'] ));
-
-	// Drop MySQL Tables
-	mysql_query("DROP TABLE `".$wpdb->prefix."adrotate`") or die("An unexpected error occured.<br />".mysql_error());
-	mysql_query("DROP TABLE `".$wpdb->prefix."adrotate_groups`") or die("An unexpected error occured.<br />".mysql_error());
-	mysql_query("DROP TABLE `".$wpdb->prefix."adrotate_tracker`") or die("An unexpected error occured.<br />".mysql_error());
-
-	// Delete Options
-	delete_option('adrotate_config');
-	delete_option('widget_adrotate_1');
-	delete_option('widget_adrotate_2');
-
-	wp_redirect(get_option('siteurl').'/wp-admin/plugins.php?deactivate=true');
 }
 ?>
