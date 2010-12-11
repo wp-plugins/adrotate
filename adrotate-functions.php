@@ -187,7 +187,7 @@ function adrotate_block($block_id) {
 					if($block->wrapper_after != '')
 						$output .= stripslashes(html_entity_decode($block->wrapper_after, ENT_QUOTES));
 					
-					if($block->columns > 0 AND $cutoff == $block->columns) {
+					if($block->columns > 0 AND $break == $block->columns) {
 						$output .= '<br style="height:none; width:none;" />';
 						$break = 1;
 					} else {
