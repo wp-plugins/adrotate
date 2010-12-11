@@ -27,8 +27,11 @@ function adrotate_ad($banner_id, $individual = true) {
 	/* Changelog:
 	// Nov 15 2010 - Moved ad formatting to new function adrotate_prepare_ad_output()
 	// Dec 10 2010 - Added check for single ad or not. Query updates for 3.0.1.
+	// Dec 11 2010 - Check for single ad now works.
 	*/
 	
+	$now = current_time('timestamp');
+
 	if($banner_id) {
 		if($individual == false) { 
 			// Coming from a group or block, no checks just load the ad
@@ -282,8 +285,8 @@ function adrotate_shortcode($atts, $content = null) {
 
 	if(!empty($atts['banner'])) 	$banner_id 	= trim($atts['banner'], "\r\t ");
 	if(!empty($atts['group'])) 		$group_ids 	= trim($atts['group'], "\r\t ");
-	if(!empty($atts['fallback']))	$fallback	= trim($atts['fallback'], "\r\t "); /* OPTIONAL */
-	if(!empty($atts['block']))		$block_id	= trim($atts['block'], "\r\t "); /* Block ID only! */
+	if(!empty($atts['fallback']))	$fallback	= trim($atts['fallback'], "\r\t "); // OPTIONAL
+	if(!empty($atts['block']))		$block_id	= trim($atts['block'], "\r\t "); // Block ID only!
 
 	if($banner_id > 0 AND $group_ids == 0 AND $block_id == 0) // Show one Ad
 		return adrotate_ad($banner_id);

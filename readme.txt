@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
 Requires at least: 3.0, PHP5
 Tested up to: 3.0.3
-Stable tag: 3.0.1
+Stable tag: 3.0.2
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -27,6 +27,12 @@ This should solve all issues reported on december 10 2010!
 * [update] Several queries which worked but weren't up to standards
 * [update] Several dashboard messages
 * [update] AdRotate Upgrade / Installer no longer uses $wpdb for added reliability
+
+**3.0.2 Changelog**
+
+* [fix] Single ads check now actually matches against a valid time
+* [fix] Blocks shortcode now uses correct block id
+
 
 **Important links**
 
