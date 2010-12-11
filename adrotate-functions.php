@@ -291,7 +291,7 @@ function adrotate_shortcode($atts, $content = null) {
 	if($banner_id == 0 AND $group_ids > 0 AND $block_id == 0) // Show group 
 		return adrotate_group($group_ids, $fallback);
 
-	if($banner_id == 0 AND $group_ids == 0 AND $block > 0) // Show block 
+	if($banner_id == 0 AND $group_ids == 0 AND $block_id > 0) // Show block 
 		return adrotate_block($block_id);
 }
 
