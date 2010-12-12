@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
 Requires at least: 3.0, PHP5
 Tested up to: 3.0.3
-Stable tag: 3.0.2
+Stable tag: 3.0.3
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -33,6 +33,9 @@ This should solve all issues reported on december 10 2010!
 * [fix] Single ads check now actually matches against a valid time
 * [fix] Blocks shortcode now uses correct block id
 
+**3.0.3 Changelog**
+
+* [fix] Installer should now work for everyone
 
 **Important links**
 

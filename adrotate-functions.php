@@ -45,7 +45,8 @@ function adrotate_ad($banner_id, $individual = true) {
 			$output = adrotate_prepare_ad_output($banner->id, $banner->bannercode, $banner->tracker, $banner->link, $banner->image);
 			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `shown` = `shown` + 1 WHERE `id` = '$banner->id'");
 		} else {
-			$output = '<span style="color: #F00; font-weight: bold;">Error, Ad (ID: '.$banner_id.') is expired or does not exist!</span>';
+//			$output = '<span style="color: #F00; font-weight: bold;">Error, Ad (ID: '.$banner_id.') is expired or does not exist!</span>';
+			$output = '<!-- Error, Ad (ID: '.$banner_id.') is expired or does not exist! -->';
 		}
 	} else {
 		$output = '<span style="color: #F00; font-weight: bold;">Error, no Ad ID set! Check your syntax!</span>';

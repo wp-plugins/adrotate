@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.0.2
+Version: 3.0.3
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -23,36 +23,46 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
-// Load plugin files
+/*--- AdRotate values ---------------------------------------*/
+define("ADROTATE_VERSION", 303);
+define("ADROTATE_DB_VERSION", 1);
+/*-----------------------------------------------------------*/
+
+/*--- Load Files --------------------------------------------*/
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-setup.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-manage.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-functions.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-widget.php');
 // wp-content/plugins/adrotate/adrotate-out.php
 // wp-content/plugins/adrotate/uninstall.php
+/*-----------------------------------------------------------*/
 
-// Load functions
+/*--- Load functions ----------------------------------------*/
 register_activation_hook(__FILE__, 'adrotate_activate');
 register_deactivation_hook(__FILE__, 'adrotate_deactivate');
 adrotate_check_config();
 adrotate_clean_trackerdata();
+/*-----------------------------------------------------------*/
 
-// Front end
+/*--- Front end ---------------------------------------------*/
 add_shortcode('adrotate', 'adrotate_shortcode');
 add_action('widgets_init', 'adrotate_widget_init');
 add_action('wp_meta', 'adrotate_meta');
+/*-----------------------------------------------------------*/
 
-// Dashboard
+/*--- Dashboard ---------------------------------------------*/
 add_action('admin_menu', 'adrotate_dashboard');
 add_action('admin_notices','adrotate_dashboard_notifications');
 add_action('wp_dashboard_setup', 'adrotate_dashboard_widget');
+/*-----------------------------------------------------------*/
 
-// Core
+/*--- Core --------------------------------------------------*/
 add_action('adrotate_ad_notification', 'adrotate_mail_notifications');
 add_action('adrotate_cache_statistics', 'adrotate_prepare_cache_statistics');
 add_filter('cron_schedules', 'adrotate_reccurences');
+/*-----------------------------------------------------------*/
 
-// Internal redirects
+/*--- Internal redirects ------------------------------------*/
 if(isset($_POST['adrotate_ad_submit'])) 				add_action('init', 'adrotate_insert_input');
 if(isset($_POST['adrotate_group_submit'])) 				add_action('init', 'adrotate_insert_group');
 if(isset($_POST['adrotate_block_submit'])) 				add_action('init', 'adrotate_insert_block');
@@ -61,13 +71,15 @@ if(isset($_POST['adrotate_options_submit'])) 			add_action('init', 'adrotate_opt
 if(isset($_POST['adrotate_testmail_submit'])) 			add_action('init', 'adrotate_mail_notifications');
 if(isset($_POST['adrotate_role_add_submit']) OR isset($_POST['adrotate_role_remove_submit'])) add_action('init', 'adrotate_prepare_roles');
 //if(isset($_POST['headers']) and isset($_POST['body'])) 	add_action('init', 'adrotate_receiver');
+/*-----------------------------------------------------------*/
 
-// Load config
+/*--- Load config -------------------------------------------*/
 $adrotate_config 				= get_option('adrotate_config');
 $adrotate_notification_timer 	= get_option('adrotate_notification_timer');
 $adrotate_crawlers 				= get_option('adrotate_crawlers');
 $adrotate_stats 				= get_option('adrotate_stats');
 $adrotate_roles 				= get_option('adrotate_roles');
+/*-----------------------------------------------------------*/
 
 /*-------------------------------------------------------------
  Name:      adrotate_dashboard
@@ -135,7 +147,7 @@ function adrotate_manage() {
 			<div id="message" class="updated fade"><p>Not all fields met the requirements</p></div>
 		<?php } ?>
 
-		<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate') AND adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups') AND adrotate_mysql_table_exists($wpdb->prefix.'adrotate_linkmeta')) { ?>
+		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
 					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=manage';?>">Manage</a> | 
@@ -563,7 +575,7 @@ function adrotate_manage_group() {
 			<div id="message" class="updated fade"><p>Group including it's Ads deleted</p></div>
 		<?php } ?>
 
-		<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_groups') AND adrotate_mysql_table_exists($wpdb->prefix.'adrotate_linkmeta')) { ?>
+		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
 					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=manage';?>">Manage</a> | 
@@ -790,7 +802,7 @@ function adrotate_manage_block() {
 			<div id="message" class="updated fade"><p>Block deleted</p></div>
 		<?php } ?>
 
-		<?php if(adrotate_mysql_table_exists($wpdb->prefix.'adrotate_blocks') AND adrotate_mysql_table_exists($wpdb->prefix.'adrotate_linkmeta')) { ?>
+		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_blocks';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
 					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=manage';?>">Manage</a> | 
