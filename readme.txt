@@ -3,14 +3,12 @@ Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
 Requires at least: 3.0, PHP5
-Tested up to: 3.0.3
+Tested up to: 3.1
 Stable tag: 3.0.3
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
 == Description ==
-
-NOTE! Despite the compatibility thing says its broken. THE PLUGIN WORKS FINE! People are aparently not smart enough to read a blog or knowledge base when they upgrade and just blindly click "doesn't work". Again, THE PLUGIN WORKS FINE ON WORDPRESS 3 OR NEWER!
 
 Get the most intuitive ad manager and start making money with your website.
 Add and manage the ads from the dashboard and show a random banner, or multiple, on your site. 
