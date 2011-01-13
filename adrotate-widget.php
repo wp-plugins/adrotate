@@ -121,7 +121,7 @@ function adrotate_widget_init() {
  Since:		2.1
 -------------------------------------------------------------*/
 function adrotate_dashboard_widget() {
-	wp_add_dashboard_widget('meandmymac_rss_widget', 'Meandmymac.net RSS Feed', 'meandmymac_rss_widget');
+	wp_add_dashboard_widget('meandmymac_rss_widget', 'AdRotate Plugin Updates', 'meandmymac_rss_widget');
 }
 
 /*-------------------------------------------------------------
@@ -133,16 +133,17 @@ function adrotate_dashboard_widget() {
  Since:		2.4.3
 -------------------------------------------------------------*/
 if(!function_exists('meandmymac_rss_widget')) {
-	function meandmymac_rss_widget() {
+	function meandmymac_rss_widget($amount = 10) {
 
 	/* Changelog:
 	// Dec 8 2010 - Now uses SimplePIE RSS parser
+	// Dec 19 2010 - Simplyfied parsing
 	*/
 
 		include_once(ABSPATH . WPINC . '/feed.php');
-		$feed		= array('http://meandmymac.net/feed/', 'http://www.adrotateplugin.com/page/updates_files/adrotate.xml');
-		$count		= 10;
-		$showdates	= 'yes';
+		$feed		= array('http://meandmymac.net/feed/', 
+							'http://www.adrotateplugin.com/page/updates_files/adrotate.xml'
+							);
 		?>
 			<style type="text/css" media="screen">
 			#meandmymac_rss_widget .text-wrap {
@@ -157,7 +158,7 @@ if(!function_exists('meandmymac_rss_widget')) {
 		<?php
 		$rss = fetch_feed($feed);
 		if (!is_wp_error($rss)) { 
-		    $maxitems = $rss->get_item_quantity($count); 
+		    $maxitems = $rss->get_item_quantity($amount); 
 		    $rss_items = $rss->get_items(0, $maxitems); 
 		}
 		echo '<ul>';
@@ -166,13 +167,11 @@ if(!function_exists('meandmymac_rss_widget')) {
 				echo '<li class="text-wrap">No items</li>';
 			} else {
 				foreach ($rss_items as $item) {
-			        echo '<li class="text-wrap"><a href='.$item->get_permalink().' title="'.$item->get_title().'">'.$item->get_title().'</a>';
-					if($showdates == "yes") echo ' on '.$item->get_date('j F Y \a\t g:i a');
-					echo '</li>';
+			        echo '<li class="text-wrap">- <a href='.$item->get_permalink().' title="'.$item->get_title().'">'.$item->get_title().'</a> on '.$item->get_date('j F Y \a\t g:i a').'</li>';
 				}
 			}
 		} else {
-			echo '<li><span class="rsserror">The feed appears to be invalid or corrupt!</span></li>';
+			echo '<li class="text-wrap"><span class="rsserror">The feed appears to be invalid or corrupt!</span></li>';
 		}
 		echo '</ul>';
 	}

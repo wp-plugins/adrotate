@@ -30,12 +30,12 @@ function adrotate_insert_input() {
 
 	$id 				= $_POST['adrotate_id'];
 	$author 			= $_POST['adrotate_username'];
-	$title	 			= strip_tags(trim($_POST['adrotate_title'], "\t\n "));
+	$title	 			= strip_tags(htmlspecialchars(trim($_POST['adrotate_title'], "\t\n "), ENT_QUOTES));
 	$bannercode			= htmlspecialchars(trim($_POST['adrotate_bannercode'], "\t\n "), ENT_QUOTES);
 	$thetime 			= date('U');
 	$active 			= $_POST['adrotate_active'];
 	$imageraw			= $_POST['adrotate_image'];
-	$link				= strip_tags(trim($_POST['adrotate_link'], "\t\n "));
+	$link				= strip_tags(htmlspecialchars(trim($_POST['adrotate_link'], "\t\n "), ENT_QUOTES));
 	$tracker			= $_POST['adrotate_tracker'];
 	$sday 				= strip_tags(trim($_POST['adrotate_sday'], "\t\n "));
 	$smonth 			= strip_tags(trim($_POST['adrotate_smonth'], "\t\n "));
@@ -48,9 +48,12 @@ function adrotate_insert_input() {
 	$groups				= $_POST['groupselect'];
 	$adtype				= strip_tags(trim($_POST['adrotate_type'], "\t\n "));
 	$advertiser			= $_POST['adrotate_advertiser'];
+	$weight				= $_POST['adrotate_weight'];
 
 	if(current_user_can($adrotate_config['ad_manage'])) {
-		if (strlen($title)!=0 AND strlen($bannercode)!=0) {
+		if(strlen($title) < 1) $title = 'Ad '.$id;
+
+		if(strlen($bannercode)!=0) {
 			// Sort out dates
 			if(strlen($smonth) == 0 OR !is_numeric($smonth)) 	$smonth 	= date('m');
 			if(strlen($sday) == 0 OR !is_numeric($sday)) 		$sday 		= date('d');
@@ -97,7 +100,7 @@ function adrotate_insert_input() {
 			}
 
 			// Save the ad to the DB
-			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author', `active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `image` = '$image', `link` = '$link', `tracker` = '$tracker', `maxclicks` = '$maxclicks', `maxshown` = '$maxshown' WHERE `id` = '$id';");
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author', `active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `image` = '$image', `link` = '$link', `tracker` = '$tracker', `maxclicks` = '$maxclicks', `maxshown` = '$maxshown', `weight` = '$weight' WHERE `id` = '$id';");
 
 			// Fetch records for the ad
 			$groupmeta = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `block` = 0 AND `user` = 0;");
@@ -162,38 +165,35 @@ function adrotate_insert_group() {
 	$ads		= $_POST['adselect'];
 
 	if(current_user_can($adrotate_config['group_manage'])) {
-		if(strlen($name) > 0) {
-			// Fetch records for the group
-			$linkmeta = $wpdb->get_results("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = '$id' AND `block` = 0 AND `user` = 0;");
-			foreach($linkmeta as $meta) {
-				$meta_array[] = $meta->ad;
-			}
-			
-			if(!is_array($meta_array)) 	$meta_array = array();
-			if(!is_array($ads)) 		$ads = array();
-			
-			// Add new ads to this group
-			$insert = array_diff($ads,$meta_array);
-			foreach($insert as &$value) {
-					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES ($value, $id, 0, 0);"); 
-			}
-			unset($value);
-			
-			// Remove ads from this group
-			$delete = array_diff($meta_array,$ads);
-			foreach($delete as &$value) {
-				$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$value' AND `group` = '$id' AND `block` = 0 AND `user` = 0;"); 
-			}
-			unset($value);
-	
-			// Update the group itself
-			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_groups` SET `name` = '$name', `fallback` = '$fallback' WHERE `id` = '$id';");
-			adrotate_return($action, array($id));
-			exit;
-		} else {
-			adrotate_return('group_field_error', array($id));
-			exit;
+		if(strlen($name) < 1) $name = 'Group '.$id;
+
+		// Fetch records for the group
+		$linkmeta = $wpdb->get_results("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = '$id' AND `block` = 0 AND `user` = 0;");
+		foreach($linkmeta as $meta) {
+			$meta_array[] = $meta->ad;
 		}
+		
+		if(!is_array($meta_array)) 	$meta_array = array();
+		if(!is_array($ads)) 		$ads = array();
+		
+		// Add new ads to this group
+		$insert = array_diff($ads,$meta_array);
+		foreach($insert as &$value) {
+				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES ($value, $id, 0, 0);"); 
+		}
+		unset($value);
+		
+		// Remove ads from this group
+		$delete = array_diff($meta_array,$ads);
+		foreach($delete as &$value) {
+			$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$value' AND `group` = '$id' AND `block` = 0 AND `user` = 0;"); 
+		}
+		unset($value);
+
+		// Update the group itself
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_groups` SET `name` = '$name', `fallback` = '$fallback' WHERE `id` = '$id';");
+		adrotate_return($action, array($id));
+		exit;
 	} else {
 		adrotate_return('no_access');
 	}
@@ -213,8 +213,8 @@ function adrotate_insert_block() {
 	$action			= $_POST['adrotate_action'];
 	$id 			= $_POST['adrotate_id'];
 	$name 			= strip_tags(trim($_POST['adrotate_blockname'], "\t\n "));
-	$adcount		= $_POST['adrotate_adcount'];
-	$columns 		= $_POST['adrotate_columns'];
+	$adcount		= strip_tags(trim($_POST['adrotate_adcount'], "\t\n "));
+	$columns 		= strip_tags(trim($_POST['adrotate_columns'], "\t\n "));
 	$wrapper_before = htmlspecialchars(trim($_POST['adrotate_wrapper_before'], "\t\n "), ENT_QUOTES);
 	$wrapper_after 	= htmlspecialchars(trim($_POST['adrotate_wrapper_after'], "\t\n "), ENT_QUOTES);
 	$groups 		= $_POST['groupselect'];
@@ -222,39 +222,35 @@ function adrotate_insert_block() {
 	if(current_user_can($adrotate_config['block_manage'])) {
 		if($adcount < 1 OR $adcount == '' OR !is_numeric($adcount)) $adcount = 1;
 		if($columns < 1 OR $columns == '' OR !is_numeric($columns)) $columns = 1;
+		if(strlen($name) < 1) $name = 'Block '.$id;
 
-		if(strlen($name) > 0) {
-			// Fetch records for the block
-			$linkmeta = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `block` = '$id' AND `ad` = 0 AND `user` = 0;");
-			foreach($linkmeta as $meta) {
-				$meta_array[] = $meta->group;
-			}
-			
-			if(!is_array($meta_array)) 	$meta_array = array();
-			if(!is_array($groups)) 		$groups = array();
-			
-			// Add new groups to this block
-			$insert = array_diff($groups,$meta_array);
-			foreach($insert as &$value) {
-				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES (0, $value, $id, 0);"); 
-			}
-			unset($value);
-			
-			// Remove groups from this block
-			$delete = array_diff($meta_array,$groups);
-			foreach($delete as &$value) {
-				$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `group` = '$value' AND `block` = '$id' AND `user` = 0;"); 
-			}
-			unset($value);
-	
-			// Update the block itself
-			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `adcount` = '$adcount', `columns` = '$columns', `wrapper_before` = '$wrapper_before', `wrapper_after` = '$wrapper_after' WHERE `id` = '$id';");
-			adrotate_return($action, array($id));
-			exit;
-		} else {
-			adrotate_return('block_field_error', array($id));
-			exit;
+		// Fetch records for the block
+		$linkmeta = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `block` = '$id' AND `ad` = 0 AND `user` = 0;");
+		foreach($linkmeta as $meta) {
+			$meta_array[] = $meta->group;
 		}
+		
+		if(!is_array($meta_array)) 	$meta_array = array();
+		if(!is_array($groups)) 		$groups = array();
+		
+		// Add new groups to this block
+		$insert = array_diff($groups,$meta_array);
+		foreach($insert as &$value) {
+			$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES (0, $value, $id, 0);"); 
+		}
+		unset($value);
+		
+		// Remove groups from this block
+		$delete = array_diff($meta_array,$groups);
+		foreach($delete as &$value) {
+			$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `group` = '$value' AND `block` = '$id' AND `user` = 0;"); 
+		}
+		unset($value);
+
+		// Update the block itself
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `adcount` = '$adcount', `columns` = '$columns', `wrapper_before` = '$wrapper_before', `wrapper_after` = '$wrapper_after' WHERE `id` = '$id';");
+		adrotate_return($action, array($id));
+		exit;
 	} else {
 		adrotate_return('no_access');
 	}
@@ -275,15 +271,18 @@ function adrotate_request_action() {
 	// Nov 14 2010 - Removed "move" option, re-inserted access rights
 	// Nov 16 2010 - Rebranded 'resetmultiple' and 'renewmultiple' to work like 'reset' and 'renew' original 'reset' and 'renew' are removed, added block support
 	// Dec 4 2010 - Fixed bug where adrotate_renew() wasn't called properly
+	// Dec 17 2010 - Added support for single ad actions (renew, reset, delete)
 	*/
 
 	if(isset($_POST['bannercheck'])) 	$banner_ids = $_POST['bannercheck'];
 	if(isset($_POST['groupcheck'])) 	$group_ids = $_POST['groupcheck'];
 	if(isset($_POST['blockcheck'])) 	$block_ids = $_POST['blockcheck'];
 	
-	$actions = $_POST['adrotate_action'];	
-	list($action, $specific) = explode("-", $actions);
+	if(isset($_POST['adrotate_id'])) 	$banner_ids = array($_POST['adrotate_id']);
 	
+	$actions = $_POST['adrotate_action'];	
+	list($action, $specific) = explode("-", $actions);	
+
 	if($banner_ids != '') {
 		foreach($banner_ids as $banner_id) {
 			if($action == 'deactivate') {

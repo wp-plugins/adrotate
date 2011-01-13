@@ -15,6 +15,8 @@ function adrotate_plugin_uninstall() {
 
 	/* Changelog:
 	// Nov 15 2010 - Moved function to work with WP's uninstall system, stripped out unnessesary code
+	// Dec 13 2010 - Updated uninstaller to properly remove options for the new installer
+	// Dec 18 2010 - Updated for tracker subscriptions
 	*/
 
 	// Drop MySQL Tables
@@ -31,6 +33,8 @@ function adrotate_plugin_uninstall() {
 	delete_option('adrotate_crawlers');
 	delete_option('adrotate_stats');
 	delete_option('adrotate_roles');
+	delete_option('adrotate_db_version');
+//	delete_option('adrotate_tracker');
 
 	// Clear out userroles
 	remove_role('adrotate_clientstats');

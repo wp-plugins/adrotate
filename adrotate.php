@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.0.3
+Version: 3.1
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -24,14 +24,15 @@ along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses
 */
 
 /*--- AdRotate values ---------------------------------------*/
-define("ADROTATE_VERSION", 303);
-define("ADROTATE_DB_VERSION", 1);
+define("ADROTATE_VERSION", 310);
+define("ADROTATE_DB_VERSION", 2);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-setup.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-manage.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-functions.php');
+include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-output.php');
 include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-widget.php');
 // wp-content/plugins/adrotate/adrotate-out.php
 // wp-content/plugins/adrotate/uninstall.php
@@ -68,6 +69,7 @@ if(isset($_POST['adrotate_group_submit'])) 				add_action('init', 'adrotate_inse
 if(isset($_POST['adrotate_block_submit'])) 				add_action('init', 'adrotate_insert_block');
 if(isset($_POST['adrotate_action_submit'])) 			add_action('init', 'adrotate_request_action');
 if(isset($_POST['adrotate_options_submit'])) 			add_action('init', 'adrotate_options_submit');
+if(isset($_POST['adrotate_request_submit'])) 			add_action('init', 'adrotate_send_message');
 if(isset($_POST['adrotate_testmail_submit'])) 			add_action('init', 'adrotate_mail_notifications');
 if(isset($_POST['adrotate_role_add_submit']) OR isset($_POST['adrotate_role_remove_submit'])) add_action('init', 'adrotate_prepare_roles');
 //if(isset($_POST['headers']) and isset($_POST['body'])) 	add_action('init', 'adrotate_receiver');
@@ -95,9 +97,8 @@ function adrotate_dashboard() {
 	add_submenu_page('adrotate', 'AdRotate > Manage Ads', 'Manage Ads', $adrotate_config['ad_manage'], 'adrotate', 'adrotate_manage');
 	add_submenu_page('adrotate', 'AdRotate > Groups', 'Manage Groups', $adrotate_config['group_manage'], 'adrotate-groups', 'adrotate_manage_group');
 	add_submenu_page('adrotate', 'AdRotate > Blocks', 'Manage Blocks', $adrotate_config['block_manage'], 'adrotate-blocks', 'adrotate_manage_block');
-//	add_submenu_page('adrotate', 'AdRotate > AdRollr', 'AdRollr', 'manage_options', 'adrotate-adrollr', 'adrotate_network');
 	add_submenu_page('adrotate', 'AdRotate > User Statistics', 'User Statistics', $adrotate_config['pagestatistics'], 'adrotate-userstatistics', 'adrotate_userstatistics');
-	add_submenu_page('adrotate', 'AdRotate > Admin Statistics', 'Admin Statistics', 'manage_options', 'adrotate-adminstatistics', 'adrotate_adminstatistics');
+	add_submenu_page('adrotate', 'AdRotate > Global Statistics', 'Global Statistics', $adrotate_config['globalstatistics'], 'adrotate-statistics', 'adrotate_statistics');
 	add_submenu_page('adrotate', 'AdRotate > Settings','Settings', 'manage_options', 'adrotate-settings', 'adrotate_options');
 }
 
@@ -143,8 +144,6 @@ function adrotate_manage() {
 			<div id="message" class="updated fade"><p>Ad(s) activated</p></div>
 		<?php } else if ($message == 'no_access') { ?>
 			<div id="message" class="updated fade"><p>Action prohibited</p></div>
-		<?php } else if ($message == 'field_error') { ?>
-			<div id="message" class="updated fade"><p>Not all fields met the requirements</p></div>
 		<?php } ?>
 
 		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
@@ -205,7 +204,7 @@ function adrotate_manage() {
 						<th scope="col">Title</th>
 						<th scope="col" width="5%"><center>Impressions</center></th>
 						<th scope="col" width="5%"><center>Clicks</center></th>
-						<th scope="col" width="8%"><center>CTR</center></th>
+						<th scope="col" width="5%"><center>CTR</center></th>
 					</tr>
 	  			</thead>
 	  			<tbody>
@@ -214,6 +213,20 @@ function adrotate_manage() {
 				if ($banners) {
 					foreach($banners as $banner) {
 						$user_id = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = ".$banner->id." AND `group` = 0 AND `block` = 0 AND `user` > 0;");
+
+						$groups	= $wpdb->get_results("SELECT `".$wpdb->prefix."adrotate_groups`.`name` 
+													FROM `".$wpdb->prefix."adrotate_groups`, `".$wpdb->prefix."adrotate_linkmeta` 
+													WHERE `".$wpdb->prefix."adrotate_linkmeta`.`ad` = '".$banner->id."'
+														AND `".$wpdb->prefix."adrotate_linkmeta`.`group` = `".$wpdb->prefix."adrotate_groups`.`id`
+														AND `".$wpdb->prefix."adrotate_linkmeta`.`block` = 0
+														AND `".$wpdb->prefix."adrotate_linkmeta`.`user` = 0
+													;");
+						$grouplist = '';
+						foreach($groups as $group) {
+							$grouplist .= $group->name.", ";
+						}
+						$grouplist = rtrim($grouplist, ", ");
+						
 						if($banner->tracker == 'N' AND $user_id) {
 							$publisherror = ' updated';
 						} else {
@@ -242,7 +255,7 @@ function adrotate_manage() {
 							} else { 
 								echo '<img src="'.get_option('siteurl').'/wp-content/plugins/adrotate/icons/cross.png" title="Inactive"/>'; 
 							}?></center></td>
-							<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=edit&edit_ad='.$banner->id;?>" title="Edit"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong></td>
+							<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=edit&edit_ad='.$banner->id;?>" title="Edit"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong><br /><?php if($groups) echo '<em style="color:#999">'.$grouplist.'</em>'; ?></td>
 							<td><center><?php echo $banner->shown;?></center></td>
 							<?php if($banner->tracker == "Y") { ?>
 							<td><center><?php echo $banner->clicks;?></center></td>
@@ -277,7 +290,7 @@ function adrotate_manage() {
 				$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty' ORDER BY `id` DESC LIMIT 1;";
 				$edit_id = $wpdb->get_var($query);
 				if($edit_id == 0) {
-					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `image`, `link`, `tracker`, `clicks`, `maxclicks`, `shown`, `maxshown`, `type`) VALUES ('', '', '$startshow', '$startshow', '$userdata->user_login', 'no', '$startshow', '$endshow', '', '', 'N', 0, 0, 0, 0, 'empty');");
+					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `image`, `link`, `tracker`, `clicks`, `maxclicks`, `shown`, `maxshown`, `type`, `weight`) VALUES ('', '', '$startshow', '$startshow', '$userdata->user_login', 'no', '$startshow', '$endshow', '', '', 'N', 0, 0, 0, 0, 'empty', 6);");
 					$edit_id = $wpdb->get_var($query);
 				}
 				$ad_edit_id = $edit_id;
@@ -310,24 +323,35 @@ function adrotate_manage() {
 	
 					<thead>
 					<tr valign="top">
-						<th colspan="4" bgcolor="#DDD">Create your banner, all fields are required!</th>
+						<th width="15%" bgcolor="#DDD">Create your banner!</th>
+						<th width="35%" bgcolor="#DDD">&nbsp;</th>
+						<th width="15%" bgcolor="#DDD">&nbsp;</th>
+						<th width="35%" bgcolor="#DDD">&nbsp;</th>
 					</tr>
 					</thead>
 	
 					<tbody>
 			      	<tr>
-				        <th scope="row" width="25%">Title:</th>
+				        <th scope="row" width="15%">Title:</th>
 				        <td colspan="3"><input tabindex="1" name="adrotate_title" type="text" size="120" class="search-input" value="<?php echo $edit_banner->title;?>" autocomplete="off" /></td>
 			      	</tr>
 			      	<tr>
-				        <th scope="row" width="25%" valign="top" style="border-bottom:none;">AdCode:</th>
-				        <td colspan="3" rowspan="2"><textarea tabindex="2" name="adrotate_bannercode" cols="90" rows="15"><?php echo stripslashes($edit_banner->bannercode); ?></textarea></td>
-			      	</tr>
-			      	<tr>
-				        <td><p><em>Options: %id%, %image%, %link%.<br />HTML/JavaScript allowed, use with care!</em></p>
-				        <p><strong>Examples:</strong></p>
-				        <p><em>Clicktracking: &lt;a href="%link%"&gt;This ad is great!&lt;/a&gt;</em></p>
-				        <p><em>Image: &lt;a href="http://example.com"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p></td>
+				        <th scope="row" valign="top">AdCode:</th>
+				        <td colspan="2"><textarea tabindex="2" name="adrotate_bannercode" cols="100" rows="15"><?php echo stripslashes($edit_banner->bannercode); ?></textarea></td>
+				        <td>
+					        <p><strong>Options:</strong></p>
+					        <p><em>%id%, %image%, %link%</em><br />
+					        HTML/JavaScript allowed, use with care!</p>
+					        
+					        <p><strong>Basic Examples:</strong></p>
+					        <p>Clicktracking: <em>&lt;a href="%link%"&gt;This ad is great!&lt;/a&gt;</em></p>
+					        <p>Image: <em>&lt;a href="http://example.com"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p>
+					        <p>Combination: <em>&lt;a href="%link%"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p>
+					        
+					        <p><strong>Advanced Example:</strong></p>
+					        <p>Clicktracking: <em>&lt;span class="ad-%id%"&gt;&lt;a href="%link%"&gt;Text Link Ad!&lt;/a&gt;&lt;/span&gt;</em><br />
+					        To accomodate custom per ad CSS. Include a class ".ad-3" in your stylesheet for ad 3.</p>
+				        </td>
 			      	</tr>
 			      	<tr>
 				        <th scope="row">Display From:</th>
@@ -374,15 +398,15 @@ function adrotate_manage() {
 				        <td colspan="3"><select tabindex="9" name="adrotate_active">
 						<?php if($edit_banner->active == "no") { ?>
 							<?php if($edit_banner->type == "empty") { ?>
-						<option value="yes">YES! The banner will be included in the pool</option>
-						<option value="no">NO! Do not show the banner anywhere</option>
+						<option value="yes">YES! The ad will be included in the pool</option>
+						<option value="no">NO! Do not show the ad anywhere</option>
 							<?php } else {?>
-						<option value="no">NO! Do not show the banner anywhere</option>
-						<option value="yes">YES! The banner will be included in the pool</option>
+						<option value="no">NO! Do not show the ad anywhere</option>
+						<option value="yes">YES! The ad will be included in the pool</option>
 							<?php } ?>
 						<?php } else { ?>
-						<option value="yes">YES! The banner will be included in the pool</option>
-						<option value="no">NO! Do not show the banner anywhere</option>
+						<option value="yes">YES! The ad will be included in the pool</option>
+						<option value="no">NO! Do not show the ad anywhere</option>
 						<?php } ?>
 						</select></td>
 			      	</tr>
@@ -406,7 +430,7 @@ function adrotate_manage() {
 	
 					<thead>
 					<tr valign="top">
-						<th colspan="4">Ad Code</th>
+						<th colspan="4">Usage</th>
 					</tr>
 					</thead>
 	
@@ -457,14 +481,50 @@ function adrotate_manage() {
 						<br /><em>Use %image% in the code. Accepted files are: jpg, jpeg, gif, png, swf and flv.</em></td>
 			      	</tr>
 			      	<tr>
-					    <th scope="row">Max Clicks:</th>
-				        <td colspan="3">Disable after <input tabindex="13" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> clicks! <em>Leave empty or 0 to skip this.</em></td>
+					    <th scope="row" valign="top">Visibility (weight):</th>
+				        <td colspan="3"><select tabindex="13" name="adrotate_weight">
+								<option value="2" <?php if($edit_banner->weight == "2") { echo 'selected'; } ?>>2 - Barely visible</option>
+								<option value="4" <?php if($edit_banner->weight == "4") { echo 'selected'; } ?>>4 - Less than average</option>
+								<option value="6" <?php if($edit_banner->weight == "6") { echo 'selected'; } ?>>6 - Normal coverage</option>
+								<option value="8" <?php if($edit_banner->weight == "8") { echo 'selected'; } ?>>8 - More than average</option>
+								<option value="10" <?php if($edit_banner->weight == "10") { echo 'selected'; } ?>>10 - Best visibility</option>
+							</select><br />
+							<em>Ads set to 40% could end up as low as 20% or as high as 60% depending on various conditions used to select the ads. This includes options for maximum clicks and/or impressions or the amount of ads in your group or block. Ad weight is not applicible to locations with only one ad.</em></td>
 					</tr>
 			      	<tr>
-					    <th scope="row">Max Impressions:</th>
-				        <td colspan="3">Disable after <input tabindex="14" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> views! <em>Leave empty or 0 to skip this.</em></td>
+					    <th scope="row">Maximum Clicks:</th>
+				        <td colspan="3">Disable after <input tabindex="14" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> clicks! <em>Leave empty or 0 to skip this.</em></td>
+					</tr>
+			      	<tr>
+					    <th scope="row">Maximum Impressions:</th>
+				        <td colspan="3">Disable after <input tabindex="15" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> views! <em>Leave empty or 0 to skip this.</em></td>
 					</tr>
 					</tbody>
+
+				<?php if($edit_banner->type != 'empty') { ?>
+					<thead>
+					<tr valign="top">
+						<th colspan="4" bgcolor="#DDD">Maintenance</th>
+					</tr>
+					</thead>
+	
+					<tbody>
+			      	<tr>
+				        <th scope="row">Actions:</th>
+				        <td colspan="3">
+					        <select name="adrotate_action" id="cat" class="postform">
+						        <option value="0">--</option>
+						        <option value="renew-31536000">Renew for 1 year</option>
+						        <option value="renew-5184000">Renew for 180 days</option>
+						        <option value="renew-2592000">Renew for 30 days</option>
+						        <option value="renew-604800">Renew for 7 days</option>
+						        <option value="delete">Delete</option>
+						        <option value="reset">Reset stats</option>
+							</select> <input type="submit" id="post-action-submit" name="adrotate_action_submit" value="Go" class="button-secondary" />
+						</td>
+					</tbody>
+				<?php } ?>
+				
 				</table>
 	
 				<br class="clear" />
@@ -473,7 +533,7 @@ function adrotate_manage() {
 		    	<table class="widefat" style="margin-top: .5em">
 		  			<thead>
 		  				<tr>
-							<th scope="col" colspan="5">Select the group(s) this ad belongs to (Optional)</th>
+							<th colspan="3">Select the group(s) this ad belongs to (Optional)</th>
 						</tr>
 		  			</thead>
 
@@ -484,7 +544,7 @@ function adrotate_manage() {
 					    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
 							<th scope="row" class="check-column"><input type="checkbox" name="groupselect[]" value="<?php echo $group->id; ?>" <?php if(in_array($group->id, $meta_array)) echo "checked"; ?> /></th>
 							<td><?php echo $group->id; ?> - <strong><?php echo $group->name; ?></strong></td>
-							<td colspan="3"><?php echo $ads_in_group; ?> Ads</td>
+							<td width="15%"><?php echo $ads_in_group; ?> Ads</td>
 						</tr>
 		 			<?php } ?>
 					</tbody>					
@@ -495,9 +555,9 @@ function adrotate_manage() {
 
 		    	<table class="widefat" style="margin-top: .5em">
 					<thead>
-					<tr valign="top">
-						<th colspan="4" bgcolor="#DDD">Statistics</th>
-					</tr>
+						<tr>
+							<th colspan="4" bgcolor="#DDD">Statistics</th>
+						</tr>
 					</thead>
 	
 					<tbody>
@@ -529,7 +589,7 @@ function adrotate_manage() {
 				</table>
 	
 		    	<p class="submit">
-					<input tabindex="15" type="submit" name="adrotate_ad_submit" class="button-primary" value="Save ad" />
+					<input tabindex="16" type="submit" name="adrotate_ad_submit" class="button-primary" value="Save ad" />
 					<a href="admin.php?page=adrotate&view=manage" class="button">Cancel</a>
 		    	</p>
 	
@@ -676,23 +736,20 @@ function adrotate_manage_group() {
 
 		  			<thead>
 		  				<tr>
-							<th scope="col" colspan="5">Fill in a name as reference and specify a fallback group</th>
+							<th scope="col" colspan="4">Fill in a name as reference and specify a fallback group</th>
 						</tr>
 		  			</thead>
 
 					<tbody>
 					    <tr id='group-new'>
-							<th scope="row">&nbsp;</th>
-							<td width="30%"><strong>ID:</strong></td>
+							<td width="15%"><strong>ID:</strong></td>
 							<td colspan="3"><?php echo $edit_group->id; ?></td>
 						</tr>
 					    <tr id='group-new'>
-							<th scope="row">&nbsp;</th>
-							<td width="30%"><strong>Name:</strong></td>
+							<td width="15%"><strong>Name:</strong></td>
 							<td colspan="3"><input tabindex="1" name="adrotate_groupname" type="text" class="search-input" size="40" value="<?php echo $edit_group->name; ?>" autocomplete="off" /></td>
 						</tr>
 					    <tr id='group-new'>
-							<th scope="row">&nbsp;</th>
 							<td><strong>Fallback group?</strong></td>
 							<td colspan="3"><select tabindex="2" name="adrotate_fallback">
 					        <option value="0">No</option>
@@ -705,7 +762,6 @@ function adrotate_manage_group() {
 						</tr>
 					<?php if($edit_group->name != '') { ?>
 				      	<tr>
-					        <th scope="row">&nbsp;</th>
 					        <th scope="row"><strong>This group is in the block(s):</strong></th>
 					        <td colspan="3"><?php echo adrotate_group_is_in_blocks($edit_group->id); ?></td>
 				      	</tr>
@@ -720,19 +776,24 @@ function adrotate_manage_group() {
 	
 					<tbody>
 				      	<tr id='group-code'>
-							<th scope="row">&nbsp;</th>
-					        <th>In a post or page:</th>
-					        <td>[adrotate group="<?php echo $edit_group->id; ?>"]</td>
-					        <th>Directly in a theme:</th>
-					        <td>&lt;?php echo adrotate_group(<?php echo $edit_group->id; ?>); ?&gt;</td>
+					        <th width="15%">In a post or page:</th>
+					        <td width="35%">[adrotate group="<?php echo $edit_group->id; ?>"]</td>
+					        <th width="15%">Directly in a theme:</th>
+					        <td width="35%">&lt;?php echo adrotate_group(<?php echo $edit_group->id; ?>); ?&gt;</td>
 				      	</tr>
 			      	</tbody>
+				</table>
 				
+				<br class="clear" />
+
+			   	<table class="widefat" style="margin-top: .5em">
 		  			<thead>
 		  				<tr>
-							<th scope="col" colspan="3">Choose the ads to use in this group</th>
-							<th scope="col"><center>Impressions - Clicks</center></th>
-							<th scope="col">Visible until</th>
+							<th scope="col" colspan="2">Choose the ads to use in this group</th>
+							<th scope="col" width="5%"><center>Impressions</center></th>
+							<th scope="col" width="5%"><center>Clicks</center></th>
+							<th scope="col" width="5%"><center>Visibility</center></th>
+							<th scope="col" width="10%">Visible until</th>
 						</tr>
 		  			</thead>
 
@@ -742,8 +803,10 @@ function adrotate_manage_group() {
 							$class = ('alternate' != $class) ? 'alternate' : ''; ?>
 						    <tr id='ad-<?php echo $ad->id; ?>' class=' <?php echo $class; ?>'>
 								<th scope="row" class="check-column"><input type="checkbox" name="adselect[]" value="<?php echo $ad->id; ?>" <?php if(in_array($ad->id, $meta_array)) echo "checked"; ?> /></th>
-								<td colspan="2"><?php echo $ad->id; ?> - <strong><?php echo $ad->title; ?></strong></td>
-								<td><center><?php echo $ad->shown; ?> - <?php if($ad->tracker == 'Y') { echo $ad->clicks; } else { ?>N/A<?php } ?></center></td>
+								<td><?php echo $ad->id; ?> - <strong><?php echo $ad->title; ?></strong></td>
+								<td><center><?php echo $ad->shown; ?></center></td>
+								<td><center><?php if($ad->tracker == 'Y') { echo $ad->clicks; } else { ?>N/A<?php } ?></center></td>
+								<td><center><?php echo $ad->weight; ?></center></td>
 								<td><span style="color: <?php echo adrotate_prepare_color($ad->endshow);?>;"><?php echo date("F d, Y", $ad->endshow); ?></span></td>
 							</tr>
 			 			<?php } ?>
@@ -818,11 +881,11 @@ function adrotate_manage_block() {
 	
 				<div class="tablenav">
 					<div class="alignleft">
-						<select name='adrotate_action' id='cat' class='postform' >
+						<select name="adrotate_action" id="cat" class="postform">
 					        <option value="">Bulk Actions</option>
 					        <option value="block_delete">Delete Block(s)</option>
 						</select>
-						<input type="submit" id="post-action-submit" value="Go" class="button-secondary" />
+						<input onclick="return confirm('You are about to delete a block\nThis action can not be undone!\n\'OK\' to continue, \'Cancel\' to stop.')" type="submit" id="post-action-submit" name="adrotate_action_submit" value="Go" class="button-secondary" />
 					</div>
 				</div>
 	
@@ -903,71 +966,72 @@ function adrotate_manage_block() {
 			   	
 		  			<thead>
 		  				<tr>
-							<th scope="col" colspan="5">Fill in a name as reference, select how many ads and in how many columns you want to block to appear</th>
+							<th scope="col" colspan="4">Fill in a name as reference, select how many ads and in how many columns you want to block to appear</th>
 						</tr>
 		  			</thead>
 		  			
 					<tbody>
 					    <tr id='block-new'>
-							<th scope="row">&nbsp;</th>
-							<td width="30%"><strong>ID:</strong></td>
+							<th width="15%">ID:</th>
 							<td colspan="3"><?php echo $edit_block->id; ?></td>
 						</tr>
 					    <tr id='block-new'>
-							<th scope="row">&nbsp;</th>
-							<td width="30%"><strong>Name / Reference:</strong></td>
+							<th width="15%">Name / Reference:</th>
 							<td colspan="3"><input tabindex="1" name="adrotate_blockname" type="text" class="search-input" size="80" value="<?php echo $edit_block->name; ?>" autocomplete="off" /></td>
 						</tr>
 					    <tr id='block-new'>
-							<th scope="row">&nbsp;</th>
-							<td><strong>How many ads and columns</strong></td>
+							<th width="15%">How many ads and columns</th>
 							<td colspan="3"><input tabindex="2" name="adrotate_adcount" type="text" class="search-input" size="5" value="<?php echo $edit_block->adcount; ?>" autocomplete="off" /> ads in <input tabindex="3" name="adrotate_columns" type="text" class="search-input" size="5" value="<?php echo $edit_block->columns; ?>" autocomplete="off" /> columns. (Example: 4 ads in 2 columns, makes a square block of 2x2 ads.)</td>
 						</tr>
 					</tbody>
 			   	
 		  			<thead>
 		  				<tr>
-							<th scope="col" colspan="5">Wrapper code (Optional) - Wraps around each ad to facilitate easy margins, paddings or borders around ads without making the ads ugly or unusable for other locations.</th>
+							<th scope="col" colspan="4">Wrapper code (Optional) - Wraps around each ad to facilitate easy margins, paddings or borders around ads without making the ads ugly or unusable for other locations.</th>
 						</tr>
 		  			</thead>
 		  			
 					<tbody>
 					    <tr id='block-new'>
-							<th scope="row">&nbsp;</th>
-							<td><strong>Before ad</strong><br/>
-							Example: &lt;span style="margin: 2px;"&gt;<br />
-							<em>HTML/CSS/JavaScript allowed</em></td>
-							<td colspan="3"><textarea tabindex="4" name="adrotate_wrapper_before" cols="90" rows="3"><?php echo $edit_block->wrapper_before; ?></textarea></td>
+							<th valign="top">Before ad</strong></th>
+							<td colspan="2"><textarea tabindex="4" name="adrotate_wrapper_before" cols="90" rows="3"><?php echo $edit_block->wrapper_before; ?></textarea></td>
+							<td>
+						        <p><strong>Example:</strong></p>
+						        <p><em>&lt;span style="margin: 2px;"&gt;</em></p>
+							</td>
 						</tr>
 					    <tr id='block-new'>
-							<th scope="row">&nbsp;</th>
-							<td><strong>After ad</strong><br/>
-							Example: &lt;/span&gt;<br />
-							<em>HTML/CSS/JavaScript allowed</em></td>
-							<td colspan="3"><textarea tabindex="5" name="adrotate_wrapper_after" cols="90" rows="3"><?php echo $edit_block->wrapper_after; ?></textarea></td>
-
+							<th valign="top">After ad</strong></th>
+							<td colspan="2"><textarea tabindex="5" name="adrotate_wrapper_after" cols="90" rows="3"><?php echo $edit_block->wrapper_after; ?></textarea></td>
+							<td>
+								<p><strong>Example:</strong></p>
+								<p><em>&lt;/span&gt;</em></p>
+							</td>
 						</tr>
 					</tbody>
 
 					<thead>
 						<tr valign="top">
-							<th colspan="5">Block Code</th>
+							<th colspan="4">Block Code</th>
 						</tr>
 					</thead>
 	
 					<tbody>
 				      	<tr id='group-code'>
-							<th scope="row">&nbsp;</th>
-					        <th>In a post or page:</th>
-					        <td>[adrotate block="<?php echo $edit_block->id; ?>"]</td>
-					        <th>Directly in a theme:</th>
-					        <td>&lt;?php echo adrotate_block(<?php echo $edit_block->id; ?>); ?&gt;</td>
+					        <th width="15%">In a post or page:</th>
+					        <td width="35%">[adrotate block="<?php echo $edit_block->id; ?>"]</td>
+					        <th width="15%">Directly in a theme:</th>
+					        <td width="35%">&lt;?php echo adrotate_block(<?php echo $edit_block->id; ?>); ?&gt;</td>
 				      	</tr>
 			      	</tbody>
+				</table>
 				
+				<br class="clear" />
+
+			   	<table class="widefat" style="margin-top: .5em">
 		  			<thead>
 		  				<tr>
-							<th scope="col" colspan="5">Choose the groups to use in this block</th>
+							<th scope="col" colspan="3">Choose the groups to use in this block</th>
 						</tr>
 		  			</thead>
 
@@ -979,13 +1043,13 @@ function adrotate_manage_block() {
 						    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
 								<th scope="row" class="check-column"><input type="checkbox" name="groupselect[]" value="<?php echo $group->id; ?>" <?php if(in_array($group->id, $meta_array)) echo "checked"; ?> /></th>
 								<td><?php echo $group->id; ?> - <strong><?php echo $group->name; ?></strong></td>
-								<td colspan="3"><?php echo $ads_in_group; ?> Ads</td>
+								<td width="10%"><?php echo $ads_in_group; ?> Ads</td>
 							</tr>
 			 			<?php } ?>
 					<?php } else { ?>
 						<tr id='no-groups'>
 							<th scope="row" class="check-column">&nbsp;</th>
-							<td colspan="4"><em>No groups created!</em></td>
+							<td colspan="2"><em>No groups created!</em></td>
 						</tr>
 					<?php } ?>
 					</tbody>					
@@ -1020,208 +1084,276 @@ function adrotate_manage_block() {
 function adrotate_userstatistics() {
 	global $wpdb, $current_user;
 	
-	$user = wp_get_current_user();
-	$user_has_ads = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = 0 AND `block` = 0 AND `user` = ".$user->ID.";");
-	$now = current_time('timestamp');
-	$in2days = $now + 172800;
+	$user 			= wp_get_current_user();
+	$message 		= $_GET['message'];
+	$view 			= $_GET['view'];
+	$request		= $_GET['request'];
+	$request_id		= $_GET['id'];
+	$now 			= current_time('timestamp');
+	$in2days 		= $now + 172800;
 ?>
 	<div class="wrap">
 	  	<h2>User Statistics</h2>
 
-		<div class="text-wrap">
-		<?php 
-		adrotate_prepare_user_cache_statistics($user->ID); 
-		$result = $wpdb->get_var("SELECT `cache` FROM `".$wpdb->prefix."adrotate_stats_cache` WHERE `user` = ".$user->ID.";");
-		$result = unserialize($result);
-		?>
-		</div>
-	
-		<?php if($user_has_ads > 0) { ?>
-			<h4>General</h4>
-			
-			<?php 
-			if($result['ad_amount_tracker'] > 0 OR $result['total_clicks'] > 0) {
-				$clicks = round($result['total_clicks'] / $result['ad_amount_tracker'], 2); 
-			} else { 
-				$clicks = 0; 
-			}
-			
-			if($result['total_impressions'] > 0 AND $result['total_clicks'] > 0) {
-				$ctr = round((100/$result['total_impressions'])*$result['total_clicks'], 2);
-			} else {
-				$ctr = 0;
-			}
-			?>
-			<table class="widefat" style="margin-top: .5em">
-				<thead>
-				<tr>
-					<th scope="col" colspan="2">Overall statistics</th>
-					<th scope="col" colspan="2">The last 15 clicks in the past 24 hours</th>
-				</tr>
-				</thead>
-				<tbody>
-			    <tr>
-					<th width="10%">General</th>
-					<td width="40%"><?php echo $result['ad_amount']; ?> ads, sharing a total of <?php echo $result['total_impressions']; ?> impressions. <?php echo $result['ad_amount_tracker']; ?> ads have tracking enabled.</td>
-					<td rowspan="5" style="border-left:1px #EEE solid;">
-					<?php 
-					if($result['last_clicks']) {
-						foreach($result['last_clicks'] as $last) {
-							$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
-							echo '<strong>'.date('d-m-Y', $last['timer']) .'</strong> - '. $bannertitle .'<br />';
-						}
-					} else {
-						echo '<em>No recent clicks</em>';
-					} ?>
-					</td>
-				</tr>
-			    <tr>
-					<th>The best</th>
-					<td><?php if($result['thebest']) {?>'<?php echo $result['thebest']['title']; ?>' with <?php echo $result['thebest']['clicks']; ?> clicks.<?php } else { ?>No ad stands out at this time.<?php } ?></td>
-				</tr>
-			    <tr>
-					<th>The worst</th>
-					<td><?php if($result['theworst']) {?>'<?php echo $result['theworst']['title']; ?>' with <?php echo $result['theworst']['clicks']; ?> clicks.<?php } else { ?>All ads seem equally bad.<?php } ?></td>
-				</tr>
-			    <tr>
-					<th>Average on all ads</th>
-					<td><?php echo $clicks; ?> clicks.</td>
-				</tr>
-			    <tr>
-					<th>Click-Through-Rate</th>
-					<td><?php echo $ctr; ?>%, based on <?php echo $result['total_impressions']; ?> impressions and <?php echo $result['total_clicks']; ?> clicks.</td>
-				</tr>
-				</tbody>
-			</table>
-			
-			<h4>Your ads</h4>
-			
-				<table class="widefat" style="margin-top: .5em">
-				<thead>
-					<tr>
-					<th scope="col" width="2%"><center>ID</center></th>
-					<th scope="col" width="10%">Show from</th>
-					<th scope="col" width="10%">Show until</th>
-					<th scope="col">Title</th>
-					<th scope="col" width="10%"><center>Impressions</center></th>
-					<th scope="col" width="10%"><center>Clicks</center></th>
-					<th scope="col" width="10%"><center>CTR</center></th>
-				</tr>
-				</thead>
-				<tbody>
-			<?php
-			if($result['ads']) {
-				foreach($result['ads'] as $ad) {
-					$class 			= ('alternate' != $class) ? 'alternate' : '';
-					$expiredclass 	= ($ad['endshow'] <= $now OR $ad['endshow'] <= $in2days) ? ' error' : '';
-			?>
-				    <tr id='banner-<?php echo $ad['id']; ?>' class='<?php echo $class.$expiredclass; ?>'>
-						<td><center><?php echo $ad['id'];?></center></td>
-						<td><?php echo date("F d, Y", $ad['startshow']);?></td>
-						<td><span style="color: <?php echo adrotate_prepare_color($ad['endshow']);?>;"><?php echo date("F d, Y", $ad['endshow']);?></span></td>
-						<th><strong><?php echo stripslashes(html_entity_decode($ad['title']));?></strong></th>
-						<td><center><?php echo $ad['impressions'];?></center></td>
-						<td><center><?php echo $ad['clicks'];?></center></td>
-						<?php if($ad['impressions'] == 0) $ad['impressions'] = 1; ?>
-						<td><center><?php echo round((100/$ad['impressions']) * $ad['clicks'],2); ?> %</center></td>
-					</tr>
-					<?php } ?>
-			<?php } else { ?>
-				<tr id='no-ads'>
-					<th scope="row" class="check-column">&nbsp;</th>
-					<td colspan="4"><em>No adststats cached! If no stats show up after 24 hours, contact an administrator.</em></td>
-				</tr>
-			<?php } ?>
-			</tbody>
-			</table>
-			
-			<br class="clear" />
-			<?php adrotate_user_credits(); ?>
-
+		<?php if ($message == 'mail_sent') { ?>
+			<div id="message" class="updated fade"><p>Your message has been sent</p></div>
 		<?php } ?>
+
+		<?php if($view == "" OR $view == "stats") {
+			$user_has_ads 	= $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = 0 AND `block` = 0 AND `user` = ".$user->ID.";");
+			
+			if($user_has_ads > 0) {
+				adrotate_prepare_user_cache_statistics($user->ID); 
+				$result = $wpdb->get_var("SELECT `cache` FROM `".$wpdb->prefix."adrotate_stats_cache` WHERE `user` = ".$user->ID.";");
+				$result = unserialize($result);
+				
+				if($result['total_impressions'] > 0 AND $result['total_clicks'] > 0) {
+					$ctr = round((100/$result['total_impressions'])*$result['total_clicks'], 2);
+				} else {
+					$ctr = 0;
+				}
+		?>
+	
+				<h4>Overall</h4>
+				
+				<table class="widefat" style="margin-top: .5em">					
+
+					<thead>
+					<tr>
+						<th scope="col" colspan="2">Overall statistics</th>
+						<th scope="col" colspan="2">The last 15 clicks in the past 24 hours</th>
+					</tr>
+					</thead>
+					
+					<tbody>
+				    <tr>
+						<th width="10%">General</th>
+						<td width="40%"><?php echo $result['ad_amount']; ?> ads, sharing a total of <?php echo $result['total_impressions']; ?> impressions.</td>
+						<td rowspan="5" style="border-left:1px #EEE solid;">
+						<?php 
+						if($result['last_clicks']) {
+							foreach($result['last_clicks'] as $last) {
+								$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
+								echo '<strong>'.date('d-m-Y', $last['timer']) .'</strong> - '. $bannertitle .'<br />';
+							}
+						} else {
+							echo '<em>No recent clicks</em>';
+						} ?>
+						</td>
+					</tr>
+				    <tr>
+						<th>The best</th>
+						<td><?php if($result['thebest']) {?>'<?php echo $result['thebest']['title']; ?>' with <?php echo $result['thebest']['clicks']; ?> clicks.<?php } else { ?>No ad stands out at this time.<?php } ?></td>
+					</tr>
+				    <tr>
+						<th>The worst</th>
+						<td><?php if($result['theworst']) {?>'<?php echo $result['theworst']['title']; ?>' with <?php echo $result['theworst']['clicks']; ?> clicks.<?php } else { ?>All ads seem equally bad.<?php } ?></td>
+					</tr>
+				    <tr>
+						<th>Average on all ads</th>
+						<td><?php echo $result['total_clicks']; ?> clicks.</td>
+					</tr>
+				    <tr>
+						<th>Click-Through-Rate</th>
+						<td><?php echo $ctr; ?>%, based on <?php echo $result['total_impressions']; ?> impressions and <?php echo $result['total_clicks']; ?> clicks.</td>
+					</tr>
+					</tbody>
+				</table>
+				
+				<h4>Your ads</h4>
+				
+				<table class="widefat" style="margin-top: .5em">
+					<thead>
+						<tr>
+						<th scope="col" width="2%"><center>ID</center></th>
+						<th scope="col" width="10%">Show from</th>
+						<th scope="col" width="10%">Show until</th>
+						<th scope="col">Title</th>
+						<th scope="col" width="5%"><center>Impressions</center></th>
+						<th scope="col" width="5%"><center>Clicks</center></th>
+						<th scope="col" width="5%"><center>CTR</center></th>
+						<th scope="col" width="15%">Contact</th>
+					</tr>
+					</thead>
+					
+					<tbody>
+				<?php
+				if($result['ads']) {
+					foreach($result['ads'] as $ad) {
+						$class 			= ('alternate' != $class) ? 'alternate' : '';
+						$expiredclass 	= ($ad['endshow'] <= $now OR $ad['endshow'] <= $in2days) ? ' error' : '';
+				?>
+					    <tr id='banner-<?php echo $ad['id']; ?>' class='<?php echo $class.$expiredclass; ?>'>
+							<td><center><?php echo $ad['id'];?></center></td>
+							<td><?php echo date("F d, Y", $ad['startshow']);?></td>
+							<td><span style="color: <?php echo adrotate_prepare_color($ad['endshow']);?>;"><?php echo date("F d, Y", $ad['endshow']);?></span></td>
+							<th><strong><?php echo stripslashes(html_entity_decode($ad['title']));?></strong></th>
+							<td><center><?php echo $ad['impressions'];?></center></td>
+							<td><center><?php echo $ad['clicks'];?></center></td>
+							<?php if($ad['impressions'] == 0) $ad['impressions'] = 1; ?>
+							<td><center><?php echo round((100/$ad['impressions']) * $ad['clicks'],2); ?> %</center></td>
+							<td><a href="admin.php?page=adrotate-userstatistics&view=message&request=renew&id=<?php echo $ad['id']; ?>">Renew</a> - <a href="admin.php?page=adrotate-userstatistics&view=message&request=remove&id=<?php echo $ad['id']; ?>">Remove</a> - <a href="admin.php?page=adrotate-userstatistics&view=message&request=report&id=<?php echo $ad['id']; ?>">Report</a></td>
+						</tr>
+						<?php } ?>
+				<?php } else { ?>
+					<tr id='no-ads'>
+						<th scope="row" class="check-column">&nbsp;</th>
+						<td colspan="7"><em>No ad stats cached! If no stats show up after 24 hours, contact an administrator.</em></td>
+					</tr>
+				<?php } ?>
+					</tbody>
+				</table>
+			<?php } else { ?>
+				<table class="widefat" style="margin-top: .5em">
+					<thead>
+						<tr>
+							<th>Notice</th>
+						</tr>
+					</thead>
+					<tbody>
+					    <tr>
+							<td>No ads for user. If you feel this to be in error please contact the site administrator.</td>
+						</tr>
+					</tbody>
+				</table>
+			<?php } ?>
+			
+		<?php } else if($view == "message") { ?>
+			
+		<?php
+		if($request == "renew") {
+			$request_name = "Renewal of";
+		} else if($request == "remove") {
+			$request_name = "Removal of";
+		} else if($request == "report") {
+			$request_name = "Reporting";
+		}
+
+		$user = get_userdata($user->ID); 
+		if(strlen($user->first_name) < 1) $firstname = $user->user_login;
+			else $firstname = $user->first_name;
+		if(strlen($user->last_name) < 1) $lastname = ''; 
+			else $lastname = $user->last_name;
+		if(strlen($user->user_email) < 1) $email = 'No address specified'; 
+			else $email = $user->user_email;
+		?>
+			<form name="request" id="post" method="post" action="admin.php?page=adrotate-userstatistics">
+		    	<input type="hidden" name="adrotate_id" value="<?php echo $request_id;?>" />
+		    	<input type="hidden" name="adrotate_request" value="<?php echo $request;?>" />
+		    	<input type="hidden" name="adrotate_username" value="<?php echo $firstname." ".$lastname;?>" />
+		    	<input type="hidden" name="adrotate_email" value="<?php echo $email;?>" />
+
+				<h4>Contact your Publisher</h4>
+
+				<table class="widefat" style="margin-top: .5em">
+					<thead>
+						<tr>
+							<th colspan="3">Put in a request for renewal, removal or report an issue with this ad.</th>
+						</tr>
+					</thead>
+					<tbody>
+					    <tr>
+							<th width="15%">Subject</th>
+							<td colspan="2"><?php echo $request_name; ?> ad <?php echo $request_id; ?></td>
+						</tr>
+					    <tr>
+							<td valign="top"><p><strong>Short message/Reason</strong></p></td>
+							<td><textarea tabindex="1" name="adrotate_message" cols="70" rows="5"></textarea></td>
+							<td><p><strong>Examples:</strong></p>
+					        <p><em>Renewal: I'd want my ad renewed for 1 year. Quote me!</em></p>
+					        <p><em>Removal: This ad doesn't perform, please remove it.</em></p>
+					        <p><em>Report: The ad is not in the right place. I'd like...</em></p></td>
+						</tr>
+					</tbody>
+				</table>
+
+		    	<p class="submit">
+					<input tabindex="2" type="submit" name="adrotate_request_submit" class="button-primary" value="Send" />
+					<a href="admin.php?page=adrotate-userstatistics&view=stats" class="button">Cancel</a>
+		    	</p>
+
+			</form>
+		<?php } ?>
+
+		<br class="clear" />
+		<?php adrotate_user_notice(); ?>
+
 	</div>
 <?php 
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_adminstatistics
+ Name:      adrotate_statistics
 
  Purpose:   Admin statistics page
  Receive:   -none-
  Return:    -none-
 -------------------------------------------------------------*/
-function adrotate_adminstatistics() {
+function adrotate_statistics() {
 	global $wpdb, $adrotate_stats;
 	
+	if($adrotate_stats['tracker'] > 0 OR $adrotate_stats['clicks'] > 0) {
+		$clicks = round($adrotate_stats['clicks'] / $adrotate_stats['tracker'], 2); 
+	} else { 
+		$clicks = 0; 
+	}
+	
+	if($adrotate_stats['total_impressions'] > 0 AND $adrotate_stats['clicks'] > 0) {
+		$ctr = round((100/$adrotate_stats['total_impressions'])*$adrotate_stats['clicks'], 2);
+	} else {
+		$ctr = 0;
+	}
 ?>
 	<div class="wrap">
 	  	<h2>Statistics</h2>
 
-		<h4>General</h4>
-		<div class="text-wrap">
-			<?php echo $adrotate_stats['banners']; ?> ads, sharing a total of <?php echo $adrotate_stats['total_impressions']; ?> impressions.<br />
-			<?php echo $adrotate_stats['tracker']; ?> ads have tracking enabled.<br />
-		</div>
-	
-		<h4>The best</h4>
-		<div class="text-wrap">
-			<?php if($adrotate_stats['thebest']) {?>
-			'<?php echo $adrotate_stats['thebest']['title']; ?>' with <?php echo $adrotate_stats['thebest']['clicks']; ?> clicks.
-			<?php } else {?>
-			No ad stands out at this time.
-			<?php } ?>
-		</div>
-	
-		<h4>The worst</h4>
-		<div class="text-wrap">
-			<?php if($adrotate_stats['theworst']) {?>
-			'<?php echo $adrotate_stats['theworst']['title']; ?>' with <?php echo $adrotate_stats['theworst']['clicks']; ?> clicks.
-			<?php } else {?>
-			All ads seem equally bad.
-			<?php } ?>
-		</div>
-	
-		<h4>Average</h4>
-		<div class="text-wrap">
-			<?php if($adrotate_stats['banners_tracker'] < 1 OR $adrotate_stats['clicks'] < 1) {
-				echo '0';
-			} else {
-				$average = $adrotate_stats['clicks'] / $adrotate_stats['banners_tracker'];
-				echo round($average, 2);
-			} ?> clicks on all banners.
-		</div>
-	
-		<h4>More... </h4>
-		<div class="text-wrap">
-			<?php if($adrotate_stats['impressions'] > 0 AND $adrotate_stats['clicks'] > 0) {
-				$ctr = round((100/$adrotate_stats['impressions'])*$adrotate_stats['clicks'], 2);
-			} else {
-				$ctr = $adrotate_stats['impressions'] = $adrotate_stats['clicks'] = 0;
-			}
-			echo $adrotate_stats['impressions'].' impressions and '.$adrotate_stats['clicks'].' clicks. CTR of '.$ctr.'%.'; ?>
-		</div>
-	
-		<h4>The last 5</h4>
-		<div class="text-wrap">
-			<?php
-			if($adrotate_stats['lastfive']) {
-				foreach($adrotate_stats['lastfive'] as $last) {
-					$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
-					echo date('d-m-Y', $last['timer']) .' - '. $bannertitle .'<br />';
-				}
-			} else { ?>
-			No recent clicks.
-			<?php } ?>
-		</div>
+		<table class="widefat" style="margin-top: .5em">
+
+			<thead>
+			<tr>
+				<th scope="col" colspan="2">Overall statistics</th>
+				<th scope="col" colspan="2">The last 5 clicks in the past 24 hours</th>
+			</tr>
+			</thead>
 			
-		<div class="text-wrap">
-			<br class="clear" />
-			<small>
-				<em>Cache is refreshed approximately every 6 hours.<br />
-					All statistics are indicative. They do not nessesarily reflect results counted by other parties.<br />
-<!-- 				AdRollr ads are NOT included in these stats!--></em>
-			</small>
-		</div>
+			<tbody>
+		    <tr>
+				<th width="10%">General</th>
+				<td width="40%"><?php echo $adrotate_stats['banners']; ?> ads, sharing a total of <?php echo $adrotate_stats['total_impressions']; ?> impressions. <?php echo $adrotate_stats['tracker']; ?> ads have tracking enabled.</td>
+				<td rowspan="5" style="border-left:1px #EEE solid;">
+				<?php 
+				if($adrotate_stats['lastfive']) {
+					foreach($adrotate_stats['lastfive'] as $last) {
+						$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
+						echo '<strong>'.date('d-m-Y', $last['timer']) .'</strong> - '. $bannertitle .'<br />';
+					}
+				} else {
+					echo '<em>No recent clicks</em>';
+				} ?>
+				</td>
+			</tr>
+		    <tr>
+				<th>The best</th>
+				<td><?php if($adrotate_stats['thebest']) {?>'<?php echo $adrotate_stats['thebest']['title']; ?>' with <?php echo $adrotate_stats['thebest']['clicks']; ?> clicks.<?php } else { ?>No ad stands out at this time.<?php } ?></td>
+			</tr>
+		    <tr>
+				<th>The worst</th>
+				<td><?php if($adrotate_stats['theworst']) {?>'<?php echo $adrotate_stats['theworst']['title']; ?>' with <?php echo $adrotate_stats['theworst']['clicks']; ?> clicks.<?php } else { ?>All ads seem equally bad.<?php } ?></td>
+			</tr>
+		    <tr>
+				<th>Average on all ads</th>
+				<td><?php echo $clicks; ?> clicks.</td>
+			</tr>
+		    <tr>
+				<th>Click-Through-Rate</th>
+				<td><?php echo $ctr; ?>%, based on <?php echo $adrotate_stats['total_impressions']; ?> impressions and <?php echo $adrotate_stats['clicks']; ?> clicks.</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<br class="clear" />
+		<?php adrotate_notice(); ?>
+
 	</div>
 <?php 
 }
@@ -1266,7 +1398,18 @@ function adrotate_options() {
 				<td colspan="2"><h3>Access Rights</h3></td>
 			</tr>
 			<tr>
-				<th scope="row" valign="top">Statistics Page</th>
+				<th scope="row" valign="top">Global Statistics Page</th>
+				<td>
+					<select name="adrotate_globalstatistics">
+						<?php foreach($editable_roles as $role) { ?>
+							<?php $capabilities = array_keys($role['capabilities']); ?>
+							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['globalstatistics'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
+						<?php }	unset($role);?>
+					</select> Minimum required userlevel to see the global statistics.
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Client Statistics Page</th>
 				<td>
 					<select name="adrotate_pagestatistics">
 						<?php foreach($editable_roles as $role) { ?>
@@ -1274,17 +1417,6 @@ function adrotate_options() {
 							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['pagestatistics'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
 						<?php }	?>
 					</select> Minimum required userlevel to see the statistics page.
-				</td>
-			</tr>
-			<tr>
-				<th scope="row" valign="top">Statistics Widget</th>
-				<td>
-					<select name="adrotate_dashboardstatistics">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['dashboardstatistics'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	unset($role);?>
-					</select> Minimum required userlevel to see the dashboard widget.
 				</td>
 			</tr>
 			<tr>
@@ -1360,7 +1492,7 @@ function adrotate_options() {
 				<?php } else { ?>
 				<input type="submit" id="post-role-submit" name="adrotate_role_remove_submit" value="Remove Role" class="button-secondary" />
 				<?php } ?><br />
-				This button creates or removes a role created especially for AdRotate to facilitate affiliates or advertisers who want to follow their ads performance.<br />
+				This button creates or removes a role created especially for AdRotate to facilitate affiliates or advertisers who want to follow their ad performance.<br />
 				This role does the same as the Subscriber role but can also access his/her statistical overview. Normal Subscribers and Contributors will not be extended with AdRotate access.<br />
 				This type of user is NOT required to use AdRotate or it's stats. It merely helps you to seperate Publishers from regular users without giving them access to your dashboard.</td>
 			</tr>
@@ -1369,7 +1501,7 @@ function adrotate_options() {
 			</tr>
 			<tr>
 				<th scope="row" valign="top">Send Email to</th>
-				<td><input name="adrotate_notification_email" type="text" class="search-input" size="45" value="<?php echo $adrotate_config['notification_email'];?>" autocomplete="off" /> Fill in one address. Message is sent once every 24 hours when needed.</td>
+				<td><input name="adrotate_notification_email" type="text" class="search-input" size="45" value="<?php echo $adrotate_config['notification_email'];?>" autocomplete="off" /> Fill in one address. Messages are sent once every 24 hours when needed.</td>
 			</tr>
 			<tr>
 				<th scope="row" valign="top">Test notification</th>
