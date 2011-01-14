@@ -32,9 +32,6 @@ function adrotate_activate() {
 		// Install tables for AdRotate
 		adrotate_database_install();
 	
-		// Upgrade tables for AdRotate where nessesary
-		adrotate_database_upgrade();
-		
 		// Run a schedule for email notifications
 		if (!wp_next_scheduled('adrotate_ad_notification')) 
 			wp_schedule_event(date('U'), '1day', 'adrotate_ad_notification');
@@ -186,10 +183,8 @@ function adrotate_database_install() {
  Since:		3.0.3
 -------------------------------------------------------------*/
 function adrotate_database_upgrade() {
-	global $wpdb;
+	global $wpdb, $adrotate_db_version;
 
-	$saved_db_version = get_option("adrotate_db_version");
-	
 	$tables = array(
 		$wpdb->prefix . "adrotate",				// Since 0.1
 		$wpdb->prefix . "adrotate_groups",		// Since 0.2
@@ -200,7 +195,7 @@ function adrotate_database_upgrade() {
 	);
 
 	// Any to 3.0 - DB version 1
-	if($saved_db_version < 1) {
+	if($adrotate_db_version < 1) {
 		// Migrate group data to accomodate version 3.0 and up from earlier setups
 		$banners = $wpdb->get_results("SELECT `id`, `group` FROM ".$tables[0]." ORDER BY `id` ASC;");
 		foreach($banners as $banner) {
@@ -231,8 +226,8 @@ function adrotate_database_upgrade() {
 		$wpdb->query("ALTER TABLE `".$tables[0]."` DROP `group`;");
 	}
 
-	// 3.0 to 3.1 - DB version 2
-	if($saved_db_version < 2) {
+	// 3.0 to 3.1 - DB version 2-3
+	if($adrotate_db_version < 3) {
 		adrotate_add_column($tables[0], 'weight', 'INT( 3 ) NOT NULL DEFAULT \'6\' AFTER `type`');
 	}
 	

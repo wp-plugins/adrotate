@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
 Requires at least: 3.0, PHP5
 Tested up to: 3.1
-Stable tag: 3.1
+Stable tag: 3.1.1
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -50,53 +50,7 @@ Find out how AdRotate works, more options and various ways to implement your ads
 
 == Frequently Asked Questions ==
 
-Go here for support/questions:
-[Knowledgebase](http://adrotateplugin.com/page/support.php)
-
-Q: Does AdRotate work with programs like AdSense?
-A: Yes!
-
-Q: Does AdRotate keep stats?
-A: Clicks and impressions yes.
-
-Q: I've sold adspace but the advertiser won't pay. Help me!!
-A: Remove the ad until he/she does!
-
-Q: Can i tie an ad to a location (or multiple..)
-A: Yes, as many as you want and multiple ads to one location too.
-
-Q: Why would i use AdRotate?
-A: Because AdRotate offers superb management for your ads as well as easy implementation on your site.
-
-Q: Can i group ads together?
-A: Yes!
-
-Q: Can i allow publishers to follow their ads performance?
-A: Yes!
-
-Q: Can i sell adspace using AdRotate?
-A: AdRotate has no shopping area but offers features that fit the bill on holding generic ads and management features that will work just as well. 
-
-Q: How can i impose limits on usage of ads?
-A: You can set limits on several things including periods of time, impressions and clicks.
-
-Q: I have made improvements to feature [...].
-A: If you think it's worth sharing you can post it in a [ticket](http://adrotateplugin.com/page/support.php) and i'll review the code.
-
-Q: I have absolutely no clue on HTML. Can you help?
-A: No!
-
-Q: But you have to help me with creating ads!
-A: Again! No, [w3schools](http://www.w3schools.com) shall teach you HTML basics!
-
-Q: My ads do not perform, can you advise me?
-A: No!
-
-Q: I've sold X clicks and they ran out in a day.
-A: Possible, clickers can be bots. Did you set up the User-Agent filter?
-
-Q: Can you add this feature?
-A: Ask me in a [ticket](http://adrotateplugin.com/page/support.php)
+Go here for support/questions: [Knowledgebase](http://adrotateplugin.com/page/support.php)
 
 == Screenshots ==
 

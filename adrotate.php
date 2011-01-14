@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.1
+Version: 3.1.1
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -23,9 +23,15 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
-/*--- AdRotate values ---------------------------------------*/
-define("ADROTATE_VERSION", 310);
-define("ADROTATE_DB_VERSION", 2);
+/*--- AdRotate values and config ----------------------------*/
+define("ADROTATE_VERSION", 311);
+define("ADROTATE_DB_VERSION", 3);
+$adrotate_config 				= get_option('adrotate_config');
+$adrotate_notification_timer 	= get_option('adrotate_notification_timer');
+$adrotate_crawlers 				= get_option('adrotate_crawlers');
+$adrotate_stats 				= get_option('adrotate_stats');
+$adrotate_roles 				= get_option('adrotate_roles');
+$adrotate_db_version			= get_option("adrotate_db_version");
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -41,6 +47,8 @@ include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-widget.php');
 /*--- Load functions ----------------------------------------*/
 register_activation_hook(__FILE__, 'adrotate_activate');
 register_deactivation_hook(__FILE__, 'adrotate_deactivate');
+if($adrotate_db_version < ADROTATE_DB_VERSION) adrotate_database_upgrade();
+
 adrotate_check_config();
 adrotate_clean_trackerdata();
 /*-----------------------------------------------------------*/
@@ -73,14 +81,6 @@ if(isset($_POST['adrotate_request_submit'])) 			add_action('init', 'adrotate_sen
 if(isset($_POST['adrotate_testmail_submit'])) 			add_action('init', 'adrotate_mail_notifications');
 if(isset($_POST['adrotate_role_add_submit']) OR isset($_POST['adrotate_role_remove_submit'])) add_action('init', 'adrotate_prepare_roles');
 //if(isset($_POST['headers']) and isset($_POST['body'])) 	add_action('init', 'adrotate_receiver');
-/*-----------------------------------------------------------*/
-
-/*--- Load config -------------------------------------------*/
-$adrotate_config 				= get_option('adrotate_config');
-$adrotate_notification_timer 	= get_option('adrotate_notification_timer');
-$adrotate_crawlers 				= get_option('adrotate_crawlers');
-$adrotate_stats 				= get_option('adrotate_stats');
-$adrotate_roles 				= get_option('adrotate_roles');
 /*-----------------------------------------------------------*/
 
 /*-------------------------------------------------------------
