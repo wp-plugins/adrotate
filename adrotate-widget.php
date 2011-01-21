@@ -1,16 +1,6 @@
 <?php
 /*  
 Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
-
-This program is free software; you can redistribute it and/or modify it under the terms of 
-the GNU General Public License, version 2, as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
 /*-------------------------------------------------------------
@@ -121,7 +111,14 @@ function adrotate_widget_init() {
  Since:		2.1
 -------------------------------------------------------------*/
 function adrotate_dashboard_widget() {
-	wp_add_dashboard_widget('meandmymac_rss_widget', 'AdRotate Plugin Updates', 'meandmymac_rss_widget');
+
+	/* Changelog:
+	// Jan 20 2011 - Added current_user_can()
+	*/
+
+	if(current_user_can('adrotate_ad_manage')) {
+		wp_add_dashboard_widget('meandmymac_rss_widget', 'AdRotate Plugin Updates', 'meandmymac_rss_widget');
+	}
 }
 
 /*-------------------------------------------------------------

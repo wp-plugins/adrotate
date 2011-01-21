@@ -1,16 +1,6 @@
 <?php
 /*  
 Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
-
-This program is free software; you can redistribute it and/or modify it under the terms of 
-the GNU General Public License, version 2, as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
 /*-------------------------------------------------------------
@@ -50,7 +40,7 @@ function adrotate_insert_input() {
 	$advertiser			= $_POST['adrotate_advertiser'];
 	$weight				= $_POST['adrotate_weight'];
 
-	if(current_user_can($adrotate_config['ad_manage'])) {
+	if(current_user_can('adrotate_ad_manage')) {
 		if(strlen($title) < 1) $title = 'Ad '.$id;
 
 		if(strlen($bannercode)!=0) {
@@ -164,7 +154,7 @@ function adrotate_insert_group() {
 	$fallback 	= $_POST['adrotate_fallback'];
 	$ads		= $_POST['adselect'];
 
-	if(current_user_can($adrotate_config['group_manage'])) {
+	if(current_user_can('adrotate_group_manage')) {
 		if(strlen($name) < 1) $name = 'Group '.$id;
 
 		// Fetch records for the group
@@ -219,7 +209,7 @@ function adrotate_insert_block() {
 	$wrapper_after 	= htmlspecialchars(trim($_POST['adrotate_wrapper_after'], "\t\n "), ENT_QUOTES);
 	$groups 		= $_POST['groupselect'];
 
-	if(current_user_can($adrotate_config['block_manage'])) {
+	if(current_user_can('adrotate_block_manage')) {
 		if($adcount < 1 OR $adcount == '' OR !is_numeric($adcount)) $adcount = 1;
 		if($columns < 1 OR $columns == '' OR !is_numeric($columns)) $columns = 1;
 		if(strlen($name) < 1) $name = 'Block '.$id;
@@ -286,7 +276,7 @@ function adrotate_request_action() {
 	if($banner_ids != '') {
 		foreach($banner_ids as $banner_id) {
 			if($action == 'deactivate') {
-				if(current_user_can($adrotate_config['ad_manage'])) {
+				if(current_user_can('adrotate_ad_manage')) {
 					adrotate_active($banner_id, 'deactivate');
 					$result_id = $banner_id;
 				} else {
@@ -294,7 +284,7 @@ function adrotate_request_action() {
 				}
 			}
 			if($action == 'activate') {
-				if(current_user_can($adrotate_config['ad_manage'])) {
+				if(current_user_can('adrotate_ad_manage')) {
 					adrotate_active($banner_id, 'activate');
 					$result_id = $banner_id;
 				} else {
@@ -302,7 +292,7 @@ function adrotate_request_action() {
 				}
 			}
 			if($action == 'delete') {
-				if(current_user_can($adrotate_config['ad_delete'])) {
+				if(current_user_can('adrotate_ad_delete')) {
 					adrotate_delete($banner_id, 'banner');
 					$result_id = $banner_id;
 				} else {
@@ -310,7 +300,7 @@ function adrotate_request_action() {
 				}
 			}
 			if($action == 'reset') {
-				if(current_user_can($adrotate_config['ad_delete'])) {
+				if(current_user_can('adrotate_ad_delete')) {
 					adrotate_reset($banner_id);
 					$result_id = $banner_id;
 				} else {
@@ -318,7 +308,7 @@ function adrotate_request_action() {
 				}
 			}
 			if($action == 'renew') {
-				if(current_user_can($adrotate_config['ad_manage'])) {
+				if(current_user_can('adrotate_ad_manage')) {
 					adrotate_renew($banner_id, $specific);
 					$result_id = $banner_id;
 				} else {
@@ -331,7 +321,7 @@ function adrotate_request_action() {
 	if($group_ids != '') {
 		foreach($group_ids as $group_id) {
 			if($action == 'group_delete') {
-				if(current_user_can($adrotate_config['group_delete'])) {
+				if(current_user_can('adrotate_group_delete')) {
 					adrotate_delete($group_id, 'group');
 					$result_id = $group_id;
 				} else {
@@ -339,7 +329,7 @@ function adrotate_request_action() {
 				}
 			}
 			if($action == 'group_delete_banners') {
-				if(current_user_can($adrotate_config['group_delete'])) {
+				if(current_user_can('adrotate_group_delete')) {
 					adrotate_delete($group_id, 'bannergroup');
 					$result_id = $group_id;
 				} else {
@@ -352,7 +342,7 @@ function adrotate_request_action() {
 	if($block_ids != '') {
 		foreach($block_ids as $block_id) {
 			if($action == 'block_delete') {
-				if(current_user_can($adrotate_config['block_delete'])) {
+				if(current_user_can('adrotate_block_delete')) {
 					adrotate_delete($block_id, 'block');
 					$result_id = $block_id;
 				} else {
@@ -456,5 +446,130 @@ function adrotate_renew($id, $howlong = 2592000) {
 	if($id > 0) {
 		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `endshow` = `endshow` + '$howlong' WHERE `id` = '$id'");
 	}
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_options_submit
+
+ Purpose:   Save options from dashboard
+ Receive:   $_POST
+ Return:    -none-
+ Since:		0.1
+-------------------------------------------------------------*/
+function adrotate_options_submit() {
+
+	/* Changelog:
+	// Jan 3 2011 - Updated crawlers to trim(), removed dashboardwidget, added globalstats setting
+	// Jan 16 2011 - Foreach() for crawlers keywords and to support multiple email notifications
+	// Jan 20 2011 - Borrowed code from NextGen Gallery plugin for user capabilities
+	*/
+
+	adrotate_set_capability($_POST['adrotate_userstatistics'], "adrotate_userstatistics");
+	adrotate_set_capability($_POST['adrotate_globalstatistics'], "adrotate_globalstatistics");
+	adrotate_set_capability($_POST['adrotate_ad_manage'], "adrotate_ad_manage");
+	adrotate_set_capability($_POST['adrotate_ad_delete'], "adrotate_ad_delete");
+	adrotate_set_capability($_POST['adrotate_group_manage'], "adrotate_group_manage");
+	adrotate_set_capability($_POST['adrotate_group_delete'], "adrotate_group_delete");
+	adrotate_set_capability($_POST['adrotate_block_manage'], "adrotate_block_manage");
+	adrotate_set_capability($_POST['adrotate_block_delete'], "adrotate_block_delete");
+
+	if(isset($_POST['adrotate_credits'])) 		$config['credits'] 		= 'Y';
+		else 									$config['credits'] 		= 'N';
+	if(isset($_POST['adrotate_browser'])) 		$config['browser'] 		= 'Y';
+		else 									$config['browser'] 		= 'N';
+	if(isset($_POST['adrotate_widgetalign'])) 	$config['widgetalign'] 	= 'Y';
+		else 									$config['widgetalign'] 	= 'N';
+
+	$emails						 	= explode(',', trim($_POST['adrotate_notification_email']));
+	foreach($emails as $email) {
+		$email = trim($email);
+		if(strlen($email) > 0) $clean_email[] = $email;
+	}
+	$config['notification_email']	= array_slice($clean_email, 0, 5);
+	$config['userstatistics'] 		= $_POST['adrotate_userstatistics'];
+	$config['globalstatistics'] 	= $_POST['adrotate_globalstatistics'];
+	$config['ad_manage'] 			= $_POST['adrotate_ad_manage'];
+	$config['ad_delete'] 			= $_POST['adrotate_ad_delete'];
+	$config['group_manage'] 		= $_POST['adrotate_group_manage'];
+	$config['group_delete'] 		= $_POST['adrotate_group_delete'];
+	$config['block_manage'] 		= $_POST['adrotate_block_manage'];
+	$config['block_delete'] 		= $_POST['adrotate_block_delete'];
+	update_option('adrotate_config', $config);
+
+	$crawlers						= explode(',', trim($_POST['adrotate_crawlers']));
+	foreach($crawlers as $crawler) {
+		$crawler = trim($crawler);
+		if(strlen($crawler) > 0) $clean_crawler[] = $crawler;
+	}
+	update_option('adrotate_crawlers', $clean_crawler);
+
+	if(isset($_POST['adrotate_debug'])) 		$debug 		= true;
+		else 									$debug		= false;
+	update_option('adrotate_debug', $debug);
+
+	adrotate_return('settings_saved');
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_prepare_roles
+
+ Purpose:   Prepare user roles for WordPress
+ Receive:   -None-
+ Return:    $action
+ Since:		3.0
+-------------------------------------------------------------*/
+function adrotate_prepare_roles() {
+	
+	if(isset($_POST['adrotate_role_add_submit'])) {
+		$action = "role_add";
+		adrotate_add_roles();		
+		update_option('adrotate_roles', '1');
+	} 
+	if(isset($_POST['adrotate_role_remove_submit'])) {
+		$action = "role_remove";
+		adrotate_remove_roles();
+		update_option('adrotate_roles', '0');
+	} 
+
+	adrotate_return($action);
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_add_roles
+
+ Purpose:   Add User roles and capabilities
+ Receive:   -None-
+ Return:    -None-
+ Since:		3.0
+-------------------------------------------------------------*/
+function adrotate_add_roles() {
+
+	add_role('adrotate_advertiser', 'AdRotate Advertiser', array('read' => 1));
+
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_remove_roles
+
+ Purpose:   Remove User roles and capabilities
+ Receive:   -None-
+ Return:    -None-
+ Since:		3.0
+-------------------------------------------------------------*/
+function adrotate_remove_roles() {
+	global $wp_roles;
+	
+	// Current
+	remove_role('adrotate_advertiser');
+
+	// Remove in version 4 or so (also remove global!)
+	remove_role('adrotate_clientstats'); 
+	$wp_roles->remove_cap('administrator','adrotate_clients');
+	$wp_roles->remove_cap('editor','adrotate_clients');
+	$wp_roles->remove_cap('author','adrotate_clients');
+	$wp_roles->remove_cap('contributor','adrotate_clients');
+	$wp_roles->remove_cap('subscriber','adrotate_clients');
+	$wp_roles->remove_cap('adrotate_advertisers','adrotate_clients');
+	$wp_roles->remove_cap('adrotate_clientstats','adrotate_clients');
 }
 ?>

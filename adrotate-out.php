@@ -1,16 +1,6 @@
 <?php
 /*  
 Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
-
-This program is free software; you can redistribute it and/or modify it under the terms of 
-the GNU General Public License, version 2, as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
 /*-------------------------------------------------------------
@@ -54,6 +44,8 @@ if(isset($_GET['trackerid']) OR $_GET['trackerid'] > 0 OR $_GET['trackerid'] != 
 			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `clicks` = `clicks` + 1 WHERE `id` = '$id';");
 			$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`) VALUES ('$buffer[0]', '$now', '$id');");
 		}
+		$banner->link = str_replace('%random%', $now, $banner->link);
+
 		wp_redirect(htmlspecialchars_decode($banner->link));
 	} else {
 		echo '<span style="color: #F00; font-style: italic; font-weight: bold;">There was an error retrieving the ad! Contact an administrator!</span>';

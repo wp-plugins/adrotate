@@ -4,27 +4,17 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.1.1
+Version: 3.2
 Author URI: http://meandmymac.net/
 License: GPL2
 */
 
 /*  
 Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
-
-This program is free software; you can redistribute it and/or modify it under the terms of 
-the GNU General Public License, version 2, as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
 /*--- AdRotate values and config ----------------------------*/
-define("ADROTATE_VERSION", 311);
+define("ADROTATE_VERSION", 320);
 define("ADROTATE_DB_VERSION", 3);
 $adrotate_config 				= get_option('adrotate_config');
 $adrotate_notification_timer 	= get_option('adrotate_notification_timer');
@@ -32,6 +22,7 @@ $adrotate_crawlers 				= get_option('adrotate_crawlers');
 $adrotate_stats 				= get_option('adrotate_stats');
 $adrotate_roles 				= get_option('adrotate_roles');
 $adrotate_db_version			= get_option("adrotate_db_version");
+$adrotate_debug					= get_option("adrotate_debug");
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -61,7 +52,7 @@ add_action('wp_meta', 'adrotate_meta');
 
 /*--- Dashboard ---------------------------------------------*/
 add_action('admin_menu', 'adrotate_dashboard');
-add_action('admin_notices','adrotate_dashboard_notifications');
+add_action('admin_notices','adrotate_notifications_dashboard');
 add_action('wp_dashboard_setup', 'adrotate_dashboard_widget');
 /*-----------------------------------------------------------*/
 
@@ -77,7 +68,7 @@ if(isset($_POST['adrotate_group_submit'])) 				add_action('init', 'adrotate_inse
 if(isset($_POST['adrotate_block_submit'])) 				add_action('init', 'adrotate_insert_block');
 if(isset($_POST['adrotate_action_submit'])) 			add_action('init', 'adrotate_request_action');
 if(isset($_POST['adrotate_options_submit'])) 			add_action('init', 'adrotate_options_submit');
-if(isset($_POST['adrotate_request_submit'])) 			add_action('init', 'adrotate_send_message');
+if(isset($_POST['adrotate_request_submit'])) 			add_action('init', 'adrotate_mail_message');
 if(isset($_POST['adrotate_testmail_submit'])) 			add_action('init', 'adrotate_mail_notifications');
 if(isset($_POST['adrotate_role_add_submit']) OR isset($_POST['adrotate_role_remove_submit'])) add_action('init', 'adrotate_prepare_roles');
 //if(isset($_POST['headers']) and isset($_POST['body'])) 	add_action('init', 'adrotate_receiver');
@@ -93,12 +84,12 @@ if(isset($_POST['adrotate_role_add_submit']) OR isset($_POST['adrotate_role_remo
 function adrotate_dashboard() {
 	global $adrotate_config;
 
-	add_object_page('AdRotate', 'AdRotate', $adrotate_config['ad_manage'], 'adrotate', 'adrotate_manage');
-	add_submenu_page('adrotate', 'AdRotate > Manage Ads', 'Manage Ads', $adrotate_config['ad_manage'], 'adrotate', 'adrotate_manage');
-	add_submenu_page('adrotate', 'AdRotate > Groups', 'Manage Groups', $adrotate_config['group_manage'], 'adrotate-groups', 'adrotate_manage_group');
-	add_submenu_page('adrotate', 'AdRotate > Blocks', 'Manage Blocks', $adrotate_config['block_manage'], 'adrotate-blocks', 'adrotate_manage_block');
-	add_submenu_page('adrotate', 'AdRotate > User Statistics', 'User Statistics', $adrotate_config['pagestatistics'], 'adrotate-userstatistics', 'adrotate_userstatistics');
-	add_submenu_page('adrotate', 'AdRotate > Global Statistics', 'Global Statistics', $adrotate_config['globalstatistics'], 'adrotate-statistics', 'adrotate_statistics');
+	add_object_page('AdRotate', 'AdRotate', 'adrotate_ad_manage', 'adrotate', 'adrotate_manage');
+	add_submenu_page('adrotate', 'AdRotate > Manage Ads', 'Manage Ads', 'adrotate_ad_manage', 'adrotate', 'adrotate_manage');
+	add_submenu_page('adrotate', 'AdRotate > Groups', 'Manage Groups', 'adrotate_group_manage', 'adrotate-groups', 'adrotate_manage_group');
+	add_submenu_page('adrotate', 'AdRotate > Blocks', 'Manage Blocks', 'adrotate_block_manage', 'adrotate-blocks', 'adrotate_manage_block');
+	add_submenu_page('adrotate', 'AdRotate > User Statistics', 'User Statistics', 'adrotate_userstatistics', 'adrotate-userstatistics', 'adrotate_userstatistics');
+	add_submenu_page('adrotate', 'AdRotate > Global Statistics', 'Global Statistics', 'adrotate_globalstatistics', 'adrotate-statistics', 'adrotate_statistics');
 	add_submenu_page('adrotate', 'AdRotate > Settings','Settings', 'manage_options', 'adrotate-settings', 'adrotate_options');
 }
 
@@ -110,7 +101,7 @@ function adrotate_dashboard() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_manage() {
-	global $wpdb, $current_user, $userdata;
+	global $wpdb, $userdata;
 
 	$message 		= $_GET['message'];
 	$view 			= $_GET['view'];
@@ -455,13 +446,17 @@ function adrotate_manage() {
 				        <td colspan="3">
 				        	<select tabindex="10" name="adrotate_advertiser" style="min-width: 200px;">
 								<option value="0" <?php if($saved_user == '0') { echo 'selected'; } ?>>Not specified</option>
-							<?php foreach($user_list as $id) {
+							<?php 
+							foreach($user_list as $id) {
 								$user = get_userdata($id->ID); 
 								if(strlen($user->first_name) < 1) $firstname = $user->user_login;
 									else $firstname = $user->first_name;
 								if(strlen($user->last_name) < 1) $lastname = ''; 
-									else $lastname = $user->last_name; ?>
-								<option value="<?php echo $id->ID; ?>"<?php if($saved_user == $id->ID) { echo ' selected'; } ?>><?php echo $firstname; ?> <?php echo $lastname; ?></option>
+									else $lastname = $user->last_name;
+								if($userdata->ID == $id->ID) $you = '(You)';
+									$you = ''; 
+							?>
+								<option value="<?php echo $id->ID; ?>"<?php if($saved_user == $id->ID) { echo ' selected'; } ?>><?php echo $firstname; ?> <?php echo $lastname; ?> <?php echo $you; ?></option>
 							<?php } ?>
 							</select><br />
 							<em>Select the advertiser of the ad so he/she can follow stats on the statistics page. He/She has to have an WordPress account on your website and be assigned the proper access rights.</em>
@@ -469,8 +464,9 @@ function adrotate_manage() {
 			      	</tr>
 			      	<tr>
 				        <th scope="row" valign="top">Clicktracking:</th>
-				        <td colspan="3">Enable? <input tabindex="10" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> url: <input tabindex="11" name="adrotate_link" type="text" size="120" class="search-input" value="<?php echo $edit_banner->link;?>" />
-				        <br /><em>Use %link% in the code. Do not check the box if you cannot specify an url (eg, you do not use &lt;a href="http://somelink"&gt;).</em></td>
+				        <td colspan="3">Enable? <input tabindex="10" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> url: <input tabindex="11" name="adrotate_link" type="text" size="120" class="search-input" value="<?php echo $edit_banner->link;?>" /><br />
+				        <em>Use %link% in the adcode instead of the actual url. Do not check the box if you cannot specify an url (eg, when using some javascript based program like AdSense).<br />
+				        Some publishing programs require you to put a random seed in referrer urls. %random% is a generated timestamp you can use. Check with them on how to format the url.</em></td>
 			      	</tr>
 			      	<tr>
 				        <th scope="row" valign="top">Banner image:</th>
@@ -851,7 +847,6 @@ function adrotate_manage_block() {
 	$message 		= $_GET['message'];
 	$view 			= $_GET['view'];
 	$block_edit_id 	= $_GET['edit_block'];
-	if($_GET['edit_block']) $block_edit_id = $_GET['edit_block'];
 	?>
 
 	<div class="wrap">
@@ -1082,7 +1077,7 @@ function adrotate_manage_block() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_userstatistics() {
-	global $wpdb, $current_user;
+	global $wpdb, $adrotate_debug;
 	
 	$user 			= wp_get_current_user();
 	$message 		= $_GET['message'];
@@ -1121,11 +1116,24 @@ function adrotate_userstatistics() {
 					<thead>
 					<tr>
 						<th scope="col" colspan="2">Overall statistics</th>
-						<th scope="col" colspan="2">The last 15 clicks in the past 24 hours</th>
+						<th scope="col" colspan="2">The last 8 clicks in the past 24 hours</th>
 					</tr>
 					</thead>
 					
 					<tbody>
+
+					<?php if($adrotate_debug == true) { ?>
+					<tr>
+						<td colspan="4">
+							<?php 
+							echo "<p><strong>User Statistics from cache</strong><pre>"; 
+							print_r($result); 
+							echo "</pre></p>"; 
+							?>
+						</td>
+					</tr>
+					<?php } ?>
+		
 				    <tr>
 						<th width="10%">General</th>
 						<td width="40%"><?php echo $result['ad_amount']; ?> ads, sharing a total of <?php echo $result['total_impressions']; ?> impressions.</td>
@@ -1212,7 +1220,7 @@ function adrotate_userstatistics() {
 					</thead>
 					<tbody>
 					    <tr>
-							<td>No ads for user. If you feel this to be in error please contact the site administrator.</td>
+							<td>No ads for user. If you feel this to be in error please <a href="admin.php?page=adrotate-userstatistics&view=message&request=issue">contact the site administrator</a>.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -1223,10 +1231,16 @@ function adrotate_userstatistics() {
 		<?php
 		if($request == "renew") {
 			$request_name = "Renewal of";
+			$example = "- I'd want my ad renewed for 1 year. Quote me!<br />- Renew my ad, but i want the weight set higher.";
 		} else if($request == "remove") {
 			$request_name = "Removal of";
+			$example = "- This ad doesn't perform, please remove it.<br />- The budget is spent, please remove the ad when it expires.";
 		} else if($request == "report") {
 			$request_name = "Reporting";
+			$example = "- The ad is not in the right place. I'd like...<br />- This ad works great for me!!";
+		} else if($request == "issue") {
+			$request_name = "Complaint or problem";
+			$example = "- My ads do not show, what's going on?<br />- Why can't i see any clicks?";
 		}
 
 		$user = get_userdata($user->ID); 
@@ -1254,15 +1268,23 @@ function adrotate_userstatistics() {
 					<tbody>
 					    <tr>
 							<th width="15%">Subject</th>
-							<td colspan="2"><?php echo $request_name; ?> ad <?php echo $request_id; ?></td>
+							<td colspan="2">
+								<?php
+								if($request == "issue") {
+									echo $request_name;
+								} else {
+									echo $request_name." ad ".$request_id;
+								}
+								?>
+							</td>
 						</tr>
 					    <tr>
 							<td valign="top"><p><strong>Short message/Reason</strong></p></td>
-							<td><textarea tabindex="1" name="adrotate_message" cols="70" rows="5"></textarea></td>
-							<td><p><strong>Examples:</strong></p>
-					        <p><em>Renewal: I'd want my ad renewed for 1 year. Quote me!</em></p>
-					        <p><em>Removal: This ad doesn't perform, please remove it.</em></p>
-					        <p><em>Report: The ad is not in the right place. I'd like...</em></p></td>
+							<td><textarea tabindex="1" name="adrotate_message" cols="50" rows="5"></textarea></td>
+							<td>
+								<p><strong>Examples:</strong></p>
+								<p><em><?php echo $example; ?></em></p>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -1290,7 +1312,7 @@ function adrotate_userstatistics() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_statistics() {
-	global $wpdb, $adrotate_stats;
+	global $wpdb, $adrotate_stats, $adrotate_debug;
 	
 	if($adrotate_stats['tracker'] > 0 OR $adrotate_stats['clicks'] > 0) {
 		$clicks = round($adrotate_stats['clicks'] / $adrotate_stats['tracker'], 2); 
@@ -1312,18 +1334,31 @@ function adrotate_statistics() {
 			<thead>
 			<tr>
 				<th scope="col" colspan="2">Overall statistics</th>
-				<th scope="col" colspan="2">The last 5 clicks in the past 24 hours</th>
+				<th scope="col" colspan="2">The last 8 clicks in the past 24 hours</th>
 			</tr>
 			</thead>
 			
 			<tbody>
+
+			<?php if($adrotate_debug == true) { ?>
+			<tr>
+				<td colspan="4">
+					<?php 
+					echo "<p><strong>Globalized Statistics from cache</strong><pre>"; 
+					print_r($adrotate_stats); 
+					echo "</pre></p>"; 
+					?>
+				</td>
+			</tr>
+			<?php } ?>
+
 		    <tr>
 				<th width="10%">General</th>
 				<td width="40%"><?php echo $adrotate_stats['banners']; ?> ads, sharing a total of <?php echo $adrotate_stats['total_impressions']; ?> impressions. <?php echo $adrotate_stats['tracker']; ?> ads have tracking enabled.</td>
 				<td rowspan="5" style="border-left:1px #EEE solid;">
 				<?php 
-				if($adrotate_stats['lastfive']) {
-					foreach($adrotate_stats['lastfive'] as $last) {
+				if($adrotate_stats['lastclicks']) {
+					foreach($adrotate_stats['lastclicks'] as $last) {
 						$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
 						echo '<strong>'.date('d-m-Y', $last['timer']) .'</strong> - '. $bannertitle .'<br />';
 					}
@@ -1366,15 +1401,16 @@ function adrotate_statistics() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_options() {
-	global $wpdb, $wp_roles, $adrotate_roles;
+	global $wpdb;
 
 	$adrotate_config 	= get_option('adrotate_config');
 	$adrotate_crawlers 	= get_option('adrotate_crawlers');
-    $all_roles 			= $wp_roles->roles;
-
-	$crawlers 		= implode(', ', $adrotate_crawlers);
-	$message 		= $_GET['message'];
-    $editable_roles = apply_filters('editable_roles', $all_roles);
+	$adrotate_roles		= get_option('adrotate_roles');
+	$adrotate_debug		= get_option('adrotate_debug');
+	
+	$crawlers 			= implode(', ', $adrotate_crawlers);
+	$notifications		= implode(', ', $adrotate_config['notification_email']);
+	$message 			= $_GET['message'];
 ?>
 	<div class="wrap">
 	  	<h2>Settings</h2>
@@ -1395,141 +1431,163 @@ function adrotate_options() {
 
 	    	<table class="form-table">
 			<tr>
-				<td colspan="2"><h3>Access Rights</h3></td>
+				<td width="15%"><h3>Access Rights</h3></td>
+				<td width="35%">&nbsp;</td>
+				<td width="15%">&nbsp;</td>
+				<td width="35%">&nbsp;</td>
 			</tr>
+
 			<tr>
 				<th scope="row" valign="top">Global Statistics Page</th>
 				<td>
 					<select name="adrotate_globalstatistics">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['globalstatistics'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	unset($role);?>
-					</select> Minimum required userlevel to see the global statistics.
+						<?php wp_dropdown_roles($adrotate_config['globalstatistics']); ?>
+					</select><br />
+					<span class="description">Role to review the global statistics.</span>
 				</td>
-			</tr>
-			<tr>
-				<th scope="row" valign="top">Client Statistics Page</th>
+				<th scope="row" valign="top">Advertiser Statistics Page</th>
 				<td>
-					<select name="adrotate_pagestatistics">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['pagestatistics'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	?>
-					</select> Minimum required userlevel to see the statistics page.
+					<select name="adrotate_userstatistics">
+						<?php wp_dropdown_roles($adrotate_config['userstatistics']); ?>
+					</select><br />
+					<span class="description">Role to allow users/advertisers to see their statistics page.</span>
 				</td>
 			</tr>
+
 			<tr>
 				<th scope="row" valign="top">Manage/Add/Edit Ads</th>
 				<td>
 					<select name="adrotate_ad_manage">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['ad_manage'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	unset($role); ?>
-					</select> Minimum required userlevel to see and add/edit ads.
+						<?php wp_dropdown_roles($adrotate_config['ad_manage']); ?>
+					</select><br />
+					<span class="description">Role to see and add/edit ads.</span>
 				</td>
-			</tr>
-			<tr>
 				<th scope="row" valign="top">Delete/Reset Ads</th>
 				<td>
 					<select name="adrotate_ad_delete">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['ad_delete'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	unset($role); ?>
-					</select> Minimum required userlevel to delete ads and reset stats.
+						<?php wp_dropdown_roles($adrotate_config['ad_delete']); ?>
+					</select><br />
+					<span class="description">Role to delete ads and reset stats.</span>
 				</td>
 			</tr>
+
 			<tr>
 				<th scope="row" valign="top">Manage/Add/Edit Groups</th>
 				<td>
 					<select name="adrotate_group_manage">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['group_manage'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	unset($role); ?>
-					</select> Minimum required userlevel to see and add/edit groups.
+						<?php wp_dropdown_roles($adrotate_config['group_manage']); ?>
+					</select><br />
+					<span class="description">Role to see and add/edit groups.</span>
 				</td>
-			</tr>
-			<tr>
 				<th scope="row" valign="top">Delete Groups</th>
 				<td>
 					<select name="adrotate_group_delete">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['group_delete'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	unset($role); ?>
-					</select> Minimum required userlevel to delete groups.
+						<?php wp_dropdown_roles($adrotate_config['group_delete']); ?>
+					</select><br />
+					<span class="description">Role to delete groups.</span>
 				</td>
 			</tr>
+
 			<tr>
 				<th scope="row" valign="top">Manage/Add/Edit Blocks</th>
 				<td>
 					<select name="adrotate_block_manage">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['block_manage'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	unset($role); ?>
-					</select> Minimum required userlevel to see and add/edit blocks.
+						<?php wp_dropdown_roles($adrotate_config['block_manage']); ?>
+					</select><br />
+					<span class="description">Role to see and add/edit blocks.</span>
 				</td>
-			</tr>
-			<tr>
 				<th scope="row" valign="top">Delete Blocks</th>
 				<td>
 					<select name="adrotate_block_delete">
-						<?php foreach($editable_roles as $role) { ?>
-							<?php $capabilities = array_keys($role['capabilities']); ?>
-							<option value="<?php echo current($capabilities); ?>" <?php if(in_array($adrotate_config['block_delete'], $capabilities)) { echo 'selected'; } ?>><?php echo $role['name']; ?></option>
-						<?php }	unset($role); ?>
-					</select> Minimum required userlevel to delete blocks.
+						<?php wp_dropdown_roles($adrotate_config['block_delete']); ?>
+					</select><br />
+					<span class="description">Role to delete blocks.</span>
+				</td>
+			</tr>
+
+			<tr>
+				<th scope="row" valign="top">AdRotate Advertisers</th>
+				<td colspan="3">
+					<?php if($adrotate_roles == 0) { ?>
+					<input type="submit" id="post-role-submit" name="adrotate_role_add_submit" value="Create Role" class="button-secondary" />
+					<?php } else { ?>
+					<input type="submit" id="post-role-submit" name="adrotate_role_remove_submit" value="Remove Role" class="button-secondary" onclick="return confirm('You are about to remove access rights from the Author, Editor and Administrator role aswell as remove the AdRotate Clients role.\n\nThis may lead to users not being able to access their ads statistics!\n\n\'OK\' to continue, \'Cancel\' to stop.')" />
+					<?php } ?><br />
+					<span class="description">This button creates or removes a role created especially for AdRotate to facilitate affiliates or advertisers who want to follow their ad performance.<br />
+					This role has no capabilities unless you assign them using the above options. Obviously you should use these settings with care and typically you'll only want the "Advertiser Statistics" accessible by this user.<br />
+					This type of user is NOT required to use AdRotate or it's stats. It merely helps you to seperate advertisers from regular subscribers without giving them too much access to your dashboard.</span>
+				</td>
+			</tr>
+
+			<?php if($adrotate_debug == true) { ?>
+			<tr>
+				<td colspan="4">
+					<?php 
+					echo "<p><strong>Globalized Config</strong><pre>"; 
+					print_r($adrotate_config); 
+					echo "</pre></p>"; 
+					echo "<p><strong>Current User Capabilities</strong><pre>"; 
+					print_r(get_option('wp_user_roles')); 
+					echo "</pre></p>"; 
+					?>
+				</td>
+			</tr>
+			<?php } ?>
+
+			<tr>
+				<td colspan="4"><h3>Email Notifications</h3></td>
+			</tr>
+
+			<tr>
+				<th scope="row" valign="top">Send Email to</th>
+				<td colspan="3">
+					<textarea name="adrotate_notification_email" cols="90" rows="3"><?php echo $notifications; ?></textarea><br />
+					<span class="description">A comma separated list of email addresses. Maximum of 5 addresses. Keep this list to a minimum!<br />
+					Only the first address will receive messages from advertisers. Messages are sent once every 24 hours when needed.</span>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row" valign="top">AdRotate Clients</th>
-				<td><?php if($adrotate_roles == 0) { ?>
-				<input type="submit" id="post-role-submit" name="adrotate_role_add_submit" value="Create Role" class="button-secondary" />
-				<?php } else { ?>
-				<input type="submit" id="post-role-submit" name="adrotate_role_remove_submit" value="Remove Role" class="button-secondary" />
-				<?php } ?><br />
-				This button creates or removes a role created especially for AdRotate to facilitate affiliates or advertisers who want to follow their ad performance.<br />
-				This role does the same as the Subscriber role but can also access his/her statistical overview. Normal Subscribers and Contributors will not be extended with AdRotate access.<br />
-				This type of user is NOT required to use AdRotate or it's stats. It merely helps you to seperate Publishers from regular users without giving them access to your dashboard.</td>
-			</tr>
-			<tr>
-				<td colspan="2"><h3>Email Notifications</h3></td>
-			</tr>
-			<tr>
-				<th scope="row" valign="top">Send Email to</th>
-				<td><input name="adrotate_notification_email" type="text" class="search-input" size="45" value="<?php echo $adrotate_config['notification_email'];?>" autocomplete="off" /> Fill in one address. Messages are sent once every 24 hours when needed.</td>
-			</tr>
-			<tr>
 				<th scope="row" valign="top">Test notification</th>
-				<td><input type="submit" name="adrotate_testmail_submit" class="button-secondary" value="Test" /> This sends a test email. Before you test, for example, with a new email address. Save the options first! If the email messages look garbled or riddled with code, enable HTML messages in your email client.</td>
+				<td colspan="3">
+					<input type="submit" name="adrotate_testmail_submit" class="button-secondary" value="Test Email Notifications" /><br />
+					<span class="description">This sends a test email to all addresses. Before you test, for example, with a new email address. Save the options first!<br />
+					If the email messages look garbled or riddled with code, enable HTML messages in your email client.</span>
+				</td>
 			</tr>
+			
 			<tr>
-				<td colspan="2"><h3>User-Agent Filter</h3></td>
+				<td colspan="4"><h3>User-Agent Filter</h3></td>
 			</tr>
+			
 			<tr>
 				<th scope="row" valign="top">List of keywords to filter</th>
-				<td><textarea name="adrotate_crawlers" cols="90" rows="5"><?php echo $crawlers; ?></textarea><br />A comma separated list of keywords. Filter out bots/crawlers/user-agents.<br />
-				Keep in mind that this might give false positives. The word 'google' also matches 'googlebot', so be careful!<br />
-				Additionally to the list specified here, empty User-Agents are blocked as well. (Learn more about <a href="http://en.wikipedia.org/wiki/User_agent#User_agent_identification" title="User Agents" target="_blank">user-agents</a>.)</td>
+				<td colspan="2">
+					<textarea name="adrotate_crawlers" cols="90" rows="5"><?php echo $crawlers; ?></textarea><br />
+					<span class="description">A comma separated list of keywords. Filter out bots/crawlers/user-agents.<br />
+					Keep in mind that this might give false positives. The word 'google' also matches 'googlebot', so be careful!<br />
+					Additionally to the list specified here, empty User-Agents are blocked as well. (Learn more about <a href="http://en.wikipedia.org/wiki/User_agent" title="User Agents" target="_blank">user-agents</a>.)</span>
+				</td>
 			</tr>
+			
 			<tr>
 				<td colspan="2"><h3>Miscellaneous</h3></td>
 			</tr>
+			
 			<tr>
 				<th scope="row" valign="top">Media Browser</th>
-				<td><input type="checkbox" name="adrotate_browser" <?php if($adrotate_config['browser'] == 'Y') { ?>checked="checked" <?php } ?> /> Include images and flash files from the media browser in the image selector.</td>
+				<td colspan="3"><input type="checkbox" name="adrotate_browser" <?php if($adrotate_config['browser'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description">Include images and flash files from the media browser in the image selector.</span></td>
 			</tr>
 			<tr>
 				<th scope="row" valign="top">Widget alignment</th>
-				<td><input type="checkbox" name="adrotate_widgetalign" <?php if($adrotate_config['widgetalign'] == 'Y') { ?>checked="checked" <?php } ?> /> Check this box if your widgets do not align in your themes sidebar. (Does not always help!)</td>
+				<td colspan="3"><input type="checkbox" name="adrotate_widgetalign" <?php if($adrotate_config['widgetalign'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description">Check this box if your widgets do not align in your themes sidebar. (Does not always help!)</span></td>
 			</tr>
 			<tr>
 				<th scope="row" valign="top">Credits</th>
-				<td><input type="checkbox" name="adrotate_credits" <?php if($adrotate_config['credits'] == 'Y') { ?>checked="checked" <?php } ?> /> Show a simple token that you're using AdRotate in the themes Meta part.</td>
+				<td colspan="3"><input type="checkbox" name="adrotate_credits" <?php if($adrotate_config['credits'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description">Show a simple token that you're using AdRotate in the themes Meta part.</span></td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">Developer Debug</th>
+				<td colspan="3"><input type="checkbox" name="adrotate_debug" <?php if($adrotate_debug == true) { ?>checked="checked" <?php } ?> /> <span class="description">Leave this option off for normal use!</span></td>
 			</tr>
 	    	</table>
 	    	

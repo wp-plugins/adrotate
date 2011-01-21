@@ -1,73 +1,7 @@
 <?php
 /*  
 Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
-
-This program is free software; you can redistribute it and/or modify it under the terms of 
-the GNU General Public License, version 2, as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, visit: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
-
-/*-------------------------------------------------------------
- Name:      adrotate_ad_output
-
- Purpose:   Prepare the output for viewing
- Receive:   $id, $bannercode, $tracker, $link, $image
- Return:    $banner_output
- Since:		3.0
--------------------------------------------------------------*/
-function adrotate_ad_output($id, $bannercode, $tracker, $link, $image, $preview = false) {
-	$banner_output = $bannercode;
-
-	if($tracker == "Y") {
-		if($preview == true) {
-			$banner_output = str_replace('%link%', get_option('siteurl').'/wp-content/plugins/adrotate/adrotate-out.php?trackerid='.$id.'&preview=true', $banner_output);		
-		} else {
-			$banner_output = str_replace('%link%', get_option('siteurl').'/wp-content/plugins/adrotate/adrotate-out.php?trackerid='.$id, $banner_output);
-		}
-	} else {
-		$banner_output = str_replace('%link%', $link, $banner_output);
-	}
-	$banner_output = str_replace('%image%', $image, $banner_output);
-	$banner_output = str_replace('%id%', $id, $banner_output);
-	$banner_output = stripslashes(htmlspecialchars_decode($banner_output, ENT_QUOTES));
-
-	return $banner_output;
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_fallback
-
- Purpose:   Fall back to the set group or show an error if no fallback is set
- Receive:   $group, $case
- Return:    $fallback_output
- Added:		2.6
--------------------------------------------------------------*/
-function adrotate_fallback($group, $case) {
-
-	/* Changelog:
-	// Dec 10 2010 - No longer double checks for $fallback values
-	*/
-
-	if($group > 0) {
-		$fallback_output = adrotate_group($group);
-	} else {
-		if($case == 'expired') {
-			$fallback_output = adrotate_error('ad_expired');
-		}
-		
-		if($case == 'unqualified') {
-			$fallback_output = adrotate_error('ad_unqualified');
-		}
-	}
-	
-	return $fallback_output;
-}
 
 /*-------------------------------------------------------------
  Name:      adrotate_shortcode
@@ -83,19 +17,21 @@ function adrotate_shortcode($atts, $content = null) {
 	// Nov 9 2010 - Rewritten for 3.0, param 'column' obsolete, added 'fallback' override for groups
 	// Nov 17 2010 - Added filters for empty values
 	// Dec 13 2010 - Improved backward compatibility for single ads and blocks
+	// Jan 16 2011 - Added $weight as an override for groups
 	*/
 
 	if(!empty($atts['banner'])) 	$banner_id 	= trim($atts['banner'], "\r\t ");
 	if(!empty($atts['group'])) 		$group_ids 	= trim($atts['group'], "\r\t ");
 	if(!empty($atts['block']))		$block_id	= trim($atts['block'], "\r\t ");
-	if(!empty($atts['fallback']))	$fallback	= trim($atts['fallback'], "\r\t "); // Optional for groups
+	if(!empty($atts['fallback']))	$fallback	= trim($atts['fallback'], "\r\t "); // Optional for groups (override)
+	if(!empty($atts['weight']))		$weight		= trim($atts['weight'], "\r\t "); // Optional for groups (override)
 	if(!empty($atts['column']))		$columns	= trim($atts['column'], "\r\t "); // OBSOLETE
 
 	if($banner_id > 0 AND ($group_ids == 0 OR $group_ids > 0) AND $block_id == 0) // Show one Ad
 		return adrotate_ad($banner_id);
 
 	if($banner_id == 0 AND $group_ids > 0 AND $block_id == 0) // Show group 
-		return adrotate_group($group_ids, $fallback);
+		return adrotate_group($group_ids, $fallback, $weight);
 
 	if($banner_id == 0 AND $group_ids == 0 AND $block_id > 0) // Show block 
 		return adrotate_block($block_id);
@@ -183,7 +119,7 @@ function adrotate_array_unique($array) {
 function adrotate_prepare_cache_statistics() {
 	global $wpdb;
 	
-	$stats['lastfive']				= adrotate_array_unique($wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` ORDER BY `timer` DESC LIMIT 5;", ARRAY_A));
+	$stats['lastclicks']			= adrotate_array_unique($wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` != 0 ORDER BY `timer` DESC LIMIT 8;", ARRAY_A));
 	$stats['thebest']				= $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' AND `active` = 'yes' AND `type` = 'manual' ORDER BY `clicks` DESC LIMIT 1;", ARRAY_A);
 	$stats['theworst']				= $wpdb->get_row("SELECT `title`, `clicks` FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' AND `active` = 'yes' AND `type` = 'manual' ORDER BY `clicks` ASC LIMIT 1;", ARRAY_A);
 	$stats['banners'] 				= $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'manual';");
@@ -193,7 +129,7 @@ function adrotate_prepare_cache_statistics() {
 	$stats['impressions']			= $wpdb->get_var("SELECT SUM(shown) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'N' AND `type` = 'manual';");
 	$stats['impressions_tracker']	= $wpdb->get_var("SELECT SUM(shown) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' AND `type` = 'manual';");
 	
-	if(!$stats['lastfive']) 			array();
+	if(!$stats['lastclicks']) 			array();
 	if(!$stats['thebest']) 				array('title' => 0, 'clicks' => 0);
 	if(!$stats['theworst']) 			array('title' => 0, 'clicks' => 0);
 	if(!$stats['banners']) 				$stats['banners'] = 0;
@@ -275,7 +211,7 @@ function adrotate_prepare_user_cache_statistics($user) {
 																				AND `".$prefix."adrotate_tracker`.`ipaddress` != 0 
 																				AND `".$prefix."adrotate_tracker`.`bannerid` = `".$prefix."adrotate_linkmeta`.`ad` 
 																				AND `".$prefix."adrotate`.`tracker` = 'Y' 
-																			ORDER BY `".$prefix."adrotate_tracker`.`timer` DESC LIMIT 15;"
+																			ORDER BY `".$prefix."adrotate_tracker`.`timer` DESC LIMIT 8;"
 																			, ARRAY_A));
 			
 			$stats['ads'] 					= $adstats;
@@ -325,69 +261,6 @@ function adrotate_prepare_color($enddate) {
 	} else {
 		return '#0C0'; // green
 	}
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_prepare_roles
-
- Purpose:   Prepare user roles for WordPress
- Receive:   -None-
- Return:    $action
- Since:		3.0
--------------------------------------------------------------*/
-function adrotate_prepare_roles() {
-	global $wp_roles;
-	
-	if(isset($_POST['adrotate_role_add_submit'])) {
-		$action = "role_add";
-		adrotate_add_roles();		
-		update_option('adrotate_roles', '1');
-	} 
-	if(isset($_POST['adrotate_role_remove_submit'])) {
-		$action = "role_remove";
-		adrotate_remove_roles();
-		update_option('adrotate_roles', '0');
-	} 
-
-	adrotate_return($action);
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_add_roles
-
- Purpose:   Prepare the output for viewing
- Receive:   $id, $bannercode, $tracker, $link, $image
- Return:    $banner_output
- Since:		3.0
--------------------------------------------------------------*/
-function adrotate_add_roles() {
-	global $wp_roles;
-	
-	add_role('adrotate_clientstats', 'AdRotate Clients', array('adrotate_clients' => true, 'read' => true));
-	$wp_roles->add_cap('administrator','adrotate_clients');
-	$wp_roles->add_cap('editor','adrotate_clients');
-	$wp_roles->add_cap('author','adrotate_clients');
-//	$wp_roles->add_cap('contributor','adrotate_clients');
-//	$wp_roles->add_cap('subscriber','adrotate_clients');
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_remove_roles
-
- Purpose:   Prepare the output for viewing
- Receive:   $id, $bannercode, $tracker, $link, $image
- Return:    $banner_output
- Since:		3.0
--------------------------------------------------------------*/
-function adrotate_remove_roles() {
-	global $wp_roles;
-	
-	remove_role('adrotate_clientstats');
-	$wp_roles->remove_cap('administrator','adrotate_clients');
-	$wp_roles->remove_cap('editor','adrotate_clients');
-	$wp_roles->remove_cap('author','adrotate_clients');
-//	$wp_roles->remove_cap('contributor','adrotate_clients');
-//	$wp_roles->remove_cap('subscriber','adrotate_clients');
 }
 
 /*-------------------------------------------------------------
@@ -453,8 +326,8 @@ function adrotate_check_banners() {
 										AND `".$wpdb->prefix."adrotate_linkmeta`.`ad` = `".$wpdb->prefix."adrotate`.`id` 
 										AND `".$wpdb->prefix."adrotate_linkmeta`.`group` = 0 
 										AND `".$wpdb->prefix."adrotate_linkmeta`.`block` = 0 
-										AND `".$wpdb->prefix."adrotate_linkmeta`.`user` > 0;"
-									);
+										AND `".$wpdb->prefix."adrotate_linkmeta`.`user` > 0
+									;");
 
 	$count = $alreadyexpired + $expiressoon + $configerror;
 	
@@ -464,14 +337,135 @@ function adrotate_check_banners() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_dashboard_notifications
+ Name:      adrotate_check_config
+
+ Purpose:   Update the options
+ Receive:   -none-
+ Return:    -none-
+ Since:		0.1
+-------------------------------------------------------------*/
+function adrotate_check_config() {
+
+	/* Changelog:
+	// Jan 3 2011 - Changed to a per setting model
+	// Jan 16 2011 - Added notification email conversion to array
+	// Jan 20 2011 - Updated user capabilities to work with new access rights system
+	// Jan 20 2011 - Added debug switch
+	*/
+	
+	$config 	= get_option('adrotate_config');
+	$crawlers 	= get_option('adrotate_crawlers');
+	$debug 		= get_option('adrotate_debug');
+
+	if($config['credits'] == '' OR !isset($config['credits']))						$config['credits'] 				= 'Y';
+	if($config['browser'] == '' OR !isset($config['browser']))						$config['browser'] 				= 'Y';
+	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))				$config['widgetalign'] 			= 'N';
+	if($config['notification_email'] == '' OR !isset($config['notification_email']) OR !is_array($config['notification_email']))	$config['notification_email']	= array(get_option('admin_email'));
+	if($config['userstatistics'] == '' OR !isset($config['userstatistics'])) 		$config['userstatistics']		= 'switch_themes'; 	// Admin
+	if($config['globalstatistics'] == '' OR !isset($config['globalstatistics'])) 	$config['globalstatistics']		= 'switch_themes'; 	// Admin
+	if($config['ad_manage'] == '' OR !isset($config['ad_manage'])) 					$config['ad_manage'] 			= 'switch_themes'; 	// Admin
+	if($config['ad_delete'] == '' OR !isset($config['ad_delete'])) 					$config['ad_delete']			= 'switch_themes'; 	// Admin
+	if($config['group_manage'] == '' OR !isset($config['group_manage'])) 			$config['group_manage']			= 'switch_themes'; 	// Admin
+	if($config['group_delete'] == '' OR !isset($config['group_delete'])) 			$config['group_delete']			= 'switch_themes'; 	// Admin
+	if($config['block_manage'] == '' OR !isset($config['block_manage'])) 			$config['block_manage']			= 'switch_themes'; 	// Admin
+	if($config['block_delete'] == '' OR !isset($config['block_delete'])) 			$config['block_delete']			= 'switch_themes'; 	// Admin
+	update_option('adrotate_config', $config);
+	
+	if($crawlers == '' OR !isset($crawlers)) 										$crawlers						= array("bot", "crawler", "spider", "google", "yahoo", "msn", "ask", "ia_archiver");
+	update_option('adrotate_crawlers', $crawlers);
+
+	if($debug == '' OR !isset($debug)) 												$crawlers						= true;
+	update_option('adrotate_debug', $debug);
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_get_sorted_roles
+
+ Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest. (Code based on NextGen Gallery)
+ Receive:   -none-
+ Return:    $sorted
+ Since:		3.2
+-------------------------------------------------------------*/
+function adrotate_get_sorted_roles() {
+	$sorted = array();
+	$editable_roles = get_editable_roles();
+	
+	foreach ( $editable_roles as $role => $details ) {
+		$sorted[$details['name']] = get_role($role);
+	}
+
+	$sorted = array_reverse($sorted);
+
+	return $sorted;
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_get_role
+
+ Purpose:   Return the lowest roles which has the capabilities (Code borrowed from NextGen Gallery)
+ Receive:   $capability
+ Return:    Boolean|$check_role->name
+ Since:		3.2
+-------------------------------------------------------------*/
+function adrotate_get_role($capability){
+	$check_order = adrotate_get_sorted_roles();
+	$args = array_slice(func_get_args(), 1);
+	$args = array_merge(array($capability), $args);
+
+	foreach($check_order as $check_role) {
+		if(empty($check_role)) return false;
+		if(call_user_func_array(array(&$check_role, 'has_cap'), $args)) return $check_role->name;
+	}
+	return false;
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_set_capability
+
+ Purpose:   Grant or revoke capabilities to a role (Code borrowed from NextGen Gallery)
+ Receive:   $lowest_role, $capability
+ Return:    -None-
+ Since:		3.2
+-------------------------------------------------------------*/
+function adrotate_set_capability($lowest_role, $capability){
+	$check_order = adrotate_get_sorted_roles();
+	$add_capability = false;
+	
+	foreach($check_order as $the_role) {
+		$role = $the_role->name;
+		if($lowest_role == $role) $add_capability = true;
+		if(empty($the_role)) continue;
+		$add_capability ? $the_role->add_cap($capability) : $the_role->remove_cap($capability) ;
+	}
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_remove_capability
+
+ Purpose:   Remove the $capability from the all roles (Based on NextGen Gallery)
+ Receive:   $capability
+ Return:    -None-
+ Since:		3.2
+-------------------------------------------------------------*/
+function adrotate_remove_capability($capability){
+	$check_order = adrotate_get_sorted_roles();
+
+	foreach($check_order as $role) {
+		$role = get_role($role);
+		$role->remove_cap($capability) ;
+	}
+
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_notifications_dashboard
 
  Purpose:   Notify user of expired banners in the dashboard
  Receive:   -none-
  Return:    -none-
  Since:		3.0
 -------------------------------------------------------------*/
-function adrotate_dashboard_notifications() {
+function adrotate_notifications_dashboard() {
 
 	$data = adrotate_check_banners();
 
@@ -499,65 +493,74 @@ function adrotate_dashboard_notifications() {
 function adrotate_mail_notifications() {
 	global $adrotate_config, $adrotate_notification_timer;
 	
+	/* Changelog:
+	// Jan 3 2011 - Changed to a per setting model
+	// Jan 16 2011 - Added support for multiple email addresses
+	*/
+	
 	if(isset($_POST['adrotate_testmail_submit'])) $action = 'test';
 		else $action = 'alert';
 	
-	if(strlen($adrotate_config['notification_email']) > 0) $email = $adrotate_config['notification_email'];
-		else $email = get_option('admin_email');
+	$emails = $adrotate_config['notification_email'];
+	$x = count($emails);
+	if($x == 0) $emails = array(get_option('admin_email'));
 	
 	$blogname 		= get_option('blogname');
 	$siteurl 		= get_option('siteurl');
 	$dashboardurl	= $siteurl."/wp-admin/admin.php?page=adrotate";
 	$pluginurl		= "http://www.adrotateplugin.com";
-    $headers 		= "MIME-Version: 1.0\n" .
-      				  "From: AdRotate Plugin <".$email.">\r\n\n" . 
-      				  "Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
 	$now 			= current_time('timestamp');
 	$timer			= $now - 180;
 
 	switch($action) {
 	case 'alert' :
 		$data = adrotate_check_banners();
-		if($data[3] > 0) {
-			$subject = '[AdRotate Alert] Your ads need your help!';
-			
-			$message = "<p>Hello,</p>";
-			$message .= "<p>This notification is send to you from your website '$blogname'.</p>";
-			$message .= "<p>You will receive a notification approximately every 24 hours until the issues are resolved.</p>";
-			$message .= "<p>Current issues:<br />";
-			if($data[0] > 0) $message .= $data[0]." ad(s) expired. This needs your immediate attention!<br />";
-			if($data[1] > 0) $message .= $data[1]." ad(s) will expire in less than 2 days.<br />";
-			if($data[2] > 0) $message .= $data[2]." ad(s) should have tracking enabled or his publisher removed.<br />";
-			$message .= "</p>";
-			$message .= "<p>A total of ".$data[3]." ad(s) are in need of your care!</p>";
-			$message .= "<p>Access your dashboard here: %s</p>";
-			$message .= "<p>Have a nice day!</p>";
-			$message .= "<p>Your AdRotate Notifier<br />";
-			$message .= "%s</p>";
-			
-			$message = sprintf($message, $dashboardurl, $pluginurl);
+		for($i=0;$i<$x;$i++) {
+			if($data[3] > 0) {
+			    $headers = "MIME-Version: 1.0\n" .
+	      				 	"From: AdRotate Plugin <".$emails[$i].">\r\n\n" . 
+	      				  	"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
+				$subject = '[AdRotate Alert] Your ads need your help!';
+				
+				$message = "<p>Hello,</p>";
+				$message .= "<p>This notification is send to you from your website '$blogname'.</p>";
+				$message .= "<p>You will receive a notification approximately every 24 hours until the issues are resolved.</p>";
+				$message .= "<p>Current issues:<br />";
+				if($data[0] > 0) $message .= $data[0]." ad(s) expired. This needs your immediate attention!<br />";
+				if($data[1] > 0) $message .= $data[1]." ad(s) will expire in less than 2 days.<br />";
+				if($data[2] > 0) $message .= $data[2]." ad(s) should have tracking enabled or his publisher removed.<br />";
+				$message .= "</p>";
+				$message .= "<p>A total of ".$data[3]." ad(s) are in need of your care!</p>";
+				$message .= "<p>Access your dashboard here: $dashboardurl</p>";
+				$message .= "<p>Have a nice day!</p>";
+				$message .= "<p>Your AdRotate Notifier<br />";
+				$message .= "$pluginurl</p>";
 	
-			wp_mail($email, $subject, $message, $headers);
+				wp_mail($emails[$i], $subject, $message, $headers);
+			}
 		}
 	break;	
 	
 	case 'test' :
 		if($adrotate_notification_timer < $timer) {
-			$subject = '[AdRotate test] This is a test notification!';
+			for($i=0;$i<$x;$i++) {
+			    $headers = "MIME-Version: 1.0\n" .
+	      				 	"From: AdRotate Plugin <".$emails[$i].">\r\n\n" . 
+	      				  	"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
+	
+				$subject = '[AdRotate test] This is a test notification!';
+				
+				$message = "<p>Hello,</p>";
+				$message .= "<p>This test notification is send to you from your website '$blogname'.<br />";
+				$message .= "Your email address has been set to receive notifications from the AdRotate plugin.</p>";
+				$message .= "<p>Have a nice day!</p>";
+				$message .= "<p>Your AdRotate Notifier<br />";
+				$message .= "$pluginurl</p>";
 			
-			$message = "<p>Hello,</p>";
-			$message .= "<p>This test notification is send to you from your website '$blogname'.<br />";
-			$message .= "Your email address has been set to receive notifications from the AdRotate plugin.</p>";
-			$message .= "<p>Have a nice day!</p>";
-			$message .= "<p>Your AdRotate Notifier<br />";
-			$message .= "%s</p>";
-			
-			$message = sprintf($message, $pluginurl);
-		
-			wp_mail($email, $subject, $message, $headers);
-
+				wp_mail($emails[$i], $subject, $message, $headers);
+			}
 			update_option('adrotate_notification_timer', $now);
-						
+
 			adrotate_return('mail_sent');
 		} else {
 			adrotate_return('mail_timer');
@@ -567,16 +570,21 @@ function adrotate_mail_notifications() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_send_message
+ Name:      adrotate_mail_message
 
  Purpose:   Send advertiser messages to the admin
  Receive:   -None-
  Return:    -None-
  Since:		3.1
 -------------------------------------------------------------*/
-function adrotate_send_message() {
+function adrotate_mail_message() {
 	global $wpdb, $adrotate_config;
 
+	/* Changelog:
+	// Jan 3 2011 - Changed to a per setting model
+	// Jan 16 2011 - Added new message type 'issue', array() support for multiple emails
+	*/
+	
 	$id 			= $_POST['adrotate_id'];
 	$request 		= $_POST['adrotate_request'];
 	$author 		= $_POST['adrotate_username'];
@@ -585,38 +593,38 @@ function adrotate_send_message() {
 
 	if(strlen($text) < 1) $text = "<em>Nothing</em>";
 	
-	if(strlen($adrotate_config['notification_email']) > 0) $email = $adrotate_config['notification_email'];
+	if(strlen($adrotate_config['notification_email']) > 0) $email = $adrotate_config['notification_email'][0];
 		else $email = get_option('admin_email');
 
 	$siteurl 		= get_option('siteurl');
 	$adurl			= $siteurl."/wp-admin/admin.php?page=adrotate&view=edit&edit_ad=".$id;
 	$pluginurl		= "http://www.adrotateplugin.com";
     $headers 		= "MIME-Version: 1.0\n" .
-      				  "From: AdRotate Plugin <".$email.">\r\n\n" . 
+      				  "From: $author <".$useremail.">\r\n\n" . 
       				  "Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
 	$now 			= current_time('timestamp');
-	$timer			= $now - 180;
 	
 	if($request == "renew") $subject = "[AdRotate] An advertiser has put in a request for renewal!";
 	if($request == "remove") $subject = "[AdRotate] An advertiser wants his ad removed.";
 	if($request == "report") $subject = "[AdRotate] An advertiser wrote a comment on his ad!";
+	if($request == "issue") $subject = "[AdRotate] An advertiser has a problem!";
 	
 	$message = "<p>Hello,</p>";
 
 	if($request == "renew") $message .= "<p>$author requests ad <strong>$id</strong> renewed!</p>";
 	if($request == "remove") $message .= "<p>$author requests ad <strong>$id</strong> removed.</p>";
 	if($request == "report") $message .= "<p>$author has something to say about ad <strong>$id</strong>.</p>";
+	if($request == "issue") $message .= "<p>$author has a problem with AdRotate.</p>";
 	
 	$message .= "<p>Attached message: $text</p>";
 	
-	$message .= "<p>Email $author here: $useremail<br />";
-	$message .= "Review the ad here: %s</p>";
+	$message .= "<p>You can reply to this message to contact $author.<br />";
+	if($request != "issue") $message .= "Review the ad here: $adurl";
+	$message .= "</p>";
 	
 	$message .= "<p>Have a nice day!<br />";
 	$message .= "Your AdRotate Notifier<br />";
-	$message .= "%s</p>";
-	
-	$message = sprintf($message, $adurl, $pluginurl);
+	$message .= "$pluginurl</p>";
 
 	wp_mail($email, $subject, $message, $headers);
 
@@ -646,79 +654,6 @@ function adrotate_reccurences() {
 			'display' => 'Once Weekly'
 		),
 	);
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_check_config
-
- Purpose:   Update the options
- Receive:   -none-
- Return:    -none-
- Since:		0.1
--------------------------------------------------------------*/
-function adrotate_check_config() {
-
-	/* Changelog:
-	// Jan 3 2011 - Changed to a per setting model
-	*/
-	
-	$config = get_option('adrotate_config');
-	if($config['credits'] == '' OR !isset($config['credits']))							$config['credits'] 				= 'Y';
-	if($config['browser'] == '' OR !isset($config['browser']))							$config['browser'] 				= 'Y';
-	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))					$config['widgetalign'] 			= 'N';
-	if($config['notification_email'] == '' OR !isset($config['notification_email']))	$config['notification_email']	= get_option('admin_email');
-	if($config['pagestatistics'] == '' OR !isset($config['pagestatistics'])) 			$config['pagestatistics']		= 'switch_themes'; 	// Admin
-	if($config['globalstatistics'] == '' OR !isset($config['globalstatistics'])) 		$config['globalstatistics']		= 'switch_themes'; 	// Admin
-	if($config['ad_manage'] == '' OR !isset($config['ad_manage'])) 						$config['ad_manage'] 			= 'switch_themes'; 	// Admin
-	if($config['ad_delete'] == '' OR !isset($config['ad_delete'])) 						$config['ad_delete']			= 'switch_themes'; 	// Admin
-	if($config['group_manage'] == '' OR !isset($config['group_manage'])) 				$config['group_manage']			= 'switch_themes'; 	// Admin
-	if($config['group_delete'] == '' OR !isset($config['group_delete'])) 				$config['group_delete']			= 'switch_themes'; 	// Admin
-	if($config['block_manage'] == '' OR !isset($config['block_manage'])) 				$config['block_manage']			= 'switch_themes'; 	// Admin
-	if($config['block_delete'] == '' OR !isset($config['block_delete'])) 				$config['block_delete']			= 'switch_themes'; 	// Admin
-	update_option('adrotate_config', $config);
-	
-	if(!$crawlers = get_option('adrotate_crawlers')) {
-		$crawlers	= array("bot", "crawler", "spider", "google", "yahoo", "msn", "ask", "ia_archiver");
-		update_option('adrotate_crawlers', $crawlers);
-	}
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_options_submit
-
- Purpose:   Save options from dashboard
- Receive:   $_POST
- Return:    -none-
- Since:		0.1
--------------------------------------------------------------*/
-function adrotate_options_submit() {
-
-	/* Changelog:
-	// Jan 3 2011 - Updated crawlers to trim(), removed dashboardwidget, added globalstats setting
-	*/
-
-	if(isset($_POST['adrotate_credits'])) 					$config['credits'] 		= 'Y';
-		else 												$config['credits'] 		= 'N';
-	if(isset($_POST['adrotate_browser'])) 					$config['browser'] 		= 'Y';
-		else 												$config['browser'] 		= 'N';
-	if(isset($_POST['adrotate_widgetalign'])) 				$config['widgetalign'] 	= 'Y';
-		else 												$config['widgetalign'] 	= 'N';
-
-	$config['notification_email'] 		= $_POST['adrotate_notification_email'];
-	$config['pagestatistics'] 			= $_POST['adrotate_pagestatistics'];
-	$config['globalstatistics'] 		= $_POST['adrotate_globalstatistics'];
-	$config['ad_manage'] 				= $_POST['adrotate_ad_manage'];
-	$config['ad_delete'] 				= $_POST['adrotate_ad_delete'];
-	$config['group_manage'] 			= $_POST['adrotate_group_manage'];
-	$config['group_delete'] 			= $_POST['adrotate_group_delete'];
-	$config['block_manage'] 			= $_POST['adrotate_block_manage'];
-	$config['block_delete'] 			= $_POST['adrotate_block_delete'];
-	update_option('adrotate_config', $config);
-
-	$crawlers							= explode(', ', trim($_POST['adrotate_crawlers'], ' \t\n'));
-	update_option('adrotate_crawlers', $crawlers);
-
-	adrotate_return('settings_saved');
 }
 
 /*-------------------------------------------------------------

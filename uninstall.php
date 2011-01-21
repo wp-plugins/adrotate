@@ -16,7 +16,7 @@ function adrotate_plugin_uninstall() {
 	/* Changelog:
 	// Nov 15 2010 - Moved function to work with WP's uninstall system, stripped out unnessesary code
 	// Dec 13 2010 - Updated uninstaller to properly remove options for the new installer
-	// Dec 18 2010 - Updated for tracker subscriptions
+	// Jan 21 2011 - Added capability cleanup
 	*/
 
 	// Drop MySQL Tables
@@ -34,15 +34,20 @@ function adrotate_plugin_uninstall() {
 	delete_option('adrotate_stats');
 	delete_option('adrotate_roles');
 	delete_option('adrotate_db_version');
-//	delete_option('adrotate_tracker');
+	delete_option('adrotate_debug');
 
 	// Clear out userroles
-	remove_role('adrotate_clientstats');
-	$wp_roles->remove_cap('administrator','adrotate_clients');
-	$wp_roles->remove_cap('editor','adrotate_clients');
-	$wp_roles->remove_cap('author','adrotate_clients');
-	$wp_roles->remove_cap('contributor','adrotate_clients');
-	$wp_roles->remove_cap('subscriber','adrotate_clients');
+	remove_role('adrotate_advertiser');
+
+	// Clear up capabilities from ALL users
+	adrotate_remove_capability("adrotate_userstatistics");
+	adrotate_remove_capability("adrotate_globalstatistics");
+	adrotate_remove_capability("adrotate_ad_manage");
+	adrotate_remove_capability("adrotate_ad_delete");
+	adrotate_remove_capability("adrotate_group_manage");
+	adrotate_remove_capability("adrotate_group_delete");
+	adrotate_remove_capability("adrotate_block_manage");
+	adrotate_remove_capability("adrotate_block_delete");
 		
 	// Delete cron schedules
 	wp_clear_scheduled_hook('adrotate_ad_notification');

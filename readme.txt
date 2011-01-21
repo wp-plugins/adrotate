@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
-Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement
+Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.0, PHP5
 Tested up to: 3.1
-Stable tag: 3.1.1
+Stable tag: 3.2
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -42,15 +42,21 @@ Receive a periodic email when banners are (about to) expire(d) informing you to 
 
 == Installation ==
 
-Find out how AdRotate works, more options and various ways to implement your ads.
-[User guide](http://adrotateplugin.com/page/support.php)
-
-= Support? = 
-[AdRotate support](http://adrotateplugin.com/page/support.php)
+Find out how AdRotate works, more options and various ways to implement your ads. Visit the [knowledgebase](http://adrotateplugin.com/page/support.php)!
 
 == Frequently Asked Questions ==
 
-Go here for support/questions: [Knowledgebase](http://adrotateplugin.com/page/support.php)
+We have a [knowledgebase](http://adrotateplugin.com/page/support.php).
+If that's not enough you can post a [ticket](http://adrotateplugin.com/page/support.php) and ask your question there!
+
+== Upgrade Notice ==
+
+= 3.2 =
+Fixes the access control system in AdRotate as well as some other important bugs.
+
+== Changelog ==
+
+The full changelog can be found [here](http://adrotateplugin.com/page/changelog.php).
 
 == Screenshots ==
 
