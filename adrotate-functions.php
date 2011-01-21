@@ -386,7 +386,7 @@ function adrotate_check_config() {
  Return:    $sorted
  Since:		3.2
 -------------------------------------------------------------*/
-function adrotate_get_sorted_roles() {
+function adrotate_get_sorted_roles() {	
 	$sorted = array();
 	$editable_roles = get_editable_roles();
 	
@@ -428,14 +428,22 @@ function adrotate_get_role($capability){
  Since:		3.2
 -------------------------------------------------------------*/
 function adrotate_set_capability($lowest_role, $capability){
+
+	/* Changelog:
+	// Jan 21 2011 - Fixed $the_role to $role
+	*/
+	
 	$check_order = adrotate_get_sorted_roles();
 	$add_capability = false;
 	
-	foreach($check_order as $the_role) {
-		$role = $the_role->name;
-		if($lowest_role == $role) $add_capability = true;
-		if(empty($the_role)) continue;
-		$add_capability ? $the_role->add_cap($capability) : $the_role->remove_cap($capability) ;
+	foreach($check_order as $role) {
+		if($lowest_role == $role->name) 
+			$add_capability = true;
+			
+		if(empty($role)) 
+			continue;
+			
+		$add_capability ? $role->add_cap($capability) : $role->remove_cap($capability) ;
 	}
 }
 
@@ -448,11 +456,16 @@ function adrotate_set_capability($lowest_role, $capability){
  Since:		3.2
 -------------------------------------------------------------*/
 function adrotate_remove_capability($capability){
+
+	/* Changelog:
+	// Jan 21 2011 - Fixed $role to $role->name
+	*/
+	
 	$check_order = adrotate_get_sorted_roles();
 
 	foreach($check_order as $role) {
-		$role = get_role($role);
-		$role->remove_cap($capability) ;
+		$role = get_role($role->name);
+		$role->remove_cap($capability);
 	}
 
 }
