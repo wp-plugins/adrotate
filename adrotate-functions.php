@@ -387,8 +387,14 @@ function adrotate_check_config() {
  Since:		3.2
 -------------------------------------------------------------*/
 function adrotate_get_sorted_roles() {	
+	global $wp_roles;
+
+	/* Changelog:
+	// Jan 22 2011 - Dropped get_editable_roles(), function is broken in pre-WP 3.1 versions.
+	*/
+	
+	$editable_roles = apply_filters('editable_roles', $wp_roles->roles);
 	$sorted = array();
-	$editable_roles = get_editable_roles();
 	
 	foreach ( $editable_roles as $role => $details ) {
 		$sorted[$details['name']] = get_role($role);
