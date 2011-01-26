@@ -180,19 +180,20 @@ function adrotate_database_install() {
 		dbDelta($sql);
 	}
 
+	add_option("adrotate_version", ADROTATE_VERSION);
 	add_option("adrotate_db_version", ADROTATE_DB_VERSION);
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_database_upgrade
+ Name:      adrotate_upgrade
 
- Purpose:   Upgrades database
+ Purpose:   Upgrades AdRotate where required
  Receive:   -none-
  Return:	-none-
  Since:		3.0.3
 -------------------------------------------------------------*/
-function adrotate_database_upgrade() {
-	global $wpdb, $adrotate_db_version;
+function adrotate_upgrade() {
+	global $wpdb, $adrotate_db_version, $adrotate_version;
 
 	$tables = array(
 		$wpdb->prefix . "adrotate",				// Since 0.1
@@ -240,6 +241,12 @@ function adrotate_database_upgrade() {
 		adrotate_add_column($tables[0], 'weight', 'INT( 3 ) NOT NULL DEFAULT \'6\' AFTER `type`');
 	}
 	
+	// 3.2.2 to 3.2.3
+	if($adrotate_version < 323) {
+		delete_option('adrotate_notification_timer');
+	}
+	
+	update_option("adrotate_version", ADROTATE_VERSION);
 	update_option("adrotate_db_version", ADROTATE_DB_VERSION);
 }
 
@@ -272,6 +279,61 @@ function adrotate_deactivate() {
 	// Clear out wp_cron
 	wp_clear_scheduled_hook('adrotate_ad_notification');
 	wp_clear_scheduled_hook('adrotate_cache_statistics');
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_uninstall
+
+ Purpose:   Delete the entire database tables and remove the options on uninstall.
+ Receive:   -none-
+ Return:	-none-
+ Since:		2.4.2
+-------------------------------------------------------------*/
+function adrotate_uninstall() {
+	global $wpdb, $wp_roles;
+
+	/* Changelog:
+	// Nov 15 2010 - Moved function to work with WP's uninstall system, stripped out unnessesary code
+	// Dec 13 2010 - Updated uninstaller to properly remove options for the new installer
+	// Jan 21 2011 - Added capability cleanup
+	// Jan 24 2011 - Added adrotate_version removal
+	// Jan 25 2011 - Moved to adrotate-setup.php
+	*/
+
+	// Drop MySQL Tables
+	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate`");
+	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_groups`");
+	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_tracker`");
+	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_blocks`");
+	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_linkmeta`");
+	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_stats_cache`");
+
+	// Delete Options	
+	delete_option('adrotate_config');				// Since 0.1
+	delete_option('adrotate_notification_timer'); 	// Since 3.0 - Obsolete in 3.2.3
+	delete_option('adrotate_crawlers'); 			// Since 3.0
+	delete_option('adrotate_stats');				// Since 3.0
+	delete_option('adrotate_roles');				// Since 3.0
+	delete_option('adrotate_version');				// Since 3.2.3
+	delete_option('adrotate_db_version');			// Since 3.0.3
+	delete_option('adrotate_debug');				// Since 3.2
+
+	// Clear out userroles
+	remove_role('adrotate_advertiser');
+
+	// Clear up capabilities from ALL users
+	adrotate_remove_capability("adrotate_userstatistics");
+	adrotate_remove_capability("adrotate_globalstatistics");
+	adrotate_remove_capability("adrotate_ad_manage");
+	adrotate_remove_capability("adrotate_ad_delete");
+	adrotate_remove_capability("adrotate_group_manage");
+	adrotate_remove_capability("adrotate_group_delete");
+	adrotate_remove_capability("adrotate_block_manage");
+	adrotate_remove_capability("adrotate_block_delete");
+		
+	// Delete cron schedules
+	wp_clear_scheduled_hook('adrotate_ad_notification');
+	wp_clear_scheduled_hook('adrotate_prepare_cache_statistics()');
 }
 
 /*-------------------------------------------------------------

@@ -18,6 +18,7 @@ function adrotate_shortcode($atts, $content = null) {
 	// Nov 17 2010 - Added filters for empty values
 	// Dec 13 2010 - Improved backward compatibility for single ads and blocks
 	// Jan 16 2011 - Added $weight as an override for groups
+	// Jan 24 2011 - Added $weight as an override for blocks
 	*/
 
 	if(!empty($atts['banner'])) 	$banner_id 	= trim($atts['banner'], "\r\t ");
@@ -34,11 +35,11 @@ function adrotate_shortcode($atts, $content = null) {
 		return adrotate_group($group_ids, $fallback, $weight);
 
 	if($banner_id == 0 AND $group_ids == 0 AND $block_id > 0) // Show block 
-		return adrotate_block($block_id);
+		return adrotate_block($block_id, $weight);
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_banner DEPRECIATED
+ Name:      adrotate_banner DEPRECATED
 
  Purpose:   Compatibility layer for old setups 
  Receive:   $group_ids, $banner_id, $block_id, $column
@@ -49,8 +50,8 @@ function adrotate_banner($group_ids = 0, $banner_id = 0, $block_id = 0, $column 
 
 	/* Changelog:
 	// Nov 6 2010 - Changed function to form a compatibility layer for old setups, for ad output see adrotate_ad()
-	// Nov 9 2010 - $block, Now accepts Block ID's only. $column, OBSOLETE, no longer in use
-	// Dec 6 2010 - Function DEPRECIATED, maintained for backward compatibility
+	// Nov 9 2010 - $block, Now accepts Block ID's only. $column OBSOLETE, no longer in use
+	// Dec 6 2010 - Function DEPRECATED, maintained for backward compatibility
 	*/
 	
 	if(($banner_id > 0 AND ($group_ids == 0 OR $group_ids == '')) OR ($banner_id > 0 AND $group_ids > 0 AND ($block_id == 0 OR $block_id == ''))) // Show one Ad
@@ -350,17 +351,15 @@ function adrotate_check_config() {
 	// Jan 3 2011 - Changed to a per setting model
 	// Jan 16 2011 - Added notification email conversion to array
 	// Jan 20 2011 - Updated user capabilities to work with new access rights system
-	// Jan 20 2011 - Added debug switch
+	// Jan 20 2011 - Added debug switch (defaults to false)
+	// Jan 23 2011 - Added option to disable email notifications
+	// Jan 24 2011 - Renamed $crawlers to $debug for debugger if()
 	*/
 	
 	$config 	= get_option('adrotate_config');
 	$crawlers 	= get_option('adrotate_crawlers');
 	$debug 		= get_option('adrotate_debug');
 
-	if($config['credits'] == '' OR !isset($config['credits']))						$config['credits'] 				= 'Y';
-	if($config['browser'] == '' OR !isset($config['browser']))						$config['browser'] 				= 'Y';
-	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))				$config['widgetalign'] 			= 'N';
-	if($config['notification_email'] == '' OR !isset($config['notification_email']) OR !is_array($config['notification_email']))	$config['notification_email']	= array(get_option('admin_email'));
 	if($config['userstatistics'] == '' OR !isset($config['userstatistics'])) 		$config['userstatistics']		= 'switch_themes'; 	// Admin
 	if($config['globalstatistics'] == '' OR !isset($config['globalstatistics'])) 	$config['globalstatistics']		= 'switch_themes'; 	// Admin
 	if($config['ad_manage'] == '' OR !isset($config['ad_manage'])) 					$config['ad_manage'] 			= 'switch_themes'; 	// Admin
@@ -369,12 +368,18 @@ function adrotate_check_config() {
 	if($config['group_delete'] == '' OR !isset($config['group_delete'])) 			$config['group_delete']			= 'switch_themes'; 	// Admin
 	if($config['block_manage'] == '' OR !isset($config['block_manage'])) 			$config['block_manage']			= 'switch_themes'; 	// Admin
 	if($config['block_delete'] == '' OR !isset($config['block_delete'])) 			$config['block_delete']			= 'switch_themes'; 	// Admin
+	if($config['notification_email_switch'] == '' OR !isset($config['notification_email_switch']))	$config['notification_email_switch']	= 'Y';
+	if($config['notification_email'] == '' OR !isset($config['notification_email']) OR !is_array($config['notification_email']))	$config['notification_email']	= array(get_option('admin_email'));
+	if($config['advertiser_email'] == '' OR !isset($config['advertiser_email']) OR !is_array($config['advertiser_email']))	$config['advertiser_email']	= array(get_option('admin_email'));
+	if($config['credits'] == '' OR !isset($config['credits']))						$config['credits'] 				= 'Y';
+	if($config['browser'] == '' OR !isset($config['browser']))						$config['browser'] 				= 'Y';
+	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))				$config['widgetalign'] 			= 'N';
 	update_option('adrotate_config', $config);
 	
-	if($crawlers == '' OR !isset($crawlers)) 										$crawlers						= array("bot", "crawler", "spider", "google", "yahoo", "msn", "ask", "ia_archiver");
+	if($crawlers == '' OR !isset($crawlers)) 		$crawlers 	= array("bot", "crawler", "spider", "google", "yahoo", "msn", "ask", "ia_archiver");
 	update_option('adrotate_crawlers', $crawlers);
 
-	if($debug == '' OR !isset($debug)) 												$crawlers						= true;
+	if($debug == '' OR !isset($debug)) 				$debug 		= false;
 	update_option('adrotate_debug', $debug);
 }
 
@@ -396,7 +401,7 @@ function adrotate_get_sorted_roles() {
 	$editable_roles = apply_filters('editable_roles', $wp_roles->roles);
 	$sorted = array();
 	
-	foreach ( $editable_roles as $role => $details ) {
+	foreach($editable_roles as $role => $details) {
 		$sorted[$details['name']] = get_role($role);
 	}
 
@@ -510,15 +515,13 @@ function adrotate_notifications_dashboard() {
  Since:		3.0
 -------------------------------------------------------------*/
 function adrotate_mail_notifications() {
-	global $adrotate_config, $adrotate_notification_timer;
+	global $adrotate_config;
 	
 	/* Changelog:
 	// Jan 3 2011 - Changed to a per setting model
 	// Jan 16 2011 - Added support for multiple email addresses
+	// Jan 24 2011 - Removed test notification (obsolete), cleaned up code
 	*/
-	
-	if(isset($_POST['adrotate_testmail_submit'])) $action = 'test';
-		else $action = 'alert';
 	
 	$emails = $adrotate_config['notification_email'];
 	$x = count($emails);
@@ -528,70 +531,39 @@ function adrotate_mail_notifications() {
 	$siteurl 		= get_option('siteurl');
 	$dashboardurl	= $siteurl."/wp-admin/admin.php?page=adrotate";
 	$pluginurl		= "http://www.adrotateplugin.com";
-	$now 			= current_time('timestamp');
-	$timer			= $now - 180;
 
-	switch($action) {
-	case 'alert' :
-		$data = adrotate_check_banners();
-		for($i=0;$i<$x;$i++) {
-			if($data[3] > 0) {
-			    $headers = "MIME-Version: 1.0\n" .
-	      				 	"From: AdRotate Plugin <".$emails[$i].">\r\n\n" . 
-	      				  	"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
-				$subject = '[AdRotate Alert] Your ads need your help!';
-				
-				$message = "<p>Hello,</p>";
-				$message .= "<p>This notification is send to you from your website '$blogname'.</p>";
-				$message .= "<p>You will receive a notification approximately every 24 hours until the issues are resolved.</p>";
-				$message .= "<p>Current issues:<br />";
-				if($data[0] > 0) $message .= $data[0]." ad(s) expired. This needs your immediate attention!<br />";
-				if($data[1] > 0) $message .= $data[1]." ad(s) will expire in less than 2 days.<br />";
-				if($data[2] > 0) $message .= $data[2]." ad(s) should have tracking enabled or his publisher removed.<br />";
-				$message .= "</p>";
-				$message .= "<p>A total of ".$data[3]." ad(s) are in need of your care!</p>";
-				$message .= "<p>Access your dashboard here: $dashboardurl</p>";
-				$message .= "<p>Have a nice day!</p>";
-				$message .= "<p>Your AdRotate Notifier<br />";
-				$message .= "$pluginurl</p>";
-	
-				wp_mail($emails[$i], $subject, $message, $headers);
-			}
-		}
-	break;	
-	
-	case 'test' :
-		if($adrotate_notification_timer < $timer) {
-			for($i=0;$i<$x;$i++) {
-			    $headers = "MIME-Version: 1.0\n" .
-	      				 	"From: AdRotate Plugin <".$emails[$i].">\r\n\n" . 
-	      				  	"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
-	
-				$subject = '[AdRotate test] This is a test notification!';
-				
-				$message = "<p>Hello,</p>";
-				$message .= "<p>This test notification is send to you from your website '$blogname'.<br />";
-				$message .= "Your email address has been set to receive notifications from the AdRotate plugin.</p>";
-				$message .= "<p>Have a nice day!</p>";
-				$message .= "<p>Your AdRotate Notifier<br />";
-				$message .= "$pluginurl</p>";
+	$data = adrotate_check_banners();
+	for($i=0;$i<$x;$i++) {
+		if($data[3] > 0) {
+		    $headers = "MIME-Version: 1.0\n" .
+      				 	"From: AdRotate Plugin <".$emails[$i].">\r\n\n" . 
+      				  	"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
+
+			$subject = '[AdRotate Alert] Your ads need your help!';
 			
-				wp_mail($emails[$i], $subject, $message, $headers);
-			}
-			update_option('adrotate_notification_timer', $now);
+			$message = "<p>Hello,</p>";
+			$message .= "<p>This notification is send to you from your website '$blogname'.</p>";
+			$message .= "<p>You will receive a notification approximately every 24 hours until the issues are resolved.</p>";
+			$message .= "<p>Current issues:<br />";
+			if($data[0] > 0) $message .= $data[0]." ad(s) expired. This needs your immediate attention!<br />";
+			if($data[1] > 0) $message .= $data[1]." ad(s) will expire in less than 2 days.<br />";
+			if($data[2] > 0) $message .= $data[2]." ad(s) should have tracking enabled or his publisher removed.<br />";
+			$message .= "</p>";
+			$message .= "<p>A total of ".$data[3]." ad(s) are in need of your care!</p>";
+			$message .= "<p>Access your dashboard here: $dashboardurl</p>";
+			$message .= "<p>Have a nice day!</p>";
+			$message .= "<p>Your AdRotate Notifier<br />";
+			$message .= "$pluginurl</p>";
 
-			adrotate_return('mail_sent');
-		} else {
-			adrotate_return('mail_timer');
-		}	
-	break;	
+			wp_mail($emails[$i], $subject, $message, $headers);
+		}
 	}
 }
 
 /*-------------------------------------------------------------
  Name:      adrotate_mail_message
 
- Purpose:   Send advertiser messages to the admin
+ Purpose:   Send advertiser messages
  Receive:   -None-
  Return:    -None-
  Since:		3.1
@@ -602,6 +574,7 @@ function adrotate_mail_message() {
 	/* Changelog:
 	// Jan 3 2011 - Changed to a per setting model
 	// Jan 16 2011 - Added new message type 'issue', array() support for multiple emails
+	// Jan 24 2011 - Change to its own email array, updated layout and formatting
 	*/
 	
 	$id 			= $_POST['adrotate_id'];
@@ -610,44 +583,48 @@ function adrotate_mail_message() {
 	$useremail 		= $_POST['adrotate_email'];
 	$text	 		= strip_tags(stripslashes(trim($_POST['adrotate_message'], "\t\n ")));
 
-	if(strlen($text) < 1) $text = "<em>Nothing</em>";
+	if(strlen($text) < 1) $text = "";
 	
-	if(strlen($adrotate_config['notification_email']) > 0) $email = $adrotate_config['notification_email'][0];
-		else $email = get_option('admin_email');
-
+	$emails = $adrotate_config['advertiser_email'];
+	$x = count($emails);
+	if($x == 0) $emails = array(get_option('admin_email'));
+	
 	$siteurl 		= get_option('siteurl');
 	$adurl			= $siteurl."/wp-admin/admin.php?page=adrotate&view=edit&edit_ad=".$id;
 	$pluginurl		= "http://www.adrotateplugin.com";
-    $headers 		= "MIME-Version: 1.0\n" .
-      				  "From: $author <".$useremail.">\r\n\n" . 
-      				  "Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
-	$now 			= current_time('timestamp');
-	
-	if($request == "renew") $subject = "[AdRotate] An advertiser has put in a request for renewal!";
-	if($request == "remove") $subject = "[AdRotate] An advertiser wants his ad removed.";
-	if($request == "report") $subject = "[AdRotate] An advertiser wrote a comment on his ad!";
-	if($request == "issue") $subject = "[AdRotate] An advertiser has a problem!";
-	
-	$message = "<p>Hello,</p>";
 
-	if($request == "renew") $message .= "<p>$author requests ad <strong>$id</strong> renewed!</p>";
-	if($request == "remove") $message .= "<p>$author requests ad <strong>$id</strong> removed.</p>";
-	if($request == "report") $message .= "<p>$author has something to say about ad <strong>$id</strong>.</p>";
-	if($request == "issue") $message .= "<p>$author has a problem with AdRotate.</p>";
+	for($i=0;$i<$x;$i++) {
+	    $headers 		= "MIME-Version: 1.0\n" .
+	      				  "From: $author <".$useremail.">\r\n\n" . 
+	      				  "Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
+		$now 			= current_time('timestamp');
+		
+		if($request == "renew") $subject = "[AdRotate] An advertiser has put in a request for renewal!";
+		if($request == "remove") $subject = "[AdRotate] An advertiser wants his ad removed.";
+		if($request == "report") $subject = "[AdRotate] An advertiser wrote a comment on his ad!";
+		if($request == "issue") $subject = "[AdRotate] An advertiser has a problem!";
+		
+		$message = "<p>Hello,</p>";
 	
-	$message .= "<p>Attached message: $text</p>";
+		if($request == "renew") $message .= "<p>$author requests ad <strong>$id</strong> renewed!</p>";
+		if($request == "remove") $message .= "<p>$author requests ad <strong>$id</strong> removed.</p>";
+		if($request == "report") $message .= "<p>$author has something to say about ad <strong>$id</strong>.</p>";
+		if($request == "issue") $message .= "<p>$author has a problem with AdRotate.</p>";
+		
+		$message .= "<p>Attached message: $text</p>";
+		
+		$message .= "<p>You can reply to this message to contact $author.<br />";
+		if($request != "issue") $message .= "Review the ad here: $adurl";
+		$message .= "</p>";
+		
+		$message .= "<p>Have a nice day!<br />";
+		$message .= "Your AdRotate Notifier<br />";
+		$message .= "$pluginurl</p>";
 	
-	$message .= "<p>You can reply to this message to contact $author.<br />";
-	if($request != "issue") $message .= "Review the ad here: $adurl";
-	$message .= "</p>";
-	
-	$message .= "<p>Have a nice day!<br />";
-	$message .= "Your AdRotate Notifier<br />";
-	$message .= "$pluginurl</p>";
+		wp_mail($emails[$i], $subject, $message, $headers);
+	}
 
-	wp_mail($email, $subject, $message, $headers);
-
-	adrotate_return('mail_request_sent');
+	adrotate_return('mail_sent');
 }
 
 /*-------------------------------------------------------------
@@ -753,6 +730,7 @@ function adrotate_return($action, $arg = null) {
 
 	/* Changelog:
 	// Nov ? 2010 - Added block support
+	// Jan 24 2011 - Added default action, removed email_timer, mail_sent, renamed mail_request_sent to mail_sent
 	*/
 
 	switch($action) {
@@ -825,14 +803,6 @@ function adrotate_return($action, $arg = null) {
 		break;
 
 		case "mail_sent" :
-			wp_redirect('admin.php?page=adrotate-settings&message=mail_sent');
-		break;
-
-		case "mail_timer" :
-			wp_redirect('admin.php?page=adrotate-settings&message=mail_timer');
-		break;
-
-		case "mail_request_sent" :
 			wp_redirect('admin.php?page=adrotate-userstatistics&message=mail_sent');
 		break;
 
@@ -850,6 +820,10 @@ function adrotate_return($action, $arg = null) {
 
 		case "error" :
 			wp_redirect('admin.php?page=adrotate&message=error');
+		break;
+
+		default:
+			wp_redirect('admin.php?page=adrotate');
 		break;
 
 	}

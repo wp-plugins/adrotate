@@ -147,11 +147,11 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
  Name:      adrotate_block
 
  Purpose:   Fetch all ads in specified groups within block. Show set amount of ads randomly
- Receive:   $block_id
+ Receive:   $block_id, $weight
  Return:    $output
  Since:		3.0
 -------------------------------------------------------------*/
-function adrotate_block($block_id) {
+function adrotate_block($block_id, $weight = 0) {
 	global $wpdb, $adrotate_debug;
 
 	/* Changelog:
@@ -169,6 +169,10 @@ function adrotate_block($block_id) {
 		if($block) {
 			$groups = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = '$block->id' AND `user` = 0;");
 			if($groups) {
+				if($weight > 0) {
+					$weightoverride = "	AND `".$prefix."adrotate`.`weight` >= '$weight'";
+				}
+		
 				$results = array();
 				foreach($groups as $group) {
 					$ads = $wpdb->get_results(
@@ -181,6 +185,7 @@ function adrotate_block($block_id) {
 							AND `".$prefix."adrotate`.`active` = 'yes' 
 							AND '$now' >= `".$prefix."adrotate`.`startshow` 
 							AND '$now' <= `".$prefix."adrotate`.`endshow`
+							".$weightoverride."
 						;");
 					$results = array_merge($ads, $results);
 				}
@@ -399,7 +404,7 @@ function adrotate_credits() {
 	echo '	<li>Find my website at <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.</li>';
 	echo '	<li>Give me your money to <a href="http://meandmymac.net/donate/" target="_blank">show your appreciation</a>. Thanks!</li>';
 	echo '	<li>The plugin homepage is at <a href="http://www.adrotateplugin.com/" target="_blank">www.adrotateplugin.com</a>!</li>';
-	echo '	<li>Check out the <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">knowledgebase</a> for manuals, how-to\'s and general information!</li>';
+	echo '	<li>Check out the <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">knowledgebase</a> for manuals, general information!</li>';
 	echo '	<li>Need more help? <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">Ticket support</a> is available!</li>';
 	echo '</ul></td>';
 	echo '<td style="border-left:1px #ddd solid;">';

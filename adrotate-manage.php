@@ -25,7 +25,7 @@ function adrotate_insert_input() {
 	$thetime 			= date('U');
 	$active 			= $_POST['adrotate_active'];
 	$imageraw			= $_POST['adrotate_image'];
-	$link				= strip_tags(htmlspecialchars(trim($_POST['adrotate_link'], "\t\n "), ENT_QUOTES));
+//	$link				= strip_tags(htmlspecialchars(trim($_POST['adrotate_link'], "\t\n "), ENT_QUOTES));
 	$tracker			= $_POST['adrotate_tracker'];
 	$sday 				= strip_tags(trim($_POST['adrotate_sday'], "\t\n "));
 	$smonth 			= strip_tags(trim($_POST['adrotate_smonth'], "\t\n "));
@@ -462,8 +462,11 @@ function adrotate_options_submit() {
 	// Jan 3 2011 - Updated crawlers to trim(), removed dashboardwidget, added globalstats setting
 	// Jan 16 2011 - Foreach() for crawlers keywords and to support multiple email notifications
 	// Jan 20 2011 - Borrowed code from NextGen Gallery plugin for user capabilities
+	// Jan 23 2011 - Added option to disable email notifications
+	// Jan 24 2011 - Automatic switch for email notifications, added array_unique() to email addresses
 	*/
 
+	// Set and save user roles
 	adrotate_set_capability($_POST['adrotate_userstatistics'], "adrotate_userstatistics");
 	adrotate_set_capability($_POST['adrotate_globalstatistics'], "adrotate_globalstatistics");
 	adrotate_set_capability($_POST['adrotate_ad_manage'], "adrotate_ad_manage");
@@ -472,20 +475,6 @@ function adrotate_options_submit() {
 	adrotate_set_capability($_POST['adrotate_group_delete'], "adrotate_group_delete");
 	adrotate_set_capability($_POST['adrotate_block_manage'], "adrotate_block_manage");
 	adrotate_set_capability($_POST['adrotate_block_delete'], "adrotate_block_delete");
-
-	if(isset($_POST['adrotate_credits'])) 		$config['credits'] 		= 'Y';
-		else 									$config['credits'] 		= 'N';
-	if(isset($_POST['adrotate_browser'])) 		$config['browser'] 		= 'Y';
-		else 									$config['browser'] 		= 'N';
-	if(isset($_POST['adrotate_widgetalign'])) 	$config['widgetalign'] 	= 'Y';
-		else 									$config['widgetalign'] 	= 'N';
-
-	$emails						 	= explode(',', trim($_POST['adrotate_notification_email']));
-	foreach($emails as $email) {
-		$email = trim($email);
-		if(strlen($email) > 0) $clean_email[] = $email;
-	}
-	$config['notification_email']	= array_slice($clean_email, 0, 5);
 	$config['userstatistics'] 		= $_POST['adrotate_userstatistics'];
 	$config['globalstatistics'] 	= $_POST['adrotate_globalstatistics'];
 	$config['ad_manage'] 			= $_POST['adrotate_ad_manage'];
@@ -494,6 +483,49 @@ function adrotate_options_submit() {
 	$config['group_delete'] 		= $_POST['adrotate_group_delete'];
 	$config['block_manage'] 		= $_POST['adrotate_block_manage'];
 	$config['block_delete'] 		= $_POST['adrotate_block_delete'];
+
+	// Filter and validate notification addresses, if not set, turn option off.
+	if(isset($_POST['adrotate_notification_email'])) {
+		$notification_emails	= explode(',', trim($_POST['adrotate_notification_email']));
+		foreach($notification_emails as $notification_email) {
+			$notification_email = trim($notification_email);
+			if(strlen($notification_email) > 0) {
+				if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $notification_email)) {
+					$clean_notification_email[] = $notification_email;
+				}
+			}
+		}
+		$config['notification_email_switch'] 	= 'Y';
+		$config['notification_email'] = array_unique(array_slice($clean_notification_email, 0, 5));
+	} else {
+		$config['notification_email_switch'] 	= 'N';
+		$config['notification_email'] = array();
+	}
+
+	// Filter and validate advertiser addresses
+	if(isset($_POST['adrotate_advertiser_email'])) {
+		$advertiser_emails = explode(',', trim($_POST['adrotate_advertiser_email']));
+		foreach($advertiser_emails as $advertiser_email) {
+			$advertiser_email = trim($advertiser_email);
+			if(strlen($advertiser_email) > 0) {
+				if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $advertiser_email)) {
+					$clean_advertiser_email[] = $advertiser_email;
+				}
+			}
+		}
+		$config['advertiser_email'] = array_unique(array_slice($clean_advertiser_email, 0, 2));
+	} else {
+		$config['advertiser_email'] = array(get_option('admin_email'));
+	}
+
+	// Miscellaneous Options
+	if(isset($_POST['adrotate_credits'])) 					$config['credits'] 		= 'Y';
+		else 												$config['credits'] 		= 'N';
+	if(isset($_POST['adrotate_browser'])) 					$config['browser'] 		= 'Y';
+		else 												$config['browser'] 		= 'N';
+	if(isset($_POST['adrotate_widgetalign'])) 				$config['widgetalign'] 	= 'Y';
+		else 												$config['widgetalign'] 	= 'N';
+
 	update_option('adrotate_config', $config);
 
 	$crawlers						= explode(',', trim($_POST['adrotate_crawlers']));
