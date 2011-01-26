@@ -25,7 +25,7 @@ function adrotate_insert_input() {
 	$thetime 			= date('U');
 	$active 			= $_POST['adrotate_active'];
 	$imageraw			= $_POST['adrotate_image'];
-//	$link				= strip_tags(htmlspecialchars(trim($_POST['adrotate_link'], "\t\n "), ENT_QUOTES));
+	$link				= strip_tags(htmlspecialchars(trim($_POST['adrotate_link'], "\t\n "), ENT_QUOTES));
 	$tracker			= $_POST['adrotate_tracker'];
 	$sday 				= strip_tags(trim($_POST['adrotate_sday'], "\t\n "));
 	$smonth 			= strip_tags(trim($_POST['adrotate_smonth'], "\t\n "));
