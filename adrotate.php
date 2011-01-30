@@ -321,7 +321,7 @@ function adrotate_manage() {
 			?>
 				
 			<?php if($ad_edit_id) {
-				if (strlen($edit_banner->bannercode) < 1) echo '<div id="message" class="error"><p>The AdCode cannot be empty!</p></div>';
+				if (strlen($edit_banner->bannercode) < 1 AND $edit_banner->type != 'empty') echo '<div id="message" class="error"><p>The AdCode cannot be empty!</p></div>';
 				if ($edit_banner->tracker == 'N' AND strlen($edit_banner->link) < 1 AND $saved_user > 0) echo '<div id="message" class="error"><p>You\'ve set an advertiser but didn\'t enable clicktracking!</p></div>';
 				if ($edit_banner->tracker == 'Y' AND strlen($edit_banner->link) < 1) echo '<div id="message" class="error"><p>You\'ve enabled clicktracking but didn\'t provide an url in the url field!</p></div>';
 				if ($edit_banner->tracker == 'N' AND strlen($edit_banner->link) > 0) echo '<div id="message" class="error"><p>You didn\'t enable clicktracking but you did use the url field!</p></div>';
