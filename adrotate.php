@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.3.1
+Version: 3.4
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -14,7 +14,7 @@ Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
 */
 
 /*--- AdRotate values and config ----------------------------*/
-define("ADROTATE_VERSION", 331);
+define("ADROTATE_VERSION", 340);
 define("ADROTATE_DB_VERSION", 3);
 $adrotate_config 				= get_option('adrotate_config');
 $adrotate_crawlers 				= get_option('adrotate_crawlers');
@@ -72,6 +72,8 @@ if(isset($_POST['adrotate_options_submit'])) 			add_action('init', 'adrotate_opt
 if(isset($_POST['adrotate_request_submit'])) 			add_action('init', 'adrotate_mail_message');
 if(isset($_POST['adrotate_testmail_submit'])) 			add_action('init', 'adrotate_mail_notifications');
 if(isset($_POST['adrotate_role_add_submit']) OR isset($_POST['adrotate_role_remove_submit'])) add_action('init', 'adrotate_prepare_roles');
+if(isset($_POST['adrotate_db_optimize_submit'])) 		add_action('init', 'adrotate_optimize_database');
+if(isset($_POST['adrotate_db_repair_submit'])) 			add_action('init', 'adrotate_repair_database');
 //if(isset($_POST['headers']) and isset($_POST['body'])) 	add_action('init', 'adrotate_receiver');
 /*-----------------------------------------------------------*/
 
@@ -145,6 +147,8 @@ function adrotate_manage() {
 			<div id="message" class="updated fade"><p>Ad(s) deactivated</p></div>
 		<?php } else if ($message == 'activate') { ?>
 			<div id="message" class="updated fade"><p>Ad(s) activated</p></div>
+		<?php } else if ($message == 'field_error') { ?>
+			<div id="message" class="updated fade"><p>The ad was saved but has an issue which might prevent it from working properly. Review the yellow marked ad.</p></div>
 		<?php } else if ($message == 'no_access') { ?>
 			<div id="message" class="updated fade"><p>Action prohibited</p></div>
 		<?php } ?>
@@ -212,11 +216,9 @@ function adrotate_manage() {
 	  			</thead>
 	  			<tbody>
 				<?php
-				$banners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'manual' ORDER BY ".$order);
+				$banners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'manual' OR `type` = 'error' ORDER BY ".$order);
 				if ($banners) {
 					foreach($banners as $banner) {
-						$user_id = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = ".$banner->id." AND `group` = 0 AND `block` = 0 AND `user` > 0;");
-
 						$groups	= $wpdb->get_results("SELECT `".$wpdb->prefix."adrotate_groups`.`name` 
 													FROM `".$wpdb->prefix."adrotate_groups`, `".$wpdb->prefix."adrotate_linkmeta` 
 													WHERE `".$wpdb->prefix."adrotate_linkmeta`.`ad` = '".$banner->id."'
@@ -230,7 +232,7 @@ function adrotate_manage() {
 						}
 						$grouplist = rtrim($grouplist, ", ");
 						
-						if($banner->tracker == 'N' AND $user_id) {
+						if($banner->type == 'error') {
 							$publisherror = ' row_error';
 						} else {
 							$publisherror = '';
@@ -301,6 +303,7 @@ function adrotate_manage() {
 			<h3>Edit Ad</h3>
 			<?php
 				$action = "update";
+				
 			}
 			
 			$edit_banner 	= $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$ad_edit_id';");
@@ -317,6 +320,13 @@ function adrotate_manage() {
 			list($eday, $emonth, $eyear) = split(" ", gmdate("d m Y", $edit_banner->endshow));
 			?>
 				
+			<?php if($ad_edit_id) {
+				if (strlen($edit_banner->bannercode) < 1) echo '<div id="message" class="error"><p>The AdCode cannot be empty!</p></div>';
+				if ($edit_banner->tracker == 'N' AND strlen($edit_banner->link) < 1 AND $saved_user > 0) echo '<div id="message" class="error"><p>You\'ve set an advertiser but didn\'t enable clicktracking!</p></div>';
+				if ($edit_banner->tracker == 'Y' AND strlen($edit_banner->link) < 1) echo '<div id="message" class="error"><p>You\'ve enabled clicktracking but didn\'t provide an url in the url field!</p></div>';
+				if ($edit_banner->tracker == 'N' AND strlen($edit_banner->link) > 0) echo '<div id="message" class="error"><p>You didn\'t enable clicktracking but you did use the url field!</p></div>';
+			} ?>
+			
 		  	<form method="post" action="admin.php?page=adrotate">
 		    	<input type="hidden" name="adrotate_username" value="<?php echo $userdata->user_login;?>" />
 		    	<input type="hidden" name="adrotate_id" value="<?php echo $edit_banner->id;?>" />
@@ -396,18 +406,8 @@ function adrotate_manage() {
 				        <th>Activate:</th>
 				        <td colspan="3">
 					        <select tabindex="9" name="adrotate_active">
-							<?php if($edit_banner->active == "no") { ?>
-								<?php if($edit_banner->type == "empty") { ?>
-							<option value="yes">YES! The ad will be included in the pool</option>
-							<option value="no">NO! Do not show the ad anywhere</option>
-								<?php } else {?>
-							<option value="no">NO! Do not show the ad anywhere</option>
-							<option value="yes">YES! The ad will be included in the pool</option>
-								<?php } ?>
-							<?php } else { ?>
-							<option value="yes">YES! The ad will be included in the pool</option>
-							<option value="no">NO! Do not show the ad anywhere</option>
-							<?php } ?>
+								<option value="yes" <?php if($edit_banner->active == "yes") { echo 'selected'; } ?>>Yes, this ad will be used</option>
+								<option value="no" <?php if($edit_banner->active == "no") { echo 'selected'; } ?>>No, no do not show this ad anywhere</option>
 							</select>
 						</td>
 			      	</tr>
@@ -1440,6 +1440,12 @@ function adrotate_options() {
 			<div id="message" class="updated fade"><p>AdRotate client role added</p></div>
 		<?php } else if ($message == 'role_remove') { ?>
 			<div id="message" class="updated fade"><p>AdRotate client role removed</p></div>
+		<?php } else if ($message == 'db_optimized') { ?>
+			<div id="message" class="updated fade"><p>Database optimized</p></div>
+		<?php } else if ($message == 'db_repaired') { ?>
+			<div id="message" class="updated fade"><p>Database repaired</p></div>
+		<?php } else if ($message == 'db_timer') { ?>
+			<div id="message" class="updated fade"><p>Database can only be optimized or repaired once every 24 hours</p></div>
 		<?php } ?>
 
 	  	<form name="settings" id="post" method="post" action="admin.php?page=adrotate-settings">
@@ -1538,10 +1544,10 @@ function adrotate_options() {
 			<tr>
 				<td colspan="2">
 					<?php 
-					echo "<p><strong>Globalized Config</strong><pre>"; 
+					echo "<p><strong>[DEBUG] Globalized Config</strong><pre>"; 
 					print_r($adrotate_config); 
 					echo "</pre></p>"; 
-					echo "<p><strong>Current User Capabilities</strong><pre>"; 
+					echo "<p><strong>[DEBUG] Current User Capabilities</strong><pre>"; 
 					print_r(get_option('wp_user_roles')); 
 					echo "</pre></p>"; 
 					?>
@@ -1583,6 +1589,48 @@ function adrotate_options() {
 				</td>
 			</tr>
 			
+			<tr>
+				<td colspan="2"><h3>Maintenance</h3></td>
+			</tr>
+
+			<?php if($adrotate_debug == true) { ?>
+			<tr>
+				<td colspan="2">
+					<?php 
+					echo "<p><strong>[DEBUG] List of tables</strong><pre>";
+					$tables = adrotate_list_tables();
+					print_r($tables); 
+					echo "</pre></p>"; 
+					?>
+				</td>
+			</tr>
+			<?php } ?>
+			
+			<tr>
+				<td colspan="2"><span class="description">NOTE: The below functions are intented to be used to OPTIMIZE and/or REPAIR your database. Always always make a backup! These functions are to be used when you feel or notice your database is slow, unresponsive and sluggish. Or if you notice garbeled characters when editing ads, groups or blocks.</span></td>
+			</tr>
+			
+			<tr>
+				<th valign="top">Optimize database</th>
+				<td>
+					<input type="submit" id="post-role-submit" name="adrotate_db_optimize_submit" value="Optimize Database" class="button-secondary" onclick="return confirm('You are about to optimize the AdRotate database.\n\nDid you make a backup of your database?\n\nThis may take a moment and may cause your website to respond slow temporarily!\n\n\'OK\' to continue, \'Cancel\' to stop.')" /><br />
+					<span class="description">Cleans up overhead data in the AdRotate tables.<br />
+					Overhead data is accumulated garbage resulting from many changes you've made. This can vary from nothing to hundreds of KiB of data.</span>
+				</td>
+			</tr>
+
+			<tr>
+				<th valign="top">Repair database</th>
+				<td>
+					<input type="submit" id="post-role-submit" name="adrotate_db_repair_submit" value="Repair Database" class="button-secondary" onclick="return confirm('You are about to repair the AdRotate database.\n\nDid you make a backup of your database?\n\nThis may take a moment and may cause your website to respond slow temporarily!\n\n\'OK\' to continue, \'Cancel\' to stop.')" /><br />
+					<span class="description">In some cases the database tables become corrupted or otherwise unusable. Use this button when you notice garbeled or otherwise unreadable icons/characters when editing ads, groups or blocks.</span>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="2"><span class="description">DISCLAIMER: If for any reason your data is lost, damaged or otherwise becomes unusable in any way or by any means in whichever way i will not take resonsibility. You should always have a backup of your database. These functions do NOT destroy data. If data is lost, damaged or unusable, your database likely was beyond repair already. Claiming it worked before clicking these buttons is not a valid point in any case.</span></td>
+			</tr>
+
 			<tr>
 				<td colspan="2"><h3>Miscellaneous</h3></td>
 			</tr>

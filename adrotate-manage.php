@@ -41,93 +41,100 @@ function adrotate_insert_input() {
 	$weight				= $_POST['adrotate_weight'];
 
 	if(current_user_can('adrotate_ad_manage')) {
-		if(strlen($title) < 1) $title = 'Ad '.$id;
-
-		if(strlen($bannercode)!=0) {
-			// Sort out dates
-			if(strlen($smonth) == 0 OR !is_numeric($smonth)) 	$smonth 	= date('m');
-			if(strlen($sday) == 0 OR !is_numeric($sday)) 		$sday 		= date('d');
-			if(strlen($syear) == 0 OR !is_numeric($syear)) 		$syear 		= date('Y');
-			if(strlen($emonth) == 0 OR !is_numeric($emonth)) 	$emonth 	= $smonth;
-			if(strlen($eday) == 0 OR !is_numeric($eday)) 		$eday 		= $sday;
-			if(strlen($eyear) == 0 OR !is_numeric($eyear)) 		$eyear 		= $syear+1;
-			$startdate 	= gmmktime($shour, $sminute, 0, $smonth, $sday, $syear);
-			$enddate 	= gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear);
-			
-			// Enddate is too early, reset
-			if($enddate <= $startdate) $enddate = $startdate + 345600; // 4 days
-
-			// Sort out click and impressions restrictions
-			if(strlen($maxclicks) < 1 OR !is_numeric($maxclicks))	$maxclicks	= 0;
-			if(strlen($maxshown) < 1 OR !is_numeric($maxshown))		$maxshown	= 0;
-
-			// Set tracker value
-			if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';
-				else $tracker = 'N';
-	
-			// Determine image settings
-			list($type, $file) = explode("|", $imageraw, 2);
-			if($type == "banner") {
-				$image = get_option('siteurl').'/wp-content/banners/'.$file;
-			}
-			
-			if($type == "media") {
-				$image = $wpdb->get_var("SELECT `guid` FROM ".$wpdb->prefix."posts 
-				WHERE `post_type` = 'attachment' 
-				AND (`post_mime_type` = 'image/jpeg' 
-					OR `post_mime_type` = 'image/gif' 
-					OR `post_mime_type` = 'image/png'
-					OR `post_mime_type` = 'application/x-shockwave-flash')
-				AND `guid` LIKE '%".$file."' LIMIT 1;");
-			}
-
-			// Determine status of ad and what to do next
-			if($adtype == 'empty') {
-				$action = 'new';
-				$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'manual' WHERE `id` = '$id';");
-			} else {
-				$action = 'update';
-			}
-
-			// Save the ad to the DB
-			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author', `active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `image` = '$image', `link` = '$link', `tracker` = '$tracker', `maxclicks` = '$maxclicks', `maxshown` = '$maxshown', `weight` = '$weight' WHERE `id` = '$id';");
-
-			// Fetch records for the ad
-			$groupmeta = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `block` = 0 AND `user` = 0;");
-			foreach($groupmeta as $meta) {
-				$group_array[] = $meta->group;
-			}
-			
-			if(!is_array($group_array)) $group_array = array();
-			if(!is_array($groups)) 		$groups = array();
-			
-			// Add new groups to this ad
-			$insert = array_diff($groups, $group_array);
-			foreach($insert as &$value) {
-				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES ($id, $value, 0, 0);"); 
-			}
-			unset($value);
-			
-			// Remove groups from this ad
-			$delete = array_diff($group_array, $groups);
-			foreach($delete as &$value) {
-				$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `group` = '$value' AND `block` = 0 AND `user` = 0;"); 
-			}
-			unset($value);
-
-			// Fetch records for the ad, see if a publisher is set
-			$linkmeta = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `group` = 0 AND `block` = 0 AND `user` > 0;");
-
-			// Add/update/remove publisher on this ad
-			if($linkmeta == 0 AND $advertiser > 0) 	$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES ($id, 0, 0, $advertiser);"); 
-			if($linkmeta == 1 AND $advertiser > 0) 	$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_linkmeta` SET `user` = '$advertiser' WHERE `ad` = '$id' AND `group` = '0' AND `block` = '0';");
-			if($linkmeta == 1 AND $advertiser == 0) 	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `group` = 0 AND `block` = 0;"); 
-			adrotate_return($action, array($id));
-			exit;
-		} else {
-			adrotate_return('field_error');
-			exit;
+		if(strlen($title) < 1) {
+			$title = 'Ad '.$id;
 		}
+
+		if(strlen($bannercode) < 1 OR (!isset($tracker) AND strlen($link) < 1 AND $advertiser > 0) OR (isset($tracker) AND strlen($link) < 1) OR (!isset($tracker) AND strlen($link) > 0)) {
+			$adtype = 'error';
+		} else {
+			$adtype = 'manual';
+		}
+
+		// Sort out dates
+		if(strlen($smonth) == 0 OR !is_numeric($smonth)) 	$smonth 	= date('m');
+		if(strlen($sday) == 0 OR !is_numeric($sday)) 		$sday 		= date('d');
+		if(strlen($syear) == 0 OR !is_numeric($syear)) 		$syear 		= date('Y');
+		if(strlen($emonth) == 0 OR !is_numeric($emonth)) 	$emonth 	= $smonth;
+		if(strlen($eday) == 0 OR !is_numeric($eday)) 		$eday 		= $sday;
+		if(strlen($eyear) == 0 OR !is_numeric($eyear)) 		$eyear 		= $syear+1;
+		$startdate 	= gmmktime($shour, $sminute, 0, $smonth, $sday, $syear);
+		$enddate 	= gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear);
+		
+		// Enddate is too early, reset
+		if($enddate <= $startdate) $enddate = $startdate + 345600; // 4 days
+
+		// Sort out click and impressions restrictions
+		if(strlen($maxclicks) < 1 OR !is_numeric($maxclicks))	$maxclicks	= 0;
+		if(strlen($maxshown) < 1 OR !is_numeric($maxshown))		$maxshown	= 0;
+
+		// Set tracker value
+		if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';
+			else $tracker = 'N';
+
+		// Determine image settings
+		list($type, $file) = explode("|", $imageraw, 2);
+		if($type == "banner") {
+			$image = get_option('siteurl').'/wp-content/banners/'.$file;
+		}
+		
+		if($type == "media") {
+			$image = $wpdb->get_var("SELECT `guid` FROM ".$wpdb->prefix."posts 
+			WHERE `post_type` = 'attachment' 
+			AND (`post_mime_type` = 'image/jpeg' 
+				OR `post_mime_type` = 'image/gif' 
+				OR `post_mime_type` = 'image/png'
+				OR `post_mime_type` = 'application/x-shockwave-flash')
+			AND `guid` LIKE '%".$file."' LIMIT 1;");
+		}
+
+		// Determine status of ad and what to do next
+		if($adtype == 'empty') {
+			$action = 'new';
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'manual' WHERE `id` = '$id';");
+		} else if($adtype == 'error') {
+			$action = 'field_error';
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'error' WHERE `id` = '$id';");
+		} else {
+			$action = 'update';
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'manual' WHERE `id` = '$id';");
+		}
+
+		// Save the ad to the DB
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author', `active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `image` = '$image', `link` = '$link', `tracker` = '$tracker', `maxclicks` = '$maxclicks', `maxshown` = '$maxshown', `weight` = '$weight' WHERE `id` = '$id';");
+
+		// Fetch records for the ad
+		$groupmeta = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `block` = 0 AND `user` = 0;");
+		foreach($groupmeta as $meta) {
+			$group_array[] = $meta->group;
+		}
+		
+		if(!is_array($group_array)) $group_array = array();
+		if(!is_array($groups)) 		$groups = array();
+		
+		// Add new groups to this ad
+		$insert = array_diff($groups, $group_array);
+		foreach($insert as &$value) {
+			$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES ($id, $value, 0, 0);"); 
+		}
+		unset($value);
+		
+		// Remove groups from this ad
+		$delete = array_diff($group_array, $groups);
+		foreach($delete as &$value) {
+			$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `group` = '$value' AND `block` = 0 AND `user` = 0;"); 
+		}
+		unset($value);
+
+		// Fetch records for the ad, see if a publisher is set
+		$linkmeta = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `group` = 0 AND `block` = 0 AND `user` > 0;");
+
+		// Add/update/remove publisher on this ad
+		if($linkmeta == 0 AND $advertiser > 0) 		$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES ($id, 0, 0, $advertiser);"); 
+		if($linkmeta == 1 AND $advertiser > 0) 		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_linkmeta` SET `user` = '$advertiser' WHERE `ad` = '$id' AND `group` = '0' AND `block` = '0';");
+		if($linkmeta == 1 AND $advertiser == 0) 	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `group` = 0 AND `block` = 0;"); 
+		adrotate_return($action, array($id));
+		exit;
 	} else {
 		adrotate_return('no_access');
 	}

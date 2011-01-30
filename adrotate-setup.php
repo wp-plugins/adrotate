@@ -58,8 +58,10 @@ function adrotate_activate() {
 			} else {
 				update_option('adrotate_roles', '0');
 			}
-			
-			// Set default settings
+
+			// Set default settings and values
+			add_option('adrotate_db_timer', date('U'));
+			add_option('adrotate_debug', false);
 			adrotate_check_config();
 	
 			// Attempt to make the wp-content/banners/ folder
@@ -83,14 +85,7 @@ function adrotate_database_install() {
 
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-	$tables = array(
-		$wpdb->prefix . "adrotate",				// Since 0.1
-		$wpdb->prefix . "adrotate_groups",		// Since 0.2
-		$wpdb->prefix . "adrotate_tracker",		// Since 2.0
-		$wpdb->prefix . "adrotate_blocks",		// Since 3.0
-		$wpdb->prefix . "adrotate_linkmeta",	// Since 3.0
-		$wpdb->prefix . "adrotate_stats_cache",	// Since 3.0
-	);
+	$tables = adrotate_list_tables();
 
 	if ( $wpdb->has_cap( 'collation' ) ) {
 		if ( ! empty($wpdb->charset) )
@@ -195,14 +190,7 @@ function adrotate_database_install() {
 function adrotate_upgrade() {
 	global $wpdb, $adrotate_db_version, $adrotate_version;
 
-	$tables = array(
-		$wpdb->prefix . "adrotate",				// Since 0.1
-		$wpdb->prefix . "adrotate_groups",		// Since 0.2
-		$wpdb->prefix . "adrotate_tracker",		// Since 2.0
-		$wpdb->prefix . "adrotate_blocks",		// Since 3.0
-		$wpdb->prefix . "adrotate_linkmeta",	// Since 3.0
-		$wpdb->prefix . "adrotate_stats_cache",	// Since 3.0
-	);
+	$tables = adrotate_list_tables();
 
 	// Any to 3.0 - DB version 1
 	if($adrotate_db_version < 1) {
@@ -241,9 +229,14 @@ function adrotate_upgrade() {
 		adrotate_add_column($tables[0], 'weight', 'INT( 3 ) NOT NULL DEFAULT \'6\' AFTER `type`');
 	}
 	
-	// 3.2.2 to 3.2.3
+	// any to 323
 	if($adrotate_version < 323) {
 		delete_option('adrotate_notification_timer');
+	}
+	
+	// 331 to 340
+	if($adrotate_version >= 331 AND $adrotate_version < 340) {
+		add_option('adrotate_db_timer', date('U'));
 	}
 	
 	update_option("adrotate_version", ADROTATE_VERSION);
@@ -337,6 +330,76 @@ function adrotate_uninstall() {
 }
 
 /*-------------------------------------------------------------
+ Name:      adrotate_optimize_database
+
+ Purpose:   Optimizes all AdRotate tables
+ Receive:   -none-
+ Return:    -none-
+ Since:		3.4
+-------------------------------------------------------------*/
+function adrotate_optimize_database() {
+	global $wpdb;
+	
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+	$adrotate_db_timer 	= get_option('adrotate_db_timer');
+
+	$now = current_time('timestamp');
+	$yesterday = $now - 86400;
+
+	$tables = adrotate_list_tables();
+
+	if($adrotate_db_timer < $yesterday) {
+		foreach($tables as $table) {
+			if($wpdb->get_var("SHOW TABLES LIKE '".$table."';")) {
+				dbDelta("OPTIMIZE TABLE `$table`;");
+			}
+		}
+		update_option('adrotate_db_timer', $now);
+		adrotate_return('db_optimized');
+	} else {
+		adrotate_return('db_timer');
+	}
+
+	
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_repair_database
+
+ Purpose:   Repairs all AdRotate tables
+ Receive:   -none-
+ Return:    -none-
+ Since:		3.4
+-------------------------------------------------------------*/
+function adrotate_repair_database() {
+	global $wpdb;
+	
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+	$adrotate_db_timer 	= get_option('adrotate_db_timer');
+
+	$now = current_time('timestamp');
+	$yesterday = $now - 86400;
+
+	$tables = adrotate_list_tables();
+
+	if($adrotate_db_timer < $yesterday) {
+		foreach($tables as $table) {
+			if($wpdb->get_var("SHOW TABLES LIKE '".$table."';")) {
+				dbDelta("REPAIR TABLE `$table`;");
+			}
+		}
+		update_option('adrotate_db_timer', $now);
+		adrotate_return('db_repaired');
+	} else {
+		adrotate_return('db_timer');
+	}
+
+	
+}
+
+/*-------------------------------------------------------------
  Name:      adrotate_add_column
 
  Purpose:   Check if the column exists in the table
@@ -359,5 +422,28 @@ function adrotate_add_column($table_name, $column_name, $attributes) {
 	
 	echo("Could not add column $column_name in table $table_name<br />\n");
 	return false;
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_list_tables
+
+ Purpose:   List tables for AdRotate in an array
+ Receive:   -None-
+ Return:	-None-
+ Since:		3.4
+-------------------------------------------------------------*/
+function adrotate_list_tables() {
+	global $wpdb;
+
+	$tables = array(
+		$wpdb->prefix . "adrotate",				// Since 0.1
+		$wpdb->prefix . "adrotate_groups",		// Since 0.2
+		$wpdb->prefix . "adrotate_tracker",		// Since 2.0
+		$wpdb->prefix . "adrotate_blocks",		// Since 3.0
+		$wpdb->prefix . "adrotate_linkmeta",	// Since 3.0
+		$wpdb->prefix . "adrotate_stats_cache",	// Since 3.0
+	);
+
+	return $tables;
 }
 ?>

@@ -33,7 +33,7 @@ function adrotate_ad($banner_id, $individual = true) {
 			$banner = $wpdb->get_row("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `startshow` <= '$now' AND `endshow` >= '$now' AND `id` = '$banner_id';");
 		}
 		if($adrotate_debug == true) {
-			echo "<p><strong>Ad specs</strong><pre>"; 
+			echo "<p><strong>[DEBUG] Ad specs</strong><pre>"; 
 			print_r($banner); 
 			echo "</pre></p>"; 
 		}			
@@ -83,7 +83,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 		}
 		
 		if($adrotate_debug == true) {
-			echo "<p><strong>Group array</strong><pre>"; 
+			echo "<p><strong>[DEBUG] Group array</strong><pre>"; 
 			print_r($group_array); 
 			echo "</pre></p>"; 
 		}			
@@ -103,7 +103,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 			;");
 
 		if($adrotate_debug == true) {
-			echo "<p><strong>Initial selection</strong><pre>"; 
+			echo "<p><strong>[DEBUG] Initial selection</strong><pre>"; 
 			print_r($linkmeta); 
 			echo "</pre></p>"; 
 		}			
@@ -124,7 +124,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 				$banner_id = adrotate_weight($selected);
 				
 				if($adrotate_debug == true) {
-					echo "<p><strong>Selected ad based on weight</strong><pre>"; 
+					echo "<p><strong>[DEBUG] Selected ad based on weight</strong><pre>"; 
 					print_r($banner_id); 
 					echo "</pre></p>"; 
 				}			
@@ -191,7 +191,7 @@ function adrotate_block($block_id, $weight = 0) {
 				}
 
 				if($adrotate_debug == true) {
-					echo "<p><strong>Initial selection</strong><pre>"; 
+					echo "<p><strong>[DEBUG] Initial selection</strong><pre>"; 
 					print_r($results); 
 					echo "</pre></p>"; 
 				}			
@@ -210,7 +210,7 @@ function adrotate_block($block_id, $weight = 0) {
 				}
 				
 				if($adrotate_debug == true) {
-					echo "<p><strong>Pre-selected ads based on impressions and clicks (reduced on cycles)</strong><pre>"; 
+					echo "<p><strong>[DEBUG] Pre-selected ads based on impressions and clicks (reduced on cycles)</strong><pre>"; 
 					print_r($selected); 
 					echo "</pre></p>"; 
 				}			
@@ -230,7 +230,7 @@ function adrotate_block($block_id, $weight = 0) {
 						$banner_id = adrotate_weight($selected);
 
 						if($adrotate_debug == true) {
-							echo "<p><strong>Selected ad based on weight (Cycle ".$i.")</strong><pre>"; 
+							echo "<p><strong>[DEBUG] Selected ad based on weight (Cycle ".$i.")</strong><pre>"; 
 							print_r($banner_id); 
 							echo "</pre></p>"; 
 						}			
@@ -244,7 +244,7 @@ function adrotate_block($block_id, $weight = 0) {
 						$selected = array_diff_key($selected, array($banner_id => 0));
 
 						if($adrotate_debug == true) {
-							echo "<p><strong>Looped array for blocks (Cycle ".$i.")</strong><pre>"; 
+							echo "<p><strong>[DEBUG] Looped array for blocks (Cycle ".$i.")</strong><pre>"; 
 							print_r($selected); 
 							echo "</pre></p>"; 
 						}			
@@ -292,7 +292,7 @@ function adrotate_preview($banner_id) {
 		$banner = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$banner_id';");
 
 		if($adrotate_debug == true) {
-			echo "<p><strong>Ad information</strong><pre>"; 
+			echo "<p><strong>[DEBUG] Ad information</strong><pre>"; 
 			print_r($banner); 
 			echo "</pre></p>"; 
 		}			

@@ -319,20 +319,16 @@ function adrotate_check_banners() {
 	$now = current_time('timestamp');
 	$in2days = $now + 172800;
 	
-	$alreadyexpired = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $now");
-	$expiressoon = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $in2days AND `endshow` >= $now");
-	$configerror = $wpdb->get_var("SELECT COUNT(*) 
-									FROM `".$wpdb->prefix."adrotate`, `".$wpdb->prefix."adrotate_linkmeta` 
-									WHERE `".$wpdb->prefix."adrotate`.`tracker` = 'N' 
-										AND `".$wpdb->prefix."adrotate_linkmeta`.`ad` = `".$wpdb->prefix."adrotate`.`id` 
-										AND `".$wpdb->prefix."adrotate_linkmeta`.`group` = 0 
-										AND `".$wpdb->prefix."adrotate_linkmeta`.`block` = 0 
-										AND `".$wpdb->prefix."adrotate_linkmeta`.`user` > 0
-									;");
+	$alreadyexpired = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $now;");
+	$expiressoon = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $in2days AND `endshow` >= $now;");
+	$error = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'error';");
 
-	$count = $alreadyexpired + $expiressoon + $configerror;
+	$count = $alreadyexpired + $expiressoon + $error;
 	
-	$result = array($alreadyexpired, $expiressoon, $configerror, $count);
+	$result = array('expired' => $alreadyexpired,
+					'expiressoon' => $expiressoon,
+					'error' => $error,
+					'total' => $count);
 
 	return $result;	
 }
@@ -493,15 +489,15 @@ function adrotate_notifications_dashboard() {
 
 	$data = adrotate_check_banners();
 
-	if($data[3] > 0) {
-		if($data[0] > 0 AND $data[1] == 0 AND $data[2] == 0) {
-			echo '<div class="error"><p>'.$data[0].' ad(s) expired. <a href="admin.php?page=adrotate">Take action now</a>!</p></div>';
-		} else if($data[0] == 0 AND $data[1] > 0 AND $data[2] == 0) {
-			echo '<div class="error"><p>'.$data[1].' ad(s) are about to expire. <a href="admin.php?page=adrotate">Check it out</a>!</p></div>';
-		} else if($data[0] == 0 AND $data[1] == 0 AND $data[2] > 0) {
-			echo '<div class="error"><p>'.$data[2].' ad(s) should have tracking enabled or his publisher removed. <a href="admin.php?page=adrotate">Solve this conflict</a>!</p></div>';
+	if($data['total'] > 0) {
+		if($data['expired'] > 0 AND $data['expiressoon'] == 0 AND $data['error'] == 0) {
+			echo '<div class="error"><p>'.$data['expired'].' ad(s) expired. <a href="admin.php?page=adrotate">Take action now</a>!</p></div>';
+		} else if($data['expired'] == 0 AND $data['expiressoon'] > 0 AND $data['error'] == 0) {
+			echo '<div class="error"><p>'.$data['expiressoon'].' ad(s) are about to expire. <a href="admin.php?page=adrotate">Check it out</a>!</p></div>';
+		} else if($data['expired'] == 0 AND $data['expiressoon'] == 0 AND $data['error'] > 0) {
+			echo '<div class="error"><p>There are '.$data['error'].' ad(s) with configuration errors. <a href="admin.php?page=adrotate">Solve this</a>!</p></div>';
 		} else {
-			echo '<div class="error"><p>'.$data[3].' ads require your attention. <a href="admin.php?page=adrotate">Fix this as soon as possible</a>!</p></div>';
+			echo '<div class="error"><p>'.$data['total'].' ads require your attention. <a href="admin.php?page=adrotate">Fix this as soon as possible</a>!</p></div>';
 		}
 	}
 }
@@ -534,7 +530,7 @@ function adrotate_mail_notifications() {
 
 	$data = adrotate_check_banners();
 	for($i=0;$i<$x;$i++) {
-		if($data[3] > 0) {
+		if($data[2] > 0) {
 		    $headers = "MIME-Version: 1.0\n" .
       				 	"From: AdRotate Plugin <".$emails[$i].">\r\n\n" . 
       				  	"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
@@ -547,9 +543,8 @@ function adrotate_mail_notifications() {
 			$message .= "<p>Current issues:<br />";
 			if($data[0] > 0) $message .= $data[0]." ad(s) expired. This needs your immediate attention!<br />";
 			if($data[1] > 0) $message .= $data[1]." ad(s) will expire in less than 2 days.<br />";
-			if($data[2] > 0) $message .= $data[2]." ad(s) should have tracking enabled or his publisher removed.<br />";
 			$message .= "</p>";
-			$message .= "<p>A total of ".$data[3]." ad(s) are in need of your care!</p>";
+			$message .= "<p>A total of ".$data[2]." ad(s) are in need of your care!</p>";
 			$message .= "<p>Access your dashboard here: $dashboardurl</p>";
 			$message .= "<p>Have a nice day!</p>";
 			$message .= "<p>Your AdRotate Notifier<br />";
@@ -763,6 +758,10 @@ function adrotate_return($action, $arg = null) {
 			wp_redirect('admin.php?page=adrotate&message=activate');
 		break;
 
+		case "field_error" :
+			wp_redirect('admin.php?page=adrotate&message=field_error');
+		break;
+
 		// Groups
 		case "group_new" :
 			wp_redirect('admin.php?page=adrotate-groups&message=created');
@@ -810,12 +809,20 @@ function adrotate_return($action, $arg = null) {
 			wp_redirect('admin.php?page=adrotate-settings&message=updated');
 		break;
 
-		case "no_access" :
-			wp_redirect('admin.php?page=adrotate&message=no_access');
+		case "db_optimized" :
+			wp_redirect('admin.php?page=adrotate-settings&message=db_optimized');
 		break;
 
-		case "field_error" :
-			wp_redirect('admin.php?page=adrotate&message=field_error');
+		case "db_repaired" :
+			wp_redirect('admin.php?page=adrotate-settings&message=db_optimized');
+		break;
+
+		case "db_timer" :
+			wp_redirect('admin.php?page=adrotate-settings&message=db_timer');
+		break;
+
+		case "no_access" :
+			wp_redirect('admin.php?page=adrotate&message=no_access');
 		break;
 
 		case "error" :
