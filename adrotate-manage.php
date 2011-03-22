@@ -16,6 +16,7 @@ function adrotate_insert_input() {
 
 	/* Changelog:
 	// Nov 14 2010 - Updated queries for 3.0
+	// Mar 7 2010 - Added check if $link has http://
 	*/
 
 	$id 				= $_POST['adrotate_id'];
@@ -35,6 +36,8 @@ function adrotate_insert_input() {
 	$eyear 				= strip_tags(trim($_POST['adrotate_eyear'], "\t\n "));
 	$maxclicks			= strip_tags(trim($_POST['adrotate_maxclicks'], "\t\n "));
 	$maxshown			= strip_tags(trim($_POST['adrotate_maxshown'], "\t\n "));
+	$targetclicks		= strip_tags(trim($_POST['adrotate_targetclicks'], "\t\n "));
+	$targetimpressions	= strip_tags(trim($_POST['adrotate_targetimpressions'], "\t\n "));
 	$groups				= $_POST['groupselect'];
 	$adtype				= strip_tags(trim($_POST['adrotate_type'], "\t\n "));
 	$advertiser			= $_POST['adrotate_advertiser'];
@@ -45,7 +48,16 @@ function adrotate_insert_input() {
 			$title = 'Ad '.$id;
 		}
 
-		if(strlen($bannercode) < 1 OR (!isset($tracker) AND strlen($link) < 1 AND $advertiser > 0) OR (isset($tracker) AND strlen($link) < 1) OR (!isset($tracker) AND strlen($link) > 0)) {
+		if(
+			strlen($bannercode) < 1 
+			OR (!isset($tracker) AND strlen($link) < 1 AND $advertiser > 0) 			// Didn't enable click-tracking, didn't provide a link, DID set a advertiser
+			OR (isset($tracker) AND strlen($link) < 1) 									// Did use link field but didn't check click-tracking checkmark
+			OR (!isset($tracker) AND strlen($link) > 0) 								// Didn't enable click-tracking but did use the link field
+			OR (!preg_match("/%link%/i", $bannercode) AND $tracker == 'Y')				// Didn't use %link% but enabled clicktracking
+			OR (preg_match("/%link%/i", $bannercode) AND $tracker == 'N')				// Did use %link% but didn't enable clicktracking
+			OR (!preg_match("/%image%/i", $bannercode) AND $imageraw != 'none')			// Didn't use %image% but selected an image
+			OR (preg_match("/%image%/i", $bannercode) AND $imageraw == 'none')			// Did use %image% but didn't select an image
+		) {
 			$adtype = 'error';
 		} else {
 			$adtype = 'manual';
@@ -68,10 +80,17 @@ function adrotate_insert_input() {
 		if(strlen($maxclicks) < 1 OR !is_numeric($maxclicks))	$maxclicks	= 0;
 		if(strlen($maxshown) < 1 OR !is_numeric($maxshown))		$maxshown	= 0;
 
+		// Format the targets
+		if(strlen($targetclicks) < 1 OR !is_numeric($targetclicks))				$targetclicks	= 0;
+		if(strlen($targetimpressions) < 1 OR !is_numeric($targetimpressions))	$targetimpressions	= 0;
+
 		// Set tracker value
 		if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';
 			else $tracker = 'N';
 
+		// Format the URL
+		if((strlen($link) > 0 OR $link != "") AND stristr($link, "http://") === false) $link = "http://".$link;
+		
 		// Determine image settings
 		list($type, $file) = explode("|", $imageraw, 2);
 		if($type == "banner") {
@@ -101,9 +120,9 @@ function adrotate_insert_input() {
 		}
 
 		// Save the ad to the DB
-		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author', `active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `image` = '$image', `link` = '$link', `tracker` = '$tracker', `maxclicks` = '$maxclicks', `maxshown` = '$maxshown', `weight` = '$weight' WHERE `id` = '$id';");
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author', `active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `image` = '$image', `link` = '$link', `tracker` = '$tracker', `maxclicks` = '$maxclicks', `maxshown` = '$maxshown', `targetclicks` = '$targetclicks', `targetimpressions` = '$targetimpressions', `weight` = '$weight' WHERE `id` = '$id';");
 
-		// Fetch records for the ad
+		// Fetch group records for the ad
 		$groupmeta = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `block` = 0 AND `user` = 0;");
 		foreach($groupmeta as $meta) {
 			$group_array[] = $meta->group;
@@ -434,7 +453,7 @@ function adrotate_reset($id) {
 	global $wpdb;
 
 	if($id > 0) {
-		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `clicks` = '0', `shown` = '0' WHERE `id` = '$id'");
+		$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = $id");
 		$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `bannerid` = $id");
 	}
 }
@@ -471,6 +490,7 @@ function adrotate_options_submit() {
 	// Jan 20 2011 - Borrowed code from NextGen Gallery plugin for user capabilities
 	// Jan 23 2011 - Added option to disable email notifications
 	// Jan 24 2011 - Automatic switch for email notifications, added array_unique() to email addresses
+	// Feb 15 2011 - Dashboard debugger
 	*/
 
 	// Set and save user roles
@@ -532,9 +552,9 @@ function adrotate_options_submit() {
 		else 												$config['browser'] 		= 'N';
 	if(isset($_POST['adrotate_widgetalign'])) 				$config['widgetalign'] 	= 'Y';
 		else 												$config['widgetalign'] 	= 'N';
-
 	update_option('adrotate_config', $config);
 
+	// Sort out crawlers
 	$crawlers						= explode(',', trim($_POST['adrotate_crawlers']));
 	foreach($crawlers as $crawler) {
 		$crawler = trim($crawler);
@@ -542,10 +562,21 @@ function adrotate_options_submit() {
 	}
 	update_option('adrotate_crawlers', $clean_crawler);
 
-	if(isset($_POST['adrotate_debug'])) 		$debug 		= true;
-		else 									$debug		= false;
+	// Debug option
+	if(isset($_POST['adrotate_debug'])) 				$debug['general'] 		= true;
+		else 											$debug['general']		= false;
+	if(isset($_POST['adrotate_debug_dashboard'])) 		$debug['dashboard'] 	= true;
+		else 											$debug['dashboard']		= false;
+	if(isset($_POST['adrotate_debug_userroles'])) 		$debug['userroles'] 	= true;
+		else 											$debug['userroles']		= false;
+	if(isset($_POST['adrotate_debug_userstats'])) 		$debug['userstats'] 	= true;
+		else 											$debug['userstats']		= false;
+	if(isset($_POST['adrotate_debug_stats'])) 			$debug['stats'] 		= true;
+		else 											$debug['stats']			= false;
 	update_option('adrotate_debug', $debug);
 
+
+	// Return to dashboard
 	adrotate_return('settings_saved');
 }
 

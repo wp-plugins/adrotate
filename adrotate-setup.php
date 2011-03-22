@@ -31,17 +31,10 @@ function adrotate_activate() {
 			if (!wp_next_scheduled('adrotate_ad_notification')) 
 				wp_schedule_event(date('U'), '1day', 'adrotate_ad_notification');
 		
-			// Run a schedule for caches
-			if (!wp_next_scheduled('adrotate_cache_statistics')) 
-				wp_schedule_event(date('U'), '6hour', 'adrotate_cache_statistics');
-		
-			// Create initial cache of statistics
-			adrotate_prepare_cache_statistics();
-		
 			// Set the capabilities for the administrator
 			$role = get_role('administrator');		
-			$role->add_cap("adrotate_userstatistics");
-			$role->add_cap("adrotate_globalstatistics");
+			$role->add_cap("adrotate_advertiser_report");
+			$role->add_cap("adrotate_global_report");
 			$role->add_cap("adrotate_ad_manage");
 			$role->add_cap("adrotate_ad_delete");
 			$role->add_cap("adrotate_group_manage");
@@ -61,7 +54,8 @@ function adrotate_activate() {
 
 			// Set default settings and values
 			add_option('adrotate_db_timer', date('U'));
-			add_option('adrotate_debug', false);
+			add_option('adrotate_debug', array('general' => false, 'dashboard' => false, 'userroles' => false, 'userstats' => false, 'stats' => false));
+
 			adrotate_check_config();
 	
 			// Attempt to make the wp-content/banners/ folder
@@ -94,8 +88,8 @@ function adrotate_database_install() {
 			$charset_collate .= " COLLATE $wpdb->collate";
 	}
 
-	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables[0]."'")) { // wp_adrotate
-		$sql = "CREATE TABLE `".$tables[0]."` (
+	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables['adrotate']."'")) { // wp_adrotate
+		$sql = "CREATE TABLE `".$tables['adrotate']."` (
 			  `id` mediumint(8) unsigned NOT NULL auto_increment,
 			  `title` longtext NOT NULL,
 			  `bannercode` longtext NOT NULL,
@@ -108,10 +102,10 @@ function adrotate_database_install() {
 			  `image` varchar(255) NOT NULL,
 			  `link` longtext NOT NULL,
 			  `tracker` varchar(5) NOT NULL default 'N',
-			  `clicks` int(15) NOT NULL default '0',
 			  `maxclicks` int(15) NOT NULL default '0',
-			  `shown` int(15) NOT NULL default '0',
 			  `maxshown` int(15) NOT NULL default '0',			  
+			  `targetclicks` int(15) NOT NULL default '0',			  
+			  `targetimpressions` int(15) NOT NULL default '0',			  
 			  `type` varchar(10) NOT NULL default '0',
 			  `weight` int(3) NOT NULL default '6',
 	  		PRIMARY KEY  (`id`)
@@ -119,8 +113,8 @@ function adrotate_database_install() {
 		dbDelta($sql);
 	}
 
-	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables[1]."'")) { // wp_adrotate_groups
-		$sql = "CREATE TABLE `".$tables[1]."` (
+	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables['adrotate_groups']."'")) { // wp_adrotate_groups
+		$sql = "CREATE TABLE `".$tables['adrotate_groups']."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`name` varchar(255) NOT NULL default 'group',
 				`fallback` varchar(5) NOT NULL default '0',
@@ -129,8 +123,8 @@ function adrotate_database_install() {
 		dbDelta($sql);
 	}
 
-	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables[2]."'")) { // wp_adrotate_tracker
-		$sql = "CREATE TABLE `".$tables[2]."` (
+	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables['adrotate_tracker']."'")) { // wp_adrotate_tracker
+		$sql = "CREATE TABLE `".$tables['adrotate_tracker']."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`ipaddress` varchar(255) NOT NULL default '0',
 				`timer` int(15) NOT NULL default '0',
@@ -140,8 +134,8 @@ function adrotate_database_install() {
 		dbDelta($sql);
 	}
 
-	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables[3]."'")) { // wp_adrotate_blocks
-		$sql = "CREATE TABLE `".$tables[3]."` (
+	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables['adrotate_blocks']."'")) { // wp_adrotate_blocks
+		$sql = "CREATE TABLE `".$tables['adrotate_blocks']."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`name` varchar(255) NOT NULL default 'Block',
 				`adcount` int(3) NOT NULL default '1',
@@ -153,8 +147,8 @@ function adrotate_database_install() {
 		dbDelta($sql);
 	}
 	
-	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables[4]."'")) { // wp_adrotate_linkmeta
-		$sql = "CREATE TABLE `".$tables[4]."` (
+	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables['adrotate_linkmeta']."'")) { // wp_adrotate_linkmeta
+		$sql = "CREATE TABLE `".$tables['adrotate_linkmeta']."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
 				`ad` int(5) NOT NULL default '0',
 				`group` int(5) NOT NULL default '0',
@@ -164,12 +158,16 @@ function adrotate_database_install() {
 			) ".$charset_collate.";";
 		dbDelta($sql);
 	}
-	
-	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables[5]."'")) { // wp_adrotate_stats_cache
-		$sql = "CREATE TABLE `".$tables[5]."` (
+
+	if(!$wpdb->get_var("SHOW TABLES LIKE '".$tables['adrotate_stats_tracker']."'")) { // wp_adrotate_stats_tracker
+		$sql = "CREATE TABLE `".$tables['adrotate_stats_tracker']."` (
 				`id` mediumint(8) unsigned NOT NULL auto_increment,
-				`user` int(5) NOT NULL default '0',
-				`cache` longtext NOT NULL,
+				`ad` int(5) NOT NULL default '0',
+				`group` int(5) NOT NULL default '0',
+				`block` int(5) NOT NULL default '0',
+				`thetime` int(15) NOT NULL default '0',
+				`clicks` int(15) NOT NULL default '0',
+				`impressions` int(15) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
 			) ".$charset_collate.";";
 		dbDelta($sql);
@@ -180,67 +178,142 @@ function adrotate_database_install() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_upgrade
+ Name:      adrotate_database_upgrade
 
  Purpose:   Upgrades AdRotate where required
  Receive:   -none-
  Return:	-none-
  Since:		3.0.3
 -------------------------------------------------------------*/
-function adrotate_upgrade() {
-	global $wpdb, $adrotate_db_version, $adrotate_version;
+function adrotate_database_upgrade() {
+	global $wpdb, $adrotate_db_version;
 
-	$tables = adrotate_list_tables();
+	if (version_compare(PHP_VERSION, '5.0.0', '<') == -1) { 
+		deactivate_plugins(plugin_basename(__FILE__));
+		wp_die('AdRotate 3.0 and up requires PHP 5 or higher.<br />You have PHP 4, which has been discontinued since december 31, 2007. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
+		return; 
+	} else {
+		// Install tables for AdRotate where required
+		adrotate_database_install();
 
-	// Any to 3.0 - DB version 1
-	if($adrotate_db_version < 1) {
-		// Migrate group data to accomodate version 3.0 and up from earlier setups
-		$banners = $wpdb->get_results("SELECT `id`, `group` FROM ".$tables[0]." ORDER BY `id` ASC;");
-		foreach($banners as $banner) {
-			$wpdb->query("INSERT INTO `".$tables[4]."` (`ad`, `group`, `block`, `user`) VALUES (".$banner->id.", ".$banner->group.", 0, 0);");
+		$tables = adrotate_list_tables();
+
+		// Database: 	1
+		if($adrotate_db_version < 1) {
+			// Migrate group data to accomodate version 3.0 and up from earlier setups
+			$banners = $wpdb->get_results("SELECT `id`, `group` FROM ".$tables['adrotate']." ORDER BY `id` ASC;");
+			foreach($banners as $banner) {
+				$wpdb->query("INSERT INTO `".$tables['adrotate_linkmeta']."` (`ad`, `group`, `block`, `user`) VALUES (".$banner->id.", ".$banner->group.", 0, 0);");
+			}
+			unset($banners);
+	
+			adrotate_add_column($tables['adrotate'], 'startshow', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `active`');
+			adrotate_add_column($tables['adrotate'], 'endshow', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `startshow`');
+			adrotate_add_column($tables['adrotate'], 'link', 'LONGTEXT NOT NULL AFTER `image`');
+			adrotate_add_column($tables['adrotate'], 'tracker', 'VARCHAR( 5 ) NOT NULL DEFAULT \'N\' AFTER `link`');
+			adrotate_add_column($tables['adrotate'], 'clicks', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `tracker`');
+			adrotate_add_column($tables['adrotate'], 'maxclicks', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `clicks`');
+			adrotate_add_column($tables['adrotate'], 'shown', 'INT( 15 ) NOT NULL DEFAULT \'0\' `maxclicks`');
+			adrotate_add_column($tables['adrotate'], 'maxshown', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `shown`');
+			adrotate_add_column($tables['adrotate'], 'type', 'VARCHAR( 10 ) NOT NULL DEFAULT \'manual\' AFTER `maxshown`');
+			
+			adrotate_add_column($tables['adrotate_groups'], 'fallback', 'VARCHAR( 5 ) NOT NULL DEFAULT \'0\' AFTER `name`');
+			
+			adrotate_add_column($tables['adrotate_tracker'], 'bannerid', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `timer`');
+			
+			$wpdb->query("ALTER TABLE `".$tables['adrotate_tracker']."` CHANGE `ipaddress` `ipaddress` varchar(255) NOT NULL DEFAULT '0';");
+	
+			$wpdb->query("UPDATE `".$tables['adrotate']."` SET `type` = 'manual' WHERE `magic` = '0' AND `title` != '';");
+			$wpdb->query("UPDATE `".$tables['adrotate']."` SET `type` = 'manual' WHERE `magic` = '1' AND `title` != '';");
+			$wpdb->query("UPDATE `".$tables['adrotate']."` SET `type` = 'empty' WHERE `magic` = '2';");
+	
+			$wpdb->query("ALTER TABLE `".$tables['adrotate']."` DROP `magic`;");
+			$wpdb->query("ALTER TABLE `".$tables['adrotate']."` DROP `group`;");
+		}
+	
+		// Database: 	3
+		if($adrotate_db_version < 3) {
+			adrotate_add_column($tables['adrotate'], 'weight', 'INT( 3 ) NOT NULL DEFAULT \'6\' AFTER `type`');
+		}
+		
+		// Database: 	5
+		if($adrotate_db_version < 5) {
+			$today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+			// Migrate current statistics to accomodate version 3.5s new stats system
+			$ads = $wpdb->get_results("SELECT `id`, `clicks`, `shown` FROM ".$tables['adrotate']." ORDER BY `id` ASC;");
+			foreach($ads as $ad) {
+				$wpdb->query("INSERT INTO `".$tables['adrotate_stats_tracker']."` (`ad`, `thetime`, `clicks`, `impressions`) VALUES (".$ad->id.", ".$today.", ".$ad->clicks.", ".$ad->shown.");");
+			}
+			unset($ads);
+
+			$wpdb->query("ALTER TABLE `".$tables['adrotate']."` DROP `clicks`;");
+			$wpdb->query("ALTER TABLE `".$tables['adrotate']."` DROP `shown`;");
+		}
+		
+		// Database: 	6
+		if($adrotate_db_version < 6) {
+			$wpdb->query("DROP TABLE `".$tables['adrotate_stats_cache']."`;");
+		}
+		
+		// Database: 	7
+		if($adrotate_db_version < 7) {
+			adrotate_add_column($tables['adrotate'], 'targetclicks', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `maxshown`');
+			adrotate_add_column($tables['adrotate'], 'targetimpressions', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `targetclicks`');
+
+		}
+		
+		update_option("adrotate_db_version", ADROTATE_DB_VERSION);
+	}
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_core_upgrade
+
+ Purpose:   Upgrades AdRotate where required
+ Receive:   -none-
+ Return:	-none-
+ Since:		3.5
+-------------------------------------------------------------*/
+function adrotate_core_upgrade() {
+	global $wp_roles, $adrotate_version;
+
+	if (version_compare(PHP_VERSION, '5.0.0', '<') == -1) { 
+		deactivate_plugins(plugin_basename(__FILE__));
+		wp_die('AdRotate 3.0 and up requires PHP 5 or higher.<br />You have PHP 4, which has been discontinued since december 31, 2007. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
+		return; 
+	} else {
+		// Plugin: 		323
+		if($adrotate_version < 323) {
+			delete_option('adrotate_notification_timer');
+		}
+		
+		// Plugin: 		340
+		if($adrotate_version < 340) {
+			add_option('adrotate_db_timer', date('U'));
 		}
 
-		adrotate_add_column($tables[0], 'startshow', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `active`');
-		adrotate_add_column($tables[0], 'endshow', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `startshow`');
-		adrotate_add_column($tables[0], 'link', 'LONGTEXT NOT NULL AFTER `image`');
-		adrotate_add_column($tables[0], 'tracker', 'VARCHAR( 5 ) NOT NULL DEFAULT \'N\' AFTER `link`');
-		adrotate_add_column($tables[0], 'clicks', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `tracker`');
-		adrotate_add_column($tables[0], 'maxclicks', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `clicks`');
-		adrotate_add_column($tables[0], 'shown', 'INT( 15 ) NOT NULL DEFAULT \'0\' `maxclicks`');
-		adrotate_add_column($tables[0], 'maxshown', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `shown`');
-		adrotate_add_column($tables[0], 'type', 'VARCHAR( 10 ) NOT NULL DEFAULT \'manual\' AFTER `maxshown`');
-		
-		adrotate_add_column($tables[1], 'fallback', 'VARCHAR( 5 ) NOT NULL DEFAULT \'0\' AFTER `name`');
-		
-		adrotate_add_column($tables[2], 'bannerid', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `timer`');
-		
-		$wpdb->query("ALTER TABLE `".$tables[2]."` CHANGE `ipaddress` `ipaddress` varchar(255) NOT NULL DEFAULT '0';");
+		// Plugin: 		350
+		if($adrotate_version < 350) {
+			update_option('adrotate_debug', array('general' => false, 'dashboard' => false, 'userroles' => false, 'userstats' => false, 'stats' => false));
+		}
 
-		$wpdb->query("UPDATE `".$tables[0]."` SET `type` = 'manual' WHERE `magic` = '0' AND `title` != '';");
-		$wpdb->query("UPDATE `".$tables[0]."` SET `type` = 'manual' WHERE `magic` = '1' AND `title` != '';");
-		$wpdb->query("UPDATE `".$tables[0]."` SET `type` = 'empty' WHERE `magic` = '2';");
+		// Plugin: 		351
+		if($adrotate_version < 351) {
+			wp_clear_scheduled_hook('adrotate_prepare_cache_statistics');
+			delete_option('adrotate_stats');
+		}
 
-		$wpdb->query("ALTER TABLE `".$tables[0]."` DROP `magic`;");
-		$wpdb->query("ALTER TABLE `".$tables[0]."` DROP `group`;");
-	}
+		// Plugin: 		352
+		if($adrotate_version < 352) {
+			adrotate_remove_capability("adrotate_userstatistics"); // OBSOLETE IN 3.5
+			adrotate_remove_capability("adrotate_globalstatistics"); // OBSOLETE IN 3.5
+			$role = get_role('administrator');		
+			$role->add_cap("adrotate_advertiser_report"); // NEW IN 3.5
+			$role->add_cap("adrotate_global_report"); // NEW IN 3.5
+		}
 
-	// 3.0 to 3.1 (3.1.1) - DB version 3
-	if($adrotate_db_version < 3) {
-		adrotate_add_column($tables[0], 'weight', 'INT( 3 ) NOT NULL DEFAULT \'6\' AFTER `type`');
+		update_option("adrotate_version", ADROTATE_VERSION);
 	}
-	
-	// any to 323
-	if($adrotate_version < 323) {
-		delete_option('adrotate_notification_timer');
-	}
-	
-	// 331 to 340
-	if($adrotate_version >= 331 AND $adrotate_version < 340) {
-		add_option('adrotate_db_timer', date('U'));
-	}
-	
-	update_option("adrotate_version", ADROTATE_VERSION);
-	update_option("adrotate_db_version", ADROTATE_DB_VERSION);
 }
 
 /*-------------------------------------------------------------
@@ -260,8 +333,8 @@ function adrotate_deactivate() {
 	}
 
 	// Clear up capabilities from ALL users
-	adrotate_remove_capability("adrotate_userstatistics");
-	adrotate_remove_capability("adrotate_globalstatistics");
+	adrotate_remove_capability("adrotate_advertiser_report");
+	adrotate_remove_capability("adrotate_global_report");
 	adrotate_remove_capability("adrotate_ad_manage");
 	adrotate_remove_capability("adrotate_ad_delete");
 	adrotate_remove_capability("adrotate_group_manage");
@@ -299,13 +372,13 @@ function adrotate_uninstall() {
 	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_tracker`");
 	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_blocks`");
 	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_linkmeta`");
-	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_stats_cache`");
+	$wpdb->query("DROP TABLE `".$wpdb->prefix."adrotate_stats_tracker`");
 
 	// Delete Options	
 	delete_option('adrotate_config');				// Since 0.1
 	delete_option('adrotate_notification_timer'); 	// Since 3.0 - Obsolete in 3.2.3
 	delete_option('adrotate_crawlers'); 			// Since 3.0
-	delete_option('adrotate_stats');				// Since 3.0
+	delete_option('adrotate_stats');				// Since 3.0 - Obsolete in 3.5
 	delete_option('adrotate_roles');				// Since 3.0
 	delete_option('adrotate_version');				// Since 3.2.3
 	delete_option('adrotate_db_version');			// Since 3.0.3
@@ -315,8 +388,8 @@ function adrotate_uninstall() {
 	remove_role('adrotate_advertiser');
 
 	// Clear up capabilities from ALL users
-	adrotate_remove_capability("adrotate_userstatistics");
-	adrotate_remove_capability("adrotate_globalstatistics");
+	adrotate_remove_capability("adrotate_advertiser_report");
+	adrotate_remove_capability("adrotate_global_report");
 	adrotate_remove_capability("adrotate_ad_manage");
 	adrotate_remove_capability("adrotate_ad_delete");
 	adrotate_remove_capability("adrotate_group_manage");
@@ -326,7 +399,7 @@ function adrotate_uninstall() {
 		
 	// Delete cron schedules
 	wp_clear_scheduled_hook('adrotate_ad_notification');
-	wp_clear_scheduled_hook('adrotate_prepare_cache_statistics()');
+	wp_clear_scheduled_hook('adrotate_prepare_cache_statistics');
 }
 
 /*-------------------------------------------------------------
@@ -360,43 +433,23 @@ function adrotate_optimize_database() {
 	} else {
 		adrotate_return('db_timer');
 	}
-
-	
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_repair_database
+ Name:      adrotate_cleanup_database
 
- Purpose:   Repairs all AdRotate tables
+ Purpose:   Clean AdRotate tables
  Receive:   -none-
  Return:    -none-
- Since:		3.4
+ Since:		3.5
 -------------------------------------------------------------*/
-function adrotate_repair_database() {
+function adrotate_cleanup_database() {
 	global $wpdb;
-	
-	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-	$adrotate_db_timer 	= get_option('adrotate_db_timer');
-
-	$now = current_time('timestamp');
-	$yesterday = $now - 86400;
-
-	$tables = adrotate_list_tables();
-
-	if($adrotate_db_timer < $yesterday) {
-		foreach($tables as $table) {
-			if($wpdb->get_var("SHOW TABLES LIKE '".$table."';")) {
-				dbDelta("REPAIR TABLE `$table`;");
-			}
-		}
-		update_option('adrotate_db_timer', $now);
-		adrotate_return('db_repaired');
-	} else {
-		adrotate_return('db_timer');
-	}
-
-	
+	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty';");
+	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` = '';");
+	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` = '';");
+	adrotate_return('db_cleaned');
 }
 
 /*-------------------------------------------------------------
@@ -436,12 +489,12 @@ function adrotate_list_tables() {
 	global $wpdb;
 
 	$tables = array(
-		$wpdb->prefix . "adrotate",				// Since 0.1
-		$wpdb->prefix . "adrotate_groups",		// Since 0.2
-		$wpdb->prefix . "adrotate_tracker",		// Since 2.0
-		$wpdb->prefix . "adrotate_blocks",		// Since 3.0
-		$wpdb->prefix . "adrotate_linkmeta",	// Since 3.0
-		$wpdb->prefix . "adrotate_stats_cache",	// Since 3.0
+		'adrotate' 					=> $wpdb->prefix . "adrotate",					// Since 0.1
+		'adrotate_groups' 			=> $wpdb->prefix . "adrotate_groups",			// Since 0.2
+		'adrotate_tracker' 			=> $wpdb->prefix . "adrotate_tracker",			// Since 2.0
+		'adrotate_blocks' 			=> $wpdb->prefix . "adrotate_blocks",			// Since 3.0
+		'adrotate_linkmeta' 		=> $wpdb->prefix . "adrotate_linkmeta",			// Since 3.0
+		'adrotate_stats_tracker' 	=> $wpdb->prefix . "adrotate_stats_tracker",	// Since 3.5
 	);
 
 	return $tables;

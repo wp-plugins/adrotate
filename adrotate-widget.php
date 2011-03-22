@@ -11,20 +11,39 @@ Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
  Return:    -none-
  Since:		0.8
 -------------------------------------------------------------*/
-class adrotate_widget extends WP_Widget {
+class adrotate_widgets extends WP_Widget {
 
-	function adrotate_widget() {
-		$widget_ops = array('classname' => 'adrotate_widget', 'description' => "Add banners in the sidebar." );
-		$this->WP_Widget('adrotate', __('AdRotate'), $widget_ops);
+	/* Changelog:
+	// Feb 28 2011 - Updated class for Wordpress 3.1
+	*/
+	
+	/*-------------------------------------------------------------
+	 Purpose:   Construct the widget
+	-------------------------------------------------------------*/
+	function adrotate_widgets() {
+
+		/* Changelog:
+		// Feb 28 2011 - New method to construct widgets in line with new standards
+		*/
+
+        parent::WP_Widget(false, 'AdRotate', array('description' => "Show unlimited ads in the sidebar."));	
+
 	}
 
-	function widget( $args, $instance ) {
-		extract( $args );
+	/*-------------------------------------------------------------
+	 Purpose:   Display the widget
+	-------------------------------------------------------------*/
+	function widget($args, $instance) {
 
-		$title = apply_filters('widget_title', empty( $instance['title'] ) ? '' : $instance['title']);
+		/* Changelog:
+		// Feb 28 2011 - Minor tweaks, updated title filter
+		*/
+
+		extract($args);
+        $title = apply_filters('widget_title', $instance['title']);
 
 		echo $before_widget;
-		if ($title)
+		if($title)
 			echo $before_title . $title . $after_title;
 		
 		if($adrotate_config['widgetalign'] == 'Y')
@@ -43,19 +62,32 @@ class adrotate_widget extends WP_Widget {
 			echo '</li></ul>';
 		
 		echo $after_widget;
+
 	}
 
-	function update( $new_instance, $old_instance ) {
+	/*-------------------------------------------------------------
+	 Purpose:   Save the widget options per instance
+	-------------------------------------------------------------*/
+	function update($new_instance, $old_instance) {
 		$new_instance['title'] = strip_tags($new_instance['title']);
 		$new_instance['type'] = strip_tags($new_instance['type']);	
 		$new_instance['id'] = strip_tags($new_instance['id']);
 
 		$instance = wp_parse_args($new_instance,$old_instance);
+
 		return $instance;
+
 	}
 
-	function form( $instance ) {
-		//Defaults
+	/*-------------------------------------------------------------
+	 Purpose:   Display the widget options for admins
+	-------------------------------------------------------------*/
+	function form($instance) {
+
+		/* Changelog:
+		// Feb 28 2011 - New method to construct widgets in line with new standards
+		*/
+
 		$defaults = array();
 		$instance = wp_parse_args( (array) $instance, $defaults );
 		extract($instance);
@@ -88,18 +120,6 @@ class adrotate_widget extends WP_Widget {
 <?php
 	}
 
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_widget_init
-
- Purpose:   Initialize unlimited widgets for AdRotate
- Receive:   -none-
- Return:    -none-
- Since:		0.8
--------------------------------------------------------------*/
-function adrotate_widget_init() {
-	register_widget('adrotate_widget');
 }
 
 /*-------------------------------------------------------------
