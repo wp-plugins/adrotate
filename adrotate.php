@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.5
+Version: 3.5.1
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -291,7 +291,7 @@ function adrotate_manage() {
 						} else {
 							$inactiveclass = '';
 						}
-	
+
 						if($class != 'alternate') {
 							$class = 'alternate';
 						} else {
@@ -1969,7 +1969,7 @@ function adrotate_options() {
 			</tr>
 
 			<tr>
-				<th valign="top">Advertiser Statistics Page</th>
+				<th valign="top">Advertiser Reports Page</th>
 				<td>
 					<select name="adrotate_advertiser_report">
 						<?php wp_dropdown_roles($adrotate_config['advertiser_report']); ?>
@@ -1978,7 +1978,7 @@ function adrotate_options() {
 			</tr>
 
 			<tr>
-				<th valign="top">Global Statistics Page</th>
+				<th valign="top">Global Report Page</th>
 				<td>
 					<select name="adrotate_global_report">
 						<?php wp_dropdown_roles($adrotate_config['global_report']); ?>
@@ -2166,7 +2166,7 @@ function adrotate_options() {
 			<?php } ?>
 			
 			<tr>
-				<td colspan="2"><span class="description">NOTE: The below functions are intented to be used to OPTIMIZE and/or REPAIR your database. Always always make a backup! These functions are to be used when you feel or notice your database is slow, unresponsive and sluggish. Or if you notice garbeled characters when editing ads, groups or blocks.</span></td>
+				<td colspan="2"><span class="description">NOTE: The below functions are intented to be used to OPTIMIZE and/or REPAIR your database. They only apply to your ads/groups/blocks and stats. Not to other settings or other parts of Wordpress! Always always make a backup! These functions are to be used when you feel or notice your database is slow, unresponsive and sluggish.</span></td>
 			</tr>
 			
 			<tr>

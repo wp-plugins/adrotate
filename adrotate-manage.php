@@ -494,16 +494,16 @@ function adrotate_options_submit() {
 	*/
 
 	// Set and save user roles
-	adrotate_set_capability($_POST['adrotate_userstatistics'], "adrotate_userstatistics");
-	adrotate_set_capability($_POST['adrotate_globalstatistics'], "adrotate_globalstatistics");
+	adrotate_set_capability($_POST['adrotate_advertiser_report'], "adrotate_advertiser_report");
+	adrotate_set_capability($_POST['adrotate_global_report'], "adrotate_global_report");
 	adrotate_set_capability($_POST['adrotate_ad_manage'], "adrotate_ad_manage");
 	adrotate_set_capability($_POST['adrotate_ad_delete'], "adrotate_ad_delete");
 	adrotate_set_capability($_POST['adrotate_group_manage'], "adrotate_group_manage");
 	adrotate_set_capability($_POST['adrotate_group_delete'], "adrotate_group_delete");
 	adrotate_set_capability($_POST['adrotate_block_manage'], "adrotate_block_manage");
 	adrotate_set_capability($_POST['adrotate_block_delete'], "adrotate_block_delete");
-	$config['userstatistics'] 		= $_POST['adrotate_userstatistics'];
-	$config['globalstatistics'] 	= $_POST['adrotate_globalstatistics'];
+	$config['advertiser_report'] 	= $_POST['adrotate_advertiser_report'];
+	$config['global_report']	 	= $_POST['adrotate_global_report'];
 	$config['ad_manage'] 			= $_POST['adrotate_ad_manage'];
 	$config['ad_delete'] 			= $_POST['adrotate_ad_delete'];
 	$config['group_manage'] 		= $_POST['adrotate_group_manage'];
