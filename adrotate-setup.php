@@ -14,13 +14,13 @@ Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
 function adrotate_activate() {
 	global $wpdb, $wp_roles, $adrotate_roles;
 
-	if (version_compare(PHP_VERSION, '5.0.0', '<')) { 
-		deactivate_plugins(plugin_basename(__FILE__));
-		wp_die('AdRotate 3.0 and up requires PHP 5 or higher.<br />You have PHP 4, which has been discontinued since december 31, 2007. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
+	if (version_compare(PHP_VERSION, '5.2.0', '<')) { 
+		deactivate_plugins(plugin_basename('adrotate.php'));
+		wp_die('AdRotate 3.6 and up requires PHP 5.2 or higher.<br />You likely have PHP 4, which has been discontinued since december 31, 2007. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
 		return; 
 	} else {
 		if(!current_user_can('activate_plugins')) {
-			deactivate_plugins(plugin_basename(__FILE__));
+			deactivate_plugins(plugin_basename('adrotate.php'));
 			wp_die('You must be an administrator to activate this plugin!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
 			return; 
 		} else {
@@ -188,9 +188,9 @@ function adrotate_database_install() {
 function adrotate_database_upgrade() {
 	global $wpdb, $adrotate_db_version;
 
-	if (version_compare(PHP_VERSION, '5.0.0', '<') == -1) { 
-		deactivate_plugins(plugin_basename(__FILE__));
-		wp_die('AdRotate 3.0 and up requires PHP 5 or higher.<br />You have PHP 4, which has been discontinued since december 31, 2007. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
+	if (version_compare(PHP_VERSION, '5.2.0', '<') == -1) { 
+		deactivate_plugins(plugin_basename('adrotate.php'));
+		wp_die('AdRotate 3.6 and up requires PHP 5.2 or higher.<br />You likely have PHP 4, which has been discontinued since december 31, 2007. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
 		return; 
 	} else {
 		// Install tables for AdRotate where required
@@ -238,7 +238,7 @@ function adrotate_database_upgrade() {
 		
 		// Database: 	5
 		if($adrotate_db_version < 5) {
-			$today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+			$today = mktime(0, 0, 0, gmdate("m"), gmdate("d"), gmdate("Y"));
 			// Migrate current statistics to accomodate version 3.5s new stats system
 			$ads = $wpdb->get_results("SELECT `id`, `clicks`, `shown` FROM ".$tables['adrotate']." ORDER BY `id` ASC;");
 			foreach($ads as $ad) {
@@ -259,9 +259,23 @@ function adrotate_database_upgrade() {
 		if($adrotate_db_version < 7) {
 			adrotate_add_column($tables['adrotate'], 'targetclicks', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `maxshown`');
 			adrotate_add_column($tables['adrotate'], 'targetimpressions', 'INT( 15 ) NOT NULL DEFAULT \'0\' AFTER `targetclicks`');
-
 		}
 		
+		// Database: 	8
+		if($adrotate_db_version < 8) {
+			// Convert image data to accomodate version 3.6 and up from earlier setups
+			$images = $wpdb->get_results("SELECT `id`, `image` FROM ".$tables['adrotate']." ORDER BY `id` ASC;");
+			foreach($images as $image) {
+				if(strlen($image->image) > 0) {
+					if(preg_match("/wp-content\/banners\//i", $image->image)) {
+						$wpdb->query("UPDATE `".$tables['adrotate']."` SET `image` = 'dropdown|$image->image' WHERE `id` = '$image->id';");
+					} else {
+						$wpdb->query("UPDATE `".$tables['adrotate']."` SET `image` = 'field|$image->image' WHERE `id` = '$image->id';");
+					}
+				}
+			}
+		}
+
 		update_option("adrotate_db_version", ADROTATE_DB_VERSION);
 	}
 }
@@ -277,39 +291,40 @@ function adrotate_database_upgrade() {
 function adrotate_core_upgrade() {
 	global $wp_roles, $adrotate_version;
 
-	if (version_compare(PHP_VERSION, '5.0.0', '<') == -1) { 
-		deactivate_plugins(plugin_basename(__FILE__));
-		wp_die('AdRotate 3.0 and up requires PHP 5 or higher.<br />You have PHP 4, which has been discontinued since december 31, 2007. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
+	if (version_compare(PHP_VERSION, '5.2.0', '<') == -1) { 
+		deactivate_plugins(plugin_basename('adrotate.php'));
+		wp_die('AdRotate 3.6 and up requires PHP 5.2 or higher.<br />You likely have PHP 4, which has been discontinued since december 31, 2007. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
 		return; 
 	} else {
-		// Plugin: 		323
 		if($adrotate_version < 323) {
 			delete_option('adrotate_notification_timer');
 		}
 		
-		// Plugin: 		340
 		if($adrotate_version < 340) {
 			add_option('adrotate_db_timer', date('U'));
 		}
 
-		// Plugin: 		350
 		if($adrotate_version < 350) {
 			update_option('adrotate_debug', array('general' => false, 'dashboard' => false, 'userroles' => false, 'userstats' => false, 'stats' => false));
 		}
 
-		// Plugin: 		351
 		if($adrotate_version < 351) {
 			wp_clear_scheduled_hook('adrotate_prepare_cache_statistics');
 			delete_option('adrotate_stats');
 		}
 
-		// Plugin: 		352
 		if($adrotate_version < 352) {
 			adrotate_remove_capability("adrotate_userstatistics"); // OBSOLETE IN 3.5
 			adrotate_remove_capability("adrotate_globalstatistics"); // OBSOLETE IN 3.5
 			$role = get_role('administrator');		
 			$role->add_cap("adrotate_advertiser_report"); // NEW IN 3.5
 			$role->add_cap("adrotate_global_report"); // NEW IN 3.5
+		}
+
+		if($adrotate_version < 353) {
+			if(!is_dir(ABSPATH.'/wp-content/plugins/adrotate/language')) {
+				mkdir(ABSPATH.'/wp-content/plugins/adrotate/language', 0755);
+			}
 		}
 
 		update_option("adrotate_version", ADROTATE_VERSION);
@@ -344,7 +359,7 @@ function adrotate_deactivate() {
 
 	// Clear out wp_cron
 	wp_clear_scheduled_hook('adrotate_ad_notification');
-	wp_clear_scheduled_hook('adrotate_cache_statistics');
+	wp_clear_scheduled_hook('adrotate_cache_statistics'); // OBSOLETE IN 3.6 - REMOVE IN 4.0
 }
 
 /*-------------------------------------------------------------
@@ -399,7 +414,7 @@ function adrotate_uninstall() {
 		
 	// Delete cron schedules
 	wp_clear_scheduled_hook('adrotate_ad_notification');
-	wp_clear_scheduled_hook('adrotate_prepare_cache_statistics');
+	wp_clear_scheduled_hook('adrotate_prepare_cache_statistics'); // OBSOLETE IN 3.6 - REMOVE IN 4.0
 }
 
 /*-------------------------------------------------------------

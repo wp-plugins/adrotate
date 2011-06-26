@@ -66,14 +66,19 @@ function adrotate_banner($group_ids = 0, $banner_id = 0, $block_id = 0, $column 
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_weight
+ Name:      adrotate_pick_weight
 
  Purpose:   Sort out and pick a random ad based on weight
  Receive:   $selected
  Return:    $key
  Since:		3.1
 -------------------------------------------------------------*/
-function adrotate_weight($selected) { 
+function adrotate_pick_weight($selected) { 
+
+	/* Changelog:
+	// Jun 5 2010 - Func renamed from adrotate_weight()
+	*/
+
     $rnd = mt_rand(0, array_sum($selected)-1);
     
     foreach($selected as $key => $var) { 
@@ -293,15 +298,19 @@ function adrotate_prepare_color($enddate) {
 function adrotate_group_is_in_blocks($id) {
 	global $wpdb;
 	
+	/* Changelog:
+	// Mar 29 2011 - Internationalization support
+	*/
+
 	$output = '';
 	$linkmeta = $wpdb->get_results("SELECT `block` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `group` = '$id' AND `block` > 0 AND `user` = 0 ORDER BY `block` ASC;");
 	if($linkmeta) {
 		foreach($linkmeta as $meta) {
 			$blockname = $wpdb->get_var("SELECT `name` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '".$meta->block."';");
-			$output .= '<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=edit&edit_block='.$meta->block.'" title="Edit Block">'.$blockname.'</a>, ';
+			$output .= '<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=edit&edit_block='.$meta->block.'" title="'.__('Edit Block', 'adrotate').'">'.$blockname.'</a>, ';
 		}
 	} else {
-		$output .= "This group is not in a block!";
+		$output .= __('This group is not in a block!', 'adrotate');
 	}
 	$output = rtrim($output, " ,");
 	
@@ -388,7 +397,6 @@ function adrotate_check_config() {
 	if($config['notification_email'] == '' OR !isset($config['notification_email']) OR !is_array($config['notification_email']))	$config['notification_email']	= array(get_option('admin_email'));
 	if($config['advertiser_email'] == '' OR !isset($config['advertiser_email']) OR !is_array($config['advertiser_email']))	$config['advertiser_email']	= array(get_option('admin_email'));
 	if($config['credits'] == '' OR !isset($config['credits']))						$config['credits'] 				= 'Y';
-	if($config['browser'] == '' OR !isset($config['browser']))						$config['browser'] 				= 'Y';
 	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))				$config['widgetalign'] 			= 'N';
 	update_option('adrotate_config', $config);
 
@@ -514,6 +522,7 @@ function adrotate_notifications_dashboard() {
 
 	/* Changelog:
 	// Mar 3 2011 - Messages now only show for ad managers (user level)
+	// Mar 29 2011 - Internationalization support
 	*/
 	
 	if(current_user_can('adrotate_ad_manage')) {
@@ -521,13 +530,13 @@ function adrotate_notifications_dashboard() {
 	
 		if($data['total'] > 0) {
 			if($data['expired'] > 0 AND $data['expiressoon'] == 0 AND $data['error'] == 0) {
-				echo '<div class="error"><p>'.$data['expired'].' ad(s) expired. <a href="admin.php?page=adrotate">Take action now</a>!</p></div>';
+				echo '<div class="error"><p>'.$data['expired'].' '.__('ad(s) expired.', 'adrotate').' <a href="admin.php?page=adrotate">'.__('Take action now', 'adrotate').'</a>!</p></div>';
 			} else if($data['expired'] == 0 AND $data['expiressoon'] > 0 AND $data['error'] == 0) {
-				echo '<div class="error"><p>'.$data['expiressoon'].' ad(s) are about to expire. <a href="admin.php?page=adrotate">Check it out</a>!</p></div>';
+				echo '<div class="error"><p>'.$data['expiressoon'].' '.__('ad(s) are about to expire.', 'adrotate').' <a href="admin.php?page=adrotate">'.__('Check it out', 'adrotate').'</a>!</p></div>';
 			} else if($data['expired'] == 0 AND $data['expiressoon'] == 0 AND $data['error'] > 0) {
-				echo '<div class="error"><p>There are '.$data['error'].' ad(s) with configuration errors. <a href="admin.php?page=adrotate">Solve this</a>!</p></div>';
+				echo '<div class="error"><p>There are '.$data['error'].' '.__('ad(s) with configuration errors.', 'adrotate').' <a href="admin.php?page=adrotate">'.__('Solve this', 'adrotate').'</a>!</p></div>';
 			} else {
-				echo '<div class="error"><p>'.$data['total'].' ads require your attention. <a href="admin.php?page=adrotate">Fix this as soon as possible</a>!</p></div>';
+				echo '<div class="error"><p>'.$data['expired'].' '.__('ad(s) expired.', 'adrotate').' '.$data['expiressoon'].' '.__('ad(s) are about to expire.', 'adrotate').' There are '.$data['error'].' '.__('ad(s) with configuration errors.', 'adrotate').' <a href="admin.php?page=adrotate">'.__('Fix this as soon as possible', 'adrotate').'</a>!</p></div>';
 			}
 		}
 	}
@@ -549,6 +558,7 @@ function adrotate_mail_notifications() {
 	// Jan 16 2011 - Added support for multiple email addresses
 	// Jan 24 2011 - Removed test notification (obsolete), cleaned up code
 	// Feb 22 2011 - $data array updated to new standard
+	// Mar 29 2011 - Internationalization support
 	*/
 	
 	$emails = $adrotate_config['notification_email'];
@@ -567,19 +577,19 @@ function adrotate_mail_notifications() {
       				 	"From: AdRotate Plugin <".$emails[$i].">\r\n\n" . 
       				  	"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
 
-			$subject = '[AdRotate Alert] Your ads need your help!';
+			$subject = __('[AdRotate Alert] Your ads need your help!', 'adrotate');
 			
-			$message = "<p>Hello,</p>";
-			$message .= "<p>This notification is send to you from your website '$blogname'.</p>";
-			$message .= "<p>You will receive a notification approximately every 24 hours until the issues are resolved.</p>";
-			$message .= "<p>Current issues:<br />";
-			if($data['expired'] > 0) $message .= $data['expired']." ad(s) expired. This needs your immediate attention!<br />";
-			if($data['expiressoon'] > 0) $message .= $data['expiressoon']." ad(s) will expire in less than 2 days.<br />";
+			$message = "<p>".__('Hello', 'adrotate').",</p>";
+			$message .= "<p>".__('This notification is send to you from your website', 'adrotate')." '$blogname'.</p>";
+			$message .= "<p>".__('You will receive a notification approximately every 24 hours until the issues are resolved.', 'adrotate')."</p>";
+			$message .= "<p>".__('Current issues:', 'adrotate')."<br />";
+			if($data['expired'] > 0) $message .= $data['expired']." ".__('ad(s) expired. This needs your immediate attention!', 'adrotate')."<br />";
+			if($data['expiressoon'] > 0) $message .= $data['expiressoon']." ".__('ad(s) will expire in less than 2 days.', 'adrotate')."<br />";
 			$message .= "</p>";
-			$message .= "<p>A total of ".$data['total']." ad(s) are in need of your care!</p>";
-			$message .= "<p>Access your dashboard here: $dashboardurl</p>";
-			$message .= "<p>Have a nice day!</p>";
-			$message .= "<p>Your AdRotate Notifier<br />";
+			$message .= "<p>".__('A total of', 'adrotate')." ".$data['total']." ".__('ad(s) are in need of your care!', 'adrotate')."</p>";
+			$message .= "<p>".__('Access your dashboard here:', 'adrotate')." $dashboardurl</p>";
+			$message .= "<p>".__('Have a nice day!', 'adrotate')."</p>";
+			$message .= "<p>".__('Your AdRotate Notifier', 'adrotate')."<br />";
 			$message .= "$pluginurl</p>";
 
 			wp_mail($emails[$i], $subject, $message, $headers);
@@ -602,6 +612,7 @@ function adrotate_mail_message() {
 	// Jan 3 2011 - Changed to a per setting model
 	// Jan 16 2011 - Added new message type 'issue', array() support for multiple emails
 	// Jan 24 2011 - Change to its own email array, updated layout and formatting
+	// Mar 29 2011 - Internationalization support
 	*/
 	
 	$id 			= $_POST['adrotate_id'];
@@ -626,26 +637,26 @@ function adrotate_mail_message() {
 	      				  "Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
 		$now 			= current_time('timestamp');
 		
-		if($request == "renew") $subject = "[AdRotate] An advertiser has put in a request for renewal!";
-		if($request == "remove") $subject = "[AdRotate] An advertiser wants his ad removed.";
-		if($request == "other") $subject = "[AdRotate] An advertiser wrote a comment on his ad!";
-		if($request == "issue") $subject = "[AdRotate] An advertiser has a problem!";
+		if($request == "renew") $subject = __('[AdRotate] An advertiser has put in a request for renewal!', 'adrotate');
+		if($request == "remove") $subject = __('[AdRotate] An advertiser wants his ad removed.', 'adrotate');
+		if($request == "other") $subject = __('[AdRotate] An advertiser wrote a comment on his ad!', 'adrotate');
+		if($request == "issue") $subject = __('[AdRotate] An advertiser has a problem!', 'adrotate');
 		
 		$message = "<p>Hello,</p>";
 	
-		if($request == "renew") $message .= "<p>$author requests ad <strong>$id</strong> renewed!</p>";
-		if($request == "remove") $message .= "<p>$author requests ad <strong>$id</strong> removed.</p>";
-		if($request == "other") $message .= "<p>$author has something to say about ad <strong>$id</strong>.</p>";
-		if($request == "issue") $message .= "<p>$author has a problem with AdRotate.</p>";
+		if($request == "renew") $message .= "<p>$author ".__('requests ad', 'adrotate')." <strong>$id</strong> ".__('renewed!', 'adrotate')."</p>";
+		if($request == "remove") $message .= "<p>$author ".__('requests ad', 'adrotate')." <strong>$id</strong> ".__('removed.', 'adrotate')."</p>";
+		if($request == "other") $message .= "<p>$author ".__('has something to say about ad', 'adrotate')." <strong>$id</strong>.</p>";
+		if($request == "issue") $message .= "<p>$author ".__('has a problem with AdRotate.', 'adrotate')."</p>";
 		
-		$message .= "<p>Attached message: $text</p>";
+		$message .= "<p>".__('Attached message:', 'adrotate')." $text</p>";
 		
-		$message .= "<p>You can reply to this message to contact $author.<br />";
-		if($request != "issue") $message .= "Review the ad here: $adurl";
+		$message .= "<p>".__('You can reply to this message to contact', 'adrotate')." $author.<br />";
+		if($request != "issue") $message .= __('Review the ad here:', 'adrotate')." $adurl";
 		$message .= "</p>";
 		
-		$message .= "<p>Have a nice day!<br />";
-		$message .= "Your AdRotate Notifier<br />";
+		$message .= "<p>".__('Have a nice day!', 'adrotate')."<br />";
+		$message .= __('Your AdRotate Notifier', 'adrotate')."<br />";
 		$message .= "$pluginurl</p>";
 	
 		wp_mail($emails[$i], $subject, $message, $headers);
@@ -666,6 +677,7 @@ function adrotate_mail_test() {
 	global $wpdb, $adrotate_config;
 
 	/* Changelog:
+	// Mar 29 2011 - Internationalization support
 	*/
 	
 	if(isset($_POST['adrotate_notification_test_submit'])) {
@@ -690,20 +702,20 @@ function adrotate_mail_test() {
 	      			"From: AdRotate Plugin <".$email.">\r\n\n" . 
 	      			"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
 		
-		if($type == "notification") $subject = "[AdRotate] This is a test notification!";
-		if($type == "advertiser") $subject = "[AdRotate] This is a test email.";
+		if($type == "notification") $subject = __('[AdRotate] This is a test notification!', 'adrotate');
+		if($type == "advertiser") $subject = __('[AdRotate] This is a test email.', 'adrotate');
 		
-		$message = 	"<p>Hello,</p>";
+		$message = 	"<p>".__('Hello', 'adrotate').",</p>";
 	
-		$message .= "<p>The administrator of $siteurl has set your email address to receive";
-		if($type == "notification") $message .= " notifications from AdRotate. These are to alert you of the state of advertisements posted on this website.";
-		if($type == "advertiser") $message .= " messages from Advertisers using AdRotate. Your email is not shown to them until you reply to their messages.";
+		$message .= "<p>".__('The administrator of', 'adrotate')." $siteurl ".__('has set your email address to receive', 'adrotate');
+		if($type == "notification") $message .= " ".__('notifications from AdRotate. These are to alert you of the state of advertisements posted on this website.', 'adrotate');
+		if($type == "advertiser") $message .= " ".__('messages from Advertisers using AdRotate. Your email is not shown to them until you reply to their messages.', 'adrotate');
 		$message .= "</p>";
 
-		$message .= "<p>If you believe this message to be in error, reply to this email with your complaint!</p>";
+		$message .= "<p>".__('If you believe this message to be in error, reply to this email with your complaint!', 'adrotate')."</p>";
 				
-		$message .= "<p>Have a nice day!<br />";
-		$message .= "Your AdRotate Notifier<br />";
+		$message .= "<p>".__('Have a nice day!', 'adrotate')."<br />";
+		$message .= __('Your AdRotate Notifier', 'adrotate')."<br />";
 		$message .= "$pluginurl</p>";
 	
 		wp_mail($emails[$i], $subject, $message, $headers);
@@ -739,6 +751,32 @@ function adrotate_reccurences() {
 }
 
 /*-------------------------------------------------------------
+ Name:      adrotate_filemanager_admin_scripts
+
+ Purpose:   Load file uploaded popup
+ Receive:   -None-
+ Return:	-None-
+ Since:		3.6
+-------------------------------------------------------------*/
+function adrotate_filemanager_admin_scripts() {
+	wp_enqueue_script('media-upload');
+	wp_enqueue_script('thickbox');
+	wp_enqueue_script('jquery');
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_filemanager_admin_styles
+
+ Purpose:   Load file uploaded popup style
+ Receive:   -None-
+ Return:	-None-
+ Since:		3.6
+-------------------------------------------------------------*/
+function adrotate_filemanager_admin_styles() {
+	wp_enqueue_style('thickbox');
+}
+
+/*-------------------------------------------------------------
  Name:      adrotate_folder_contents
 
  Purpose:   List folder contents of /wp-content/banners and /wp-content/uploads
@@ -751,6 +789,8 @@ function adrotate_folder_contents($current) {
 
 	/* Changelog:
 	// Mar 9 2011 - Updated folder reading with better error handling
+	// Mar 25 2011 - Removed Media listing (commented out)
+	// Mar 29 2011 - Internationalization support
 	*/
 	
 	$output = '';
@@ -767,7 +807,7 @@ function adrotate_folder_contents($current) {
 	    }
 	    closedir($handle);
 
-		$output .= "<option disabled>-- Banners folder --</option>";
+/* 		$output .= "<option disabled>-- ".__('Banners folder', 'adrotate')." --</option>"; */
 	    if($i > 0) {
 			sort($files);
 			foreach($files as $file) {
@@ -775,18 +815,19 @@ function adrotate_folder_contents($current) {
 		
 				if((strtolower($fileinfo['extension']) == "jpg" OR strtolower($fileinfo['extension']) == "gif" OR strtolower($fileinfo['extension']) == "png" 
 				OR strtolower($fileinfo['extension']) == "jpeg" OR strtolower($fileinfo['extension']) == "swf" OR strtolower($fileinfo['extension']) == "flv")) {
-				    $output .= "<option value='banner|".$file."'";
+				    $output .= "<option value='".$file."'";
 				    if($current == get_option('siteurl').'/wp-content/banners/'.$file) { $output .= "selected"; }
 				    $output .= ">".$file."</option>";
 				}
 			}
 		} else {
-	    	$output .= "<option disabled>&nbsp;&nbsp;&nbsp;No files found</option>";
+	    	$output .= "<option disabled>&nbsp;&nbsp;&nbsp;".__('No files found', 'adrotate')."</option>";
 		}
 	} else {
-    	$output .= "<option disabled>&nbsp;&nbsp;&nbsp;Folder not found or not accessible</option>";
+    	$output .= "<option disabled>&nbsp;&nbsp;&nbsp;".__('Folder not found or not accessible', 'adrotate')."</option>";
 	}
 
+/* OBSOLETE IN 3.6 - REMOVE IN FUTURE VERSION?
 	// Read /wp-content/uploads/ from the WP database
 	if($adrotate_config['browser'] == 'Y') {
 		$uploadedmedia = $wpdb->get_results("SELECT `guid` FROM ".$wpdb->prefix."posts 
@@ -797,7 +838,7 @@ function adrotate_folder_contents($current) {
 				OR `post_mime_type` = 'application/x-shockwave-flash')
 			ORDER BY `post_title` ASC");
 		
-		$output .= "<option disabled>-- Uploaded Media --</option>";
+		$output .= "<option disabled>-- ".__('Uploaded Media', 'adrotate')." --</option>";
 		if($uploadedmedia) {
 			foreach($uploadedmedia as $media) {
 		        $output .= "<option value='media|".basename($media->guid)."'";
@@ -805,9 +846,10 @@ function adrotate_folder_contents($current) {
 		        $output .= ">".basename($media->guid)."</option>";
 			}
 		} else {
-			$output .= "<option disabled>&nbsp;&nbsp;&nbsp;No media found</option>";
+			$output .= "<option disabled>&nbsp;&nbsp;&nbsp;".__('No media found', 'adrotate')."</option>";
 		}
 	}
+*/
 	
 	return $output;
 }
@@ -835,7 +877,11 @@ function adrotate_return($action, $arg = null) {
 		break;
 
 		case "update" :
-			wp_redirect('admin.php?page=adrotate&view=edit&message=updated&edit_ad='.$arg[0]);
+			wp_redirect('admin.php?page=adrotate&view=edit&message=updated&ad='.$arg[0]);
+		break;
+
+		case "update_manage" :
+			wp_redirect('admin.php?page=adrotate&message=updated');
 		break;
 
 		case "delete" :
@@ -868,7 +914,7 @@ function adrotate_return($action, $arg = null) {
 		break;
 
 		case "group_edit" :
-			wp_redirect('admin.php?page=adrotate-groups&view=edit&message=updated&edit_group='.$arg[0]);
+			wp_redirect('admin.php?page=adrotate-groups&view=edit&message=updated&group='.$arg[0]);
 		break;
 
 		case "group_delete" :
@@ -885,11 +931,23 @@ function adrotate_return($action, $arg = null) {
 		break;
 
 		case "block_edit" :
-			wp_redirect('admin.php?page=adrotate-blocks&view=edit&message=updated&edit_block='.$arg[0]);
+			wp_redirect('admin.php?page=adrotate-blocks&view=edit&message=updated&block='.$arg[0]);
 		break;
 
 		case "block_delete" :
 			wp_redirect('admin.php?page=adrotate-blocks&message=deleted');
+		break;
+
+		case "block_template_new" :
+			wp_redirect('admin.php?page=adrotate-blocks&view=templates&message=created_template');
+		break;
+
+		case "block_template_edit" :
+			wp_redirect('admin.php?page=adrotate-blocks&view=templates&message=edit_template');
+		break;
+
+		case "block_template_delete" :
+			wp_redirect('admin.php?page=adrotate-blocks&view=templates&message=deleted_template');
 		break;
 
 		// Settings
@@ -964,64 +1022,65 @@ function adrotate_error($action, $arg = null) {
 	/* Changelog:
 	// Dec 26 2010 - Added more errors from other functions
 	// Mar 8 2011 - Added debug switch for commented errors
+	// Mar 29 2011 - Internationalization support
 	*/
 
 	switch($action) {
 		// Ads
 		case "ad_expired" :
 			if($adrotate_debug['general'] == true) {
-				$result = '<span style="font-weight: bold; color: #f00;">Error, Ad (ID: '.$arg[0].') is expired or does not exist!</span>';
+				$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, Ad', 'adrotate').' (ID: '.$arg[0].') '.__('is expired or does not exist!', 'adrotate').'</span>';
 			} else {
-				$result = '<!-- Error, Ad (ID: '.$arg[0].') is expired or does not exist! -->';
+				$result = '<!-- '.__('Error, Ad', 'adrotate').' (ID: '.$arg[0].') '.__('is expired or does not exist!', 'adrotate').' -->';
 			}
 			return $result;
 		break;
 		
 		case "ad_unqualified" :
 			if($adrotate_debug['general'] == true) {
-				$result = '<span style="font-weight: bold; color: #f00;">Either there are no banners, they are disabled or none qualified for this location!</span>';
+				$result = '<span style="font-weight: bold; color: #f00;">'.__('Either there are no banners, they are disabled or none qualified for this location!', 'adrotate').'</span>';
 			} else {
-				$result = '<!-- Either there are no banners, they are disabled or none qualified for this location! -->';
+				$result = '<!-- '.__('Either there are no banners, they are disabled or none qualified for this location!', 'adrotate').' -->';
 			}
 			return $result;
 		break;
 		
 		case "ad_no_id" :
-			$result = '<span style="font-weight: bold; color: #f00;">Error, no Ad ID set! Check your syntax!</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no Ad ID set! Check your syntax!', 'adrotate').'</span>';
 			return $result;
 		break;
 
 		case "ad_not_found" :
-			$result = '<span style="font-weight: bold; color: #f00;">Error, ad could not be found! Make sure it exists.</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, ad could not be found! Make sure it exists.', 'adrotate').'</span>';
 			return $result;
 		break;
 
 		// Groups
 		case "group_no_id" :
-			$result = '<span style="font-weight: bold; color: #f00;">Error, no group set! Check your syntax!</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no group set! Check your syntax!', 'adrotate').'</span>';
 			return $result;
 		break;
 
 		// Blocks
 		case "block_not_found" :
-			$result = '<span style="font-weight: bold; color: #f00;">Error, Block (ID: '.$arg[0].') does not exist! Check your syntax!</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, Block', 'adrotate').' (ID: '.$arg[0].') '.__('does not exist! Check your syntax!', 'adrotate').'</span>';
 			return $result;
 		break;
 
 		case "block_no_id" :
-			$result = '<span style="font-weight: bold; color: #f00;">Error, no Block ID set! Check your syntax!</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no Block ID set! Check your syntax!', 'adrotate').'</span>';
 			return $result;
 		break;
 
 		// Database
 		case "db_error" :
-			$result = '<span style="font-weight: bold; color: #f00;">There was an error locating the database tables for AdRotate. Please deactivate and re-activate AdRotate from the plugin page!!<br />If this does not solve the issue please seek support at <a href="http://www.adrotateplugin.com/page/support.php">www.adrotateplugin.com/page/support.php</a></span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('There was an error locating the database tables for AdRotate. Please deactivate and re-activate AdRotate from the plugin page!!', 'adrotate').'<br />'.__('If this does not solve the issue please seek support at', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php">www.adrotateplugin.com/page/support.php</a></span>';
 			return $result;
 		break;
 
 		// Misc
 		default:
-			$default = 'An unknown error occured.';
+			$default = __('An unknown error occured.', 'adrotate');
 			return $default;
 		break;
 

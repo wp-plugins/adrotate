@@ -12,7 +12,7 @@ Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
  Since:		3.0
 -------------------------------------------------------------*/
 function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
-	global $wpdb, $adrotate_debug;
+	global $wpdb, $adrotate_crawlers, $adrotate_debug;
 
 	/* Changelog:
 	// Nov 15 2010 - Moved ad formatting to new function adrotate_ad_output()
@@ -23,10 +23,13 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	// Feb 22 2011 - Updated debug routine with Memory usage
 	// Feb 28 2011 - Updated for new statistics system
 	// Mar 12 2011 - Added new receiving values $group and $block for stats
+	// Mar 25 2011 - Added crawler filter to prevent impressions for bots
 	*/
 	
-	$now 	= current_time('timestamp');
-	$today 	= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+	$now 				= current_time('timestamp');
+	$today 				= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
+	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
 	if($group > 0) $grouporblock = " AND `group` = '$group'";
 	if($block > 0) $grouporblock = " AND `block` = '$block'";
@@ -41,7 +44,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 		}
 		
 		if($adrotate_debug['general'] == true) {
-			echo "<p><strong>[DEBUG] Ad specs</strong><pre>";
+			echo "<p><strong>[DEBUG] Selected Ad, specs</strong><pre>";
 			$memory = (memory_get_usage() / 1024 / 1024);
 			echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
 			$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
@@ -53,12 +56,23 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 		if($banner) {
 			$output = adrotate_ad_output($banner->id, $group, $block, $banner->bannercode, $banner->tracker, $banner->link, $banner->image);
 
-			$stats = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$banner_id'$grouporblock AND `thetime` = '$today';");
-			if($stats > 0) {
-				$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_stats_tracker` SET `impressions` = `impressions` + 1 WHERE `id` = '$stats';");
-			} else {
-				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_stats_tracker` (`ad`, `group`, `block`, `thetime`, `clicks`, `impressions`) VALUES ('$banner_id', '$group', '$block', '$today', '0', '1');");
+			if(is_array($adrotate_crawlers)) $crawlers = $adrotate_crawlers;
+				else $crawlers = array();
+
+			$nocrawler = true;
+			foreach ($crawlers as $crawler) {
+				if (preg_match("/$crawler/i", $useragent)) $nocrawler = false;
 			}
+		
+			if($nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
+				$stats = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$banner_id'$grouporblock AND `thetime` = '$today';");
+				if($stats > 0) {
+					$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_stats_tracker` SET `impressions` = `impressions` + 1 WHERE `id` = '$stats';");
+				} else {
+					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_stats_tracker` (`ad`, `group`, `block`, `thetime`, `clicks`, `impressions`) VALUES ('$banner_id', '$group', '$block', '$today', '0', '1');");
+				}
+			}
+
 		} else {
 			$output = adrotate_error('ad_expired', array($banner_id));
 		}
@@ -88,6 +102,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 	// Feb 22 2011 - Updated debug routine with Memory usage
 	// Feb 28 2011 - Updated ad selection for new statistics system
 	// Mar 12 2011 - Added use of $group for adrotate_ad()
+	// Mar 29 2011 - Renamed $fallbackoverride to $fallback
 	*/
 
 	if($group_ids) {
@@ -95,8 +110,9 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 		$group_array = explode(",", $group_ids);
 		$group_choice = array_rand($group_array, 1);
 		$prefix = $wpdb->prefix;
+
 		if($fallback == 0 OR $fallback == '') {
-			$fallbackoverride = $wpdb->get_var("SELECT `fallback` FROM `".$prefix."adrotate_groups` WHERE `id` = '$group_array[$group_choice]';");
+			$fallback = $wpdb->get_var("SELECT `fallback` FROM `".$prefix."adrotate_groups` WHERE `id` = '$group_array[$group_choice]';");
 		}
 		
 		if($weight > 0) {
@@ -137,7 +153,6 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 			;");
 
 		if($results) {
-
 			if($adrotate_debug['general'] == true) {
 				echo "<p><strong>[DEBUG] Initial selection</strong><pre>"; 
 				$memory = (memory_get_usage() / 1024 / 1024);
@@ -155,7 +170,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 				if($stats->impressions == null) $stats->impressions = '0';
 
 				if($adrotate_debug['general'] == true) {
-					echo "<p><strong>[DEBUG] Stats for ad $result->id since ".date("d-M-Y", $result->updated)."</strong><pre>"; 
+					echo "<p><strong>[DEBUG] Stats for ad $result->id since ".gmdate("d-M-Y", $result->updated)."</strong><pre>"; 
 					$memory = (memory_get_usage() / 1024 / 1024);
 					echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
 					$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
@@ -172,12 +187,10 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 				if($stats->impressions >= $result->maxshown AND $result->maxshown > 0) {
 					$selected = array_diff_key($selected, array($result->id => $result->weight));
 				}
-				unset($stats);
 			}
-			unset($results);
 
 			if(count($selected) > 0) {
-				$banner_id = adrotate_weight($selected);
+				$banner_id = adrotate_pick_weight($selected);
 				
 				if($adrotate_debug['general']['userroles'] == true) {
 					echo "<p><strong>[DEBUG] Selected ad based on weight</strong><pre>"; 
@@ -191,14 +204,17 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 
 				$output = adrotate_ad($banner_id, false, $group_array[$group_choice]);
 
-				unset($selected);
-
 			} else {
-				$output = adrotate_fallback($fallbackoverride, 'expired');
+				$output = adrotate_fallback($fallback, 'expired');
 			}
 		} else {
-			$output = adrotate_fallback($fallbackoverride, 'unqualified');
+			$output = adrotate_fallback($fallback, 'unqualified');
 		}
+		
+		unset($stats);
+		unset($results);
+		unset($selected);
+		
 	} else {
 		$output = adrotate_error('group_no_id');
 	}
@@ -225,15 +241,16 @@ function adrotate_block($block_id, $weight = 0) {
 	// Feb 22 2011 - Updated debug routine with Memory usage
 	// Feb 28 2011 - Updated ad selection for new statistics system
 	// Mar 12 2011 - Added use of $block for adrotate_ad()
+	// Apr 2 2011 - Added fallback support
 	*/
 	
 	if($block_id) {
 		$now = current_time('timestamp');
 		$prefix = $wpdb->prefix;
 		
+		// Get block specs
 		$block = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '$block_id';");
 		if($block) {
-
 			if($adrotate_debug['general'] == true) {
 				echo "<p><strong>[DEBUG] Selected block</strong><pre>"; 
 				$memory = (memory_get_usage() / 1024 / 1024);
@@ -244,9 +261,9 @@ function adrotate_block($block_id, $weight = 0) {
 				echo "</pre></p>"; 
 			}			
 
+			// Get groups in block
 			$groups = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = '$block->id' AND `user` = 0;");
-			if($groups) {
-
+			if($groups) {				
 				if($adrotate_debug['general'] == true) {
 					echo "<p><strong>[DEBUG] Groups in block</strong><pre>"; 
 					$memory = (memory_get_usage() / 1024 / 1024);
@@ -260,7 +277,8 @@ function adrotate_block($block_id, $weight = 0) {
 				if($weight > 0) {
 					$weightoverride = "	AND `".$prefix."adrotate`.`weight` >= '$weight'";
 				}
-		
+
+				// Get all ads in all groups and process them in an array
 				$results = array();
 				foreach($groups as $group) {
 					$ads = $wpdb->get_results(
@@ -285,10 +303,13 @@ function adrotate_block($block_id, $weight = 0) {
 							".$weightoverride."
 						;");
 					$results = array_merge($ads, $results);
+
+					// Build array of fallback groups
+					$fallback_array[] = $group->group;
 				}
-				unset($groups);
-					
+
 				if($results) {
+					// Filter results, make an array of ads
 					if($adrotate_debug['general'] == true) {
 						echo "<p><strong>[DEBUG] All ads from all groups</strong><pre>"; 
 						$memory = (memory_get_usage() / 1024 / 1024);
@@ -306,7 +327,7 @@ function adrotate_block($block_id, $weight = 0) {
 						if($stats->impressions == null) $stats->impressions = '0';
 
 						if($adrotate_debug['general'] == true) {
-							echo "<p><strong>[DEBUG] Stats for ad $result->id since ".date("d-M-Y", $result->updated)."</strong><pre>"; 
+							echo "<p><strong>[DEBUG] Stats for ad $result->id since ".gmdate("d-M-Y", $result->updated)."</strong><pre>"; 
 							$memory = (memory_get_usage() / 1024 / 1024);
 							echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
 							$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
@@ -323,21 +344,42 @@ function adrotate_block($block_id, $weight = 0) {
 						if($stats->impressions >= $result->maxshown AND $result->maxshown > 0) {
 							$selected = array_diff_key($selected, array($result->id => $result->weight));
 						}
-						unset($stats);
 					}
-					unset($results);
+
+					if($adrotate_debug['general'] == true) {
+						echo "<p><strong>[DEBUG] Pre-selected ads based on impressions and clicks. (ad_id => weight)</strong><pre>"; 
+						$memory = (memory_get_usage() / 1024 / 1024);
+						echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
+						$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
+						echo "Peak memory usage: " . round($peakmemory, 2) ." MB <br />"; 
+						print_r($selected); 
+						echo "</pre></p>"; 
+					}			
+
+				} else {
+					// Set fallback group (if any)
+					$group_choice = array_rand($fallback_array, 1);
+					$fallback = $wpdb->get_var("SELECT `fallback` FROM `".$prefix."adrotate_groups` WHERE `id` = '$fallback_array[$group_choice]';");
+					
+					if($adrotate_debug['general'] == true) {
+						echo "<p><strong>[DEBUG] Selected Fallback Group.</strong><pre>"; 
+						$memory = (memory_get_usage() / 1024 / 1024);
+						echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
+						$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
+						echo "Peak memory usage: " . round($peakmemory, 2) ." MB";
+						echo "<br />fallback_array "; 
+						print_r($fallback_array); 
+						echo "<br />group_choice "; 
+						print_r($group_choice); 
+						echo "<br />fallback_array[group_choice] "; 
+						print_r($fallback_array[$group_choice]); 
+						echo "<br />Fallback group "; 
+						print_r($fallback); 
+						echo "</pre></p>"; 
+					}			
+
 				}
 				
-				if($adrotate_debug['general'] == true) {
-					echo "<p><strong>[DEBUG] Pre-selected ads based on impressions and clicks. (ad_id => weight)</strong><pre>"; 
-					$memory = (memory_get_usage() / 1024 / 1024);
-					echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
-					$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
-					echo "Peak memory usage: " . round($peakmemory, 2) ." MB <br />"; 
-					print_r($selected); 
-					echo "</pre></p>"; 
-				}			
-
 				$array_count = count($selected);
 
 				if($array_count > 0) {
@@ -346,11 +388,11 @@ function adrotate_block($block_id, $weight = 0) {
 					} else { 
 						$block_count = $block->adcount;
 					}
-						
+
 					$output = '';
 					$break = 1;
 					for($i=0;$i<$block_count;$i++) {
-						$banner_id = adrotate_weight($selected);
+						$banner_id = adrotate_pick_weight($selected);
 
 						if($adrotate_debug['general'] == true) {
 							echo "<p><strong>[DEBUG] Reduced array (Cycle ".$i.")</strong><pre>"; 
@@ -376,24 +418,18 @@ function adrotate_block($block_id, $weight = 0) {
 						}
 
 					}
-
-					if($adrotate_debug['general'] == true) {
-						echo "<p><strong>[DEBUG] Looped array for blocks (Cycle ".$i.")</strong><pre>"; 
-						$memory = (memory_get_usage() / 1024 / 1024);
-						echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
-						$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
-						echo "Peak memory usage: " . round($peakmemory, 2) ." MB <br />"; 
-						echo "</pre></p>"; 
-					}			
-
-					unset($selected);
-			
 				} else {
 					$output = adrotate_error('ad_unqualified');
 				}
 			}
 			
+			// Destroy data
+			unset($groups);
+			unset($results);
+			unset($stats);
+			unset($selected);
 			unset($block);
+			unset($fallback_array);
 			
 		} else {
 			$output = adrotate_error('block_not_found', array($block_id));
@@ -438,7 +474,7 @@ function adrotate_preview($banner_id) {
 		}			
 
 		if($banner) {
-			$output = adrotate_ad_output($banner->id, 0, s0, $banner->bannercode, $banner->tracker, $banner->link, $banner->image, true);
+			$output = adrotate_ad_output($banner->id, 0, 0, $banner->bannercode, $banner->tracker, $banner->link, $banner->image, true);
 		} else {
 			$output = adrotate_error('ad_not_found');
 		}
@@ -460,7 +496,8 @@ function adrotate_preview($banner_id) {
 function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, $link, $image, $preview = false) {
 
 	$meta = urlencode("$id,$group,$block");
-	
+	list($type, $file) = explode("|", $image, 2);
+
 	$banner_output = $bannercode;
 	if($tracker == "Y") {
 		if($preview == true) {
@@ -471,7 +508,7 @@ function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, 
 	} else {
 		$banner_output = str_replace('%link%', $link, $banner_output);
 	}
-	$banner_output = str_replace('%image%', $image, $banner_output);
+	$banner_output = str_replace('%image%', $file, $banner_output);
 	$banner_output = str_replace('%id%', $id, $banner_output);
 	$banner_output = stripslashes(htmlspecialchars_decode($banner_output, ENT_QUOTES));
 
@@ -490,6 +527,7 @@ function adrotate_fallback($group, $case) {
 
 	/* Changelog:
 	// Dec 10 2010 - No longer double checks for $fallback values
+	// Apr 02 2010 - Now also used for blocks
 	*/
 
 	if($group > 0) {
@@ -518,8 +556,12 @@ function adrotate_fallback($group, $case) {
 function adrotate_meta() {
 	global $adrotate_config;
 
+	/* Changelog:
+	// Mar 29 2011 - Internationalization support
+	*/
+
 	if($adrotate_config['credits'] == "Y") {
-		echo "<li>I'm using <a href=\"http://www.adrotateplugin.com/\" target=\"_blank\" title=\"AdRotate\">AdRotate</a></li>\n";
+		echo "<li>". __('I\'m using', 'adrotate') ." <a href=\"http://www.adrotateplugin.com/\" target=\"_blank\" title=\"AdRotate\">AdRotate</a></li>\n";
 	}
 }
 
@@ -532,29 +574,34 @@ function adrotate_meta() {
  Since:		2.?
 -------------------------------------------------------------*/
 function adrotate_credits() {
+
+	/* Changelog:
+	// Mar 29 2011 - Internationalization support
+	*/
+
 	echo '<table class="widefat" style="margin-top: .5em">';
 
 	echo '<thead>';
 	echo '<tr valign="top">';
-	echo '	<th width="40%">AdRotate Credits</th>';
-	echo '	<th>AdRotate Updates</th>';
+	echo '	<th width="40%">AdRotate '.__('Credits', 'adrotate').'</th>';
+	echo '	<th>AdRotate '.__('Updates', 'adrotate').'</th>';
 	echo '</tr>';
 	echo '</thead>';
 
 	echo '<tbody>';
 	echo '<tr><td><ul>';
-	echo '	<li>Find my website at <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.</li>';
-	echo '	<li>Give me your money to <a href="http://meandmymac.net/donate/" target="_blank">show your appreciation</a>. Thanks!</li>';
-	echo '	<li>The plugin homepage is at <a href="http://www.adrotateplugin.com/" target="_blank">www.adrotateplugin.com</a>!</li>';
-	echo '	<li>Check out the <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">knowledgebase</a> for manuals, general information!</li>';
-	echo '	<li>Need more help? <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">Ticket support</a> is available!</li>';
+	echo '	<li>'.__('Find my website at', 'adrotate').' <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.</li>';
+	echo '	<li>'.__('Give me your money to', 'adrotate').' <a href="http://meandmymac.net/donate/" target="_blank">'.__('show your appreciation', 'adrotate').'</a>. '.__('Thanks!', 'adrotate').'</li>';
+	echo '	<li>'.__('The plugin homepage is at', 'adrotate').' <a href="http://www.adrotateplugin.com/" target="_blank">www.adrotateplugin.com</a>!</li>';
+	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('knowledgebase', 'adrotate').'</a> '.__('for manuals, general information!', 'adrotate').'</li>';
+	echo '	<li>'.__('Need more help?', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('Ticket support', 'adrotate').'</a> '.__('is available!', 'adrotate').'</li>';
 	echo '</ul></td>';
 	echo '<td style="border-left:1px #ddd solid;">';
 	meandmymac_rss_widget(5);
 	echo '</td></tr>';
 	echo '</tbody>';
 
-	echo '</table';
+	echo '</table>';
 }
 
 /*-------------------------------------------------------------
@@ -566,22 +613,27 @@ function adrotate_credits() {
  Since:		3.0
 -------------------------------------------------------------*/
 function adrotate_user_notice() {
+
+	/* Changelog:
+	// Mar 29 2011 - Internationalization support
+	*/
+
 	echo '<table class="widefat" style="margin-top: .5em">';
 
 	echo '<thead>';
 	echo '<tr valign="top">';
-	echo '	<th>AdRotate Notice</th>';
+	echo '	<th>'.__('AdRotate Notice').'</th>';
 	echo '</tr>';
 	echo '</thead>';
 
 	echo '<tbody>';
 	echo '<tr><td>';
-	echo '	The overall stats do not take ads from other advertisers into account.<br />';
-	echo '	All statistics are indicative. They do not nessesarily reflect results counted by other parties.<br />';
-	echo '	Your ads are published with <a href="http://www.adrotateplugin.com/" target="_blank">AdRotate</a> for WordPress.';
+	echo '	'.__('The overall stats do not take ads from other advertisers into account.', 'adrotate').'<br />';
+	echo '	'.__('All statistics are indicative. They do not nessesarily reflect results counted by other parties.', 'adrotate').'<br />';
+	echo '	'.__('Your ads are published with', 'adrotate').' <a href="http://www.adrotateplugin.com/" target="_blank">AdRotate</a> '.__('for WordPress.', 'adrotate');
 	echo '</td></tr>';
 	echo '</tbody>';
 
-	echo '</table';
+	echo '</table>';
 }
 ?>

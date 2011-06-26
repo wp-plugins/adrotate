@@ -86,6 +86,7 @@ class adrotate_widgets extends WP_Widget {
 
 		/* Changelog:
 		// Feb 28 2011 - New method to construct widgets in line with new standards
+		// Mar 29 2011 - Internationalization support
 		*/
 
 		$defaults = array();
@@ -96,26 +97,26 @@ class adrotate_widgets extends WP_Widget {
 		$id = esc_attr( $id );
 ?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title (optional):' ); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title (optional):', 'adrotate' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 			<br />
-			<small><?php _e( 'HTML will be stripped out.' ); ?></small>
+			<small><?php _e( 'HTML will be stripped out.', 'adrotate' ); ?></small>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('type'); ?>"><?php _e( 'Type:' ); ?></label>
+			<label for="<?php echo $this->get_field_id('type'); ?>"><?php _e( 'Type:', 'adrotate' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id('type'); ?>" name="<?php echo $this->get_field_name('type'); ?>" class="postform">
-			    <option value="single" <?php if($type == "single") { echo 'selected'; } ?>>Single Ad - Use Ad ID</option>
-		        <option value="group" <?php if($type == "group") { echo 'selected'; } ?>>Group of Ads - Use group ID</option>
-			    <option value="block" <?php if($type == "block") { echo 'selected'; } ?>>Block of Ads - Use Block ID</option>
+			    <option value="single" <?php if($type == "single") { echo 'selected'; } ?>><?php _e( 'Single Ad - Use Ad ID', 'adrotate' ); ?></option>
+		        <option value="group" <?php if($type == "group") { echo 'selected'; } ?>><?php _e( 'Group of Ads - Use group ID', 'adrotate' ); ?></option>
+			    <option value="block" <?php if($type == "block") { echo 'selected'; } ?>><?php _e( 'Block of Ads - Use Block ID', 'adrotate' ); ?></option>
 			</select>
 			<br />
-			<small><?php _e( 'Choose what you want to use this widget for' ); ?></small>
+			<small><?php _e( 'Choose what you want to use this widget for', 'adrotate' ); ?></small>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('id'); ?>"><?php _e( 'ID:' ); ?></label>
+			<label for="<?php echo $this->get_field_id('id'); ?>"><?php _e( 'ID:', 'adrotate' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('id'); ?>" name="<?php echo $this->get_field_name('id'); ?>" type="text" value="<?php echo $id; ?>" />
 			<br />
-			<small><?php _e( 'Fill in the ID of the type you want to display!' ); ?></small>
+			<small><?php _e( 'Fill in the ID of the type you want to display!', 'adrotate' ); ?></small>
 		</p>
 <?php
 	}

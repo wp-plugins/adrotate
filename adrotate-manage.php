@@ -17,6 +17,7 @@ function adrotate_insert_input() {
 	/* Changelog:
 	// Nov 14 2010 - Updated queries for 3.0
 	// Mar 7 2010 - Added check if $link has http://
+	// Mar 25 2010 - Updated for new image selector
 	*/
 
 	$id 				= $_POST['adrotate_id'];
@@ -25,7 +26,8 @@ function adrotate_insert_input() {
 	$bannercode			= htmlspecialchars(trim($_POST['adrotate_bannercode'], "\t\n "), ENT_QUOTES);
 	$thetime 			= date('U');
 	$active 			= $_POST['adrotate_active'];
-	$imageraw			= $_POST['adrotate_image'];
+	$image_field		= strip_tags(htmlspecialchars(trim($_POST['adrotate_image'], "\t\n "), ENT_QUOTES));
+	$image_dropdown		= $_POST['adrotate_image_dropdown'];
 	$link				= strip_tags(htmlspecialchars(trim($_POST['adrotate_link'], "\t\n "), ENT_QUOTES));
 	$tracker			= $_POST['adrotate_tracker'];
 	$sday 				= strip_tags(trim($_POST['adrotate_sday'], "\t\n "));
@@ -48,15 +50,18 @@ function adrotate_insert_input() {
 			$title = 'Ad '.$id;
 		}
 
+		// Determine error states
 		if(
 			strlen($bannercode) < 1 
-			OR (!isset($tracker) AND strlen($link) < 1 AND $advertiser > 0) 			// Didn't enable click-tracking, didn't provide a link, DID set a advertiser
-			OR (isset($tracker) AND strlen($link) < 1) 									// Did use link field but didn't check click-tracking checkmark
-			OR (!isset($tracker) AND strlen($link) > 0) 								// Didn't enable click-tracking but did use the link field
-			OR (!preg_match("/%link%/i", $bannercode) AND $tracker == 'Y')				// Didn't use %link% but enabled clicktracking
-			OR (preg_match("/%link%/i", $bannercode) AND $tracker == 'N')				// Did use %link% but didn't enable clicktracking
-			OR (!preg_match("/%image%/i", $bannercode) AND $imageraw != 'none')			// Didn't use %image% but selected an image
-			OR (preg_match("/%image%/i", $bannercode) AND $imageraw == 'none')			// Did use %image% but didn't select an image
+			OR (!isset($tracker) AND strlen($link) < 1 AND $advertiser > 0) 		// Didn't enable click-tracking, didn't provide a link, DID set a advertiser
+			OR (isset($tracker) AND strlen($link) < 1) 								// Did use link field but didn't check click-tracking checkmark
+			OR (!isset($tracker) AND strlen($link) > 0) 							// Didn't enable click-tracking but did use the link field
+			OR (!preg_match("/%link%/i", $bannercode) AND $tracker == 'Y')			// Didn't use %link% but enabled clicktracking
+			OR (preg_match("/%link%/i", $bannercode) AND $tracker == 'N')			// Did use %link% but didn't enable clicktracking
+			OR (!preg_match("/%image%/i", $bannercode) AND $image_field != '')		// Didn't use %image% but selected an image
+			AND (!preg_match("/%image%/i", $bannercode) AND $image_dropdown != '')	// Didn't use %image% but selected an image
+			OR (preg_match("/%image%/i", $bannercode) AND $image_field == '')		// Did use %image% but didn't select an image
+			AND (preg_match("/%image%/i", $bannercode) AND $image_dropdown == '')	// Did use %image% but didn't select an image
 		) {
 			$adtype = 'error';
 		} else {
@@ -64,9 +69,9 @@ function adrotate_insert_input() {
 		}
 
 		// Sort out dates
-		if(strlen($smonth) == 0 OR !is_numeric($smonth)) 	$smonth 	= date('m');
-		if(strlen($sday) == 0 OR !is_numeric($sday)) 		$sday 		= date('d');
-		if(strlen($syear) == 0 OR !is_numeric($syear)) 		$syear 		= date('Y');
+		if(strlen($smonth) == 0 OR !is_numeric($smonth)) 	$smonth 	= gmdate('m');
+		if(strlen($sday) == 0 OR !is_numeric($sday)) 		$sday 		= gmdate('d');
+		if(strlen($syear) == 0 OR !is_numeric($syear)) 		$syear 		= gmdate('Y');
 		if(strlen($emonth) == 0 OR !is_numeric($emonth)) 	$emonth 	= $smonth;
 		if(strlen($eday) == 0 OR !is_numeric($eday)) 		$eday 		= $sday;
 		if(strlen($eyear) == 0 OR !is_numeric($eyear)) 		$eyear 		= $syear+1;
@@ -88,10 +93,20 @@ function adrotate_insert_input() {
 		if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';
 			else $tracker = 'N';
 
-		// Format the URL
-		if((strlen($link) > 0 OR $link != "") AND stristr($link, "http://") === false) $link = "http://".$link;
+		// Format the URL (assume http://)
+		if((strlen($link) > 0 OR $link != "") AND stristr($link, "http://") === false AND stristr($link, "https://") === false) $link = "http://".$link;
 		
-		// Determine image settings
+		// Determine image settings ($image_field has priority!)
+		if(strlen($image_field) > 1) {
+			$image = "field|".$image_field;
+		} else {
+			if($image_dropdown == "") {
+				$image = "";
+			} else {
+				$image = "dropdown|".get_option('siteurl')."/wp-content/banners/".$image_dropdown;
+			}
+		}
+/* OBSOLETE IN 3.6 - REMOVE IN FUTURE VERSION?
 		list($type, $file) = explode("|", $imageraw, 2);
 		if($type == "banner") {
 			$image = get_option('siteurl').'/wp-content/banners/'.$file;
@@ -99,13 +114,15 @@ function adrotate_insert_input() {
 		
 		if($type == "media") {
 			$image = $wpdb->get_var("SELECT `guid` FROM ".$wpdb->prefix."posts 
-			WHERE `post_type` = 'attachment' 
-			AND (`post_mime_type` = 'image/jpeg' 
-				OR `post_mime_type` = 'image/gif' 
-				OR `post_mime_type` = 'image/png'
-				OR `post_mime_type` = 'application/x-shockwave-flash')
-			AND `guid` LIKE '%".$file."' LIMIT 1;");
+									WHERE `post_type` = 'attachment' 
+									AND (`post_mime_type` = 'image/jpeg' 
+										OR `post_mime_type` = 'image/gif' 
+										OR `post_mime_type` = 'image/png'
+										OR `post_mime_type` = 'application/x-shockwave-flash')
+									AND `guid` LIKE '%".$file."' LIMIT 1;
+									");
 		}
+*/
 
 		// Determine status of ad and what to do next
 		if($adtype == 'empty') {
@@ -229,10 +246,9 @@ function adrotate_insert_block() {
 	$action			= $_POST['adrotate_action'];
 	$id 			= $_POST['adrotate_id'];
 	$name 			= strip_tags(trim($_POST['adrotate_blockname'], "\t\n "));
-	$adcount		= strip_tags(trim($_POST['adrotate_adcount'], "\t\n "));
+	$rows			= strip_tags(trim($_POST['adrotate_rows'], "\t\n "));
 	$columns 		= strip_tags(trim($_POST['adrotate_columns'], "\t\n "));
-	$wrapper_before = htmlspecialchars(trim($_POST['adrotate_wrapper_before'], "\t\n "), ENT_QUOTES);
-	$wrapper_after 	= htmlspecialchars(trim($_POST['adrotate_wrapper_after'], "\t\n "), ENT_QUOTES);
+	$template 		= strip_tags(trim($_POST['adrotate_template'], "\t\n "));
 	$groups 		= $_POST['groupselect'];
 
 	if(current_user_can('adrotate_block_manage')) {
@@ -264,7 +280,7 @@ function adrotate_insert_block() {
 		unset($value);
 
 		// Update the block itself
-		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `adcount` = '$adcount', `columns` = '$columns', `wrapper_before` = '$wrapper_before', `wrapper_after` = '$wrapper_after' WHERE `id` = '$id';");
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `rows` = '$rows', `columns` = '$columns', `template` = '$template' WHERE `id` = '$id';");
 		adrotate_return($action, array($id));
 		exit;
 	} else {
@@ -288,15 +304,31 @@ function adrotate_request_action() {
 	// Nov 16 2010 - Rebranded 'resetmultiple' and 'renewmultiple' to work like 'reset' and 'renew' original 'reset' and 'renew' are removed, added block support
 	// Dec 4 2010 - Fixed bug where adrotate_renew() wasn't called properly
 	// Dec 17 2010 - Added support for single ad actions (renew, reset, delete)
+	// 5 Jun 2011 - Added, Bulk weight changes, new action for disabled ads listing
 	*/
 
-	if(isset($_POST['bannercheck'])) 	$banner_ids = $_POST['bannercheck'];
-	if(isset($_POST['groupcheck'])) 	$group_ids = $_POST['groupcheck'];
-	if(isset($_POST['blockcheck'])) 	$block_ids = $_POST['blockcheck'];
+	if(isset($_POST['bannercheck'])) 			$banner_ids = $_POST['bannercheck'];
+	if(isset($_POST['disabledbannercheck'])) 	$banner_ids = $_POST['disabledbannercheck'];
+	if(isset($_POST['errorbannercheck'])) 		$banner_ids = $_POST['errorbannercheck'];
+	if(isset($_POST['groupcheck'])) 			$group_ids = $_POST['groupcheck'];
+	if(isset($_POST['blockcheck'])) 			$block_ids = $_POST['blockcheck'];
 	
-	if(isset($_POST['adrotate_id'])) 	$banner_ids = array($_POST['adrotate_id']);
+	if(isset($_POST['adrotate_id'])) 			$banner_ids = array($_POST['adrotate_id']);
 	
-	$actions = $_POST['adrotate_action'];	
+	// Determine which kind of action to use
+	if(isset($_POST['adrotate_action'])) {
+		// Default action call
+		$actions = $_POST['adrotate_action'];
+	} else if(isset($_POST['adrotate_disabled_action'])) {
+		// Disabled ads listing call
+		$actions = $_POST['adrotate_disabled_action'];
+	} else if(isset($_POST['adrotate_error_action'])) {
+		// Erroneous ads listing call
+		$actions = $_POST['adrotate_error_action'];
+	} else {
+		// If neither, protect user with invalid ID
+		$banner_ids = $group_ids = $block_ids = '';
+	}
 	list($action, $specific) = explode("-", $actions);	
 
 	if($banner_ids != '') {
@@ -336,6 +368,14 @@ function adrotate_request_action() {
 			if($action == 'renew') {
 				if(current_user_can('adrotate_ad_manage')) {
 					adrotate_renew($banner_id, $specific);
+					$result_id = $banner_id;
+				} else {
+					adrotate_return('no_access');
+				}
+			}
+			if($action == 'weight') {
+				if(current_user_can('adrotate_ad_manage')) {
+					adrotate_weight($banner_id, $specific);
 					$result_id = $banner_id;
 				} else {
 					adrotate_return('no_access');
@@ -394,6 +434,7 @@ function adrotate_delete($id, $what) {
 
 	/* Changelog:
 	// 14 Nov 2010 - Added and updated queries to work with linkmeta
+	// 1 Apr 2011 - Added template support
 	*/
 
 	if($id > 0) {
@@ -406,6 +447,9 @@ function adrotate_delete($id, $what) {
 		} else if ($what == 'block') {
 			$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = $id;");
 			$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `block` = $id;");
+		} else if ($what == 'template') {
+			$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_templates` WHERE `id` = $id;");
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `template` = '0' WHERE `template` = $id;");
 		} else if ($what == 'bannergroup') {
 			$linkmeta = $wpdb->get_results("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = '$id' AND `block` = '0';");
 			foreach($linkmeta as $meta) {
@@ -471,6 +515,22 @@ function adrotate_renew($id, $howlong = 2592000) {
 
 	if($id > 0) {
 		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `endshow` = `endshow` + '$howlong' WHERE `id` = '$id'");
+	}
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_weight
+
+ Purpose:   Renew the end date of a banner
+ Receive:   $id, $weight
+ Return:    -none-
+ Since:		3.6
+-------------------------------------------------------------*/
+function adrotate_weight($id, $weight = 6) {
+	global $wpdb;
+
+	if($id > 0) {
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `weight` = '$weight' WHERE `id` = '$id'");
 	}
 }
 
@@ -546,10 +606,9 @@ function adrotate_options_submit() {
 	}
 
 	// Miscellaneous Options
+	$config['sortorder'] = $_POST['adrotate_sortorder'];
 	if(isset($_POST['adrotate_credits'])) 					$config['credits'] 		= 'Y';
 		else 												$config['credits'] 		= 'N';
-	if(isset($_POST['adrotate_browser'])) 					$config['browser'] 		= 'Y';
-		else 												$config['browser'] 		= 'N';
 	if(isset($_POST['adrotate_widgetalign'])) 				$config['widgetalign'] 	= 'Y';
 		else 												$config['widgetalign'] 	= 'N';
 	update_option('adrotate_config', $config);
