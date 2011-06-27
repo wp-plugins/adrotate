@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.6
+Version: 3.6.1
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -187,7 +187,7 @@ function adrotate_manage() {
 	    	<?php if ($view == "" OR $view == "manage") { ?>
 	
 			<?php
-			$errorbanners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'error' OR `endshow` <= $now OR `endshow` <= $in2days ORDER BY `id` ASC;");
+			$errorbanners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE (`type` = 'error' OR `endshow` <= $now OR `endshow` <= $in2days) AND `active` = 'yes' ORDER BY `id` ASC;");
 			if ($errorbanners) {
 			?>
 			<h3><?php _e('Ads that need attention', 'adrotate'); ?></h3>
@@ -1589,9 +1589,9 @@ function adrotate_manage_block() {
 							<td colspan="3"><input tabindex="1" name="adrotate_blockname" type="text" class="search-input" size="80" value="<?php echo $edit_block->name; ?>" autocomplete="off" /></td>
 						</tr>
 					    <tr>
-							<th width="15%"><?php _e('How many rows and columns', 'adrotate'); ?></th>
+							<th width="15%"><?php _e('Format:', 'adrotate'); ?></th>
 							<td colspan="3">
-								<input tabindex="2" name="adrotate_rows" type="text" class="search-input" size="5" value="<?php echo $edit_block->rows; ?>" autocomplete="off" /> <?php _e('rows, and', 'adrotate'); ?> <input tabindex="3" name="adrotate_columns" type="text" class="search-input" size="5" value="<?php echo $edit_block->columns; ?>" autocomplete="off" /> <?php _e('columns. (Example: 2 rows and 2 columns, makes a square block of 2x2 ads.)', 'adrotate'); ?>
+								<input tabindex="2" name="adrotate_adcount" type="text" class="search-input" size="5" value="<?php echo $edit_block->adcount; ?>" autocomplete="off" /> <?php _e('ads, and', 'adrotate'); ?> <input tabindex="3" name="adrotate_columns" type="text" class="search-input" size="5" value="<?php echo $edit_block->columns; ?>" autocomplete="off" /> <?php _e('columns. (Example: 4 ads and 2 columns, makes a square block of 2x2 ads.)', 'adrotate'); ?>
 							</td>
 						</tr>
 						</tbody>
@@ -2426,8 +2426,8 @@ function adrotate_options() {
 				        <option value="startshow DESC" <?php if($adrotate_config['sortorder'] == "startshow DESC") { echo 'selected'; } ?>><?php _e('start date (descending)', 'adrotate'); ?></option>
 				        <option value="endshow ASC" <?php if($adrotate_config['sortorder'] == "endshow ASC") { echo 'selected'; } ?>><?php _e('end date (ascending)', 'adrotate'); ?></option>
 				        <option value="endshow DESC" <?php if($adrotate_config['sortorder'] == "endshow DESC") { echo 'selected'; } ?>><?php _e('end date (descending)', 'adrotate'); ?></option>
-				        <option value="ID ASC" <?php if($adrotate_config['sortorder'] == "ID ASC") { echo 'selected'; } ?>><?php _e('ID (Default)', 'adrotate'); ?></option>
-				        <option value="ID DESC" <?php if($adrotate_config['sortorder'] == "ID DESC") { echo 'selected'; } ?>><?php _e('ID reversed', 'adrotate'); ?></option>
+				        <option value="id ASC" <?php if($adrotate_config['sortorder'] == "id ASC") { echo 'selected'; } ?>><?php _e('ID (Default)', 'adrotate'); ?></option>
+				        <option value="id DESC" <?php if($adrotate_config['sortorder'] == "id DESC") { echo 'selected'; } ?>><?php _e('ID reversed', 'adrotate'); ?></option>
 				        <option value="title ASC" <?php if($adrotate_config['sortorder'] == "title ASC") { echo 'selected'; } ?>><?php _e('title (A-Z)', 'adrotate'); ?></option>
 				        <option value="title DESC" <?php if($adrotate_config['sortorder'] == "title DESC") { echo 'selected'; } ?>><?php _e('title (Z-A)', 'adrotate'); ?></option>
 					</select> <span class="description"><?php _e('Default sort order for ad management.', 'adrotate'); ?></span>

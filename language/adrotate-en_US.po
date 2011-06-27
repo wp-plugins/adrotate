@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: AdRotate 3.6\n"
+"Project-Id-Version: AdRotate 3.6.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-26 23:53+0100\n"
-"PO-Revision-Date: 2011-06-26 23:53+0100\n"
+"POT-Creation-Date: 2011-06-27 20:47+0100\n"
+"PO-Revision-Date: 2011-06-27 20:54+0100\n"
 "Last-Translator: Arnan de Gans <adegans@meandmymac.net>\n"
 "Language-Team: Arnan de Gans <info@adrotateplugin.com>\n"
 "MIME-Version: 1.0\n"
@@ -25,223 +25,223 @@ msgstr ""
 msgid "This group is not in a block!"
 msgstr ""
 
-#: adrotate-functions.php:533
-#: adrotate-functions.php:539
+#: adrotate-functions.php:534
+#: adrotate-functions.php:540
 msgid "ad(s) expired."
 msgstr ""
 
-#: adrotate-functions.php:533
+#: adrotate-functions.php:534
 msgid "Take action now"
 msgstr ""
 
-#: adrotate-functions.php:535
-#: adrotate-functions.php:539
+#: adrotate-functions.php:536
+#: adrotate-functions.php:540
 msgid "ad(s) are about to expire."
 msgstr ""
 
-#: adrotate-functions.php:535
+#: adrotate-functions.php:536
 msgid "Check it out"
 msgstr ""
 
-#: adrotate-functions.php:537
-#: adrotate-functions.php:539
+#: adrotate-functions.php:538
+#: adrotate-functions.php:540
 msgid "ad(s) with configuration errors."
 msgstr ""
 
-#: adrotate-functions.php:537
+#: adrotate-functions.php:538
 msgid "Solve this"
 msgstr ""
 
-#: adrotate-functions.php:539
+#: adrotate-functions.php:540
 msgid "Fix this as soon as possible"
 msgstr ""
 
-#: adrotate-functions.php:580
+#: adrotate-functions.php:581
 msgid "[AdRotate Alert] Your ads need your help!"
 msgstr ""
 
-#: adrotate-functions.php:582
-#: adrotate-functions.php:708
+#: adrotate-functions.php:583
+#: adrotate-functions.php:709
 msgid "Hello"
 msgstr ""
 
-#: adrotate-functions.php:583
+#: adrotate-functions.php:584
 msgid "This notification is send to you from your website"
 msgstr ""
 
-#: adrotate-functions.php:584
+#: adrotate-functions.php:585
 msgid "You will receive a notification approximately every 24 hours until the issues are resolved."
 msgstr ""
 
-#: adrotate-functions.php:585
+#: adrotate-functions.php:586
 msgid "Current issues:"
 msgstr ""
 
-#: adrotate-functions.php:586
+#: adrotate-functions.php:587
 msgid "ad(s) expired. This needs your immediate attention!"
 msgstr ""
 
-#: adrotate-functions.php:587
+#: adrotate-functions.php:588
 msgid "ad(s) will expire in less than 2 days."
 msgstr ""
 
-#: adrotate-functions.php:589
+#: adrotate-functions.php:590
 msgid "A total of"
 msgstr ""
 
-#: adrotate-functions.php:589
+#: adrotate-functions.php:590
 msgid "ad(s) are in need of your care!"
 msgstr ""
 
-#: adrotate-functions.php:590
-msgid "Access your dashboard here:"
-msgstr ""
-
 #: adrotate-functions.php:591
-#: adrotate-functions.php:658
-#: adrotate-functions.php:717
-msgid "Have a nice day!"
+msgid "Access your dashboard here:"
 msgstr ""
 
 #: adrotate-functions.php:592
 #: adrotate-functions.php:659
 #: adrotate-functions.php:718
+msgid "Have a nice day!"
+msgstr ""
+
+#: adrotate-functions.php:593
+#: adrotate-functions.php:660
+#: adrotate-functions.php:719
 msgid "Your AdRotate Notifier"
 msgstr ""
 
-#: adrotate-functions.php:640
+#: adrotate-functions.php:641
 msgid "[AdRotate] An advertiser has put in a request for renewal!"
 msgstr ""
 
-#: adrotate-functions.php:641
+#: adrotate-functions.php:642
 msgid "[AdRotate] An advertiser wants his ad removed."
 msgstr ""
 
-#: adrotate-functions.php:642
+#: adrotate-functions.php:643
 msgid "[AdRotate] An advertiser wrote a comment on his ad!"
 msgstr ""
 
-#: adrotate-functions.php:643
+#: adrotate-functions.php:644
 msgid "[AdRotate] An advertiser has a problem!"
 msgstr ""
 
-#: adrotate-functions.php:647
 #: adrotate-functions.php:648
+#: adrotate-functions.php:649
 msgid "requests ad"
 msgstr ""
 
-#: adrotate-functions.php:647
+#: adrotate-functions.php:648
 msgid "renewed!"
 msgstr ""
 
-#: adrotate-functions.php:648
+#: adrotate-functions.php:649
 msgid "removed."
 msgstr ""
 
-#: adrotate-functions.php:649
+#: adrotate-functions.php:650
 msgid "has something to say about ad"
 msgstr ""
 
-#: adrotate-functions.php:650
+#: adrotate-functions.php:651
 msgid "has a problem with AdRotate."
 msgstr ""
 
-#: adrotate-functions.php:652
+#: adrotate-functions.php:653
 msgid "Attached message:"
 msgstr ""
 
-#: adrotate-functions.php:654
+#: adrotate-functions.php:655
 msgid "You can reply to this message to contact"
 msgstr ""
 
-#: adrotate-functions.php:655
+#: adrotate-functions.php:656
 msgid "Review the ad here:"
 msgstr ""
 
-#: adrotate-functions.php:705
+#: adrotate-functions.php:706
 msgid "[AdRotate] This is a test notification!"
 msgstr ""
 
-#: adrotate-functions.php:706
+#: adrotate-functions.php:707
 msgid "[AdRotate] This is a test email."
 msgstr ""
 
-#: adrotate-functions.php:710
+#: adrotate-functions.php:711
 msgid "The administrator of"
 msgstr ""
 
-#: adrotate-functions.php:710
+#: adrotate-functions.php:711
 msgid "has set your email address to receive"
 msgstr ""
 
-#: adrotate-functions.php:711
+#: adrotate-functions.php:712
 msgid "notifications from AdRotate. These are to alert you of the state of advertisements posted on this website."
 msgstr ""
 
-#: adrotate-functions.php:712
+#: adrotate-functions.php:713
 msgid "messages from Advertisers using AdRotate. Your email is not shown to them until you reply to their messages."
 msgstr ""
 
-#: adrotate-functions.php:715
+#: adrotate-functions.php:716
 msgid "If you believe this message to be in error, reply to this email with your complaint!"
 msgstr ""
 
-#: adrotate-functions.php:824
+#: adrotate-functions.php:825
 msgid "No files found"
 msgstr ""
 
-#: adrotate-functions.php:827
+#: adrotate-functions.php:828
 msgid "Folder not found or not accessible"
 msgstr ""
 
-#: adrotate-functions.php:1032
-#: adrotate-functions.php:1034
+#: adrotate-functions.php:1033
+#: adrotate-functions.php:1035
 msgid "Error, Ad"
 msgstr ""
 
-#: adrotate-functions.php:1032
-#: adrotate-functions.php:1034
+#: adrotate-functions.php:1033
+#: adrotate-functions.php:1035
 msgid "is expired or does not exist!"
 msgstr ""
 
-#: adrotate-functions.php:1041
-#: adrotate-functions.php:1043
+#: adrotate-functions.php:1042
+#: adrotate-functions.php:1044
 msgid "Either there are no banners, they are disabled or none qualified for this location!"
 msgstr ""
 
-#: adrotate-functions.php:1049
+#: adrotate-functions.php:1050
 msgid "Error, no Ad ID set! Check your syntax!"
 msgstr ""
 
-#: adrotate-functions.php:1054
+#: adrotate-functions.php:1055
 msgid "Error, ad could not be found! Make sure it exists."
 msgstr ""
 
-#: adrotate-functions.php:1060
+#: adrotate-functions.php:1061
 msgid "Error, no group set! Check your syntax!"
 msgstr ""
 
-#: adrotate-functions.php:1066
+#: adrotate-functions.php:1067
 msgid "Error, Block"
 msgstr ""
 
-#: adrotate-functions.php:1066
+#: adrotate-functions.php:1067
 msgid "does not exist! Check your syntax!"
 msgstr ""
 
-#: adrotate-functions.php:1071
+#: adrotate-functions.php:1072
 msgid "Error, no Block ID set! Check your syntax!"
 msgstr ""
 
-#: adrotate-functions.php:1077
+#: adrotate-functions.php:1078
 msgid "There was an error locating the database tables for AdRotate. Please deactivate and re-activate AdRotate from the plugin page!!"
 msgstr ""
 
-#: adrotate-functions.php:1077
+#: adrotate-functions.php:1078
 msgid "If this does not solve the issue please seek support at"
 msgstr ""
 
-#: adrotate-functions.php:1083
+#: adrotate-functions.php:1084
 msgid "An unknown error occured."
 msgstr ""
 
@@ -1284,15 +1284,15 @@ msgid "Name / Reference:"
 msgstr ""
 
 #: adrotate.php:1592
-msgid "How many rows and columns"
+msgid "Format:"
 msgstr ""
 
 #: adrotate.php:1594
-msgid "rows, and"
+msgid "ads, and"
 msgstr ""
 
 #: adrotate.php:1594
-msgid "columns. (Example: 2 rows and 2 columns, makes a square block of 2x2 ads.)"
+msgid "columns. (Example: 4 ads and 2 columns, makes a square block of 2x2 ads.)"
 msgstr ""
 
 #: adrotate.php:1620

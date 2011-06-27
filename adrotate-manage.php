@@ -246,9 +246,10 @@ function adrotate_insert_block() {
 	$action			= $_POST['adrotate_action'];
 	$id 			= $_POST['adrotate_id'];
 	$name 			= strip_tags(trim($_POST['adrotate_blockname'], "\t\n "));
-	$rows			= strip_tags(trim($_POST['adrotate_rows'], "\t\n "));
+	$adcount		= strip_tags(trim($_POST['adrotate_adcount'], "\t\n "));
 	$columns 		= strip_tags(trim($_POST['adrotate_columns'], "\t\n "));
-	$template 		= strip_tags(trim($_POST['adrotate_template'], "\t\n "));
+	$wrapper_before	= strip_tags(trim($_POST['adrotate_wrapper_before'], "\t\n "));
+	$wrapper_after	= strip_tags(trim($_POST['adrotate_wrapper_after'], "\t\n "));
 	$groups 		= $_POST['groupselect'];
 
 	if(current_user_can('adrotate_block_manage')) {
@@ -280,7 +281,7 @@ function adrotate_insert_block() {
 		unset($value);
 
 		// Update the block itself
-		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `rows` = '$rows', `columns` = '$columns', `template` = '$template' WHERE `id` = '$id';");
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `adcount` = '$adcount', `columns` = '$columns', `wrapper_before` = '$wrapper_before', `wrapper_after` = '$wrapper_after' WHERE `id` = '$id';");
 		adrotate_return($action, array($id));
 		exit;
 	} else {

@@ -396,6 +396,7 @@ function adrotate_check_config() {
 	if($config['notification_email_switch'] == '' OR !isset($config['notification_email_switch']))	$config['notification_email_switch']	= 'Y';
 	if($config['notification_email'] == '' OR !isset($config['notification_email']) OR !is_array($config['notification_email']))	$config['notification_email']	= array(get_option('admin_email'));
 	if($config['advertiser_email'] == '' OR !isset($config['advertiser_email']) OR !is_array($config['advertiser_email']))	$config['advertiser_email']	= array(get_option('admin_email'));
+	if($config['sortorder'] == '' OR !isset($config['sortorder']))					$config['sortorder'] 			= 'id ASC';
 	if($config['credits'] == '' OR !isset($config['credits']))						$config['credits'] 				= 'Y';
 	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))				$config['widgetalign'] 			= 'N';
 	update_option('adrotate_config', $config);
