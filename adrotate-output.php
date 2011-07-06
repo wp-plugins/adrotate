@@ -24,10 +24,12 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	// Feb 28 2011 - Updated for new statistics system
 	// Mar 12 2011 - Added new receiving values $group and $block for stats
 	// Mar 25 2011 - Added crawler filter to prevent impressions for bots
+	// Jul 6 2011 - Expanded impression filter to not count every page load
 	*/
 	
-	$now 				= current_time('timestamp');
+	$now 				= date('U');
 	$today 				= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+	$fiveminutes 		= $now + 300;
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
@@ -51,28 +53,36 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 			echo "Peak memory usage: " . round($peakmemory, 2) ." MB <br />"; 
 			print_r($banner); 
 			echo "</pre></p>"; 
-		}			
+		}
+			
+		if($adrotate_debug['timers'] == true) {
+			$fiveminutes = $now;
+		} else {
+			$fiveminutes = $now + 300;
+		}
 		
 		if($banner) {
 			$output = adrotate_ad_output($banner->id, $group, $block, $banner->bannercode, $banner->tracker, $banner->link, $banner->image);
 
+			$remote_ip 	= adrotate_get_remote_ip();
 			if(is_array($adrotate_crawlers)) $crawlers = $adrotate_crawlers;
 				else $crawlers = array();
 
 			$nocrawler = true;
-			foreach ($crawlers as $crawler) {
-				if (preg_match("/$crawler/i", $useragent)) $nocrawler = false;
+			foreach($crawlers as $crawler) {
+				if(preg_match("/$crawler/i", $useragent)) $nocrawler = false;
 			}
 		
-			if($nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
+			$ip = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'i' AND `timer` < '$fiveminutes' AND `bannerid` = '$banner_id' LIMIT 1;");
+			if($ip < 1 AND $nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
 				$stats = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$banner_id'$grouporblock AND `thetime` = '$today';");
 				if($stats > 0) {
 					$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_stats_tracker` SET `impressions` = `impressions` + 1 WHERE `id` = '$stats';");
 				} else {
 					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_stats_tracker` (`ad`, `group`, `block`, `thetime`, `clicks`, `impressions`) VALUES ('$banner_id', '$group', '$block', '$today', '0', '1');");
 				}
+				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`, `stat`) VALUES ('$remote_ip', '$now', '$banner_id', 'i');");
 			}
-
 		} else {
 			$output = adrotate_error('ad_expired', array($banner_id));
 		}

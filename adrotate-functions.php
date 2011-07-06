@@ -379,6 +379,7 @@ function adrotate_check_config() {
 	// Jan 24 2011 - Renamed $crawlers to $debug for debugger if()
 	// Feb 15 2011 - Added dashboard debug option
 	// Feb 28 2011 - Revamped debug option with array()
+	// Jul 6 2011 - Renewed crawlers
 	*/
 	
 	$config 	= get_option('adrotate_config');
@@ -401,7 +402,7 @@ function adrotate_check_config() {
 	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))				$config['widgetalign'] 			= 'N';
 	update_option('adrotate_config', $config);
 
-	if($crawlers == '' OR !isset($crawlers)) 										$crawlers 						= array("bot", "crawler", "spider", "google", "yahoo", "msn", "ask", "ia_archiver");
+	if($crawlers == '' OR !isset($crawlers)) 										$crawlers 						= array("Teoma", "alexa", "froogle", "Gigabot", "inktomi","looksmart", "URL_Spider_SQL", "Firefly", "NationalDirectory","Ask Jeeves", "TECNOSEEK", "InfoSeek", "WebFindBot", "girafabot","www.galaxy.com", "Googlebot", "Scooter", "Slurp","msnbot", "appie", "FAST", "WebBug", "Spade", "ZyBorg", "rabaz","Baiduspider", "Feedfetcher-Google", "TechnoratiSnoop", "Rankivabot","Mediapartners-Google", "Sogou web spider", "WebAlta Crawler","bot", "crawler", "yahoo", "msn", "ask", "ia_archiver");
 	update_option('adrotate_crawlers', $crawlers);
 
 	if($debug['general'] == '' OR !isset($debug['general'])) 						$debug['general'] 				= false;
@@ -409,6 +410,7 @@ function adrotate_check_config() {
 	if($debug['userroles'] == '' OR !isset($debug['userroles'])) 					$debug['userroles'] 			= false;
 	if($debug['userstats'] == '' OR !isset($debug['userstats'])) 					$debug['userstats'] 			= false;
 	if($debug['stats'] == '' OR !isset($debug['stats'])) 							$debug['stats'] 				= false;
+	if($debug['timers'] == '' OR !isset($debug['timers'])) 							$debug['timers'] 				= false;
 	update_option('adrotate_debug', $debug);
 
 }
@@ -458,6 +460,25 @@ function adrotate_get_role($capability){
 		if(call_user_func_array(array(&$check_role, 'has_cap'), $args)) return $check_role->name;
 	}
 	return false;
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_get_remote_ip
+
+ Purpose:   Return the lowest roles which has the capabilities (Code borrowed from NextGen Gallery)
+ Receive:   -None-
+ Return:    $buffer[0]
+ Since:		3.6.2
+-------------------------------------------------------------*/
+function adrotate_get_remote_ip(){
+	if(empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+		$remote_ip = $_SERVER["REMOTE_ADDR"];
+	} else {
+		$remote_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+	}
+	$buffer = explode(',', $remote_ip, 2);
+
+	return $buffer[0];
 }
 
 /*-------------------------------------------------------------

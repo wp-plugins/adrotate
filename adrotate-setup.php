@@ -129,6 +129,7 @@ function adrotate_database_install() {
 				`ipaddress` varchar(255) NOT NULL default '0',
 				`timer` int(15) NOT NULL default '0',
 				`bannerid` int(15) NOT NULL default '0',
+				`stat` char(1) NOT NULL default 'c',
 				PRIMARY KEY  (`id`)
 			) ".$charset_collate.";";
 		dbDelta($sql);
@@ -276,6 +277,13 @@ function adrotate_database_upgrade() {
 			}
 		}
 
+		// Database: 	10
+		// AdRotate: 	3.6.2
+		if($adrotate_db_version < 10) {
+			adrotate_add_column($tables['adrotate_tracker'], 'stat', 'CHAR(1) NOT NULL DEFAULT \'c\' AFTER `bannerid`');
+			$wpdb->query("UPDATE `".$tables['adrotate_tracker']."` SET `stat` = 'c' WHERE `stat` = '';");
+		}
+		
 		update_option("adrotate_db_version", ADROTATE_DB_VERSION);
 	}
 }
@@ -325,6 +333,11 @@ function adrotate_core_upgrade() {
 			if(!is_dir(ABSPATH.'/wp-content/plugins/adrotate/language')) {
 				mkdir(ABSPATH.'/wp-content/plugins/adrotate/language', 0755);
 			}
+		}
+
+		if($adrotate_version < 354) {
+			$crawlers = array("Teoma", "alexa", "froogle", "Gigabot", "inktomi","looksmart", "URL_Spider_SQL", "Firefly", "NationalDirectory","Ask Jeeves", "TECNOSEEK", "InfoSeek", "WebFindBot", "girafabot","www.galaxy.com", "Googlebot", "Scooter", "Slurp","msnbot", "appie", "FAST", "WebBug", "Spade", "ZyBorg", "rabaz","Baiduspider", "Feedfetcher-Google", "TechnoratiSnoop", "Rankivabot","Mediapartners-Google", "Sogou web spider", "WebAlta Crawler","bot", "crawler", "yahoo", "msn", "ask", "ia_archiver");
+			update_option('adrotate_crawlers', $crawlers);
 		}
 
 		update_option("adrotate_version", ADROTATE_VERSION);

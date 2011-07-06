@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.6.1
+Version: 3.6.2
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -14,8 +14,8 @@ Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
 */
 
 /*--- AdRotate values ---------------------------------------*/
-define("ADROTATE_VERSION", 353);
-define("ADROTATE_DB_VERSION", 9);
+define("ADROTATE_VERSION", 354);
+define("ADROTATE_DB_VERSION", 10);
 setlocale(LC_ALL, get_locale().'.'.DB_CHARSET);
 /*-----------------------------------------------------------*/
 
@@ -1596,6 +1596,31 @@ function adrotate_manage_block() {
 						</tr>
 						</tbody>
 	
+			  			<thead>
+		  				<tr>
+							<th colspan="4">Wrapper code (Optional) - Wraps around each ad to facilitate easy margins, paddings or borders around ads</th>
+						</tr>
+			  			</thead>
+			  			
+						<tbody>
+					    <tr>
+							<th valign="top">Before ad</strong></th>
+							<td colspan="2"><textarea tabindex="4" name="adrotate_wrapper_before" cols="65" rows="3"><?php echo $edit_block->wrapper_before; ?></textarea></td>
+							<td>
+						        <p><strong>Example:</strong></p>
+						        <p><em>&lt;span style="margin: 2px;"&gt;</em></p>
+							</td>
+						</tr>
+					    <tr>
+							<th valign="top">After ad</strong></th>
+							<td colspan="2"><textarea tabindex="5" name="adrotate_wrapper_after" cols="65" rows="3"><?php echo $edit_block->wrapper_after; ?></textarea></td>
+							<td>
+								<p><strong>Example:</strong></p>
+								<p><em>&lt;/span&gt;</em></p>
+							</td>
+						</tr>
+						</tbody>
+	
 						<thead>
 						<tr valign="top">
 							<th colspan="4"><?php _e('Usage', 'adrotate'); ?></th>
@@ -2500,6 +2525,7 @@ function adrotate_options() {
 					<input type="checkbox" name="adrotate_debug_userroles" <?php if($adrotate_debug['userroles'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show array of all userroles and capabilities!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_userstats" <?php if($adrotate_debug['userstats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review saved user stats (users)! Visible to advertisers!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_stats" <?php if($adrotate_debug['stats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review global stats, per ad/group/block stats (admins)!', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_timers" <?php if($adrotate_debug['timers'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable timers for clicks and impressions allowing you to test the impression and click counters or stats without having to wait for the timer!', 'adrotate'); ?></span><br />
 				</td>
 			</tr>
 	    	</table>

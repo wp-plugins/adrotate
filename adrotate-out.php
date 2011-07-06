@@ -11,7 +11,7 @@ Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
 -------------------------------------------------------------*/
 
 include('../../../wp-blog-header.php');
-global $wpdb, $adrotate_crawlers;
+global $wpdb, $adrotate_crawlers, $adrotate_debug;
 
 if(isset($_GET['track']) OR $_GET['track'] != '') {
 	$meta 									= urldecode($_GET['track']);	
@@ -24,16 +24,16 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 	if($group > 0) $grouporblock = " AND `group` = '$group'";
 	if($block > 0) $grouporblock = " AND `block` = '$block'";
 
-	if(empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-		$remote_ip = $_SERVER["REMOTE_ADDR"];
-	} else {
-		$remote_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-	}
 	
-	$buffer 	= explode(',', $remote_ip, 2);
+	$remote_ip 	= adrotate_get_remote_ip();
 	$now 		= date('U');
 	$today 		= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
-	$tomorrow 	= $now + 86400;
+	if($adrotate_debug['timers'] == true) {
+		$tomorrow = $now;
+	} else {
+		$tomorrow 	= $now + 86400;
+	}
+		
 	
 	$bannerurl = $wpdb->get_var("SELECT `link` FROM `".$prefix."adrotate` WHERE `id` = '".$ad."' LIMIT 1;");
 	if($bannerurl) {
@@ -44,11 +44,11 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 		foreach ($crawlers as $crawler) {
 			if (preg_match("/$crawler/i", $useragent)) $nocrawler = false;
 		}
-	
-		$ip = $wpdb->get_var("SELECT COUNT(*) FROM `".$prefix."adrotate_tracker` WHERE `ipaddress` = '$buffer[0]' AND `timer` < '$tomorrow' AND `bannerid` = '$ad' LIMIT 1;");
+
+		$ip = $wpdb->get_var("SELECT COUNT(*) FROM `".$prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'c' AND `timer` < '$tomorrow' AND `bannerid` = '$ad' LIMIT 1;");
 		if($ip < 1 AND $nocrawler == true AND (!isset($preview) OR empty($preview)) AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
 			$wpdb->query("UPDATE `".$prefix."adrotate_stats_tracker` SET `clicks` = `clicks` + 1 WHERE `ad` = '$ad'$grouporblock AND `thetime` = '$today';");
-			$wpdb->query("INSERT INTO `".$prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`) VALUES ('$buffer[0]', '$now', '$ad');");
+			$wpdb->query("INSERT INTO `".$prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`, `stat`) VALUES ('$remote_ip', '$now', '$ad', 'c');");
 		}
 		$bannerurl = str_replace('%random%', $now, $bannerurl);
 

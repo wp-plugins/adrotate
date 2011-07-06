@@ -248,8 +248,8 @@ function adrotate_insert_block() {
 	$name 			= strip_tags(trim($_POST['adrotate_blockname'], "\t\n "));
 	$adcount		= strip_tags(trim($_POST['adrotate_adcount'], "\t\n "));
 	$columns 		= strip_tags(trim($_POST['adrotate_columns'], "\t\n "));
-	$wrapper_before	= strip_tags(trim($_POST['adrotate_wrapper_before'], "\t\n "));
-	$wrapper_after	= strip_tags(trim($_POST['adrotate_wrapper_after'], "\t\n "));
+	$wrapper_before	= trim($_POST['adrotate_wrapper_before'], "\t\n ");
+	$wrapper_after	= trim($_POST['adrotate_wrapper_after'], "\t\n ");
 	$groups 		= $_POST['groupselect'];
 
 	if(current_user_can('adrotate_block_manage')) {
@@ -633,6 +633,8 @@ function adrotate_options_submit() {
 		else 											$debug['userstats']		= false;
 	if(isset($_POST['adrotate_debug_stats'])) 			$debug['stats'] 		= true;
 		else 											$debug['stats']			= false;
+	if(isset($_POST['adrotate_debug_timers'])) 			$debug['timers'] 		= true;
+		else 											$debug['timers']		= false;
 	update_option('adrotate_debug', $debug);
 
 
