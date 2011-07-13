@@ -1,6 +1,6 @@
 <?php
 /*  
-Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
+Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
 */
 
 /*-------------------------------------------------------------
@@ -12,7 +12,7 @@ Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
  Since:		3.0
 -------------------------------------------------------------*/
 function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
-	global $wpdb, $adrotate_crawlers, $adrotate_debug;
+	global $wpdb, $adrotate_config, $adrotate_crawlers, $adrotate_debug;
 
 	/* Changelog:
 	// Nov 15 2010 - Moved ad formatting to new function adrotate_ad_output()
@@ -25,11 +25,11 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	// Mar 12 2011 - Added new receiving values $group and $block for stats
 	// Mar 25 2011 - Added crawler filter to prevent impressions for bots
 	// Jul 6 2011 - Expanded impression filter to not count every page load
+	// Jul 11 2011 - Added call to change the impression timer
 	*/
 	
 	$now 				= date('U');
 	$today 				= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
-	$fiveminutes 		= $now + 300;
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
@@ -56,9 +56,9 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 		}
 			
 		if($adrotate_debug['timers'] == true) {
-			$fiveminutes = $now;
+			$impression_timer = $now;
 		} else {
-			$fiveminutes = $now + 300;
+			$impression_timer = $now + $adrotate_config['impression_timer'];
 		}
 		
 		if($banner) {
@@ -73,7 +73,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 				if(preg_match("/$crawler/i", $useragent)) $nocrawler = false;
 			}
 		
-			$ip = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'i' AND `timer` < '$fiveminutes' AND `bannerid` = '$banner_id' LIMIT 1;");
+			$ip = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'i' AND `timer` < '$impression_timer' AND `bannerid` = '$banner_id' LIMIT 1;");
 			if($ip < 1 AND $nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
 				$stats = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$banner_id'$grouporblock AND `thetime` = '$today';");
 				if($stats > 0) {
@@ -113,6 +113,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 	// Feb 28 2011 - Updated ad selection for new statistics system
 	// Mar 12 2011 - Added use of $group for adrotate_ad()
 	// Mar 29 2011 - Renamed $fallbackoverride to $fallback
+	// Jul 11 2011 - Removed impression and stats counts AFTER last ad update so the max impressions and clicks works again
 	*/
 
 	if($group_ids) {
@@ -174,7 +175,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 			}			
 
 			foreach($results as $result) {
-				$stats = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$result->id' AND `thetime` >= '$result->updated';");
+				$stats = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$result->id';");
 
 				if($stats->clicks == null) $stats->clicks = '0';
 				if($stats->impressions == null) $stats->impressions = '0';
@@ -252,6 +253,7 @@ function adrotate_block($block_id, $weight = 0) {
 	// Feb 28 2011 - Updated ad selection for new statistics system
 	// Mar 12 2011 - Added use of $block for adrotate_ad()
 	// Apr 2 2011 - Added fallback support
+	// Jul 11 2011 - Removed impression and stats counts AFTER last ad update so the max impressions and clicks works again
 	*/
 	
 	if($block_id) {
@@ -331,7 +333,7 @@ function adrotate_block($block_id, $weight = 0) {
 					}			
 
 					foreach($results as $result) {
-						$stats = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$result->id' AND `thetime` >= '$result->updated';");
+						$stats = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$result->id';");
 
 						if($stats->clicks == null) $stats->clicks = '0';
 						if($stats->impressions == null) $stats->impressions = '0';

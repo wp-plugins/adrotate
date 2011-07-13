@@ -4,13 +4,13 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.6.2
+Version: 3.6.3
 Author URI: http://meandmymac.net/
 License: GPL2
 */
 
 /*  
-Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
+Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
 */
 
 /*--- AdRotate values ---------------------------------------*/
@@ -2268,7 +2268,6 @@ function adrotate_options() {
 					</select> <span class="description"><?php _e('Role to allow users/advertisers to see their reports page.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Global Report Page', 'adrotate'); ?></th>
 				<td>
@@ -2277,7 +2276,6 @@ function adrotate_options() {
 					</select> <span class="description"><?php _e('Role to review the global report.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Manage/Add/Edit Ads', 'adrotate'); ?></th>
 				<td>
@@ -2286,7 +2284,6 @@ function adrotate_options() {
 					</select> <span class="description"><?php _e('Role to see and add/edit ads.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Delete/Reset Ads', 'adrotate'); ?></th>
 				<td>
@@ -2295,7 +2292,6 @@ function adrotate_options() {
 					</select> <span class="description"><?php _e('Role to delete ads and reset stats.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Manage/Add/Edit Groups', 'adrotate'); ?></th>
 				<td>
@@ -2304,7 +2300,6 @@ function adrotate_options() {
 					</select> <span class="description"><?php _e('Role to see and add/edit groups.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Delete Groups', 'adrotate'); ?></th>
 				<td>
@@ -2313,7 +2308,6 @@ function adrotate_options() {
 					</select> <span class="description"><?php _e('Role to delete groups.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Manage/Add/Edit Blocks', 'adrotate'); ?></th>
 				<td>
@@ -2322,7 +2316,6 @@ function adrotate_options() {
 					</select> <span class="description"><?php _e('Role to see and add/edit blocks.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Delete Blocks', 'adrotate'); ?></th>
 				<td>
@@ -2331,7 +2324,6 @@ function adrotate_options() {
 					</select> <span class="description"><?php _e('Role to delete blocks.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('AdRotate Advertisers', 'adrotate'); ?></th>
 				<td>
@@ -2378,7 +2370,6 @@ function adrotate_options() {
 			<tr>
 				<td colspan="2"><h2><?php _e('Email Notifications', 'adrotate'); ?></h2></td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Notifications', 'adrotate'); ?></th>
 				<td>
@@ -2398,7 +2389,6 @@ function adrotate_options() {
 			<tr>
 				<td colspan="2"><h2><?php _e('Advertiser Messages', 'adrotate'); ?></h2></td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Advertiser Messages', 'adrotate'); ?></th>
 				<td>
@@ -2415,9 +2405,9 @@ function adrotate_options() {
 			</tr>
 			
 			<tr>
-				<td colspan="2"><h2><?php _e('User-Agent Filter', 'adrotate'); ?></h2></td>
+				<td colspan="2"><h2><?php _e('Clicktracker / Impressiontracker', 'adrotate'); ?></h2></td>
 			</tr>
-			
+
 			<?php if($adrotate_debug['dashboard'] == true) { ?>
 			<tr>
 				<td colspan="2">
@@ -2431,7 +2421,7 @@ function adrotate_options() {
 			<?php } ?>
 
 			<tr>
-				<th valign="top"><?php _e('List of keywords to filter', 'adrotate'); ?></th>
+				<th valign="top"><?php _e('User-Agent Filter', 'adrotate'); ?></th>
 				<td>
 					<textarea name="adrotate_crawlers" cols="90" rows="5"><?php echo $crawlers; ?></textarea><br />
 					<span class="description"><?php _e('A comma separated list of keywords. Filter out bots/crawlers/user-agents. To prevent impressions and clicks counted on them.', 'adrotate'); ?><br />
@@ -2439,11 +2429,18 @@ function adrotate_options() {
 					<?php _e('Additionally to the list specified here, empty User-Agents are blocked as well.', 'adrotate'); ?> (<?php _e('Learn more about', 'adrotate'); ?> <a href="http://en.wikipedia.org/wiki/User_agent" title="User Agents" target="_blank"><?php _e('user-agents', 'adrotate'); ?></a>.)</span>
 				</td>
 			</tr>
+			<tr>
+				<th valign="top"><?php _e('Impressions timer', 'adrotate'); ?></th>
+				<td>
+					<input name="adrotate_impression_timer" type="text" class="search-input" size="5" value="<?php echo $adrotate_config['impression_timer']; ?>" autocomplete="off" /> <?php _e('Seconds.', 'adrotate'); ?><br />
+					<span class="description"><?php _e('Default: 300. If you set this to anything lower than 20 seconds a visitor can inflate impressions relatively quickly by pressing refresh in the browser.', 'adrotate'); ?><br /><?php _e('This number may not be empty, negative or exceed 3600 (1 hour).', 'adrotate'); ?></span>
+				</td>
+			</tr>
+
 			
 			<tr>
 				<td colspan="2"><h2><?php _e('Miscellaneous', 'adrotate'); ?></h2></td>
 			</tr>
-			
 			<tr>
 				<th valign="top"><?php _e('Sort Order', 'adrotate'); ?></th>
 				<td><select name="adrotate_sortorder" id="cat" class="postform">
@@ -2487,7 +2484,6 @@ function adrotate_options() {
 			<tr>
 				<td colspan="2"><span class="description"><?php _e('NOTE: The below functions are intented to be used to OPTIMIZE your database. They only apply to your ads/groups/blocks and stats. Not to other settings or other parts of Wordpress! Always always make a backup! These functions are to be used when you feel or notice your database is slow, unresponsive and sluggish.', 'adrotate'); ?></span></td>
 			</tr>
-			
 			<tr>
 				<th valign="top"><?php _e('Optimize Database', 'adrotate'); ?></th>
 				<td>
@@ -2496,7 +2492,6 @@ function adrotate_options() {
 					<?php _e('Overhead data is accumulated garbage resulting from many changes you\'ve made. This can vary from nothing to hundreds of KiB of data.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<th valign="top"><?php _e('Clean-up Database', 'adrotate'); ?></th>
 				<td>
@@ -2504,7 +2499,6 @@ function adrotate_options() {
 					<span class="description"><?php _e('AdRotate creates empty records when you start making ads, groups or blocks. In rare occasions these records are faulty. If you made an ad, group or block that does not save when you make it use this button to delete those empty records.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			<tr>
 				<td colspan="2"><span class="description"><?php _e('DISCLAIMER: If for any reason your data is lost, damaged or otherwise becomes unusable in any way or by any means in whichever way i will not take responsibility. You should always have a backup of your database. These functions do NOT destroy data. If data is lost, damaged or unusable, your database likely was beyond repair already. Claiming it worked before clicking these buttons is not a valid point in any case.', 'adrotate'); ?></span></td>
 			</tr>
@@ -2512,7 +2506,6 @@ function adrotate_options() {
 			<tr>
 				<td colspan="2"><h2><?php _e('Troubleshooting', 'adrotate'); ?></h2></td>
 			</tr>
-			
 			<tr>
 				<td colspan="2"><span class="description"><?php _e('NOTE: The below options are not meant for normal use and are only there for developers to review saved settings or how ads are selected. These can be used as a measure of troubleshooting upon request but for normal use they SHOULD BE LEFT UNCHECKED!!', 'adrotate'); ?></span></td>
 			</tr>

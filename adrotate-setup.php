@@ -1,6 +1,6 @@
 <?php
 /*  
-Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
+Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
 */
 
 /*-------------------------------------------------------------

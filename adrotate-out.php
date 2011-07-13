@@ -1,6 +1,6 @@
 <?php
 /*  
-Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
+Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
 */
 
 /*-------------------------------------------------------------
@@ -15,8 +15,7 @@ global $wpdb, $adrotate_crawlers, $adrotate_debug;
 
 if(isset($_GET['track']) OR $_GET['track'] != '') {
 	$meta 									= urldecode($_GET['track']);	
-	$useragent 								= $_SERVER['HTTP_USER_AGENT'];
-	$useragent_trim 						= trim($useragent, ' \t\r\n\0\x0B');
+	$useragent 								= trim($_SERVER['HTTP_USER_AGENT'], ' \t\r\n\0\x0B');
 	$prefix									= $wpdb->prefix;
 
 	if(isset($_GET['preview'])) $preview 	= $_GET['preview'];	
@@ -31,7 +30,7 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 	if($adrotate_debug['timers'] == true) {
 		$tomorrow = $now;
 	} else {
-		$tomorrow 	= $now + 86400;
+		$tomorrow = $now + 86400;
 	}
 		
 	
@@ -46,7 +45,7 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 		}
 
 		$ip = $wpdb->get_var("SELECT COUNT(*) FROM `".$prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'c' AND `timer` < '$tomorrow' AND `bannerid` = '$ad' LIMIT 1;");
-		if($ip < 1 AND $nocrawler == true AND (!isset($preview) OR empty($preview)) AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
+		if($ip < 1 AND $nocrawler == true AND (!isset($preview) OR empty($preview)) AND (strlen($useragent) > 0 OR !empty($useragent))) {
 			$wpdb->query("UPDATE `".$prefix."adrotate_stats_tracker` SET `clicks` = `clicks` + 1 WHERE `ad` = '$ad'$grouporblock AND `thetime` = '$today';");
 			$wpdb->query("INSERT INTO `".$prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`, `stat`) VALUES ('$remote_ip', '$now', '$ad', 'c');");
 		}

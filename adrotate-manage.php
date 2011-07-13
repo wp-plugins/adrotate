@@ -1,6 +1,6 @@
 <?php
 /*  
-Copyright 2010 Arnan de Gans  (email : adegans@meandmymac.net)
+Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
 */
 
 /*-------------------------------------------------------------
@@ -552,6 +552,7 @@ function adrotate_options_submit() {
 	// Jan 23 2011 - Added option to disable email notifications
 	// Jan 24 2011 - Automatic switch for email notifications, added array_unique() to email addresses
 	// Feb 15 2011 - Dashboard debugger
+	// Jul 11 2011 - Added option for impression timer, enhanced several checks for email validation to be compatible with PHP5.3
 	*/
 
 	// Set and save user roles
@@ -573,12 +574,13 @@ function adrotate_options_submit() {
 	$config['block_delete'] 		= $_POST['adrotate_block_delete'];
 
 	// Filter and validate notification addresses, if not set, turn option off.
-	if(isset($_POST['adrotate_notification_email'])) {
-		$notification_emails	= explode(',', trim($_POST['adrotate_notification_email']));
+	$notification_emails = $_POST['adrotate_notification_email'];
+	if(strlen($notification_emails) > 0) {
+		$notification_emails = explode(',', trim($_POST['adrotate_notification_email']));
 		foreach($notification_emails as $notification_email) {
 			$notification_email = trim($notification_email);
 			if(strlen($notification_email) > 0) {
-				if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $notification_email)) {
+  				if(preg_match("/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i", $notification_email) ) {
 					$clean_notification_email[] = $notification_email;
 				}
 			}
@@ -591,12 +593,13 @@ function adrotate_options_submit() {
 	}
 
 	// Filter and validate advertiser addresses
-	if(isset($_POST['adrotate_advertiser_email'])) {
+	$advertiser_emails = $_POST['adrotate_advertiser_email'];
+	if(strlen($advertiser_emails) > 0) {
 		$advertiser_emails = explode(',', trim($_POST['adrotate_advertiser_email']));
 		foreach($advertiser_emails as $advertiser_email) {
 			$advertiser_email = trim($advertiser_email);
 			if(strlen($advertiser_email) > 0) {
-				if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $advertiser_email)) {
+  				if(preg_match("/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i", $advertiser_email) ) {
 					$clean_advertiser_email[] = $advertiser_email;
 				}
 			}
@@ -604,6 +607,14 @@ function adrotate_options_submit() {
 		$config['advertiser_email'] = array_unique(array_slice($clean_advertiser_email, 0, 2));
 	} else {
 		$config['advertiser_email'] = array(get_option('admin_email'));
+	}
+
+	// Set up impression tracker timer
+	$impression_timer = trim($_POST['adrotate_impression_timer']);
+	if(strlen($impression_timer) > 0 AND (is_numeric($impression_timer) AND $impression_timer >= 0 AND $impression_timer <= 3600)) {
+		$config['impression_timer'] = $impression_timer;
+	} else {
+		$config['impression_timer'] = 300;
 	}
 
 	// Miscellaneous Options
