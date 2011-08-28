@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.6.3
+Version: 3.6.4
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -15,7 +15,7 @@ Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_VERSION", 354);
-define("ADROTATE_DB_VERSION", 10);
+define("ADROTATE_DB_VERSION", 11);
 setlocale(LC_ALL, get_locale().'.'.DB_CHARSET);
 /*-----------------------------------------------------------*/
 
@@ -56,6 +56,7 @@ adrotate_clean_trackerdata();
 add_shortcode('adrotate', 'adrotate_shortcode');
 add_action('widgets_init', create_function('', 'return register_widget("adrotate_widgets");'));
 add_action('wp_meta', 'adrotate_meta');
+wp_enqueue_script( 'jquery' );
 /*-----------------------------------------------------------*/
 
 /*--- Dashboard ---------------------------------------------*/
@@ -120,7 +121,7 @@ function adrotate_manage() {
 	if(isset($_POST['adrotate_order_submit'])) { 
 		$order = $_POST['adrotate_order']; 
 	} else { 
-		$order = $adrotate_config['sortorder']; 
+		$order = '`sortorder` ASC, `id` ASC'; 
 	}
 	?>
 
@@ -187,7 +188,7 @@ function adrotate_manage() {
 	    	<?php if ($view == "" OR $view == "manage") { ?>
 	
 			<?php
-			$errorbanners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE (`type` = 'error' OR `endshow` <= $now OR `endshow` <= $in2days) AND `active` = 'yes' ORDER BY `id` ASC;");
+			$errorbanners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE (`type` = 'error' OR `endshow` <= $now OR `endshow` <= $in2days) AND `active` = 'yes' ORDER BY `sortorder` ASC;");
 			if ($errorbanners) {
 			?>
 			<h3><?php _e('Ads that need attention', 'adrotate'); ?></h3>
@@ -313,14 +314,16 @@ function adrotate_manage() {
 					<input type="submit" id="post-action-submit" name="adrotate_action_submit" value="Go" class="button-secondary" />
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<?php _e('Sort by', 'adrotate'); ?> <select name="adrotate_order" id="cat" class="postform">
-				        <option value="startshow ASC" <?php if($order == "startshow ASC") { echo 'selected'; } ?>><?php _e('start date (ascending)', 'adrotate'); ?></option>
-				        <option value="startshow DESC" <?php if($order == "startshow DESC") { echo 'selected'; } ?>><?php _e('start date (descending)', 'adrotate'); ?></option>
-				        <option value="endshow ASC" <?php if($order == "endshow ASC") { echo 'selected'; } ?>><?php _e('end date (ascending)', 'adrotate'); ?></option>
-				        <option value="endshow DESC" <?php if($order == "endshow DESC") { echo 'selected'; } ?>><?php _e('end date (descending)', 'adrotate'); ?></option>
-				        <option value="ID ASC" <?php if($order == "ID ASC") { echo 'selected'; } ?>><?php _e('ID (Default)', 'adrotate'); ?></option>
+				        <option value="sortorder ASC" <?php if($order == "sortorder ASC") { echo 'selected'; } ?>><?php _e('Sort Order (ascending, default)', 'adrotate'); ?></option>
+				        <option value="sortorder DESC" <?php if($order == "sortorder DESC") { echo 'selected'; } ?>><?php _e('Sort Order (descending)', 'adrotate'); ?></option>
+				        <option value="startshow ASC" <?php if($order == "startshow ASC") { echo 'selected'; } ?>><?php _e('Start Date (ascending)', 'adrotate'); ?></option>
+				        <option value="startshow DESC" <?php if($order == "startshow DESC") { echo 'selected'; } ?>><?php _e('Start Date (descending)', 'adrotate'); ?></option>
+				        <option value="endshow ASC" <?php if($order == "endshow ASC") { echo 'selected'; } ?>><?php _e('End Date (ascending)', 'adrotate'); ?></option>
+				        <option value="endshow DESC" <?php if($order == "endshow DESC") { echo 'selected'; } ?>><?php _e('End Date (descending)', 'adrotate'); ?></option>
+				        <option value="ID ASC" <?php if($order == "ID ASC") { echo 'selected'; } ?>><?php _e('ID', 'adrotate'); ?></option>
 				        <option value="ID DESC" <?php if($order == "ID DESC") { echo 'selected'; } ?>><?php _e('ID reversed', 'adrotate'); ?></option>
-				        <option value="title ASC" <?php if($order == "title ASC") { echo 'selected'; } ?>><?php _e('title (A-Z)', 'adrotate'); ?></option>
-				        <option value="title DESC" <?php if($order == "title DESC") { echo 'selected'; } ?>><?php _e('title (Z-A)', 'adrotate'); ?></option>
+				        <option value="title ASC" <?php if($order == "title ASC") { echo 'selected'; } ?>><?php _e('Title (A-Z)', 'adrotate'); ?></option>
+				        <option value="title DESC" <?php if($order == "title DESC") { echo 'selected'; } ?>><?php _e('Title (Z-A)', 'adrotate'); ?></option>
 					</select>
 					<input type="submit" id="post-query-submit" name="adrotate_order_submit" value="Sort" class="button-secondary" />
 				</div>
@@ -478,7 +481,7 @@ function adrotate_manage() {
 	  			</thead>
 	  			<tbody>
 				<?php
-				$disabledbanners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'manual' AND `active` = 'no' ORDER BY `id` ASC;");
+				$disabledbanners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'manual' AND `active` = 'no' ORDER BY `sortorder` ASC;");
 				if ($disabledbanners) {
 					foreach($disabledbanners as $disbanner) {
 						$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
@@ -578,7 +581,7 @@ function adrotate_manage() {
 				$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty' ORDER BY `id` DESC LIMIT 1;";
 				$edit_id = $wpdb->get_var($query);
 				if($edit_id == 0) {
-					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `image`, `link`, `tracker`, `maxclicks`, `maxshown`, `targetclicks`, `targetimpressions`, `type`, `weight`) VALUES ('', '', '$startshow', '$startshow', '$userdata->user_login', 'no', '$startshow', '$endshow', '', '', 'N', 0, 0, 0, 0, 'empty', 6);");
+					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `image`, `link`, `tracker`, `maxclicks`, `maxshown`, `targetclicks`, `targetimpressions`, `type`, `weight`, `sortorder`) VALUES ('', '', '$startshow', '$startshow', '$userdata->user_login', 'yes', '$startshow', '$endshow', '', '', 'N', 0, 0, 0, 0, 'empty', 6, 0);");
 					$edit_id = $wpdb->get_var($query);
 				}
 				$ad_edit_id = $edit_id;
@@ -620,15 +623,14 @@ function adrotate_manage() {
 				else if($edit_banner->endshow < $in7days) echo '<div class="updated"><p>'. __('This ad will expire in less than 7 days!', 'adrotate').'</p></div>';
 
 				// Determine image field
-				list($type, $file) = explode("|", $edit_banner->image, 2);
-				if($type == "field") {
-					$image_field = $file;
+				if($edit_banner->imagetype == "field") {
+					$image_field = $edit_banner->image;
 					$image_dropdown = '';
 				}
 				
-				if($type == "dropdown") {
+				if($edit_banner->imagetype == "dropdown") {
 					$image_field = '';
-					$image_dropdown = $file;
+					$image_dropdown = $edit_banner->image;
 				}
 			}
 			?>
@@ -736,6 +738,12 @@ function adrotate_manage() {
 							</select>
 						</td>
 			      	</tr>
+			      	<tr>
+				        <th><?php _e('Sortorder:', 'adrotate'); ?></th>
+				        <td colspan="3">
+					        <input tabindex="10" name="adrotate_sortorder" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->sortorder;?>" /> <em><?php _e('For administrative purposes set a sortorder.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this. Will default to ad id.', 'adrotate'); ?></em>
+						</td>
+			      	</tr>
 					</tbody>
 	
 				<?php if($edit_banner->type != 'empty') { ?>
@@ -779,7 +787,7 @@ function adrotate_manage() {
 			      	<tr>
 				        <th valign="top"><?php _e('Advertiser:', 'adrotate'); ?></th>
 				        <td colspan="3">
-				        	<select tabindex="10" name="adrotate_advertiser" style="min-width: 200px;">
+				        	<select tabindex="11" name="adrotate_advertiser" style="min-width: 200px;">
 								<option value="0" <?php if($saved_user == '0') { echo 'selected'; } ?>><?php _e('Not specified', 'adrotate'); ?></option>
 							<?php 
 							foreach($user_list as $id) {
@@ -800,7 +808,7 @@ function adrotate_manage() {
 			      	<tr>
 				        <th valign="top"><?php _e('Clicktracking:', 'adrotate'); ?></th>
 				        <td colspan="3">
-				        	<?php _e('Enable?', 'adrotate'); ?> <input tabindex="11" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> url: <input tabindex="12" name="adrotate_link" type="text" size="80" class="search-input" value="<?php echo $edit_banner->link;?>" /><br />
+				        	<?php _e('Enable?', 'adrotate'); ?> <input tabindex="12" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> url: <input tabindex="12" name="adrotate_link" type="text" size="80" class="search-input" value="<?php echo $edit_banner->link;?>" /><br />
 					        <em><?php _e('Use %link% in the adcode instead of the actual url.', 'adrotate'); ?><br />
 					        <?php _e('For a random seed you can use %random%. A generated timestamp you can use.', 'adrotate'); ?></em>
 				        </td>
@@ -809,9 +817,9 @@ function adrotate_manage() {
 				        <th valign="top"><?php _e('Banner image:', 'adrotate'); ?></th>
 						<td colspan="3">
 							<label for="upload_image">
-								<?php _e('Media:', 'adrotate'); ?> <input tabindex="13" size="100" id="adrotate_image" type="text" name="adrotate_image" value="<?php echo $image_field; ?>" /> <input tabindex="14" id="adrotate_image_button" type="button" value="<?php _e('Select Image', 'adrotate'); ?>" /><br />
+								<?php _e('Media:', 'adrotate'); ?> <input tabindex="14" size="100" id="adrotate_image" type="text" name="adrotate_image" value="<?php echo $image_field; ?>" /> <input tabindex="15" id="adrotate_image_button" type="button" value="<?php _e('Select Image', 'adrotate'); ?>" /><br />
 								<?php _e('- OR -', 'adrotate'); ?><br />
-								<?php _e('Banner folder:', 'adrotate'); ?> <select tabindex="15" name="adrotate_image_dropdown" style="min-width: 200px;">
+								<?php _e('Banner folder:', 'adrotate'); ?> <select tabindex="16" name="adrotate_image_dropdown" style="min-width: 200px;">
 			   						<option value=""><?php _e('No image selected', 'adrotate'); ?></option>
 									<?php echo adrotate_folder_contents($image_dropdown); ?>
 								</select><br />
@@ -822,31 +830,31 @@ function adrotate_manage() {
 			      	<tr>
 					    <th valign="top"><?php _e('Weight:', 'adrotate'); ?></th>
 				        <td colspan="3">
-				        	<input type="radio" tabindex="16" name="adrotate_weight" value="2" <?php if($edit_banner->weight == "2") { echo 'checked'; } ?> /> 2, <?php _e('Barely visible', 'adrotate'); ?><br />
-				        	<input type="radio" tabindex="17" name="adrotate_weight" value="4" <?php if($edit_banner->weight == "4") { echo 'checked'; } ?> /> 4, <?php _e('Less than average', 'adrotate'); ?><br />
-				        	<input type="radio" tabindex="18" name="adrotate_weight" value="6" <?php if($edit_banner->weight == "6") { echo 'checked'; } ?> /> 6, <?php _e('Normal coverage', 'adrotate'); ?><br />
-				        	<input type="radio" tabindex="19" name="adrotate_weight" value="8" <?php if($edit_banner->weight == "8") { echo 'checked'; } ?> /> 8, <?php _e('More than average', 'adrotate'); ?><br />
-				        	<input type="radio" tabindex="20" name="adrotate_weight" value="10" <?php if($edit_banner->weight == "10") { echo 'checked'; } ?> /> 10, <?php _e('Best visibility', 'adrotate'); ?>
+				        	<input type="radio" tabindex="17" name="adrotate_weight" value="2" <?php if($edit_banner->weight == "2") { echo 'checked'; } ?> /> 2, <?php _e('Barely visible', 'adrotate'); ?><br />
+				        	<input type="radio" tabindex="18" name="adrotate_weight" value="4" <?php if($edit_banner->weight == "4") { echo 'checked'; } ?> /> 4, <?php _e('Less than average', 'adrotate'); ?><br />
+				        	<input type="radio" tabindex="19" name="adrotate_weight" value="6" <?php if($edit_banner->weight == "6") { echo 'checked'; } ?> /> 6, <?php _e('Normal coverage', 'adrotate'); ?><br />
+				        	<input type="radio" tabindex="20" name="adrotate_weight" value="8" <?php if($edit_banner->weight == "8") { echo 'checked'; } ?> /> 8, <?php _e('More than average', 'adrotate'); ?><br />
+				        	<input type="radio" tabindex="21" name="adrotate_weight" value="10" <?php if($edit_banner->weight == "10") { echo 'checked'; } ?> /> 10, <?php _e('Best visibility', 'adrotate'); ?>
 						</td>
 					</tr>
 			      	<tr>
 					    <th><?php _e('Maximum Clicks:', 'adrotate'); ?></th>
-				        <td colspan="3"><?php _e('Disable after', 'adrotate'); ?> <input tabindex="21" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> <?php _e('clicks!', 'adrotate'); ?> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
+				        <td colspan="3"><?php _e('Disable after', 'adrotate'); ?> <input tabindex="22" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> <?php _e('clicks!', 'adrotate'); ?> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
 					</tr>
 			      	<tr>
 					    <th><?php _e('Maximum Impressions:', 'adrotate'); ?></th>
-				        <td colspan="3"><?php _e('Disable after', 'adrotate'); ?> <input tabindex="22" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> <?php _e('impressions!', 'adrotate'); ?> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
+				        <td colspan="3"><?php _e('Disable after', 'adrotate'); ?> <input tabindex="23" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> <?php _e('impressions!', 'adrotate'); ?> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
 					</tr>
 			      	<tr>
 				        <th valign="top"><?php _e('Expected Clicks:', 'adrotate'); ?></th>
 				        <td colspan="3">
-				        	<input tabindex="23" name="adrotate_targetclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->targetclicks;?>" /> <em><?php _e('Set a target or milestone for clicks. Shows in the graph.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em>
+				        	<input tabindex="24" name="adrotate_targetclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->targetclicks;?>" /> <em><?php _e('Set a target or milestone for clicks. Shows in the graph.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em>
 				        </td>
 			      	</tr>
 			      	<tr>
 				        <th valign="top"><?php _e('Expected impressions:', 'adrotate'); ?></th>
 				        <td colspan="3">
-				        	<input tabindex="24" name="adrotate_targetimpressions" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->targetimpressions;?>" /> <em><?php _e('Set a target or milestone for impressions. Shows in the graph.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em>
+				        	<input tabindex="25" name="adrotate_targetimpressions" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->targetimpressions;?>" /> <em><?php _e('Set a target or milestone for impressions. Shows in the graph.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em>
 				        </td>
 			      	</tr>
 					</tbody>
@@ -878,6 +886,11 @@ function adrotate_manage() {
 				
 				</table>
 	
+		    	<p class="submit">
+					<input tabindex="26" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
+					<a href="admin.php?page=adrotate&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
+		    	</p>
+
 				<?php if($groups) { ?>
 				<h3><?php _e('Select Groups', 'adrotate'); ?></h3>
 
@@ -903,7 +916,7 @@ function adrotate_manage() {
 				<?php } ?>
 	
 		    	<p class="submit">
-					<input tabindex="25" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
+					<input tabindex="27" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
 					<a href="admin.php?page=adrotate&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
 		    	</p>
 	
@@ -1121,7 +1134,7 @@ function adrotate_manage_group() {
 		  			</thead>
 					<tbody>
 		  			
-					<?php $groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` WHERE `name` != '' ORDER BY `id`;");
+					<?php $groups = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_groups` WHERE `name` != '' ORDER BY `sortorder` ASC, `id` ASC;");
 					if ($groups) {
 						foreach($groups as $group) {
 							$today 			= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
@@ -1229,6 +1242,12 @@ function adrotate_manage_group() {
 					        <td colspan="3"><?php echo adrotate_group_is_in_blocks($edit_group->id); ?></td>
 				      	</tr>
 						<?php } ?>
+				      	<tr>
+					        <th><?php _e('Sortorder:', 'adrotate'); ?></th>
+					        <td colspan="3">
+						        <input tabindex="23" name="adrotate_sortorder" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_group->sortorder;?>" /> <em><?php _e('For administrative purposes set a sortorder.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this. Will default to group id.', 'adrotate'); ?></em>
+							</td>
+				      	</tr>
 						</tbody>
 	
 						<thead>
@@ -1247,6 +1266,11 @@ function adrotate_manage_group() {
 				      	</tbody>
 					</table>
 				
+			    	<p class="submit">
+						<input tabindex="3" type="submit" name="adrotate_group_submit" class="button-primary" value="<?php _e('Save', 'adrotate'); ?>" />
+						<a href="admin.php?page=adrotate-groups&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
+			    	</p>
+
 					<h3><?php _e('Select Ads', 'adrotate'); ?></h3>
 
 				   	<table class="widefat" style="margin-top: .5em">
@@ -1498,7 +1522,7 @@ function adrotate_manage_block() {
 
 					<tbody>
 		  			
-					<?php $blocks = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_blocks` WHERE `name` != '' ORDER BY `id`;");
+					<?php $blocks = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_blocks` WHERE `name` != '' ORDER BY `sortorder` ASC, `id` ASC;");
 					if ($blocks) {
 						foreach($blocks as $block) {
 							$today 			= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
@@ -1598,27 +1622,33 @@ function adrotate_manage_block() {
 	
 			  			<thead>
 		  				<tr>
-							<th colspan="4">Wrapper code (Optional) - Wraps around each ad to facilitate easy margins, paddings or borders around ads</th>
+							<th colspan="4"><?php _e('Wrapper code (Optional) - Wraps around each ad to facilitate easy margins, paddings or borders around ads', 'adrotate'); ?></th>
 						</tr>
 			  			</thead>
 			  			
 						<tbody>
 					    <tr>
-							<th valign="top">Before ad</strong></th>
+							<th valign="top"><?php _e('Before ad', 'adrotate'); ?></strong></th>
 							<td colspan="2"><textarea tabindex="4" name="adrotate_wrapper_before" cols="65" rows="3"><?php echo $edit_block->wrapper_before; ?></textarea></td>
 							<td>
-						        <p><strong>Example:</strong></p>
+						        <p><strong><?php _e('Example:', 'adrotate'); ?></strong></p>
 						        <p><em>&lt;span style="margin: 2px;"&gt;</em></p>
 							</td>
 						</tr>
 					    <tr>
-							<th valign="top">After ad</strong></th>
+							<th valign="top"><?php _e('After ad', 'adrotate'); ?></strong></th>
 							<td colspan="2"><textarea tabindex="5" name="adrotate_wrapper_after" cols="65" rows="3"><?php echo $edit_block->wrapper_after; ?></textarea></td>
 							<td>
-								<p><strong>Example:</strong></p>
+								<p><strong><?php _e('Example:', 'adrotate'); ?></strong></p>
 								<p><em>&lt;/span&gt;</em></p>
 							</td>
 						</tr>
+				      	<tr>
+					        <th><?php _e('Sortorder:', 'adrotate'); ?></th>
+					        <td colspan="3">
+						        <input tabindex="23" name="adrotate_sortorder" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_block->sortorder;?>" /> <em><?php _e('For administrative purposes set a sortorder.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this. Will default to block id.', 'adrotate'); ?></em>
+							</td>
+				      	</tr>
 						</tbody>
 	
 						<thead>
@@ -1637,6 +1667,11 @@ function adrotate_manage_block() {
 				      	</tbody>
 					</table>
 					
+			    	<p class="submit">
+						<input tabindex="6" type="submit" name="adrotate_block_submit" class="button-primary" value="<?php _e('Save', 'adrotate'); ?>" />
+						<a href="admin.php?page=adrotate-blocks&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
+			    	</p>
+
 					<h3><?php _e('Select Groups', 'adrotate'); ?></h3>
 
 				   	<table class="widefat" style="margin-top: .5em">
@@ -2433,27 +2468,13 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Impressions timer', 'adrotate'); ?></th>
 				<td>
 					<input name="adrotate_impression_timer" type="text" class="search-input" size="5" value="<?php echo $adrotate_config['impression_timer']; ?>" autocomplete="off" /> <?php _e('Seconds.', 'adrotate'); ?><br />
-					<span class="description"><?php _e('Default: 300. If you set this to anything lower than 20 seconds a visitor can inflate impressions relatively quickly by pressing refresh in the browser.', 'adrotate'); ?><br /><?php _e('This number may not be empty, negative or exceed 3600 (1 hour).', 'adrotate'); ?></span>
+					<span class="description"><?php _e('Default: 10. Set to 0 to disable this timer.', 'adrotate'); ?><br /><?php _e('This number may not be empty, negative or exceed 3600 (1 hour).', 'adrotate'); ?></span>
 				</td>
 			</tr>
 
 			
 			<tr>
 				<td colspan="2"><h2><?php _e('Miscellaneous', 'adrotate'); ?></h2></td>
-			</tr>
-			<tr>
-				<th valign="top"><?php _e('Sort Order', 'adrotate'); ?></th>
-				<td><select name="adrotate_sortorder" id="cat" class="postform">
-				        <option value="startshow ASC" <?php if($adrotate_config['sortorder'] == "startshow ASC") { echo 'selected'; } ?>><?php _e('start date (ascending)', 'adrotate'); ?></option>
-				        <option value="startshow DESC" <?php if($adrotate_config['sortorder'] == "startshow DESC") { echo 'selected'; } ?>><?php _e('start date (descending)', 'adrotate'); ?></option>
-				        <option value="endshow ASC" <?php if($adrotate_config['sortorder'] == "endshow ASC") { echo 'selected'; } ?>><?php _e('end date (ascending)', 'adrotate'); ?></option>
-				        <option value="endshow DESC" <?php if($adrotate_config['sortorder'] == "endshow DESC") { echo 'selected'; } ?>><?php _e('end date (descending)', 'adrotate'); ?></option>
-				        <option value="id ASC" <?php if($adrotate_config['sortorder'] == "id ASC") { echo 'selected'; } ?>><?php _e('ID (Default)', 'adrotate'); ?></option>
-				        <option value="id DESC" <?php if($adrotate_config['sortorder'] == "id DESC") { echo 'selected'; } ?>><?php _e('ID reversed', 'adrotate'); ?></option>
-				        <option value="title ASC" <?php if($adrotate_config['sortorder'] == "title ASC") { echo 'selected'; } ?>><?php _e('title (A-Z)', 'adrotate'); ?></option>
-				        <option value="title DESC" <?php if($adrotate_config['sortorder'] == "title DESC") { echo 'selected'; } ?>><?php _e('title (Z-A)', 'adrotate'); ?></option>
-					</select> <span class="description"><?php _e('Default sort order for ad management.', 'adrotate'); ?></span>
-				</td>
 			</tr>
 			<tr>
 				<th valign="top"><?php _e('Widget alignment', 'adrotate'); ?></th>

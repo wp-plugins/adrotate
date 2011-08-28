@@ -28,6 +28,34 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	// Jul 11 2011 - Added call to change the impression timer
 	*/
 	
+
+if(isset($_POST["adrotate_ajax_call"]))
+{
+?>
+<script type="text/javascript">
+	jQuery(document).ready(function()
+	{
+		window.setTimeout('adrotate_ajax_call()', 10000);
+	});
+
+	function adrotate_ajax_call()
+	{
+		var adrotate_ajax_url = '<?php echo WP_PLUGIN_URL . "/adrotate/adrotate.php"; ?>'
+		
+		jQuery.ajax({
+			type: 'POST',
+			url: adrotate_ajax_url,
+			data: 'adrotate_ajax_call=true',
+			success: function(d){ alert(d); },
+		});
+		
+		window.setTimeout('adrotate_ajax_call()', 10000);
+	}
+</script>
+
+<?php
+}
+
 	$now 				= date('U');
 	$today 				= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
@@ -58,7 +86,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 		if($adrotate_debug['timers'] == true) {
 			$impression_timer = $now;
 		} else {
-			$impression_timer = $now + $adrotate_config['impression_timer'];
+			$impression_timer = $now - $adrotate_config['impression_timer'];
 		}
 		
 		if($banner) {
@@ -508,7 +536,7 @@ function adrotate_preview($banner_id) {
 function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, $link, $image, $preview = false) {
 
 	$meta = urlencode("$id,$group,$block");
-	list($type, $file) = explode("|", $image, 2);
+//	list($type, $file) = explode("|", $image, 2);
 
 	$banner_output = $bannercode;
 	if($tracker == "Y") {
@@ -520,7 +548,7 @@ function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, 
 	} else {
 		$banner_output = str_replace('%link%', $link, $banner_output);
 	}
-	$banner_output = str_replace('%image%', $file, $banner_output);
+	$banner_output = str_replace('%image%', $image, $banner_output);
 	$banner_output = str_replace('%id%', $id, $banner_output);
 	$banner_output = stripslashes(htmlspecialchars_decode($banner_output, ENT_QUOTES));
 
@@ -606,7 +634,7 @@ function adrotate_credits() {
 	echo '	<li>'.__('Give me your money to', 'adrotate').' <a href="http://meandmymac.net/donate/" target="_blank">'.__('show your appreciation', 'adrotate').'</a>. '.__('Thanks!', 'adrotate').'</li>';
 	echo '	<li>'.__('The plugin homepage is at', 'adrotate').' <a href="http://www.adrotateplugin.com/" target="_blank">www.adrotateplugin.com</a>!</li>';
 	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('knowledgebase', 'adrotate').'</a> '.__('for manuals, general information!', 'adrotate').'</li>';
-	echo '	<li>'.__('Need more help?', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('Ticket support', 'adrotate').'</a> '.__('is available!', 'adrotate').'</li>';
+	echo '	<li>'.__('Need more help?', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('Forum support', 'adrotate').'</a> '.__('is available!', 'adrotate').'</li>';
 	echo '</ul></td>';
 	echo '<td style="border-left:1px #ddd solid;">';
 	meandmymac_rss_widget(5);

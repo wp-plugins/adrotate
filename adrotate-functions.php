@@ -348,7 +348,7 @@ function adrotate_check_banners() {
 	
 	$alreadyexpired = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $now;");
 	$expiressoon = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `endshow` <= $in2days AND `endshow` >= $now;");
-	$error = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'error';");
+	$error = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'yes' AND `type` = 'error';");
 
 	$count = $alreadyexpired + $expiressoon + $error;
 	
@@ -381,6 +381,7 @@ function adrotate_check_config() {
 	// Feb 28 2011 - Revamped debug option with array()
 	// Jul 6 2011 - Renewed crawlers
 	// Jul 11 2011 - Added option for impression timer
+	// Aug 10 2011 - Removed sortorder option
 	*/
 	
 	$config 	= get_option('adrotate_config');
@@ -398,10 +399,9 @@ function adrotate_check_config() {
 	if($config['notification_email_switch'] == '' OR !isset($config['notification_email_switch']))	$config['notification_email_switch']	= 'Y';
 	if(($config['notification_email'] == '' OR !isset($config['notification_email']) OR !is_array($config['notification_email'])) AND $config['notification_email_switch'] == 'Y')	$config['notification_email']	= array(get_option('admin_email'));
 	if($config['advertiser_email'] == '' OR !isset($config['advertiser_email']) OR !is_array($config['advertiser_email']))	$config['advertiser_email']	= array(get_option('admin_email'));
-	if($config['sortorder'] == '' OR !isset($config['sortorder']))					$config['sortorder'] 			= 'id ASC';
 	if($config['credits'] == '' OR !isset($config['credits']))						$config['credits'] 				= 'Y';
 	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))				$config['widgetalign'] 			= 'N';
-	if($config['impression_timer'] == '' OR !isset($config['impression_timer']))	$config['impression_timer'] 	= '300';
+	if($config['impression_timer'] == '' OR !isset($config['impression_timer']))	$config['impression_timer'] 	= '10';
 	update_option('adrotate_config', $config);
 
 	if($crawlers == '' OR !isset($crawlers)) 										$crawlers 						= array("Teoma", "alexa", "froogle", "Gigabot", "inktomi","looksmart", "URL_Spider_SQL", "Firefly", "NationalDirectory","Ask Jeeves", "TECNOSEEK", "InfoSeek", "WebFindBot", "girafabot","www.galaxy.com", "Googlebot", "Scooter", "Slurp","msnbot", "appie", "FAST", "WebBug", "Spade", "ZyBorg", "rabaz","Baiduspider", "Feedfetcher-Google", "TechnoratiSnoop", "Rankivabot","Mediapartners-Google", "Sogou web spider", "WebAlta Crawler","bot", "crawler", "yahoo", "msn", "ask", "ia_archiver");
