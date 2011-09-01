@@ -51,24 +51,6 @@ function adrotate_insert_input() {
 			$title = 'Ad '.$id;
 		}
 
-		// Determine error states
-		if(
-			strlen($bannercode) < 1 
-			OR (!isset($tracker) AND strlen($link) < 1 AND $advertiser > 0) 		// Didn't enable click-tracking, didn't provide a link, DID set a advertiser
-			OR (isset($tracker) AND strlen($link) < 1) 								// Did use link field but didn't check click-tracking checkmark
-			OR (!isset($tracker) AND strlen($link) > 0) 							// Didn't enable click-tracking but did use the link field
-			OR (!preg_match("/%link%/i", $bannercode) AND $tracker == 'Y')			// Didn't use %link% but enabled clicktracking
-			OR (preg_match("/%link%/i", $bannercode) AND $tracker == 'N')			// Did use %link% but didn't enable clicktracking
-			OR (!preg_match("/%image%/i", $bannercode) AND $image_field != '')		// Didn't use %image% but selected an image
-			AND (!preg_match("/%image%/i", $bannercode) AND $image_dropdown != '')	// Didn't use %image% but selected an image
-			OR (preg_match("/%image%/i", $bannercode) AND $image_field == '')		// Did use %image% but didn't select an image
-			AND (preg_match("/%image%/i", $bannercode) AND $image_dropdown == '')	// Did use %image% but didn't select an image
-		) {
-			$adtype = 'error';
-		} else {
-			$adtype = 'manual';
-		}
-
 		// Sort out dates
 		if(strlen($smonth) == 0 OR !is_numeric($smonth)) 	$smonth 	= gmdate('m');
 		if(strlen($sday) == 0 OR !is_numeric($sday)) 		$sday 		= gmdate('d');
@@ -114,20 +96,36 @@ function adrotate_insert_input() {
 			}
 		}
 
-		// Determine status of ad and what to do next
-		if($adtype == 'empty') {
-			$action = 'new';
-			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'manual' WHERE `id` = '$id';");
-		} else if($adtype == 'error') {
-			$action = 'field_error';
-			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'error' WHERE `id` = '$id';");
-		} else {
-			$action = 'update';
-			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'manual' WHERE `id` = '$id';");
-		}
-
 		// Save the ad to the DB
-		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `title` = '$title', `bannercode` = '$bannercode', `updated` = '$thetime', `author` = '$author', `active` = '$active', `startshow` = '$startdate', `endshow` = '$enddate', `imagetype` = '$imagetype', `image` = '$image', `link` = '$link', `tracker` = '$tracker', `maxclicks` = '$maxclicks', `maxshown` = '$maxshown', `targetclicks` = '$targetclicks', `targetimpressions` = '$targetimpressions', `weight` = '$weight', `sortorder` = '$sortorder' WHERE `id` = '$id';");
+		$wpdb->query("UPDATE 
+						`".$wpdb->prefix."adrotate` 
+					SET 
+						`title` = '$title', 
+						`bannercode` = '$bannercode', 
+						`updated` = '$thetime', 
+						`author` = '$author', 
+						`active` = '$active', 
+						`startshow` = '$startdate', 
+						`endshow` = '$enddate', 
+						`imagetype` = '$imagetype', 
+						`image` = '$image', 
+						`link` = '$link', 
+						`tracker` = '$tracker', 
+						`maxclicks` = '$maxclicks', 
+						`maxshown` = '$maxshown', 
+						`targetclicks` = '$targetclicks', 
+						`targetimpressions` = '$targetimpressions', 
+						`weight` = '$weight', 
+						`sortorder` = '$sortorder' 
+					WHERE 
+						`id` = '$id'
+					;");
+
+
+		// Determine status of ad and what to do next
+		$adstate = adrotate_evaluate_ad($id);
+		if($adstate == true) $adtype = 'error';
+			else $adtype = 'manual';
 
 		// Fetch group records for the ad
 		$groupmeta = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `block` = 0 AND `user` = 0;");

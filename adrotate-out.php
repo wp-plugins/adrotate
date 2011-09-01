@@ -47,7 +47,7 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 		$ip = $wpdb->get_var("SELECT COUNT(*) FROM `".$prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'c' AND `timer` < '$tomorrow' AND `bannerid` = '$ad' LIMIT 1;");
 		if($ip < 1 AND $nocrawler == true AND (!isset($preview) OR empty($preview)) AND (strlen($useragent) > 0 OR !empty($useragent))) {
 			$wpdb->query("UPDATE `".$prefix."adrotate_stats_tracker` SET `clicks` = `clicks` + 1 WHERE `ad` = '$ad'$grouporblock AND `thetime` = '$today';");
-			$wpdb->query("INSERT INTO `".$prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`, `stat`) VALUES ('$remote_ip', '$now', '$ad', 'c');");
+			$wpdb->query("INSERT INTO `".$prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`, `stat`, `useragent`) VALUES ('$remote_ip', '$now', '$ad', 'c', '$useragent');");
 		}
 		$bannerurl = str_replace('%random%', $now, $bannerurl);
 

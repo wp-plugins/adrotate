@@ -133,6 +133,7 @@ function adrotate_database_install() {
 				`timer` int(15) NOT NULL default '0',
 				`bannerid` int(15) NOT NULL default '0',
 				`stat` char(1) NOT NULL default 'c',
+				`useragent` mediumtext NOT NULL,
 				PRIMARY KEY  (`id`)
 			) ".$charset_collate.";";
 		dbDelta($sql);
@@ -307,6 +308,12 @@ function adrotate_database_upgrade() {
 					}
 				}
 			}
+		}
+
+		// Database: 	12
+		// AdRotate: 	3.6.5
+		if($adrotate_db_version < 12) {
+			adrotate_add_column($tables['adrotate_tracker'], 'useragent', 'mediumtext NOT NULL AFTER `stat`');
 		}
 
 		update_option("adrotate_db_version", ADROTATE_DB_VERSION);

@@ -27,34 +27,6 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	// Jul 6 2011 - Expanded impression filter to not count every page load
 	// Jul 11 2011 - Added call to change the impression timer
 	*/
-	
-
-if(isset($_POST["adrotate_ajax_call"]))
-{
-?>
-<script type="text/javascript">
-	jQuery(document).ready(function()
-	{
-		window.setTimeout('adrotate_ajax_call()', 10000);
-	});
-
-	function adrotate_ajax_call()
-	{
-		var adrotate_ajax_url = '<?php echo WP_PLUGIN_URL . "/adrotate/adrotate.php"; ?>'
-		
-		jQuery.ajax({
-			type: 'POST',
-			url: adrotate_ajax_url,
-			data: 'adrotate_ajax_call=true',
-			success: function(d){ alert(d); },
-		});
-		
-		window.setTimeout('adrotate_ajax_call()', 10000);
-	}
-</script>
-
-<?php
-}
 
 	$now 				= date('U');
 	$today 				= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
@@ -109,7 +81,7 @@ if(isset($_POST["adrotate_ajax_call"]))
 				} else {
 					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_stats_tracker` (`ad`, `group`, `block`, `thetime`, `clicks`, `impressions`) VALUES ('$banner_id', '$group', '$block', '$today', '0', '1');");
 				}
-				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`, `stat`) VALUES ('$remote_ip', '$now', '$banner_id', 'i');");
+				$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_tracker` (`ipaddress`, `timer`, `bannerid`, `stat`, `useragent`) VALUES ('$remote_ip', '$now', '$banner_id', 'i', '');");
 			}
 		} else {
 			$output = adrotate_error('ad_expired', array($banner_id));
@@ -221,10 +193,10 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 				$selected[$result->id] = $result->weight;
 
 				if($stats->clicks >= $result->maxclicks AND $result->maxclicks > 0 AND $result->tracker == "Y") {
-					$selected = array_diff_key($selected, array($result->id => $result->weight));
+					$selected = array_diff_key($selected, array($result->id => $result->maxclicks));
 				}
 				if($stats->impressions >= $result->maxshown AND $result->maxshown > 0) {
-					$selected = array_diff_key($selected, array($result->id => $result->weight));
+					$selected = array_diff_key($selected, array($result->id => $result->maxshown));
 				}
 			}
 
@@ -379,10 +351,10 @@ function adrotate_block($block_id, $weight = 0) {
 						$selected[$result->id] = $result->weight;
 
 						if($stats->clicks >= $result->maxclicks AND $result->maxclicks > 0 AND $result->tracker == "Y") {
-							$selected = array_diff_key($selected, array($result->id => $result->weight));
+							$selected = array_diff_key($selected, array($result->id => $result->maxclicks));
 						}
 						if($stats->impressions >= $result->maxshown AND $result->maxshown > 0) {
-							$selected = array_diff_key($selected, array($result->id => $result->weight));
+							$selected = array_diff_key($selected, array($result->id => $result->maxshown));
 						}
 					}
 

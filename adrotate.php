@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.6.4
+Version: 3.6.5
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -15,16 +15,16 @@ Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_VERSION", 354);
-define("ADROTATE_DB_VERSION", 11);
+define("ADROTATE_DB_VERSION", 12);
 setlocale(LC_ALL, get_locale().'.'.DB_CHARSET);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
-include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-setup.php');
-include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-manage.php');
-include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-functions.php');
-include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-output.php');
-include_once(ABSPATH.'wp-content/plugins/adrotate/adrotate-widget.php');
+include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-setup.php');
+include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-manage.php');
+include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-functions.php');
+include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-output.php');
+include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-widget.php');
 // wp-content/plugins/adrotate/adrotate-out.php
 /*-----------------------------------------------------------*/
 
@@ -56,7 +56,6 @@ adrotate_clean_trackerdata();
 add_shortcode('adrotate', 'adrotate_shortcode');
 add_action('widgets_init', create_function('', 'return register_widget("adrotate_widgets");'));
 add_action('wp_meta', 'adrotate_meta');
-wp_enqueue_script( 'jquery' );
 /*-----------------------------------------------------------*/
 
 /*--- Dashboard ---------------------------------------------*/
@@ -80,6 +79,7 @@ if(isset($_POST['adrotate_role_add_submit']))			add_action('init', 'adrotate_pre
 if(isset($_POST['adrotate_role_remove_submit'])) 		add_action('init', 'adrotate_prepare_roles');
 if(isset($_POST['adrotate_db_optimize_submit'])) 		add_action('init', 'adrotate_optimize_database');
 if(isset($_POST['adrotate_db_cleanup_submit'])) 		add_action('init', 'adrotate_cleanup_database');
+if(isset($_POST['adrotate_evaluate_submit'])) 			add_action('init', 'adrotate_prepare_evaluate_ads');
 /*-----------------------------------------------------------*/
 
 /*-------------------------------------------------------------
@@ -409,7 +409,6 @@ function adrotate_manage() {
 						}
 						$grouplist = rtrim($grouplist, ", ");
 						
-
 						if($class != 'alternate') {
 							$class = 'alternate';
 						} else {
@@ -481,7 +480,7 @@ function adrotate_manage() {
 	  			</thead>
 	  			<tbody>
 				<?php
-				$disabledbanners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'manual' AND `active` = 'no' ORDER BY `sortorder` ASC;");
+				$disabledbanners = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `active` = 'no' ORDER BY `sortorder` ASC;");
 				if ($disabledbanners) {
 					foreach($disabledbanners as $disbanner) {
 						$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
@@ -530,19 +529,25 @@ function adrotate_manage() {
 						}
 						$grouplist = rtrim($grouplist, ", ");
 						
-						if($disbanner->active == 'no') {
+						if($disbanner->active == 'no' AND $disbanner->type != 'error') {
 							$inactiveclass = ' row_inactive';
 						} else {
 							$inactiveclass = '';
 						}
 
+						if($disbanner->type == 'error') {
+							$errorclass = ' row_error';
+						} else {
+							$errorclass = '';
+						}
+	
 						if($class != 'alternate') {
 							$class = 'alternate';
 						} else {
 							$class = '';
 						}
 						?>
-					    <tr id='adrotateindex' class='<?php echo $class.$inactiveclass; ?>'>
+					    <tr id='adrotateindex' class='<?php echo $class.$inactiveclass.$errorclass; ?>'>
 							<th class="check-column"><input type="checkbox" name="disabledbannercheck[]" value="<?php echo $disbanner->id; ?>" /></th>
 							<td><center><?php echo $disbanner->id;?></center></td>
 							<td><?php echo date_i18n("F d, Y", $disbanner->startshow);?></td>
@@ -581,7 +586,7 @@ function adrotate_manage() {
 				$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty' ORDER BY `id` DESC LIMIT 1;";
 				$edit_id = $wpdb->get_var($query);
 				if($edit_id == 0) {
-					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `image`, `link`, `tracker`, `maxclicks`, `maxshown`, `targetclicks`, `targetimpressions`, `type`, `weight`, `sortorder`) VALUES ('', '', '$startshow', '$startshow', '$userdata->user_login', 'yes', '$startshow', '$endshow', '', '', 'N', 0, 0, 0, 0, 'empty', 6, 0);");
+					$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate` (`title`, `bannercode`, `thetime`, `updated`, `author`, `active`, `startshow`, `endshow`, `imagetype`, `image`, `link`, `tracker`, `maxclicks`, `maxshown`, `targetclicks`, `targetimpressions`, `type`, `weight`, `sortorder`) VALUES ('', '', '$startshow', '$startshow', '$userdata->user_login', 'yes', '$startshow', '$endshow', '', '', '', 'N', 0, 0, 0, 0, 'empty', 6, 0);");
 					$edit_id = $wpdb->get_var($query);
 				}
 				$ad_edit_id = $edit_id;
@@ -594,7 +599,7 @@ function adrotate_manage() {
 			
 			$edit_banner 	= $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$ad_edit_id';");
 			$groups			= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' ORDER BY `id` ASC;"); 
-			$user_list		= $wpdb->get_results("SELECT `ID` FROM `$wpdb->users` ORDER BY `user_nicename` ASC;");
+			$user_list		= $wpdb->get_results("SELECT `ID`, `display_name` FROM `$wpdb->users` ORDER BY `user_nicename` ASC;");
 			$saved_user 	= $wpdb->get_var("SELECT `user` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$edit_banner->id' AND `group` = 0 AND `block` = 0;");
 			$linkmeta		= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$edit_banner->id' AND `block` = 0 AND `user` = 0;");
 			foreach($linkmeta as $meta) {
@@ -607,14 +612,46 @@ function adrotate_manage() {
 			
 			if($ad_edit_id) {
 				// Errors
-				if(strlen($edit_banner->bannercode) < 1 AND $edit_banner->type != 'empty') echo '<div class="error"><p>'. __('The AdCode cannot be empty!', 'adrotate').'</p></div>';
-				if($edit_banner->tracker == 'N' AND strlen($edit_banner->link) < 1 AND $saved_user > 0) echo '<div class="error"><p>'. __('You\'ve set an advertiser but didn\'t enable clicktracking!', 'adrotate').'</p></div>';
-				if($edit_banner->tracker == 'Y' AND strlen($edit_banner->link) < 1) echo '<div class="error"><p>'. __('You\'ve enabled clicktracking but didn\'t provide an url in the url field!', 'adrotate').'</p></div>';
-				if($edit_banner->tracker == 'N' AND strlen($edit_banner->link) > 0) echo '<div class="error"><p>'. __('You didn\'t enable clicktracking but you did use the url field!', 'adrotate').'</p></div>';
-				if(!preg_match("/%link%/i", $edit_banner->bannercode) AND $edit_banner->tracker == 'Y') echo '<div class="error"><p>'. __('You didn\'t use %link% in your AdCode but did enable clicktracking!', 'adrotate').'</p></div>';
-				if(preg_match("/%link%/i", $edit_banner->bannercode) AND $edit_banner->tracker == 'N') echo '<div class="error"><p>'. __('You\'ve %link% in your AdCode but didn\'t enable clicktracking!', 'adrotate').'</p></div>';
-				if(!preg_match("/%image%/i", $edit_banner->bannercode) AND $edit_banner->image != '') echo '<div class="error"><p>'. __('You didn\'t use %image% in your AdCode but did select an image!', 'adrotate').'</p></div>';
-				if(preg_match("/%image%/i", $edit_banner->bannercode) AND $edit_banner->image == '') echo '<div class="error"><p>'. __('You did use %image% in your AdCode but did not select an image!', 'adrotate').'</p></div>';
+				if(strlen($edit_banner->bannercode) < 1 AND $edit_banner->type != 'empty') 
+					echo '<div class="error"><p>'. __('The AdCode cannot be empty!', 'adrotate').'</p></div>';
+
+				if($edit_banner->tracker == 'N' AND strlen($edit_banner->link) < 1 AND $saved_user > 0) 
+					echo '<div class="error"><p>'. __('You\'ve set an advertiser but didn\'t enable clicktracking!', 'adrotate').'</p></div>';
+
+				if($edit_banner->tracker == 'Y' AND strlen($edit_banner->link) < 1) 
+					echo '<div class="error"><p>'. __('You\'ve enabled clicktracking but didn\'t provide an url in the url field!', 'adrotate').'</p></div>';
+
+				if($edit_banner->tracker == 'N' AND strlen($edit_banner->link) > 0) 
+					echo '<div class="error"><p>'. __('You didn\'t enable clicktracking but you did use the url field!', 'adrotate').'</p></div>';
+
+				if(!preg_match("/%link%/i", $edit_banner->bannercode) AND $edit_banner->tracker == 'Y') 
+					echo '<div class="error"><p>'. __('You didn\'t use %link% in your AdCode but did enable clicktracking!', 'adrotate').'</p></div>';
+
+				if(preg_match("/%link%/i", $edit_banner->bannercode) AND $edit_banner->tracker == 'N') 
+					echo '<div class="error"><p>'. __('You\'ve %link% in your AdCode but didn\'t enable clicktracking!', 'adrotate').'</p></div>';
+
+				if(!preg_match("/%image%/i", $edit_banner->bannercode) AND $edit_banner->image != '') 
+					echo '<div class="error"><p>'. __('You didn\'t use %image% in your AdCode but did select an image!', 'adrotate').'</p></div>';
+
+				if(preg_match("/%image%/i", $edit_banner->bannercode) AND $edit_banner->image == '') 
+					echo '<div class="error"><p>'. __('You did use %image% in your AdCode but did not select an image!', 'adrotate').'</p></div>';
+				
+				if((($edit_banner->imagetype != '' AND $edit_banner->image == '') OR ($edit_banner->imagetype == '' AND $edit_banner->image != ''))) 
+					echo '<div class="error"><p>'. __('There is a problem saving the image specification. Please reset your image and re-save the ad!', 'adrotate').'</p></div>';
+				
+				// If ad is set to error, but there is no error
+				if($edit_banner->type == 'error'
+				AND strlen($edit_banner->bannercode) > 1
+				AND (($edit_banner->tracker == 'Y' AND strlen($edit_banner->link) > 0 AND $saved_user > 0)
+					OR ($edit_banner->tracker == 'N' AND strlen($edit_banner->link) < 1)
+					OR ($edit_banner->tracker == 'Y' AND strlen($edit_banner->link) > 0))
+				AND ((!preg_match("/%link%/i", $edit_banner->bannercode) AND $edit_banner->tracker == 'N')
+					OR (preg_match("/%link%/i", $edit_banner->bannercode) AND $edit_banner->tracker == 'Y'))
+				AND ((!preg_match("/%image%/i", $edit_banner->bannercode) AND $edit_banner->image == '')
+					OR (preg_match("/%image%/i", $edit_banner->bannercode) AND $edit_banner->image != ''))
+				AND (($edit_banner->imagetype == '' AND $edit_banner->image == '')
+					OR ($edit_banner->imagetype != '' AND $edit_banner->image != ''))
+				) echo '<div class="error"><p>'. __('AdRotate cannot find an error but the ad is marked erroneous, try re-saving the ad!', 'adrotate').'</p></div>';
 				
 				// Notices
 				if($edit_banner->active == 'no' AND $edit_banner->type != "empty") echo '<div class="updated"><p>'. __('This ad has been disabled and does not rotate on your site!', 'adrotate').'</p></div>';
@@ -790,6 +827,8 @@ function adrotate_manage() {
 				        	<select tabindex="11" name="adrotate_advertiser" style="min-width: 200px;">
 								<option value="0" <?php if($saved_user == '0') { echo 'selected'; } ?>><?php _e('Not specified', 'adrotate'); ?></option>
 							<?php 
+							foreach($user_list as $user) {
+/*
 							foreach($user_list as $id) {
 								$user = get_userdata($id->ID); 
 								if(strlen($user->first_name) < 1) $firstname = $user->user_login;
@@ -798,8 +837,11 @@ function adrotate_manage() {
 									else $lastname = $user->last_name;
 								if($user->ID == $userdata->ID) $you = ' (You)';
 									else $you = '';
+*/
+								if($user->ID == $userdata->ID) $you = ' (You)';
+									else $you = '';
 							?>
-								<option value="<?php echo $id->ID; ?>"<?php if($saved_user == $id->ID) { echo ' selected'; } ?>><?php echo $firstname; ?> <?php echo $lastname; ?><?php echo $you; ?></option>
+								<option value="<?php echo $user->ID; ?>"<?php if($saved_user == $user->ID) { echo ' selected'; } ?>><?php echo $user->display_name; ?><?php echo $you; ?></option>
 							<?php } ?>
 							</select><br />
 					        <em><?php _e('Must be a registered user on your site with appropriate access roles.', 'adrotate'); ?></em>
@@ -2141,8 +2183,7 @@ function adrotate_global_report() {
 
 			<thead>
 			<tr>
-				<th colspan="2"><?php _e('Overall statistics', 'adrotate'); ?></th>
-				<th colspan="2"><?php _e('The last 4 clicks in the past 24 hours', 'adrotate'); ?></th>
+				<th colspan="4"><?php _e('Overall statistics', 'adrotate'); ?></th>
 			</tr>
 			</thead>
 			
@@ -2163,17 +2204,6 @@ function adrotate_global_report() {
 		    <tr>
 				<th width="10%"><?php _e('General', 'adrotate'); ?></th>
 				<td width="40%"><?php echo $adrotate_stats['banners']; ?> <?php _e('ads, sharing a total of', 'adrotate'); ?> <?php echo $adrotate_stats['impressions']; ?> <?php _e('impressions.', 'adrotate'); ?> <?php echo $adrotate_stats['tracker']; ?> <?php _e('ads have tracking enabled.', 'adrotate'); ?></td>
-				<td rowspan="3" style="border-left:1px #EEE solid;">
-				<?php 
-				if($adrotate_stats['lastclicks']) {
-					foreach($adrotate_stats['lastclicks'] as $last) {
-						$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
-						echo '<strong>'.date_i18n('d-m-Y', $last['timer']) .'</strong> - '. $bannertitle .'<br />';
-					}
-				} else {
-					echo '<em>'.__('No recent clicks', 'adrotate').'</em>';
-				} ?>
-				</td>
 			</tr>
 		    <tr>
 				<th><?php _e('Average on all ads', 'adrotate'); ?></th>
@@ -2228,6 +2258,28 @@ function adrotate_global_report() {
 					?>
 		        </th>
 	      	</tr>
+			</tbody>
+
+			<thead>
+			<tr>
+				<th colspan="4"><?php _e('The last 50 clicks in the past 24 hours', 'adrotate'); ?></th>
+			</tr>
+			</thead>
+			
+			<tbody>
+			<tr>
+				<td colspan="4">
+				<?php 
+				if($adrotate_stats['lastclicks']) {
+					foreach($adrotate_stats['lastclicks'] as $last) {
+						$bannertitle = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$last[bannerid]'");
+						echo '<strong>'.date_i18n('d-m-Y', $last['timer']) .'</strong> - '. $bannertitle .' - '.$last['useragent'].'<br />';
+					}
+				} else {
+					echo '<em>'.__('No recent clicks', 'adrotate').'</em>';
+				} ?>
+				</td>
+			</tr>
 	      	<tr>
 				<td colspan="4">
 					<b><?php _e('Note:', 'adrotate'); ?></b> <em><?php _e('All statistics are indicative. They do not nessesarily reflect results counted by other parties.', 'adrotate'); ?></em><br />
@@ -2264,6 +2316,7 @@ function adrotate_options() {
 	$notification_mails	= implode(', ', $adrotate_config['notification_email']);
 	$advertiser_mails	= implode(', ', $adrotate_config['advertiser_email']);
 	$message 			= $_GET['message'];
+	$corrected		 	= $_GET['corrected'];
 ?>
 	<div class="wrap">
 	  	<h2><?php _e('AdRotate Settings', 'adrotate'); ?></h2>
@@ -2280,6 +2333,8 @@ function adrotate_options() {
 			<div id="message" class="updated fade"><p><?php _e('Database repaired', 'adrotate'); ?></p></div>
 		<?php } else if ($message == 'db_cleaned') { ?>
 			<div id="message" class="updated fade"><p><?php _e('Empty database records removed', 'adrotate'); ?></p></div>
+		<?php } else if ($message == 'eval_complete') { ?>
+			<div id="message" class="updated fade"><p><?php _e('Ads re-evaluated, '.$corrected.' ad(s) marked with errors', 'adrotate'); ?></p></div>
 		<?php } else if ($message == 'db_timer') { ?>
 			<div id="message" class="updated fade"><p><?php _e('Database can only be optimized or cleaned once every hour', 'adrotate'); ?></p></div>
 		<?php } else if ($message == 'mail_notification_sent') { ?>
@@ -2518,6 +2573,13 @@ function adrotate_options() {
 				<td>
 					<input type="submit" id="post-role-submit" name="adrotate_db_cleanup_submit" value="<?php _e('Clean-up Database', 'adrotate'); ?>" class="button-secondary" onclick="return confirm('<?php _e('You are about to remove empty records from the AdRotate database.', 'adrotate'); ?>\n\n<?php _e('Did you make a backup of your database?', 'adrotate'); ?>\n\n<?php _e('OK to continue, CANCEL to stop.', 'adrotate'); ?>')" /><br />
 					<span class="description"><?php _e('AdRotate creates empty records when you start making ads, groups or blocks. In rare occasions these records are faulty. If you made an ad, group or block that does not save when you make it use this button to delete those empty records.', 'adrotate'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('Re-evaluate Ads', 'adrotate'); ?></th>
+				<td>
+					<input type="submit" id="post-role-submit" name="adrotate_evaluate_submit" value="<?php _e('Re-evaluate all ads', 'adrotate'); ?>" class="button-secondary" onclick="return confirm('<?php _e('You are about to check all ads for errors.', 'adrotate'); ?>\n\n<?php _e('This might take a while and make slow down your site during this action!', 'adrotate'); ?>\n\n<?php _e('OK to continue, CANCEL to stop.', 'adrotate'); ?>')" /><br />
+					<span class="description"><?php _e('This will apply all evaluation rules to all ads to see if any error slipped in. Normally you shouldn\t need this feature.', 'adrotate'); ?></span>
 				</td>
 			</tr>
 			<tr>

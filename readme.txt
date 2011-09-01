@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.0, PHP5.2
 Tested up to: 3.2.1
-Stable tag: 3.6.4
+Stable tag: 3.6.5
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -51,8 +51,11 @@ If that's not enough you can post on our [forum](http://adrotateplugin.com/page/
 
 == Upgrade Notice ==
 
+= 3.6.5 =
+Important bugfixes to stats and error evaluation. Small tweaks. Some new features. 
+
 = 3.6.4 =
-Bugfixes. Small tweaks. Some new features/
+Bugfixes. Small tweaks. Some new features.
 
 = 3.6.3 =
 Minor bugfixes. Improved PHP5.3 compatibility.

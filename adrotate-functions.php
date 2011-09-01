@@ -116,6 +116,69 @@ function adrotate_array_unique($array) {
 }
 
 /*-------------------------------------------------------------
+ Name:      adrotate_prepare_evaluate_ads
+
+ Purpose:   Initiate evaluations for errors
+ Receive:   -None-
+ Return:    -None-
+ Since:		3.6.5
+-------------------------------------------------------------*/
+function adrotate_prepare_evaluate_ads() {
+	global $wpdb;
+	
+	// Clean Ad table
+	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty';");
+
+	// Fetch ads
+	$ads = $wpdb->get_results("SELECT `id` FROM `".$wpdb->prefix."adrotate` ORDER BY `id` ASC;");
+
+	// Determine error states
+	$corrected = 0;
+	foreach($ads as $ad) {
+		$result = adrotate_evaluate_ad($ad->id);
+		if($result == true) $corrected++;
+	}
+
+	adrotate_return('eval_complete', array($corrected));
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_evaluate_ad
+
+ Purpose:   Evaluates ads for errors
+ Receive:   $ad_id
+ Return:    String
+ Since:		3.6.5
+-------------------------------------------------------------*/
+function adrotate_evaluate_ad($ad_id) {
+	global $wpdb;
+	
+	// Fetch ad
+	$ad = $wpdb->get_row("SELECT `bannercode`, `tracker`, `link`, `imagetype`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$ad_id';");
+	$advertiser = $wpdb->get_var("SELECT `user` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$ad_id' AND `group` = 0 AND `block` = 0 AND `user` > 0;");
+
+	// Determine error states
+	if(
+		strlen($ad->bannercode) < 1 
+		OR ($ad->tracker == 'N' AND strlen($ad->link) < 1 AND $advertiser > 0) 							// Didn't enable click-tracking, didn't provide a link, DID set a advertiser
+		OR ($ad->tracker == 'Y' AND strlen($ad->link) < 1) 												// Enabled clicktracking but provided no url (link)
+		OR ($ad->tracker == 'N' AND strlen($ad->link) > 0) 												// Didn't enable click-tracking but did provide an url (link)
+		OR (!preg_match("/%link%/i", $ad->bannercode) AND $ad->tracker == 'Y')							// Didn't use %link% but enabled clicktracking
+		OR (preg_match("/%link%/i", $ad->bannercode) AND $ad->tracker == 'N')							// Did use %link% but didn't enable clicktracking
+		OR (!preg_match("/%image%/i", $ad->bannercode) AND $ad->image != '' AND $ad->imagetype != '')	// Didn't use %image% but selected an image
+		OR (preg_match("/%image%/i", $ad->bannercode) AND $ad->image == '' AND $ad->imagetype == '')	// Did use %image% but didn't select an image
+		OR ($ad->image == '' AND $ad->imagetype != '')													// Critical Image and Imagetype mismatch
+		OR ($ad->image != '' AND $ad->imagetype == '')													// Critical Image and Imagetype mismatch
+	) {
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'error' WHERE `id` = '$ad_id';");
+		return true;
+	} else {
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'manual' WHERE `id` = '$ad_id';");
+		return false;
+	}
+}
+
+/*-------------------------------------------------------------
  Name:      adrotate_prepare_global_report
 
  Purpose:   Generate live stats for admins
@@ -128,7 +191,7 @@ function adrotate_prepare_global_report() {
 	
 	$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
 
-	$stats['lastclicks']			= adrotate_array_unique($wpdb->get_results("SELECT `timer`, `bannerid` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` != 0 ORDER BY `timer` DESC LIMIT 4;", ARRAY_A));
+	$stats['lastclicks']			= adrotate_array_unique($wpdb->get_results("SELECT `timer`, `bannerid`, `useragent` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `stat` = 'c' AND `ipaddress` != 0 ORDER BY `timer` DESC LIMIT 50;", ARRAY_A));
 	$stats['banners'] 				= $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'manual';");
 	$stats['tracker']				= $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' AND `type` = 'manual';");
 	$stats['clicks']				= $wpdb->get_var("SELECT SUM(`clicks`) as `clicks` FROM `".$wpdb->prefix."adrotate_stats_tracker`;");
@@ -1010,6 +1073,10 @@ function adrotate_return($action, $arg = null) {
 
 		case "db_timer" :
 			wp_redirect('admin.php?page=adrotate-settings&message=db_timer');
+		break;
+
+		case "eval_complete" :
+			wp_redirect('admin.php?page=adrotate-settings&message=eval_complete&corrected='.$arg[0]);
 		break;
 
 		// Misc plugin events
