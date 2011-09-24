@@ -507,8 +507,7 @@ function adrotate_preview($banner_id) {
 -------------------------------------------------------------*/
 function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, $link, $image, $preview = false) {
 
-	$meta = urlencode("$id,$group,$block");
-//	list($type, $file) = explode("|", $image, 2);
+	$meta = base64_encode("$id,$group,$block");
 
 	$banner_output = $bannercode;
 	if($tracker == "Y") {

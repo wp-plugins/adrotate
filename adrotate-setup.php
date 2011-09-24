@@ -304,7 +304,7 @@ function adrotate_database_upgrade() {
 				if(strlen($image->image) > 0) {
 					if(preg_match("/dropdown|/i", $image->image) OR preg_match("/field|/i", $image->image)) {
 						$buffer = explode("|", $image->image, 3);
-						$wpdb->query("UPDATE `".$tables['adrotate']."` SET `imagetype` = '".$buffer[0]."', `image` = '".$buffer[2]."' WHERE `id` = '$image->id';");
+						$wpdb->query("UPDATE `".$tables['adrotate']."` SET `imagetype` = '".$buffer[0]."', `image` = '".$buffer[1]."' WHERE `id` = '$image->id';");
 					}
 				}
 			}
