@@ -34,6 +34,7 @@ class adrotate_widgets extends WP_Widget {
 	 Purpose:   Display the widget
 	-------------------------------------------------------------*/
 	function widget($args, $instance) {
+		global $adrotate_config;
 
 		/* Changelog:
 		// Feb 28 2011 - Minor tweaks, updated title filter

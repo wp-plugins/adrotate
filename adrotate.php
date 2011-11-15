@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.6.6
+Version: 3.6.7
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -1203,6 +1203,7 @@ function adrotate_manage_group() {
 								<td><center>[adrotate group="<?php echo $group->id; ?>"]</center></td>
 								<td><center><?php if($group->fallback == 0) { echo "Not set"; } else { echo $group->fallback; } ?></center></td>
 							</tr>
+							<?php unset($stats);?>
 			 			<?php } ?>
 					<?php } else { ?>
 					<tr>

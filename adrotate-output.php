@@ -33,6 +33,8 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
+echo "group ".$group;
+echo " block ".$block;
 	if($group > 0) $grouporblock = " AND `group` = '$group'";
 	if($block > 0) $grouporblock = " AND `block` = '$block'";
 
@@ -72,9 +74,8 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 			foreach($crawlers as $crawler) {
 				if(preg_match("/$crawler/i", $useragent)) $nocrawler = false;
 			}
-		
-			$ip = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'i' AND `timer` < '$impression_timer' AND `bannerid` = '$banner_id' LIMIT 1;");
-			if($ip < 1 AND $nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
+			$ip = $wpdb->get_var("SELECT `timer` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'i' AND `bannerid` = '$banner_id' ORDER BY `timer` DESC LIMIT 1;");
+			if($ip < $impression_timer AND $nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
 				$stats = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$banner_id'$grouporblock AND `thetime` = '$today';");
 				if($stats > 0) {
 					$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_stats_tracker` SET `impressions` = `impressions` + 1 WHERE `id` = '$stats';");
@@ -89,7 +90,6 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	} else {
 		$output = adrotate_error('ad_no_id');
 	}
-
 	return $output;
 }
 
@@ -213,7 +213,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 					echo "</pre></p>"; 
 				}			
 
-				$output = adrotate_ad($banner_id, false, $group_array[$group_choice]);
+				$output = adrotate_ad($banner_id, false, $group_array[$group_choice], 0);
 
 			} else {
 				$output = adrotate_fallback($fallback, 'expired');
@@ -507,7 +507,9 @@ function adrotate_preview($banner_id) {
 -------------------------------------------------------------*/
 function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, $link, $image, $preview = false) {
 
+//	$meta = urlencode("$id,$group,$block");	
 	$meta = base64_encode("$id,$group,$block");
+//	$meta = "$id,$group,$block";
 
 	$banner_output = $bannercode;
 	if($tracker == "Y") {
