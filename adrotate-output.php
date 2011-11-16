@@ -33,8 +33,6 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
-echo "group ".$group;
-echo " block ".$block;
 	if($group > 0) $grouporblock = " AND `group` = '$group'";
 	if($block > 0) $grouporblock = " AND `block` = '$block'";
 
