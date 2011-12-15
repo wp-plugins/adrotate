@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.6.7
+Version: 3.6.8
 Author URI: http://meandmymac.net/
 License: GPL2
 */
