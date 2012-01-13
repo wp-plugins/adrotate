@@ -49,50 +49,6 @@ Find out how AdRotate works, more options and various ways to implement your ads
 We have a [knowledgebase](http://adrotateplugin.com/page/support.php).
 If that's not enough you can post on our [forum](http://adrotateplugin.com/page/support.php) and ask your question there!
 
-== Upgrade Notice ==
-
-= 3.6.6 =
-Critical bugfix for users using clicktracking. This patches a SQL injection issue in the redirect url.
-
-= 3.6.5 =
-Important bugfixes to stats and error evaluation. Small tweaks. Some new features. 
-
-= 3.6.4 =
-Bugfixes. Small tweaks. Some new features.
-
-= 3.6.3 =
-Minor bugfixes. Improved PHP5.3 compatibility.
-
-= 3.6.2 =
-Minor bugfixes, Renewed bot list, MySQL change to accomodate improved impression counter.
-
-= 3.6.1 =
-Minor bugfixes.
-
-= 3.6 =
-Adds i18n and various stats related bugfixes.
-
-= 3.5.1 =
-Fixes access roles for reports not saving.
-
-= 3.5 =
-Some bugfixes and some important new features.
-
-= 3.4 =
-New error reporting system.
-
-= 3.3 =
-Several important bugfixes.
-
-= 3.2.2 =
-Fixes a version inclusion which for some reason doesn't work in Wordpress 3.0.4 and older.
-
-= 3.2.1 =
-Fixes a typo in the role name search (used internall)
-
-= 3.2 =
-Fixes the access control system in AdRotate as well as some other important bugs.
-
 == Changelog ==
 
 The full changelog can be found [here](http://adrotateplugin.com/page/get/changelog.php).
