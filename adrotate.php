@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans
-Version: 3.6.8
+Version: 3.6.9
 Author URI: http://meandmymac.net/
 License: GPL2
 */
@@ -16,7 +16,7 @@ Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_VERSION", 354);
 define("ADROTATE_DB_VERSION", 12);
-setlocale(LC_ALL, get_locale().'.'.DB_CHARSET);
+//setlocale(LC_ALL, get_locale().'.'.DB_CHARSET);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -25,11 +25,12 @@ include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-manage.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-functions.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-output.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-widget.php');
+include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-network.php');
 // wp-content/plugins/adrotate/adrotate-out.php
 /*-----------------------------------------------------------*/
 
 /*--- Check and Load config ---------------------------------*/
-load_plugin_textdomain('adrotate', false, dirname(plugin_basename(__FILE__)).'/language/');
+load_plugin_textdomain('adrotate', false, basename( dirname( __FILE__ ) ) . '/language' );
 adrotate_check_config();
 $adrotate_config 				= get_option('adrotate_config');
 $adrotate_crawlers 				= get_option('adrotate_crawlers');
@@ -54,6 +55,7 @@ adrotate_clean_trackerdata();
 
 /*--- Front end ---------------------------------------------*/
 add_shortcode('adrotate', 'adrotate_shortcode');
+//add_action('wp_enqueue_scripts', 'adrotate_head');
 add_action('widgets_init', create_function('', 'return register_widget("adrotate_widgets");'));
 add_action('wp_meta', 'adrotate_meta');
 /*-----------------------------------------------------------*/
@@ -177,10 +179,10 @@ function adrotate_manage() {
 		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
-					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=manage';?>"><?php _e('Manage', 'adrotate'); ?></a> | 
-					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=addnew';?>"><?php _e('Add New', 'adrotate'); ?></a> 
+					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate&view=manage');?>"><?php _e('Manage', 'adrotate'); ?></a> | 
+					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate&view=addnew');?>"><?php _e('Add New', 'adrotate'); ?></a> 
 					<?php if($ad_edit_id) { ?>
-					| <a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=report&ad='.$ad_edit_id;?>"><?php _e('Report', 'adrotate'); ?></a>
+					| <a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate&view=report&ad='.$ad_edit_id);?>"><?php _e('Report', 'adrotate'); ?></a>
 					<?php } ?>
 				</div>
 			</div>
@@ -217,7 +219,7 @@ function adrotate_manage() {
 		   	<table class="widefat" style="margin-top: .5em">
 	 			<thead>
 	  				<tr>
-						<th class="check-column">&nbsp;</th>
+						<th scope="col" class="manage-column column-cb check-column" style=""><input type="checkbox" /></th>
 						<th width="2%"><center><?php _e('ID', 'adrotate'); ?></center></th>
 						<th width="12%"><?php _e('Show from', 'adrotate'); ?></th>
 						<th width="12%"><?php _e('Show until', 'adrotate'); ?></th>
@@ -280,7 +282,7 @@ function adrotate_manage() {
 						<td><center><?php echo $errbanner->id;?></center></td>
 						<td><?php echo date_i18n("F d, Y", $errbanner->startshow);?></td>
 						<td><span style="color: <?php echo adrotate_prepare_color($errbanner->endshow);?>;"><?php echo date_i18n("F d, Y", $errbanner->endshow);?></span></td>
-						<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=edit&ad='.$errbanner->id;?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo stripslashes(html_entity_decode($errbanner->title));?></a></strong> - <a href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=report&ad='.$errbanner->id;?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a><?php if($groups) echo '<br /><em style="color:#999">'.$grouplist.'</em>'; ?></td>
+						<td><strong><a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate&view=edit&ad='.$errbanner->id);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo stripslashes(html_entity_decode($errbanner->title));?></a></strong> - <a href="<?php echo admin_url('/admin.php?page=adrotate&view=report&ad='.$errbanner->id);?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a><?php if($groups) echo '<br /><em style="color:#999">'.$grouplist.'</em>'; ?></td>
 					</tr>
 	 			<?php } ?>
 				</tbody>
@@ -334,7 +336,7 @@ function adrotate_manage() {
 		   	<table class="widefat" style="margin-top: .5em">
 	 			<thead>
 	  				<tr>
-						<th class="check-column">&nbsp;</th>
+						<th scope="col" class="manage-column column-cb check-column" style=""><input type="checkbox" /></th>
 						<th width="2%"><center><?php _e('ID', 'adrotate'); ?></center></th>
 						<th width="12%"><?php _e('Show from', 'adrotate'); ?></th>
 						<th width="12%"><?php _e('Show until', 'adrotate'); ?></th>
@@ -420,7 +422,7 @@ function adrotate_manage() {
 							<td><center><?php echo $banner->id;?></center></td>
 							<td><?php echo date_i18n("F d, Y", $banner->startshow);?></td>
 							<td><span style="color: <?php echo adrotate_prepare_color($banner->endshow);?>;"><?php echo date_i18n("F d, Y", $banner->endshow);?></span></td>
-							<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=edit&ad='.$banner->id;?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong> - <a href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=report&ad='.$banner->id;?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a><?php if($groups) echo '<br /><em style="color:#999">'.$grouplist.'</em>'; ?></td>
+							<td><strong><a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate&view=edit&ad='.$banner->id);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo stripslashes(html_entity_decode($banner->title));?></a></strong> - <a href="<?php echo admin_url('/admin.php?page=adrotate&view=report&ad='.$banner->id);?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a><?php if($groups) echo '<br /><em style="color:#999">'.$grouplist.'</em>'; ?></td>
 							<td><center><?php echo $banner->weight; ?></center></td>
 							<td><center><?php echo $stats->impressions; ?></center></td>
 							<td><center><?php echo $stats_today->impressions; ?></center></td>
@@ -467,7 +469,7 @@ function adrotate_manage() {
 		   	<table class="widefat" style="margin-top: .5em">
 	 			<thead>
 	  				<tr>
-						<th class="check-column">&nbsp;</th>
+						<th scope="col" class="manage-column column-cb check-column" style=""><input type="checkbox" /></th>
 						<th width="2%"><center><?php _e('ID', 'adrotate'); ?></center></th>
 						<th width="12%"><?php _e('Show from', 'adrotate'); ?></th>
 						<th width="12%"><?php _e('Show until', 'adrotate'); ?></th>
@@ -552,7 +554,7 @@ function adrotate_manage() {
 							<td><center><?php echo $disbanner->id;?></center></td>
 							<td><?php echo date_i18n("F d, Y", $disbanner->startshow);?></td>
 							<td><span style="color: <?php echo adrotate_prepare_color($disbanner->endshow);?>;"><?php echo date_i18n("F d, Y", $disbanner->endshow);?></span></td>
-							<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=edit&ad='.$disbanner->id;?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo stripslashes(html_entity_decode($disbanner->title));?></a></strong> - <a href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate&view=report&ad='.$disbanner->id;?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a><?php if($groups) echo '<br /><em style="color:#999">'.$grouplist.'</em>'; ?></td>
+							<td><strong><a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate&view=edit&ad='.$disbanner->id);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo stripslashes(html_entity_decode($disbanner->title));?></a></strong> - <a href="<?php echo admin_url('/admin.php?page=adrotate&view=report&ad='.$disbanner->id);?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a><?php if($groups) echo '<br /><em style="color:#999">'.$grouplist.'</em>'; ?></td>
 							<td><center><?php echo $disbanner->weight; ?></center></td>
 							<td><center><?php echo $stats->impressions; ?></center></td>
 							<?php if($disbanner->tracker == "Y") { ?>
@@ -1134,10 +1136,10 @@ function adrotate_manage_group() {
 		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
-					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=manage';?>"><?php _e('Manage', 'adrotate'); ?></a> | 
-					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=addnew';?>"><?php _e('Add New', 'adrotate'); ?></a>
+					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-groups&view=manage');?>"><?php _e('Manage', 'adrotate'); ?></a> | 
+					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-groups&view=addnew');?>"><?php _e('Add New', 'adrotate'); ?></a>
 					<?php if($group_edit_id) { ?>
-					| <a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=report&group='.$group_edit_id;?>"><?php _e('Report', 'adrotate'); ?></a>
+					| <a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-groups&view=report&group='.$group_edit_id);?>"><?php _e('Report', 'adrotate'); ?></a>
 					<?php } ?>
 				</div>
 			</div>
@@ -1194,7 +1196,7 @@ function adrotate_manage_group() {
 						    <trclass='<?php echo $class; ?>'>
 								<th class="check-column"><input type="checkbox" name="groupcheck[]" value="<?php echo $group->id; ?>" /></th>
 								<td><center><?php echo $group->id;?></center></td>
-								<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=edit&group='.$group->id;?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo $group->name;?></a></strong><br /><a href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-groups&view=report&group='.$group->id;?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a></td>
+								<td><strong><a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-groups&view=edit&group='.$group->id);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo $group->name;?></a></strong><br /><a href="<?php echo admin_url('/admin.php?page=adrotate-groups&view=report&group='.$group->id);?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a></td>
 								<td><center><?php echo $ads_in_group;?></center></td>
 								<td><center><?php echo $stats->impressions;?></center></td>
 								<td><center><?php echo $stats_today->impressions;?></center></td>
@@ -1449,11 +1451,11 @@ function adrotate_manage_group() {
 
 								$impressions_title = urlencode(serialize(__('Impressions over the past 21 days', 'adrotate')));
 								$impressions_array = urlencode(serialize($impressions_array));
-								echo "<img src=\"../wp-content/plugins/adrotate/library/graph_group.php?title=$impressions_title&data=$impressions_array\" />";
+								echo "<img src=\"".plugins_url("/library/graph_group.php?title=$impressions_title&data=$impressions_array", __FILE__)."\" />";
 
 								$clicks_title = urlencode(serialize(__('Clicks over the past 21 days', 'adrotate')));
 								$clicks_array = urlencode(serialize($clicks_array));
-								echo "<img src=\"../wp-content/plugins/adrotate/library/graph_group.php?title=$clicks_title&data=$clicks_array\" />";
+								echo "<img src=\"".plugins_url("/library/graph_group.php?title=$clicks_title&data=$clicks_array", __FILE__)."\" />";
 							} else {
 								_e('No data to show!', 'adrotate');
 							} 
@@ -1523,10 +1525,10 @@ function adrotate_manage_block() {
 		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_blocks';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
-					<a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=manage';?>"><?php _e('Manage', 'adrotate'); ?></a> 
-					| <a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=addnew';?>"><?php _e('Add New', 'adrotate'); ?></a> 
+					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=manage');?>"><?php _e('Manage', 'adrotate'); ?></a> 
+					| <a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=addnew');?>"><?php _e('Add New', 'adrotate'); ?></a> 
 					<?php if($block_edit_id) { ?>
-					| <a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=report&block='.$block_edit_id;?>"><?php _e('Report', 'adrotate'); ?></a> 
+					| <a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=report&block='.$block_edit_id);?>"><?php _e('Report', 'adrotate'); ?></a> 
 					<?php } ?>
 				</div>
 			</div>
@@ -1583,7 +1585,7 @@ function adrotate_manage_block() {
 						    <tr class='<?php echo $class; ?>'>
 								<th class="check-column"><input type="checkbox" name="blockcheck[]" value="<?php echo $block->id; ?>" /></th>
 								<td><center><?php echo $block->id;?></center></td>
-								<td><strong><a class="row-title" href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=edit&block='.$block->id;?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo $block->name;?></a></strong><br /><a href="<?php echo get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=report&block='.$block->id;?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a></td>
+								<td><strong><a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=edit&block='.$block->id);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo $block->name;?></a></strong><br /><a href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=report&block='.$block->id);?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a></td>
 								<td><center><?php echo $groups_in_block;?></center></td>
 								<td><center><?php echo $stats->impressions;?></center></td>
 								<td><center><?php echo $stats_today->impressions;?></center></td>
@@ -1837,11 +1839,11 @@ function adrotate_manage_block() {
 
 								$impressions_title = urlencode(serialize(__('Impressions over the past 21 days', 'adrotate')));
 								$impressions_array = urlencode(serialize($impressions_array));
-								echo "<img src=\"../wp-content/plugins/adrotate/library/graph_block.php?title=$impressions_title&data=$impressions_array\" />";
+								echo "<img src=\"".plugins_url("/library/graph_block.php?title=$impressions_title&data=$impressions_array", __FILE__)."\" />";
 
 								$clicks_title = urlencode(serialize(__('Clicks over the past 21 days', 'adrotate')));
 								$clicks_array = urlencode(serialize($clicks_array));
-								echo "<img src=\"../wp-content/plugins/adrotate/library/graph_block.php?title=$clicks_title&data=$clicks_array\" />";
+								echo "<img src=\"".plugins_url("/library/graph_block.php?title=$clicks_title&data=$clicks_array", __FILE__)."\" />";
 							} else {
 								_e('No data to show!', 'adrotate');
 							} 
@@ -2045,11 +2047,11 @@ function adrotate_advertiser_report() {
 			
 								$impressions_title = urlencode(serialize(__('Impressions of all your ads over the past 21 days', 'adrotate')));
 								$impressions_array = urlencode(serialize($impressions_array));
-								echo "<img src=\"../wp-content/plugins/adrotate/library/graph_all_ads.php?title=$impressions_title&data=$impressions_array\" />";
+								echo "<img src=\"".plugins_url("/library/graph_all_ads.php?title=$impressions_title&data=$impressions_array", __FILE__)."\" />";
 
 								$clicks_title = urlencode(serialize(__('Clicks of all your ads over the past 21 days', 'adrotate')));
 								$clicks_array = urlencode(serialize($clicks_array));
-								echo "<img src=\"../wp-content/plugins/adrotate/library/graph_all_ads.php?title=$clicks_title&data=$clicks_array\" />";
+								echo "<img src=\"".plugins_url("/library/graph_all_ads.php?title=$clicks_title&data=$clicks_array", __FILE__)."\" />";
 							} else {
 								_e('No data to show!');
 							} 
@@ -2248,11 +2250,11 @@ function adrotate_global_report() {
 
 						$impressions_title = urlencode(serialize(__('Impressions over the past 21 days')));
 						$impressions_array = urlencode(serialize($impressions_array));
-						echo "<img src=\"../wp-content/plugins/adrotate/library/graph_all_ads.php?title=$impressions_title&data=$impressions_array\" />";
+						echo "<img src=\"".plugins_url("/library/graph_all_ads.php?title=$impressions_title&data=$impressions_array", __FILE__)."\" />";
 
 						$clicks_title = urlencode(serialize(__('Clicks over the past 21 days')));
 						$clicks_array = urlencode(serialize($clicks_array));
-						echo "<img src=\"../wp-content/plugins/adrotate/library/graph_all_ads.php?title=$clicks_title&data=$clicks_array\" />";
+						echo "<img src=\"".plugins_url("/library/graph_all_ads.php?title=$clicks_title&data=$clicks_array", __FILE__)."\" />";
 					} else {
 						_e('No data to show!');
 					} 
@@ -2318,6 +2320,7 @@ function adrotate_options() {
 	$advertiser_mails	= implode(', ', $adrotate_config['advertiser_email']);
 	$message 			= $_GET['message'];
 	$corrected		 	= $_GET['corrected'];
+	$converted		 	= base64_decode($_GET['converted']);
 ?>
 	<div class="wrap">
 	  	<h2><?php _e('AdRotate Settings', 'adrotate'); ?></h2>

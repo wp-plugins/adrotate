@@ -424,6 +424,18 @@ function adrotate_check_banners() {
 }
 
 /*-------------------------------------------------------------
+ Name:      adrotate_head
+
+ Purpose:   Add clicktracking code to <head>
+ Receive:   -none-
+ Return:    -none-
+ Since:		3.6.9
+-------------------------------------------------------------*/
+function adrotate_head() {
+	wp_enqueue_script('AdRotate-Clicktracker', WP_CONTENT_URL.'/plugins/adrotate/library/clicktracker.js', 'jQuery');
+}   
+
+/*-------------------------------------------------------------
  Name:      adrotate_check_config
 
  Purpose:   Update the options
@@ -1061,6 +1073,10 @@ function adrotate_return($action, $arg = null) {
 		// Maintenance
 		case "db_optimized" :
 			wp_redirect('admin.php?page=adrotate-settings&message=db_optimized');
+		break;
+
+		case "db_converted" :
+			wp_redirect('admin.php?page=adrotate-settings&message=db_converted');
 		break;
 
 		case "db_repaired" :

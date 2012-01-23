@@ -505,11 +505,12 @@ function adrotate_preview($banner_id) {
 -------------------------------------------------------------*/
 function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, $link, $image, $preview = false) {
 
-//	$meta = urlencode("$id,$group,$block");	
-	$meta = base64_encode("$id,$group,$block");
-//	$meta = "$id,$group,$block";
+	$meta = base64_encode("$id,$group,$block,$link");
+//	$meta = "$id,$group,$block,$link";
+	$now = time();
 
 	$banner_output = $bannercode;
+/*
 	if($tracker == "Y") {
 		if($preview == true) {
 			$banner_output = str_replace('%link%', get_option('siteurl').'/wp-content/plugins/adrotate/adrotate-out.php?track='.$meta.'&preview=true', $banner_output);		
@@ -519,6 +520,17 @@ function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, 
 	} else {
 		$banner_output = str_replace('%link%', $link, $banner_output);
 	}
+*/
+	if($tracker == "Y") {
+		$url = add_query_arg('track', $meta, WP_CONTENT_URL."/plugins/adrotate/adrotate-out.php");
+		if($preview == true) {
+			$url = add_query_arg('preview', 'true', $url);
+		}		
+		$banner_output = str_replace('%link%', $url, $banner_output);
+	} else {
+		$banner_output = str_replace('%link%', $link, $banner_output);
+	}
+	$banner_output = str_replace('%random%', rand(100000,999999), $banner_output);
 	$banner_output = str_replace('%image%', $image, $banner_output);
 	$banner_output = str_replace('%id%', $id, $banner_output);
 	$banner_output = stripslashes(htmlspecialchars_decode($banner_output, ENT_QUOTES));

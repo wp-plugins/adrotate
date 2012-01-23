@@ -3,8 +3,8 @@ Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.0, PHP5.2
-Tested up to: 3.3
-Stable tag: 3.6.8
+Tested up to: 3.3.1
+Stable tag: 3.6.9
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -21,6 +21,7 @@ Receive a periodic email when banners are (about to) expire(d) informing you to 
 
 * [Details](http://adrotateplugin.com) - Lots of Additional plugin information
 * [Manuals & Support](http://adrotateplugin.com/page/support.php) - Setup instructions and support
+* [Premium services](http://adrotateplugin.com/page/services.php) - Hire us to install or troubleshoot AdRotate
 
 **Some Features**
 

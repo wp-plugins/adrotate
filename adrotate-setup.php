@@ -111,7 +111,7 @@ function adrotate_database_install() {
 			  	`weight` int(3) NOT NULL default '6',
 				`sortorder` int(5) NOT NULL default '0',
 	  		PRIMARY KEY  (`id`)
-			) ".$charset_collate.";";
+			) ".$charset_collate." ENGINE = 'MyISAM';";
 		dbDelta($sql);
 	}
 
@@ -122,7 +122,7 @@ function adrotate_database_install() {
 				`fallback` varchar(5) NOT NULL default '0',
 				`sortorder` int(5) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate.";";
+			) ".$charset_collate." ENGINE = 'MyISAM';";
 		dbDelta($sql);
 	}
 
@@ -135,7 +135,7 @@ function adrotate_database_install() {
 				`stat` char(1) NOT NULL default 'c',
 				`useragent` mediumtext NOT NULL,
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate.";";
+			) ".$charset_collate." ENGINE = 'MyISAM';";
 		dbDelta($sql);
 	}
 
@@ -149,7 +149,7 @@ function adrotate_database_install() {
 				`wrapper_after` longtext NOT NULL,
 				`sortorder` int(5) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate.";";
+			) ".$charset_collate." ENGINE = 'MyISAM';";
 		dbDelta($sql);
 	}
 	
@@ -161,7 +161,7 @@ function adrotate_database_install() {
 				`block` int(5) NOT NULL default '0',
 				`user` int(5) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate.";";
+			) ".$charset_collate." ENGINE = 'MyISAM';";
 		dbDelta($sql);
 	}
 
@@ -175,7 +175,7 @@ function adrotate_database_install() {
 				`clicks` int(15) NOT NULL default '0',
 				`impressions` int(15) NOT NULL default '0',
 				PRIMARY KEY  (`id`)
-			) ".$charset_collate.";";
+			) ".$charset_collate." ENGINE = 'MyISAM';";
 		dbDelta($sql);
 	}
 
