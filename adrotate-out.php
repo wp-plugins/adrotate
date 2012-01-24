@@ -9,6 +9,7 @@ Copyright 2010-2011 Arnan de Gans  (email : adegans@meandmymac.net)
  Return:	-None-
  Since:		2.0
 -------------------------------------------------------------*/
+include('../../../wp-blog-header.php');
 
 global $wpdb, $adrotate_crawlers, $adrotate_debug;
 
@@ -21,7 +22,15 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 	if(isset($_GET['preview'])) $preview 	= $_GET['preview'];	
 	list($ad, $group, $block, $bannerurl) = explode(",", $meta);
 	
-	$remote_ip 	= adrotate_get_remote_ip();
+	if(empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+		$remote_ip = $_SERVER["REMOTE_ADDR"];
+	} else {
+		$remote_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+	}
+	$buffer = explode(',', $remote_ip, 2);
+
+	$remote_ip 	= $buffer[0];
+//	$remote_ip 	= adrotate_get_remote_ip();
 	$now 		= time();
 	$today 		= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
 	if($adrotate_debug['timers'] == true) {
