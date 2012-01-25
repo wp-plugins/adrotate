@@ -617,10 +617,11 @@ function adrotate_credits() {
 	echo '	<li>'.__('Give me your money to', 'adrotate').' <a href="http://meandmymac.net/donate/" target="_blank">'.__('show your appreciation', 'adrotate').'</a>. '.__('Thanks!', 'adrotate').'</li>';
 	echo '	<li>'.__('The plugin homepage is at', 'adrotate').' <a href="http://www.adrotateplugin.com/" target="_blank">www.adrotateplugin.com</a>!</li>';
 	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('knowledgebase', 'adrotate').'</a> '.__('for manuals, general information!', 'adrotate').'</li>';
+	echo '	<li>'.__('Premium support and setup assistance!', 'adrotate').' <a href="http://www.adrotateplugin.com/page/services.php" target="_blank">'.__('Hire us', 'adrotate').'</a> '.__(', and see how we can help you!', 'adrotate').'</li>';
 	echo '	<li>'.__('Need more help?', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('Forum support', 'adrotate').'</a> '.__('is available!', 'adrotate').'</li>';
 	echo '</ul></td>';
 	echo '<td style="border-left:1px #ddd solid;">';
-	meandmymac_rss_widget(5);
+	meandmymac_rss_widget(6);
 	echo '</td></tr>';
 	echo '</tbody>';
 
