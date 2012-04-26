@@ -161,7 +161,7 @@ if(!function_exists('meandmymac_rss_widget')) {
 
 		include_once(ABSPATH . WPINC . '/feed.php');
 		$feed		= array('http://meandmymac.net/feed/', 
-							'http://blog.adrotateplugin.com/feed/'
+							'http://blog.adrotateplugin.com/feed/?utm_source=PluginFeed&utm_medium=website&utm_campaign=AdRotate%2BBlog%2Bfrom%2Bplugins'
 							);
 		?>
 			<style type="text/css" media="screen">
