@@ -14,7 +14,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 */
 
 /*--- AdRotate values ---------------------------------------*/
-define("ADROTATE_BETA", '3.7rc9');
+define("ADROTATE_BETA", '');
 define("ADROTATE_VERSION", 357);
 define("ADROTATE_DB_VERSION", 18);
 /*-----------------------------------------------------------*/
