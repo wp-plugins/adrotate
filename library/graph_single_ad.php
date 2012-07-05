@@ -18,7 +18,7 @@ if($target > 0) {
 }
 
 $graph->setupYAxis(false);
-$graph->setupXAxis(30, '#EEE');
+$graph->setupXAxis(15, '#EEE');
 
 $graph->setDataValues(true);
 
