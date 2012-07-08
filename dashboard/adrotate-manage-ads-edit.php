@@ -320,7 +320,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 				</table>
 	
 		    	<p class="submit">
-					<input tabindex="20" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
+					<input tabindex="17" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
 					<a href="admin.php?page=adrotate&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
 		    	</p>
 
@@ -353,11 +353,11 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			      	<tr>
 				        <th><?php _e('Maximum clicks:', 'adrotate'); ?></th>
 				        <td>
-					        <label for="adrotate_timeframeclicks"></label><input tabindex="18" name="adrotate_timeframeclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframeclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
+					        <label for="adrotate_timeframeclicks"></label><input tabindex="20" name="adrotate_timeframeclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframeclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
 				        </td>
 				        <th valign="top"><?php _e('Maximum impressions:', 'adrotate'); ?></th>
 				        <td>
-					        <label for="adrotate_timeframeimpressions"><input tabindex="17" name="adrotate_timeframeimpressions" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframeimpressions;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
+					        <label for="adrotate_timeframeimpressions"><input tabindex="21" name="adrotate_timeframeimpressions" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframeimpressions;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
 				        </td>
 			      	</tr>
 					</tbody>					
@@ -368,21 +368,21 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 		    	<table class="widefat" style="margin-top: .5em">
 					<thead>
 					<tr>
-						<th colspan="6"><?php _e('Add new schedules (Required)', 'adrotate'); ?></th>
+						<th colspan="4"><?php _e('Add new schedules (Required)', 'adrotate'); ?></th>
 					</tr>
 					</thead>
 	
 					<tbody>
 			      	<tr>
-			      		<th valign="top" colspan="2">Important:</th>
-				        <td colspan="4"><em><?php _e('Time uses a 24 hour clock. When you\'re used to the AM/PM system keep this in mind: If the the start or end time is after lunch, add 12 hours. 2PM is 14:00 hours. 6AM is 6:00 hours.', 'adrotate'); ?><br /><?php _e('The maximum clicks and impressions are measured over the set schedule only. Every schedule can have it\'s own limit!', 'adrotate'); ?></em></td>
+			      		<th valign="top" valign="top">Important:</th>
+				        <td colspan="3"><em><?php _e('Time uses a 24 hour clock. When you\'re used to the AM/PM system keep this in mind: If the the start or end time is after lunch, add 12 hours. 2PM is 14:00 hours. 6AM is 6:00 hours.', 'adrotate'); ?><br /><?php _e('The maximum clicks and impressions are measured over the set schedule only. Every schedule can have it\'s own limit!', 'adrotate'); ?></em></td>
 					</tr>
 			      	<tr>
-				        <th colspan="2"><?php _e('Start time:', 'adrotate'); ?></th>
-				        <td colspan="2">
+				        <th><?php _e('Start time (day/month/year hh:mm):', 'adrotate'); ?></th>
+				        <td>
 				        	<label for="adrotate_sday">
-				        	<input tabindex="21" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
-							<select tabindex="22" name="adrotate_smonth">
+				        	<input tabindex="22" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
+							<select tabindex="23" name="adrotate_smonth">
 								<option value="01" <?php if($smonth == "01") { echo 'selected'; } ?>><?php _e('January', 'adrotate'); ?></option>
 								<option value="02" <?php if($smonth == "02") { echo 'selected'; } ?>><?php _e('February', 'adrotate'); ?></option>
 								<option value="03" <?php if($smonth == "03") { echo 'selected'; } ?>><?php _e('March', 'adrotate'); ?></option>
@@ -396,16 +396,16 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 								<option value="11" <?php if($smonth == "11") { echo 'selected'; } ?>><?php _e('November', 'adrotate'); ?></option>
 								<option value="12" <?php if($smonth == "12") { echo 'selected'; } ?>><?php _e('December', 'adrotate'); ?></option>
 							</select> /
-							<input tabindex="23" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />&nbsp;&nbsp;&nbsp; 
-							<input tabindex="24" name="adrotate_shour" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $shour;?>" /> :
-							<input tabindex="25" name="adrotate_sminute" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $sminute;?>" />
+							<input tabindex="24" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />&nbsp;&nbsp;&nbsp; 
+							<input tabindex="25" name="adrotate_shour" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $shour;?>" /> :
+							<input tabindex="26" name="adrotate_sminute" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $sminute;?>" />
 							</label>
 				        </td>
-				        <th><?php _e('End time:', 'adrotate'); ?></th>
-				        <td colspan="2">
+				        <th><?php _e('End time (day/month/year hh:mm):', 'adrotate'); ?></th>
+				        <td>
 				        	<label for="adrotate_eday">
-				        	<input tabindex="26" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>"  /> /
-							<select tabindex="27" name="adrotate_emonth">
+				        	<input tabindex="27" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>"  /> /
+							<select tabindex="28" name="adrotate_emonth">
 								<option value="01" <?php if($emonth == "01") { echo 'selected'; } ?>><?php _e('January', 'adrotate'); ?></option>
 								<option value="02" <?php if($emonth == "02") { echo 'selected'; } ?>><?php _e('February', 'adrotate'); ?></option>
 								<option value="03" <?php if($emonth == "03") { echo 'selected'; } ?>><?php _e('March', 'adrotate'); ?></option>
@@ -419,17 +419,17 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 								<option value="11" <?php if($emonth == "11") { echo 'selected'; } ?>><?php _e('November', 'adrotate'); ?></option>
 								<option value="12" <?php if($emonth == "12") { echo 'selected'; } ?>><?php _e('December', 'adrotate'); ?></option>
 							</select> /
-							<input tabindex="28" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />&nbsp;&nbsp;&nbsp; 
-							<input tabindex="29" name="adrotate_ehour" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $ehour;?>" /> :
-							<input tabindex="30" name="adrotate_eminute" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eminute;?>" />
+							<input tabindex="29" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />&nbsp;&nbsp;&nbsp; 
+							<input tabindex="30" name="adrotate_ehour" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $ehour;?>" /> :
+							<input tabindex="31" name="adrotate_eminute" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eminute;?>" />
 							</label>
 						</td>
 			      	</tr>	
 			      	<tr>
-			      		<th colspan="2"><?php _e('Maximum Clicks:', 'adrotate'); ?></th>
-				        <td><input tabindex="31" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
+			      		<th><?php _e('Maximum Clicks:', 'adrotate'); ?></th>
+				        <td><input tabindex="32" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
 					    <th><?php _e('Maximum Impressions:', 'adrotate'); ?></th>
-				        <td><input tabindex="32" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
+				        <td><input tabindex="33" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
 					</tr>
 					</tbody>					
 				</table>
@@ -468,7 +468,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 		      	<?php } ?>
 
 		    	<p class="submit">
-					<input tabindex="33" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
+					<input tabindex="34" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
 					<a href="admin.php?page=adrotate&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
 		    	</p>
 
@@ -497,7 +497,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 				</table>
 
 		    	<p class="submit">
-					<input tabindex="34" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
+					<input tabindex="35" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
 					<a href="admin.php?page=adrotate&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
 		    	</p>
 				<?php } ?>

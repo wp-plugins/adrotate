@@ -33,35 +33,12 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 				echo "</pre></p>"; 
 			}
 
-			$selected[$banner->id] = 0;			
-			$schedules = $wpdb->get_results("
-				SELECT 
-					`".$wpdb->prefix."adrotate_schedule`.`starttime`, 
-					`".$wpdb->prefix."adrotate_schedule`.`stoptime`, 
-					`".$wpdb->prefix."adrotate_schedule`.`maxclicks`, 
-					`".$wpdb->prefix."adrotate_schedule`.`maximpressions`, 
-					SUM(`".$wpdb->prefix."adrotate_stats_tracker`.`clicks`) as `clicks`,
-					SUM(`".$wpdb->prefix."adrotate_stats_tracker`.`impressions`) as `impressions`
-				FROM 
-					`".$wpdb->prefix."adrotate_schedule`, 
-					`".$wpdb->prefix."adrotate_stats_tracker` 
-				WHERE 
-					`".$wpdb->prefix."adrotate_schedule`.`ad` = '$banner_id'
-					AND `".$wpdb->prefix."adrotate_stats_tracker`.`ad` = `".$wpdb->prefix."adrotate_schedule`.`ad`
-					AND `".$wpdb->prefix."adrotate_stats_tracker`.`thetime` >= `".$wpdb->prefix."adrotate_schedule`.`starttime`
-					AND `".$wpdb->prefix."adrotate_stats_tracker`.`thetime` <= `".$wpdb->prefix."adrotate_schedule`.`stoptime`
-				GROUP BY
-					`".$wpdb->prefix."adrotate_schedule`.`starttime`
-				;");
-
-			foreach($schedules as $schedule) {
-				$selected = adrotate_filter_schedule($selected, $banner, $schedule);
-			}
+			$selected = array($banner->id => 0);			
+			$selected = adrotate_filter_schedule($selected, $banner);
 
 			if ($banner->timeframe == 'hour' OR $banner->timeframe == 'day' OR $banner->timeframe == 'week' OR $banner->timeframe == 'month') {
 				$selected = adrotate_filter_timeframe($selected, $banner);
 			}
-			if(!is_array($valid)) $valid = array();
 		} else {
 			// Coming from a group or block, no checks (they're already ran elsewhere) just load the ad
 			$banner = $wpdb->get_row("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$banner_id';");
@@ -105,7 +82,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 		} else {
 			$output = adrotate_error('ad_expired', array($banner_id));
 		}
-		unset($banner, $valid, $schedules);
+		unset($banner, $schedules);
 		
 	} else {
 		$output = adrotate_error('ad_no_id');
@@ -737,7 +714,7 @@ function adrotate_credits() {
 
 	echo '<thead>';
 	echo '<tr valign="top">';
-	echo '	<th width="27%">AdRotate '.__('Useful information', 'adrotate').'</th>';
+	echo '	<th width="27%">AdRotate '.__('Useful Links', 'adrotate').'</th>';
 	echo '	<th>'.__('Getting help', 'adrotate').'</th>';
 	echo '	<th width="35%">'.__('Brought to you by', 'adrotate').'</th>';
 	echo '</tr>';

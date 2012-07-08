@@ -95,19 +95,38 @@ function adrotate_ctr($clicks = 0, $impressions = 0, $round = 2) {
  Name:      adrotate_filter_schedule
 
  Purpose:   Weed out ads that are over the limit of their schedule
- Receive:   $selected, $ad
+ Receive:   $selected, $banner
  Return:    $selected
- Since:		3.6.11
+ Since:		3.7
 -------------------------------------------------------------*/
-function adrotate_filter_schedule($selected, $ad) { 
+function adrotate_filter_schedule($selected, $banner) { 
 	global $wpdb, $adrotate_debug;
 
-	$now = current_time('timestamp');
+	$now 				= date('U');
 
-	$schedules = $wpdb->get_results("SELECT `starttime`, `stoptime`, `maxclicks`, `maximpressions` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '$ad->id';");
+	// Get schedules for advert
+	$schedules = $wpdb->get_results("
+		SELECT 
+			`".$wpdb->prefix."adrotate_schedule`.`starttime`, 
+			`".$wpdb->prefix."adrotate_schedule`.`stoptime`, 
+			`".$wpdb->prefix."adrotate_schedule`.`maxclicks`, 
+			`".$wpdb->prefix."adrotate_schedule`.`maximpressions`, 
+			SUM(`".$wpdb->prefix."adrotate_stats_tracker`.`clicks`) as `clicks`,
+			SUM(`".$wpdb->prefix."adrotate_stats_tracker`.`impressions`) as `impressions`
+		FROM 
+			`".$wpdb->prefix."adrotate_schedule`, 
+			`".$wpdb->prefix."adrotate_stats_tracker` 
+		WHERE 
+			`".$wpdb->prefix."adrotate_schedule`.`ad` = '".$banner->id."'
+			AND `".$wpdb->prefix."adrotate_stats_tracker`.`ad` = `".$wpdb->prefix."adrotate_schedule`.`ad`
+			AND `".$wpdb->prefix."adrotate_stats_tracker`.`thetime` >= `".$wpdb->prefix."adrotate_schedule`.`starttime`
+			AND `".$wpdb->prefix."adrotate_stats_tracker`.`thetime` <= `".$wpdb->prefix."adrotate_schedule`.`stoptime`
+		GROUP BY
+			`".$wpdb->prefix."adrotate_schedule`.`starttime`
+		;");
 
 	if($adrotate_debug['general'] == true) {
-		echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Ad (id: ".$ad->id.") schedules</strong><pre>";
+		echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedules</strong><pre>";
 		print_r($schedules); 
 		echo "</pre></p>"; 
 	}
@@ -119,12 +138,16 @@ function adrotate_filter_schedule($selected, $ad) {
 		if($schedule->clicks == null) $schedule->clicks = '0';
 		if($schedule->impressions == null) $schedule->impressions = '0';
 
-		if($schedule->clicks >= $schedule->maxclicks AND $schedule->maxclicks > 0 AND $ad->tracker == "Y") {
-			$selected = array_diff_key($selected, array($ad->id => 0));
+		// Ad exceeded max clicks?
+		if($schedule->clicks >= $schedule->maxclicks AND $schedule->maxclicks > 0 AND $banner->tracker == "Y") {
+			$selected = array_diff_key($selected, array($banner->id => 0));
 		}
+	
+		// Ad exceeded max impressions?
 		if($schedule->impressions >= $schedule->maximpressions AND $schedule->maximpressions > 0) {
-			$selected = array_diff_key($selected, array($ad->id => 0));
+			$selected = array_diff_key($selected, array($banner->id => 0));
 		}
+
 		if($schedule->starttime > $now OR $schedule->stoptime < $now) {
 			$current[] = 0;
 		} else {
@@ -133,12 +156,18 @@ function adrotate_filter_schedule($selected, $ad) {
 		
 	}
 	
+	if($adrotate_debug['general'] == true) {
+		echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Current</strong><pre>";
+		print_r($current); 
+		echo "</pre></p>"; 
+	}
+	
 	// Remove advert from array if all schedules are false (0)
 	if(!in_array(1, $current)) {
-		$selected = array_diff_key($selected, array($ad->id => 0));
+		$selected = array_diff_key($selected, array($banner->id => 0));
 	}
 	unset($current);
-
+	
 	return $selected;
 } 
 
