@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.7.1
+Version: 3.7.2
 Author URI: http://www.ajdg.net
 License: GPL2
 */
@@ -16,7 +16,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
 define("ADROTATE_VERSION", 357);
-define("ADROTATE_DB_VERSION", 18);
+define("ADROTATE_DB_VERSION", 19);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -200,7 +200,7 @@ function adrotate_manage() {
 		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_schedule';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
 			
 			<?php
-			$allbanners = $wpdb->get_results("SELECT `id`, `title`, `type`, `tracker`, `weight` FROM `".$wpdb->prefix."adrotate` ORDER BY `id` ASC;");
+			$allbanners = $wpdb->get_results("SELECT `id`, `title`, `type`, `tracker`, `weight` FROM `".$wpdb->prefix."adrotate` ORDER BY $order;");
 			
 			foreach($allbanners as $singlebanner) {
 				

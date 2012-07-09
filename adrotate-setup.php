@@ -161,6 +161,7 @@ function adrotate_database_install() {
 				  `name` varchar(255) NOT NULL DEFAULT 'Block',
 				  `rows` int(3) NOT NULL DEFAULT '2',
 				  `columns` int(3) NOT NULL DEFAULT '2',
+				  `gridfloat` varchat(6) NOT NULL DEFAULT 'none',
 				  `gridpadding` int(2) NOT NULL DEFAULT '0',
 				  `gridborder` varchar(20) NOT NULL DEFAULT '0',
 				  `adwidth` int(4) NOT NULL DEFAULT '125',
@@ -454,6 +455,14 @@ function adrotate_database_upgrade() {
 			adrotate_add_column($tables['adrotate_blocks'], 'admargin', 'int(4) NOT NULL DEFAULT \'1\' AFTER `adheight`');
 			adrotate_add_column($tables['adrotate_blocks'], 'adpadding', 'int(4) NOT NULL DEFAULT \'0\' AFTER `admargin`');
 			adrotate_add_column($tables['adrotate_blocks'], 'adborder', 'varchar(20) NOT NULL DEFAULT \'0\' AFTER `adpadding`');
+		}
+
+		// Database: 	19
+		// AdRotate:	3.8
+		if($adrotate_db_version < 19) {
+			adrotate_add_column($tables['adrotate_blocks'], 'gridfloat', 'varchar(7) NOT NULL DEFAULT \'none\' AFTER `columns`');
+			$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` CHANGE `adwidth` `adwidth` varchar(6)  NOT NULL  DEFAULT '125';");
+			$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` CHANGE `adheight` `adheight` varchar(6)  NOT NULL  DEFAULT '125';");
 		}
 
 		update_option("adrotate_db_version", ADROTATE_DB_VERSION);

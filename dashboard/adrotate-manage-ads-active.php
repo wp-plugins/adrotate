@@ -31,10 +31,10 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			<?php _e('Sort by', 'adrotate'); ?> <select name="adrotate_order" id="cat" class="postform">
 		        <option value="sortorder ASC" <?php if($order == "sortorder ASC") { echo 'selected'; } ?>><?php _e('Sort Order (ascending, default)', 'adrotate'); ?></option>
 		        <option value="sortorder DESC" <?php if($order == "sortorder DESC") { echo 'selected'; } ?>><?php _e('Sort Order (descending)', 'adrotate'); ?></option>
-		        <option value="startshow ASC" <?php if($order == "startshow ASC") { echo 'selected'; } ?>><?php _e('Start Date (ascending)', 'adrotate'); ?></option>
-		        <option value="startshow DESC" <?php if($order == "startshow DESC") { echo 'selected'; } ?>><?php _e('Start Date (descending)', 'adrotate'); ?></option>
-		        <option value="endshow ASC" <?php if($order == "endshow ASC") { echo 'selected'; } ?>><?php _e('End Date (ascending)', 'adrotate'); ?></option>
-		        <option value="endshow DESC" <?php if($order == "endshow DESC") { echo 'selected'; } ?>><?php _e('End Date (descending)', 'adrotate'); ?></option>
+		        <option value="thetime ASC" <?php if($order == "thetime ASC") { echo 'selected'; } ?>><?php _e('Creation date (ascending)', 'adrotate'); ?></option>
+		        <option value="thetime DESC" <?php if($order == "thetime DESC") { echo 'selected'; } ?>><?php _e('Creation date (descending)', 'adrotate'); ?></option>
+		        <option value="updated ASC" <?php if($order == "updated ASC") { echo 'selected'; } ?>><?php _e('Updated (ascending)', 'adrotate'); ?></option>
+		        <option value="updated DESC" <?php if($order == "updated DESC") { echo 'selected'; } ?>><?php _e('Updated (descending)', 'adrotate'); ?></option>
 		        <option value="ID ASC" <?php if($order == "ID ASC") { echo 'selected'; } ?>><?php _e('ID', 'adrotate'); ?></option>
 		        <option value="ID DESC" <?php if($order == "ID DESC") { echo 'selected'; } ?>><?php _e('ID reversed', 'adrotate'); ?></option>
 		        <option value="title ASC" <?php if($order == "title ASC") { echo 'selected'; } ?>><?php _e('Title (A-Z)', 'adrotate'); ?></option>

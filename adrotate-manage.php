@@ -318,6 +318,7 @@ function adrotate_insert_block() {
 
 	$rows			= strip_tags(trim($_POST['adrotate_gridrows'], "\t\n "));
 	$columns 		= strip_tags(trim($_POST['adrotate_gridcolumns'], "\t\n "));
+	$gridfloat 		= strip_tags(trim($_POST['adrotate_gridfloat'], "\t\n "));
 	$gridpadding	= strip_tags(trim($_POST['adrotate_gridpadding'], "\t\n "));
 	$gridpx			= strip_tags(trim($_POST['adrotate_gridborderpx'], "\t\n "));
 	$gridcolor		= strip_tags(trim($_POST['adrotate_gridbordercolor'], "\t\n "));
@@ -387,7 +388,7 @@ function adrotate_insert_block() {
 		unset($value);
 
 		// Update the block itself
-		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `rows` = '$rows', `columns` = '$columns', `gridpadding` = '$gridpadding', `gridborder` = '$gridborder', `adwidth` = '$adwidth', `adheight` = '$adheight', `admargin` = '$admargin', `adpadding` = '$adpadding', `adborder` = '$adborder', `wrapper_before` = '$wrapper_before', `wrapper_after` = '$wrapper_after', `sortorder` = '$sortorder' WHERE `id` = '$id';");
+		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `rows` = '$rows', `columns` = '$columns', `gridfloat` = '$gridfloat', `gridpadding` = '$gridpadding', `gridborder` = '$gridborder', `adwidth` = '$adwidth', `adheight` = '$adheight', `admargin` = '$admargin', `adpadding` = '$adpadding', `adborder` = '$adborder', `wrapper_before` = '$wrapper_before', `wrapper_after` = '$wrapper_after', `sortorder` = '$sortorder' WHERE `id` = '$id';");
 		adrotate_return($action, array($id));
 		exit;
 	} else {

@@ -102,49 +102,59 @@ function adrotate_ctr($clicks = 0, $impressions = 0, $round = 2) {
 function adrotate_filter_schedule($selected, $banner) { 
 	global $wpdb, $adrotate_debug;
 
-	$now 				= date('U');
-
-	// Get schedules for advert
-	$schedules = $wpdb->get_results("
-		SELECT 
-			`".$wpdb->prefix."adrotate_schedule`.`starttime`, 
-			`".$wpdb->prefix."adrotate_schedule`.`stoptime`, 
-			`".$wpdb->prefix."adrotate_schedule`.`maxclicks`, 
-			`".$wpdb->prefix."adrotate_schedule`.`maximpressions`, 
-			SUM(`".$wpdb->prefix."adrotate_stats_tracker`.`clicks`) as `clicks`,
-			SUM(`".$wpdb->prefix."adrotate_stats_tracker`.`impressions`) as `impressions`
-		FROM 
-			`".$wpdb->prefix."adrotate_schedule`, 
-			`".$wpdb->prefix."adrotate_stats_tracker` 
-		WHERE 
-			`".$wpdb->prefix."adrotate_schedule`.`ad` = '".$banner->id."'
-			AND `".$wpdb->prefix."adrotate_stats_tracker`.`ad` = `".$wpdb->prefix."adrotate_schedule`.`ad`
-			AND `".$wpdb->prefix."adrotate_stats_tracker`.`thetime` >= `".$wpdb->prefix."adrotate_schedule`.`starttime`
-			AND `".$wpdb->prefix."adrotate_stats_tracker`.`thetime` <= `".$wpdb->prefix."adrotate_schedule`.`stoptime`
-		GROUP BY
-			`".$wpdb->prefix."adrotate_schedule`.`starttime`
-		;");
+	$now = date('U');
+	$prefix = $wpdb->prefix;
 
 	if($adrotate_debug['general'] == true) {
-		echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedules</strong><pre>";
-		print_r($schedules); 
+		echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Filtering banner</strong><pre>";
+		print_r($banner->id); 
 		echo "</pre></p>"; 
 	}
 	
+	// Get schedules for advert
+	$schedules = $wpdb->get_results("
+		SELECT 
+			`starttime`, 
+			`stoptime`, 
+			`maxclicks`, 
+			`maximpressions`
+		FROM 
+			`".$prefix."adrotate_schedule` 
+		WHERE 
+			`ad` = '".$banner->id."'
+		;");
+
 	$current = array();
 	foreach($schedules as $schedule) {
+		$stat = $wpdb->get_row("
+			SELECT
+				SUM(`clicks`) as `clicks`,
+				SUM(`impressions`) as `impressions` 
+			FROM
+				`".$prefix."adrotate_stats_tracker`
+			WHERE 
+				`ad` = ".$banner->id."
+				AND `thetime` >= ".$schedule->starttime."
+				AND `thetime` <= ".$schedule->stoptime."
+			;");
+		
+		if($adrotate_debug['general'] == true) {
+			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule and limits</strong><pre>";
+			print_r($schedule); 
+			print_r($stat); 
+			echo "</pre></p>"; 
+		}
+	
 		if($schedule->maxclicks == null) $schedule->maxclicks = '0';
 		if($schedule->maximpressions == null) $schedule->maximpressions = '0';
-		if($schedule->clicks == null) $schedule->clicks = '0';
-		if($schedule->impressions == null) $schedule->impressions = '0';
 
 		// Ad exceeded max clicks?
-		if($schedule->clicks >= $schedule->maxclicks AND $schedule->maxclicks > 0 AND $banner->tracker == "Y") {
+		if($stat->clicks >= $schedule->maxclicks AND $schedule->maxclicks > 0 AND $banner->tracker == "Y") {
 			$selected = array_diff_key($selected, array($banner->id => 0));
 		}
 	
 		// Ad exceeded max impressions?
-		if($schedule->impressions >= $schedule->maximpressions AND $schedule->maximpressions > 0) {
+		if($stat->impressions >= $schedule->maximpressions AND $schedule->maximpressions > 0) {
 			$selected = array_diff_key($selected, array($banner->id => 0));
 		}
 
@@ -154,6 +164,7 @@ function adrotate_filter_schedule($selected, $banner) {
 			$current[] = 1;
 		}
 		
+		unset($schedule, $stat);
 	}
 	
 	if($adrotate_debug['general'] == true) {
@@ -179,28 +190,28 @@ function adrotate_filter_schedule($selected, $banner) {
  Return:    $selected
  Since:		3.6.11
 -------------------------------------------------------------*/
-function adrotate_filter_timeframe($selected, $ad) { 
+function adrotate_filter_timeframe($selected, $banner) { 
 	global $wpdb, $adrotate_debug;
 
 	// Determine timeframe limits
-	if($ad->timeframe == 'hour') {
+	if($banner->timeframe == 'hour') {
 		$impression_start	= gmmktime(gmdate('H'), 0, 0); // Start of hour
 		$impression_end		= gmmktime(gmdate('H'), 59, 59); // End of hour
-		$multiplier = 3600 * ($ad->timeframelength - 1);
+		$multiplier = 3600 * ($banner->timeframelength - 1);
 		$impression_end = $impression_end + $multiplier;
-	} else if($ad->timeframe == 'day') {
+	} else if($banner->timeframe == 'day') {
 		$impression_start	= gmmktime(0, 0, 0, gmdate("m")  , gmdate("d")); // Start of day
 		$impression_end		= gmmktime(23, 59, 59, gmdate('m'), gmdate("d")); // End of day
-		$multiplier = 86400 * ($ad->timeframelength - 1);
+		$multiplier = 86400 * ($banner->timeframelength - 1);
 		$impression_end = $impression_end + $multiplier;
-	} else if($ad->timeframe == 'week') {
+	} else if($banner->timeframe == 'week') {
 		$impression_start	= strtotime('Last Monday', time()); // Start of week
 		$impression_end		= strtotime('Next Sunday', time()); // End of week
-		$multiplier = 604800 * ($ad->timeframelength - 1);
+		$multiplier = 604800 * ($banner->timeframelength - 1);
 		$impression_end = $impression_end + $multiplier;
-	} else if($ad->timeframe == 'month') {
+	} else if($banner->timeframe == 'month') {
 		$impression_start	= gmmktime(0, 0, 0, date('m'), 01); // Start of month
-		$impression_end		= gmmktime(23, 59, 59, date('m')+$ad->timeframelength, 00); // End of month
+		$impression_end		= gmmktime(23, 59, 59, date('m')+$banner->timeframelength, 00); // End of month
 	}
 
 	// Set addition to query
@@ -211,14 +222,14 @@ function adrotate_filter_timeframe($selected, $ad) {
 		FROM 
 			`".$wpdb->prefix."adrotate_stats_tracker` 
 		WHERE 
-			`ad` = '$ad->id' 
+			`ad` = '$banner->id' 
 			AND `thetime` >= '$impression_start' 
 			AND `thetime` <= '$impression_end'
 		;");
 
 	if($adrotate_debug['general'] == true) {
-		echo "<p><strong>[DEBUG][adrotate_filter_timeframe()] Ad (id: ".$ad->id.") Timeframe</strong><pre>";
-		echo "Timeframe: ".$ad->timeframe;
+		echo "<p><strong>[DEBUG][adrotate_filter_timeframe()] Ad (id: ".$banner->id.") Timeframe</strong><pre>";
+		echo "Timeframe: ".$banner->timeframe;
 		echo "<br />Start: ".$impression_start." (".gmdate("F j, Y, g:i a", $impression_start).")";
 		echo "<br />End: ".$impression_end." (".gmdate("F j, Y, g:i a", $impression_end).")";
 		echo "<br />Clicks this period: ".$timeframe_stat->clicks;
@@ -227,13 +238,13 @@ function adrotate_filter_timeframe($selected, $ad) {
 	}
 	
 	if($timeframe_stat) {
-		if($ad->timeframeclicks == null) $ad->timeframeclicks = '0';
-		if($ad->timeframeimpressions == null) $ad->timeframeimpressions = '0';
-		if($timeframe_stat->clicks > $ad->timeframeclicks AND $ad->timeframeclicks > 0) {
-			$selected = array_diff_key($selected, array($ad->id => 0));
+		if($banner->timeframeclicks == null) $banner->timeframeclicks = '0';
+		if($banner->timeframeimpressions == null) $banner->timeframeimpressions = '0';
+		if($timeframe_stat->clicks > $banner->timeframeclicks AND $banner->timeframeclicks > 0) {
+			$selected = array_diff_key($selected, array($banner->id => 0));
 		}
-		if($timeframe_stat->impressions > $ad->timeframeimpressions AND $ad->timeframeimpressions > 0) {
-			$selected = array_diff_key($selected, array($ad->id => 0));
+		if($timeframe_stat->impressions > $banner->timeframeimpressions AND $banner->timeframeimpressions > 0) {
+			$selected = array_diff_key($selected, array($banner->id => 0));
 		}
 	}
 

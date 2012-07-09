@@ -215,7 +215,7 @@ function adrotate_block($block_id, $weight = 0) {
 		$prefix = $wpdb->prefix;
 		
 		// Get block specs
-		$block = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '$block_id';");
+		$block = $wpdb->get_row("SELECT * FROM `".$prefix."adrotate_blocks` WHERE `id` = '$block_id';");
 		if($block) {
 			if($adrotate_debug['general'] == true) {
 				echo "<p><strong>[DEBUG][adrotate_block()] Selected block</strong><pre>"; 
@@ -224,7 +224,7 @@ function adrotate_block($block_id, $weight = 0) {
 			}			
 
 			// Get groups in block
-			$groups = $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = '$block->id' AND `user` = 0;");
+			$groups = $wpdb->get_results("SELECT `group` FROM `".$prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = '$block->id' AND `user` = 0;");
 			if($groups) {
 				if($weight > 0) {
 					$weightoverride = "	AND `".$prefix."adrotate`.`weight` >= '$weight'";
@@ -308,9 +308,14 @@ function adrotate_block($block_id, $weight = 0) {
 					$gridwidth = ($block->columns * $block->adwidth) + $widthmargin;
 					$gridheight = ($block->rows * $block->adheight) + $heightmargin;
 					
+					//Set float
+					if($block->gridfloat == 'none') $gridfloat = 'float:none;';
+					if($block->gridfloat == 'left') $gridfloat = 'float:left;';
+					if($block->gridfloat == 'right') $gridfloat = 'float:right;';
+					if($block->gridfloat == 'inherit') $gridfloat = 'float:inherit;';
 					
 					$output = '';
-					$output .='<div style="margin:0;padding:'.$block->gridpadding.'px;clear:none;width:'.$gridwidth.'px;height:'.$gridheight.'px;border:'.$block->gridborder.';">';
+					$output .='<div style="'.$gridfloat.'margin:0;padding:'.$block->gridpadding.'px;clear:none;width:'.$gridwidth.'px;height:'.$gridheight.'px;border:'.$block->gridborder.';">';
 					for($i=0;$i<$block_count;$i++) {
 						$banner_id = adrotate_pick_weight($selected);
 

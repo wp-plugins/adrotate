@@ -10,7 +10,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 					$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;";
 					$edit_id = $wpdb->get_var($query);
 					if($edit_id == 0) {
-						$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_blocks` (`name`, `rows`, `columns`, `gridpadding`, `gridborder`, `adwidth`, `adheight`, `admargin`, `adpadding`, `adborder`, `wrapper_before`, `wrapper_after`, `sortorder`) VALUES ('', 2, 2, 1, 0, 125, 125, 1, 0, 0, '', '', 0);");
+						$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_blocks` (`name`, `rows`, `columns`, `gridfloat`, `gridpadding`, `gridborder`, `adwidth`, `adheight`, `admargin`, `adpadding`, `adborder`, `wrapper_before`, `wrapper_after`, `sortorder`) VALUES ('', 2, 2, 'none', 1, 0, 125, 125, 1, 0, 0, '', '', 0);");
 						$edit_id = $wpdb->get_var($query);
 					}
 					$block_edit_id = $edit_id;
@@ -82,6 +82,20 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 							</td>
 							<td colspan="2">
 						        <p><em><?php _e('Make a grid for your ads. Filling in 2 and 2 makes a 2x2 grid. (Default: 2/2)', 'adrotate'); ?></em></p>
+							</td>
+						</tr>
+					    <tr>
+							<th valign="top"><?php _e('Float', 'adrotate'); ?></strong></th>
+							<td>
+								<label for="adrotate_gridfloat"><select tabindex="6" name="adrotate_gridfloat">
+						        	<option value="none" <?php if($edit_block->gridfloat == 'none') { echo 'selected'; } ?>><?php _e('None', 'adrotate'); ?></option>
+						        	<option value="left" <?php if($edit_block->gridfloat == "left") { echo 'selected'; } ?>><?php _e('Left', 'adrotate'); ?></option>
+						        	<option value="right" <?php if($edit_block->gridfloat == "right") { echo 'selected'; } ?>><?php _e('Right', 'adrotate'); ?></option>
+						        	<option value="inherit" <?php if($edit_block->gridfloat == "inherit") { echo 'selected'; } ?>><?php _e('Inherit', 'adrotate'); ?></option>
+						        </select></label> 
+							</td>
+							<td colspan="2">
+								<p><em><?php _e('This will help in aligning your block. Set to none if unsure.', 'adrotate'); ?></em></p>
 							</td>
 						</tr>
 					    <tr>
