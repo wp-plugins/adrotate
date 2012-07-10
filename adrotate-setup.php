@@ -161,7 +161,7 @@ function adrotate_database_install() {
 				  `name` varchar(255) NOT NULL DEFAULT 'Block',
 				  `rows` int(3) NOT NULL DEFAULT '2',
 				  `columns` int(3) NOT NULL DEFAULT '2',
-				  `gridfloat` varchat(6) NOT NULL DEFAULT 'none',
+				  `gridfloat` varchar(7) NOT NULL DEFAULT 'none',
 				  `gridpadding` int(2) NOT NULL DEFAULT '0',
 				  `gridborder` varchar(20) NOT NULL DEFAULT '0',
 				  `adwidth` int(4) NOT NULL DEFAULT '125',
