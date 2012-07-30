@@ -14,7 +14,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	global $wpdb, $adrotate_config, $adrotate_crawlers, $adrotate_debug;
 
-	$now 				= date('U');
+	$now 				= current_time('timestamp');
 	$today 				= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
@@ -155,7 +155,6 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 		}			
 
 		if($results) {
-			$i = 0;
 			foreach($results as $result) {
 				$selected[$result->id] = $result->weight;
 				$selected = adrotate_filter_schedule($selected, $result);
@@ -163,7 +162,6 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 				if ($result->timeframe == 'hour' OR $result->timeframe == 'day' OR $result->timeframe == 'week' OR $result->timeframe == 'month') {
 					$selected = adrotate_filter_timeframe($selected, $result);
 				}
-				$i++;
 			}
 			
 			if($adrotate_debug['general'] == true) {
@@ -267,7 +265,6 @@ function adrotate_block($block_id, $weight = 0) {
 				}			
 
 				if($results) {
-					$i = 0;
 					foreach($results as $result) {
 						$selected[$result->id] = $result->weight;
 						$selected = adrotate_filter_schedule($selected, $result);
@@ -275,7 +272,6 @@ function adrotate_block($block_id, $weight = 0) {
 						if ($result->timeframe == 'hour' OR $result->timeframe == 'day' OR $result->timeframe == 'week' OR $result->timeframe == 'month') {
 							$selected = adrotate_filter_timeframe($selected, $result);
 						}
-						$i++;
 					}
 				}
 				
@@ -305,8 +301,14 @@ function adrotate_block($block_id, $weight = 0) {
 					// set definitive block size
 					$widthmargin = (($block->admargin * 2) * $block->columns) + (($block->adpadding * 2) * $block->columns) + (($adborder * 2) * $block->columns);
 					$heightmargin = (($block->admargin * 2) * $block->rows) + (($block->adpadding * 2) * $block->rows) + (($adborder * 2) * $block->rows);
-					$gridwidth = ($block->columns * $block->adwidth) + $widthmargin;
-					$gridheight = ($block->rows * $block->adheight) + $heightmargin;
+					$gridwidth = ($block->columns * $block->adwidth) + $widthmargin.'px';
+					$adwidth = $block->adwidth.'px';
+					if($block->adheight == 'auto') {
+						$gridheight = $adheight = 'auto';
+					} else {
+						$gridheight = ($block->rows * $block->adheight) + $heightmargin.'px';
+						$adheight = $block->adheight.'px';
+					}
 					
 					//Set float
 					if($block->gridfloat == 'none') $gridfloat = 'float:none;';
@@ -315,11 +317,11 @@ function adrotate_block($block_id, $weight = 0) {
 					if($block->gridfloat == 'inherit') $gridfloat = 'float:inherit;';
 					
 					$output = '';
-					$output .='<div style="'.$gridfloat.'margin:0;padding:'.$block->gridpadding.'px;clear:none;width:'.$gridwidth.'px;height:'.$gridheight.'px;border:'.$block->gridborder.';">';
+					$output .='<div style="'.$gridfloat.'margin:0;padding:'.$block->gridpadding.'px;clear:none;width:'.$gridwidth.';height:'.$gridheight.';border:'.$block->gridborder.';">';
 					for($i=0;$i<$block_count;$i++) {
 						$banner_id = adrotate_pick_weight($selected);
 
-						$output .='<div style="margin:'.$block->admargin.'px;padding:'.$block->adpadding.'px;clear:none;float:left;width:'.$block->adwidth.'px;height:'.$block->adheight.'px;border:'.$block->adborder.';">';
+						$output .='<div style="margin:'.$block->admargin.'px;padding:'.$block->adpadding.'px;clear:none;float:left;width:'.$adwidth.';height:'.$adheight.';border:'.$block->adborder.';">';
 						if($block->wrapper_before != '') {$output .= stripslashes(html_entity_decode($block->wrapper_before, ENT_QUOTES)); }
 						$output .= adrotate_ad($banner_id, false, 0, $block_id);
 						if($block->wrapper_after != '') { $output .= stripslashes(html_entity_decode($block->wrapper_after, ENT_QUOTES)); }
@@ -351,6 +353,7 @@ function adrotate_block($block_id, $weight = 0) {
 
 	return $output;
 }
+
 
 /*-------------------------------------------------------------
  Name:      adrotate_preview

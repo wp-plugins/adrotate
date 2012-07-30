@@ -47,8 +47,6 @@ function adrotate_insert_input() {
 	$image_dropdown		= $_POST['adrotate_image_dropdown'];
 	$link				= strip_tags(htmlspecialchars(trim($_POST['adrotate_link'], "\t\n "), ENT_QUOTES));
 	$tracker			= $_POST['adrotate_tracker'];
-	$targetclicks		= strip_tags(trim($_POST['adrotate_targetclicks'], "\t\n "));
-	$targetimpressions	= strip_tags(trim($_POST['adrotate_targetimpressions'], "\t\n "));
 	
 	// Misc variabled
 	$groups				= $_POST['groupselect'];
@@ -106,10 +104,6 @@ function adrotate_insert_input() {
 		if(strlen($maxclicks) < 1 OR !is_numeric($maxclicks))	$maxclicks	= 0;
 		if(strlen($maxshown) < 1 OR !is_numeric($maxshown))		$maxshown	= 0;
 
-		// Format the targets
-		if(strlen($targetclicks) < 1 OR !is_numeric($targetclicks))				$targetclicks	= 0;
-		if(strlen($targetimpressions) < 1 OR !is_numeric($targetimpressions))	$targetimpressions	= 0;
-
 		// Set tracker value
 		if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';
 			else $tracker = 'N';
@@ -158,8 +152,6 @@ function adrotate_insert_input() {
 						`image` = '$image', 
 						`link` = '$link', 
 						`tracker` = '$tracker', 
-						`targetclicks` = '$targetclicks', 
-						`targetimpressions` = '$targetimpressions', 
 						`timeframe` = '$timeframe', 
 						`timeframelength` = '$timeframelength', 
 						`timeframeclicks` = '$timeframeclicks', 
@@ -214,6 +206,7 @@ function adrotate_insert_input() {
 		if($linkmeta == 0 AND $advertiser > 0) 		$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_linkmeta` (`ad`, `group`, `block`, `user`) VALUES ($id, 0, 0, $advertiser);"); 
 		if($linkmeta == 1 AND $advertiser > 0) 		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_linkmeta` SET `user` = '$advertiser' WHERE `ad` = '$id' AND `group` = '0' AND `block` = '0';");
 		if($linkmeta == 1 AND $advertiser == 0) 	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$id' AND `group` = 0 AND `block` = 0;"); 
+
 		adrotate_return($action, array($id));
 		exit;
 	} else {
@@ -351,8 +344,8 @@ function adrotate_insert_block() {
 		}
 		
 		// Sort out advert specs
-		if($adwidth < 1 OR $adwidth > 1000 OR $adwidth == '' OR !is_numeric($adwidth)) $adwidth = 125;
-		if($adheight < 1 OR $adheight > 1000 OR $adheight == '' OR !is_numeric($adheight)) $adheight = 125;
+		if($adwidth < 1 OR $adwidth > 1000 OR $adwidth == '' OR !is_numeric($adwidth)) $adwidth = '125';
+		if($adheight < 1 OR $adheight > 1000 OR $adheight == '' OR (!is_numeric($adheight) AND $adheight != 'auto')) $adheight = '125';
 		if($admargin < 0 OR $admargin > 99 OR $admargin == '' OR !is_numeric($admargin)) $admargin = 0;
 		if($adpadding < 0 OR $adpadding > 99 OR  $adpadding == '' OR !is_numeric($adpadding)) $adpadding = 0;
 		if($adpx >= 1 AND $adpx <= 99 AND is_numeric($adpx) AND $adcolor != '' AND preg_match('/^#[a-f0-9]{6}$/i', $adcolor) AND $adstyle != 'none') {
@@ -388,7 +381,26 @@ function adrotate_insert_block() {
 		unset($value);
 
 		// Update the block itself
-		$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_blocks` SET `name` = '$name', `rows` = '$rows', `columns` = '$columns', `gridfloat` = '$gridfloat', `gridpadding` = '$gridpadding', `gridborder` = '$gridborder', `adwidth` = '$adwidth', `adheight` = '$adheight', `admargin` = '$admargin', `adpadding` = '$adpadding', `adborder` = '$adborder', `wrapper_before` = '$wrapper_before', `wrapper_after` = '$wrapper_after', `sortorder` = '$sortorder' WHERE `id` = '$id';");
+		$wpdb->query("UPDATE 
+						`".$wpdb->prefix."adrotate_blocks` 
+					SET 
+						`name` = '$name', 
+						`rows` = '$rows', 
+						`columns` = '$columns', 
+						`gridfloat` = '$gridfloat', 
+						`gridpadding` = '$gridpadding', 
+						`gridborder` = '$gridborder', 
+						`adwidth` = '$adwidth', 
+						`adheight` = '$adheight', 
+						`admargin` = '$admargin', 
+						`adpadding` = '$adpadding', 
+						`adborder` = '$adborder', 
+						`wrapper_before` = '$wrapper_before', 
+						`wrapper_after` = '$wrapper_after', 
+						`sortorder` = '$sortorder' 
+					WHERE 
+						`id` = '$id'
+					;");
 		adrotate_return($action, array($id));
 		exit;
 	} else {

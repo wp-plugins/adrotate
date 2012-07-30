@@ -154,7 +154,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 								<label for="adrotate_adwidth"><input tabindex="9" name="adrotate_adwidth" type="text" class="search-input" size="3" value="<?php echo $edit_block->adwidth; ?>" autocomplete="off" /> <?php _e('pixel(s) wide', 'adrotate'); ?>,</label> <label for="adrotate_adheight"><input tabindex="10" name="adrotate_adheight" type="text" class="search-input" size="3" value="<?php echo $edit_block->adheight; ?>" autocomplete="off" /> <?php _e('pixel(s) high.', 'adrotate'); ?></label>
 							</td>
 							<td colspan="2">
-						        <p><em><?php _e('Define the maximum size of the ads in pixels. (Default: 125/125)', 'adrotate'); ?></em></p>
+						        <p><em><?php _e('Define the maximum size of the ads in pixels. Height can be \'auto\' (Default: 125/125)', 'adrotate'); ?></em></p>
 							</td>
 						</tr>
 					    <tr>

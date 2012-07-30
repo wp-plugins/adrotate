@@ -102,7 +102,7 @@ function adrotate_ctr($clicks = 0, $impressions = 0, $round = 2) {
 function adrotate_filter_schedule($selected, $banner) { 
 	global $wpdb, $adrotate_debug;
 
-	$now = date('U');
+	$now = current_time('timestamp');
 	$prefix = $wpdb->prefix;
 
 	if($adrotate_debug['general'] == true) {
@@ -124,7 +124,6 @@ function adrotate_filter_schedule($selected, $banner) {
 			`ad` = '".$banner->id."'
 		;");
 
-	$current = array();
 	foreach($schedules as $schedule) {
 		$stat = $wpdb->get_row("
 			SELECT
@@ -138,16 +137,25 @@ function adrotate_filter_schedule($selected, $banner) {
 				AND `thetime` <= ".$schedule->stoptime."
 			;");
 		
+		if($schedule->maxclicks == null) $schedule->maxclicks = '0';
+		if($schedule->maximpressions == null) $schedule->maximpressions = '0';
+		if($stat->clicks == null) $stat->clicks = '0';
+		if($stat->impressions == null) $stat->impressions = '0';
+
 		if($adrotate_debug['general'] == true) {
 			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule and limits</strong><pre>";
-			print_r($schedule); 
-			print_r($stat); 
+			echo 'Now: '.date("j M Y G:i",$now).' (According to server)<br>';
+			echo 'Saved start time: '.date("j M Y G:i",$schedule->starttime).'<br>';
+			echo 'Saved stop time: '.date("j M Y G:i",$schedule->stoptime).'<br>';
+			echo '<br>';
+			echo 'Max. allowed clicks: '.$schedule->maxclicks.'<br>';
+			echo 'Recorded clicks for this period: '.$stat->clicks.'<br>';
+			echo '<br>';
+			echo 'Max. allowed impressions: '.$schedule->maximpressions.'<br>';
+			echo 'Recorded impressions for this period: '.$stat->impressions.'<br>';
 			echo "</pre></p>"; 
 		}
 	
-		if($schedule->maxclicks == null) $schedule->maxclicks = '0';
-		if($schedule->maximpressions == null) $schedule->maximpressions = '0';
-
 		// Ad exceeded max clicks?
 		if($stat->clicks >= $schedule->maxclicks AND $schedule->maxclicks > 0 AND $banner->tracker == "Y") {
 			$selected = array_diff_key($selected, array($banner->id => 0));
@@ -158,6 +166,7 @@ function adrotate_filter_schedule($selected, $banner) {
 			$selected = array_diff_key($selected, array($banner->id => 0));
 		}
 
+		// Check if ad falls within time limits
 		if($schedule->starttime > $now OR $schedule->stoptime < $now) {
 			$current[] = 0;
 		} else {
@@ -227,19 +236,20 @@ function adrotate_filter_timeframe($selected, $banner) {
 			AND `thetime` <= '$impression_end'
 		;");
 
-	if($adrotate_debug['general'] == true) {
-		echo "<p><strong>[DEBUG][adrotate_filter_timeframe()] Ad (id: ".$banner->id.") Timeframe</strong><pre>";
-		echo "Timeframe: ".$banner->timeframe;
-		echo "<br />Start: ".$impression_start." (".gmdate("F j, Y, g:i a", $impression_start).")";
-		echo "<br />End: ".$impression_end." (".gmdate("F j, Y, g:i a", $impression_end).")";
-		echo "<br />Clicks this period: ".$timeframe_stat->clicks;
-		echo "<br />Impressions this period: ".$timeframe_stat->impressions;
-		echo "</pre></p>";
-	}
-	
 	if($timeframe_stat) {
-		if($banner->timeframeclicks == null) $banner->timeframeclicks = '0';
-		if($banner->timeframeimpressions == null) $banner->timeframeimpressions = '0';
+		if($timeframe_stat->clicks == null) $timeframe_stat->clicks = '0';
+		if($timeframe_stat->impressions == null) $timeframe_stat->impressions = '0';
+	
+		if($adrotate_debug['general'] == true) {
+			echo "<p><strong>[DEBUG][adrotate_filter_timeframe()] Ad (id: ".$banner->id.") Timeframe</strong><pre>";
+			echo "Timeframe: ".$banner->timeframe;
+			echo "<br />Start: ".$impression_start." (".gmdate("F j, Y, g:i a", $impression_start).")";
+			echo "<br />End: ".$impression_end." (".gmdate("F j, Y, g:i a", $impression_end).")";
+			echo "<br />Clicks this period: ".$timeframe_stat->clicks;
+			echo "<br />Impressions this period: ".$timeframe_stat->impressions;
+			echo "</pre></p>";
+		}
+	
 		if($timeframe_stat->clicks > $banner->timeframeclicks AND $banner->timeframeclicks > 0) {
 			$selected = array_diff_key($selected, array($banner->id => 0));
 		}

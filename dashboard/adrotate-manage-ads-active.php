@@ -76,13 +76,8 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			// Prevent gaps in display
 			if($stats->impressions == 0) 		$stats->impressions 		= 0;
 			if($stats->clicks == 0)				$stats->clicks 				= 0;
-			if($stats_today != null) {
-				if($stats_today->impressions == 0) 	$stats_today->impressions 	= 0;
-				if($stats_today->clicks == 0) 		$stats_today->clicks 		= 0;
-			} else {
-				$stats_today->impressions 		= 0;
-				$stats_today->clicks 			= 0;
-			}
+			if($stats_today->impressions == 0) 	$stats_today->impressions 	= 0;
+			if($stats_today->clicks == 0) 		$stats_today->clicks 		= 0;
 			
 			if($adrotate_debug['dashboard'] == true) {
 				echo "<tr><td>&nbsp;</td><td><strong>[DEBUG]</strong></td><td colspan='9'><pre>";

@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.7.2
+Version: 3.7.3
 Author URI: http://www.ajdg.net
 License: GPL2
 */
@@ -16,7 +16,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
 define("ADROTATE_VERSION", 357);
-define("ADROTATE_DB_VERSION", 19);
+define("ADROTATE_DB_VERSION", 20);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -45,11 +45,10 @@ $adrotate_advert_status			= get_option("adrotate_advert_status");
 register_activation_hook(__FILE__, 'adrotate_activate');
 register_deactivation_hook(__FILE__, 'adrotate_deactivate');
 register_uninstall_hook(__FILE__, 'adrotate_uninstall');
-if($adrotate_version < ADROTATE_VERSION) adrotate_core_upgrade();
-if($adrotate_db_version < ADROTATE_DB_VERSION) adrotate_database_upgrade();
-add_filter('cron_schedules', 'adrotate_reccurences');
+add_action('init', 'adrotate_check_upgrade', 1);
 add_action('adrotate_ad_notification', 'adrotate_mail_notifications');
 add_action('adrotate_clean_trackerdata', 'adrotate_clean_trackerdata');
+add_filter('cron_schedules', 'adrotate_reccurences');
 /*-----------------------------------------------------------*/
 
 /*--- Front end ---------------------------------------------*/
@@ -197,8 +196,11 @@ function adrotate_manage() {
 			<div id="message" class="updated fade"><p><?php _e('Email(s) with reports successfully sent', 'adrotate'); ?></p></div>
 		<?php } ?>
 
-		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_schedule';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
-			
+		<?php
+		if(adrotate_check_database(array('adrotate', 'adrotate_groups', 'adrotate_linkmeta', 'adrotate_schedule')) == true) {
+		?>
+
+		
 			<?php
 			$allbanners = $wpdb->get_results("SELECT `id`, `title`, `type`, `tracker`, `weight` FROM `".$wpdb->prefix."adrotate` ORDER BY $order;");
 			
@@ -345,7 +347,7 @@ function adrotate_manage_group() {
 			<div id="message" class="updated fade"><p><?php _e('No data found in selected time period', 'adrotate'); ?></p></div>
 		<?php } ?>
 
-		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
+		<?php if(adrotate_check_database(array('adrotate_groups', 'adrotate_linkmeta')) == true) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
 					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-groups&view=manage');?>"><?php _e('Manage', 'adrotate'); ?></a> | 
@@ -429,7 +431,7 @@ function adrotate_manage_block() {
 			<div id="message" class="updated fade"><p><?php _e('No data found in selected time period', 'adrotate'); ?></p></div>
 		<?php } ?>
 
-		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_blocks';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
+		<?php if(adrotate_check_database(array('adrotate_blocks', 'adrotate_linkmeta')) == true) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
 					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=manage');?>"><?php _e('Manage', 'adrotate'); ?></a> 

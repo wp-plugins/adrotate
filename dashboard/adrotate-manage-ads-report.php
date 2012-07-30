@@ -54,7 +54,6 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 				        <th colspan="5">
 				        	<?php
 				        	$adstats = $wpdb->get_results("SELECT `thetime`, SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$ad_edit_id' GROUP BY `thetime` DESC LIMIT 21;");
-				        	$target = $wpdb->get_row("SELECT `targetclicks`, `targetimpressions` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$ad_edit_id';");
 							if($adstats) {
 							
 								$adstats = array_reverse($adstats);
@@ -83,15 +82,13 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 								}
 
 								$impressions_title = urlencode(serialize(__('Impressions over the past 21 days', 'adrotate')));
-								$impressions_target = urlencode(serialize($target->targetimpressions));
 								$impressions_array = urlencode(serialize($impressions_array));
-								echo "<img src=\"".plugins_url("adrotate/library/graph_single_ad.php?title=$impressions_title&target=$impressions_target&data=$impressions_array", "AdRotate")."\" />";
+								echo "<img src=\"".plugins_url("adrotate/library/graph_single_ad.php?title=$impressions_title&data=$impressions_array", "AdRotate")."\" />";
 
 								if($banner->tracker == "Y") {
 									$clicks_title = urlencode(serialize(__('Clicks over the past 21 days', 'adrotate')));
-									$clicks_target = urlencode(serialize($target->targetclicks));
 									$clicks_array = urlencode(serialize($clicks_array));
-									echo "<img src=\"".plugins_url("adrotate/library/graph_single_ad.php?title=$clicks_title&target=$clicks_target&data=$clicks_array", "AdRotate")."\" />";
+									echo "<img src=\"".plugins_url("adrotate/library/graph_single_ad.php?title=$clicks_title&data=$clicks_array", "AdRotate")."\" />";
 								}
 							} else {
 								_e('No data to show!', 'adrotate');

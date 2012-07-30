@@ -7,8 +7,8 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			<h3><?php _e('New Ad', 'adrotate'); ?></h3>
 			<?php
 				// Initial date for new entries
-				list($sday, $smonth, $syear, $shour, $sminute) = split(" ", gmdate("d m Y H i", $now));
-				list($eday, $emonth, $eyear, $ehour, $eminute) = split(" ", gmdate("d m Y H i", $in84days));
+				list($syear, $smonth, $sday, $shour, $sminute, $ssecond) = split('([^0-9])', current_time('mysql'));
+				list($eyear, $emonth, $eday, $ehour, $eminute, $esecond) = split('([^0-9])', date('Y-m-d H:i:s', strtotime("+12 weeks", $now)));
 			
 				$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty' ORDER BY `id` DESC LIMIT 1;";
 				$edit_id = $wpdb->get_var($query);
@@ -38,7 +38,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			if($ad_edit_id) {
 				if($edit_banner->type != 'empty') {
 					// Errors
-					if(strlen($edit_banner->bannercode) < 1 AND $edit_banner->type != 'empty') 
+					if(strlen($edit_banner->bannercode) < 1) 
 						echo '<div class="error"><p>'. __('The AdCode cannot be empty!', 'adrotate').'</p></div>';
 	
 					if($edit_banner->tracker == 'N' AND strlen($edit_banner->link) < 1 AND $saved_user > 0) 
@@ -278,45 +278,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 				        	</label>
 						</td>
 					</tr>
-			      	<tr>
-				        <th><?php _e('Expected Clicks:', 'adrotate'); ?></th>
-				        <td colspan="3">
-				        	<label for="adrotate_weight"><input tabindex="15" name="adrotate_targetclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->targetclicks;?>" /> <em><?php _e('Set a target or milestone for clicks. Shows in the graph.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
-				        </td>
-			      	</tr>
-			      	<tr>
-				        <th><?php _e('Expected impressions:', 'adrotate'); ?></th>
-				        <td colspan="3">
-				        	<label for="adrotate_weight"><input tabindex="16" name="adrotate_targetimpressions" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->targetimpressions;?>" /> <em><?php _e('Set a target or milestone for impressions. Shows in the graph.', 'adrotate'); ?> <?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
-				        </td>
-			      	</tr>
 					</tbody>
-
-				<?php if($edit_banner->type != 'empty') { ?>
-					<thead>
-					<tr>
-						<th colspan="4" bgcolor="#DDD"><?php _e('Maintenance', 'adrotate'); ?></th>
-					</tr>
-					</thead>
-	
-					<tbody>
-			      	<tr>
-				        <th><?php _e('Actions:', 'adrotate'); ?></th>
-				        <td colspan="3">
-					        <select name="adrotate_action" id="cat" class="postform">
-						        <option value="0">--</option>
-						        <option value="renew-31536000"><?php _e('Renew for 1 year', 'adrotate'); ?></option>
-						        <option value="renew-5184000"><?php _e('Renew for 180 days', 'adrotate'); ?></option>
-						        <option value="renew-2592000"><?php _e('Renew for 30 days', 'adrotate'); ?></option>
-						        <option value="renew-604800"><?php _e('Renew for 7 days', 'adrotate'); ?></option>
-						        <option value="delete"><?php _e('Delete', 'adrotate'); ?></option>
-						        <option value="reset"><?php _e('Reset stats', 'adrotate'); ?></option>
-							</select> <input type="submit" id="post-action-submit" name="adrotate_action_submit" value="Go" class="button-secondary" />
-						</td>
-					</tr>
-					</tbody>
-				<?php } ?>
-				
 				</table>
 	
 		    	<p class="submit">
@@ -324,51 +286,12 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 					<a href="admin.php?page=adrotate&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
 		    	</p>
 
-				<h3><?php _e('Timeframe and Schedules', 'adrotate'); ?></h3>
-
-		    	<table class="widefat" style="margin-top: .5em">
-					<thead>
-					<tr>
-						<th colspan="4"><?php _e('Timeframe (Optional)', 'adrotate'); ?></th>
-					</tr>
-					</thead>
-	
-					<tbody>
-			      	<tr>
-			      		<th>Important:</th>
-				        <td colspan="3"><em><?php _e('Set a click or impression limit on any given day, week or month. This option overrules any other click or impression limit as long as the ad is within a valid schedule.', 'adrotate'); ?></em></td>
-					</tr>
-			      	<tr>
-				        <th><?php _e('Timeframe:', 'adrotate'); ?></th>
-				        <td colspan="3">
-					        <input tabindex="18" name="adrotate_timeframelength" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframelength;?>" /> <select tabindex="19" name="adrotate_timeframe">
-								<option value="" <?php if($edit_banner->timeframe == "") { echo 'selected'; } ?>>No limits</option>
-								<option value="hour" <?php if($edit_banner->timeframe == "hour") { echo 'selected'; } ?>>Hour(s)</option>
-								<option value="day" <?php if($edit_banner->timeframe == "day") { echo 'selected'; } ?>>Day(s)</option>
-								<option value="week" <?php if($edit_banner->timeframe == "week") { echo 'selected'; } ?>>Week(s)</option>
-								<option value="month" <?php if($edit_banner->timeframe == "month") { echo 'selected'; } ?>>Month(s)</option>
-							</select>
-				        </td>
-			      	</tr>
-			      	<tr>
-				        <th><?php _e('Maximum clicks:', 'adrotate'); ?></th>
-				        <td>
-					        <label for="adrotate_timeframeclicks"></label><input tabindex="20" name="adrotate_timeframeclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframeclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
-				        </td>
-				        <th valign="top"><?php _e('Maximum impressions:', 'adrotate'); ?></th>
-				        <td>
-					        <label for="adrotate_timeframeimpressions"><input tabindex="21" name="adrotate_timeframeimpressions" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframeimpressions;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
-				        </td>
-			      	</tr>
-					</tbody>					
-				</table>
-
 				<h3><?php _e('Schedules', 'adrotate'); ?></h3>
 
 		    	<table class="widefat" style="margin-top: .5em">
 					<thead>
 					<tr>
-						<th colspan="4"><?php _e('Add new schedules (Required)', 'adrotate'); ?></th>
+						<th colspan="4"><?php _e('Add a new schedule (Required)', 'adrotate'); ?></th>
 					</tr>
 					</thead>
 	
@@ -466,6 +389,45 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 					</tbody>
 				</table>
 		      	<?php } ?>
+
+				<h3><?php _e('Timeframe', 'adrotate'); ?></h3>
+
+		    	<table class="widefat" style="margin-top: .5em">
+					<thead>
+					<tr>
+						<th colspan="4"><?php _e('Timeframe (Optional)', 'adrotate'); ?></th>
+					</tr>
+					</thead>
+	
+					<tbody>
+			      	<tr>
+			      		<th>Important:</th>
+				        <td colspan="3"><em><?php _e('Set a click or impression limit per hour, day, week or month. This option overrules any other click or impression limit as long as the ad is within a valid schedule.', 'adrotate'); ?></em></td>
+					</tr>
+			      	<tr>
+				        <th><?php _e('Timeframe:', 'adrotate'); ?></th>
+				        <td colspan="3">
+					        <input tabindex="18" name="adrotate_timeframelength" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframelength;?>" /> <select tabindex="19" name="adrotate_timeframe">
+								<option value="" <?php if($edit_banner->timeframe == "") { echo 'selected'; } ?>>No limits</option>
+								<option value="hour" <?php if($edit_banner->timeframe == "hour") { echo 'selected'; } ?>>Hour(s)</option>
+								<option value="day" <?php if($edit_banner->timeframe == "day") { echo 'selected'; } ?>>Day(s)</option>
+								<option value="week" <?php if($edit_banner->timeframe == "week") { echo 'selected'; } ?>>Week(s)</option>
+								<option value="month" <?php if($edit_banner->timeframe == "month") { echo 'selected'; } ?>>Month(s)</option>
+							</select>
+				        </td>
+			      	</tr>
+			      	<tr>
+				        <th><?php _e('Maximum clicks:', 'adrotate'); ?></th>
+				        <td>
+					        <label for="adrotate_timeframeclicks"></label><input tabindex="20" name="adrotate_timeframeclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframeclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
+				        </td>
+				        <th valign="top"><?php _e('Maximum impressions:', 'adrotate'); ?></th>
+				        <td>
+					        <label for="adrotate_timeframeimpressions"><input tabindex="21" name="adrotate_timeframeimpressions" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->timeframeimpressions;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></label>
+				        </td>
+			      	</tr>
+					</tbody>					
+				</table>
 
 		    	<p class="submit">
 					<input tabindex="34" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save ad', 'adrotate'); ?>" />
