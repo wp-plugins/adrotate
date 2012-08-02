@@ -12,7 +12,9 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
  Since:		0.7
 -------------------------------------------------------------*/
 function adrotate_shortcode($atts, $content = null) {
+	global $adrotate_debug;
 
+	$banner_id = $group_ids = $block_id = $fallback = $weight = $columns = 0;
 	if(!empty($atts['banner'])) 	$banner_id 	= trim($atts['banner'], "\r\t ");
 	if(!empty($atts['group'])) 		$group_ids 	= trim($atts['group'], "\r\t ");
 	if(!empty($atts['block']))		$block_id	= trim($atts['block'], "\r\t ");
@@ -20,6 +22,17 @@ function adrotate_shortcode($atts, $content = null) {
 	if(!empty($atts['weight']))		$weight		= trim($atts['weight'], "\r\t "); // Optional for groups (override)
 	if(!empty($atts['column']))		$columns	= trim($atts['column'], "\r\t "); // OBSOLETE/UNUSED
 
+	if($adrotate_debug['general'] == true) {
+		echo "<p><strong>[DEBUG][adrotate_shortcode()] Attributes</strong><pre>";
+		echo "Banner ID: ".$banner_id."</br>"; 
+		echo "Group ID: ".$group_ids."</br>"; 
+		echo "Block ID: ".$block_id."</br>"; 
+		echo "Fallback: ".$fallback."</br>"; 
+		echo "Weight: ".$weight."</br>"; 
+		echo "Columns (Obsolete): ".$columns."</br>"; 
+		echo "</pre></p>";
+	}
+	
 	if($banner_id > 0 AND ($group_ids == 0 OR $group_ids > 0) AND $block_id == 0) // Show one Ad
 		return adrotate_ad($banner_id);
 
@@ -28,6 +41,9 @@ function adrotate_shortcode($atts, $content = null) {
 
 	if($banner_id == 0 AND $group_ids == 0 AND $block_id > 0) // Show block 
 		return adrotate_block($block_id, $weight);
+
+	if($banner_id == 0 AND $group_ids == 0 AND $block_id == 0) // Show error 
+		return adrotate_error('no_id');
 }
 
 /*-------------------------------------------------------------
@@ -104,6 +120,7 @@ function adrotate_filter_schedule($selected, $banner) {
 
 	$now = current_time('timestamp');
 	$prefix = $wpdb->prefix;
+	$current = array();
 
 	if($adrotate_debug['general'] == true) {
 		echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Filtering banner</strong><pre>";

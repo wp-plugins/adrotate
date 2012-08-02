@@ -19,34 +19,41 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
-	if($group > 0) $grouporblock = " AND `group` = '$group'";
-	if($block > 0) $grouporblock = " AND `block` = '$block'";
+	$banner = $wpdb->get_row("SELECT 
+								`id`, 
+								`bannercode`, 
+								`tracker`, 
+								`link`, 
+								`image`, 
+								`timeframe`, 
+								`timeframelength`, 
+								`timeframeclicks`, 
+								`timeframeimpressions` 
+							FROM 
+								`".$wpdb->prefix."adrotate` 
+							WHERE 
+								`id` = '$banner_id' 
+								AND `type` = 'active'
+							;");
 
-	if($banner_id) {
+	$selected[$banner->id] = 0;			
+
+	if($banner) {
 		if($individual == true) {
-			$banner = $wpdb->get_row("SELECT `id`, `bannercode`, `tracker`, `link`, `image`, `timeframe`, `timeframelength`, `timeframeclicks`, `timeframeimpressions` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$banner_id' AND `type` = 'active';");
-	
-			if($adrotate_debug['general'] == true) {
-				if($banner->timeframe == '') $banner->timeframe = "not set";
-				echo "<p><strong>[DEBUG][adrotate_ad()] Selected Ad, specs</strong><pre>";
-				print_r($banner); 
-				echo "</pre></p>"; 
-			}
-
-			$selected = array($banner->id => 0);			
+			// Individual ad, check schedules and timeframe
+			// For groups and blocks these are checked elsewhere
 			$selected = adrotate_filter_schedule($selected, $banner);
 
-			if ($banner->timeframe == 'hour' OR $banner->timeframe == 'day' OR $banner->timeframe == 'week' OR $banner->timeframe == 'month') {
+			if($banner->timeframe == 'hour' OR $banner->timeframe == 'day' OR $banner->timeframe == 'week' OR $banner->timeframe == 'month') {
 				$selected = adrotate_filter_timeframe($selected, $banner);
 			}
-		} else {
-			// Coming from a group or block, no checks (they're already ran elsewhere) just load the ad
-			$banner = $wpdb->get_row("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$banner_id';");
-			$selected[$banner->id] = 0;			
-			$schedules = array('Already checked when choosing group/block.');
 		}
 		
 		if($adrotate_debug['general'] == true) {
+			if($banner->timeframe == '') $banner->timeframe = "not set";
+			echo "<p><strong>[DEBUG][adrotate_ad()] Selected Ad, specs</strong><pre>";
+			print_r($banner); 
+			echo "</pre></p>"; 
 			echo "<p><strong>[DEBUG][adrotate_ad()] Ad to display (ID => (fake) weight)</strong><pre>";
 			print_r($selected); 
 			echo "</pre></p>"; 
@@ -71,6 +78,8 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 			}
 			$ip = $wpdb->get_var("SELECT `timer` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` = '$remote_ip' AND `stat` = 'i' AND `bannerid` = '$banner_id' ORDER BY `timer` DESC LIMIT 1;");
 			if($ip < $impression_timer AND $nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
+				if($group > 0) $grouporblock = " AND `group` = '$group'";
+				if($block > 0) $grouporblock = " AND `block` = '$block'";
 				$stats = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$banner_id'$grouporblock AND `thetime` = '$today';");
 				if($stats > 0) {
 					$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_stats_tracker` SET `impressions` = `impressions` + 1 WHERE `id` = '$stats';");
@@ -85,7 +94,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 		unset($banner, $schedules);
 		
 	} else {
-		$output = adrotate_error('ad_no_id');
+		$output = adrotate_error('ad_no_id', array($banner_id));
 	}
 	return $output;
 }
@@ -627,12 +636,12 @@ function adrotate_error($action, $arg = null) {
 		break;
 		
 		case "ad_no_id" :
-			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no Ad ID set! Check your syntax!', 'adrotate').'</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no valid AD ID set! Check your syntax!', 'adrotate').'</span>';
 			return $result;
 		break;
 
 		case "ad_not_found" :
-			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, ad could not be found! Make sure it exists.', 'adrotate').'</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, ad could not be found! Make sure it exists or that you set the right ID.', 'adrotate').'</span>';
 			return $result;
 		break;
 
@@ -660,6 +669,11 @@ function adrotate_error($action, $arg = null) {
 		break;
 
 		// Misc
+		case "no_id" :
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no ID set! Check your syntax!', 'adrotate').'</span>';
+			return $result;
+		break;
+
 		default:
 			$default = '<span style="font-weight: bold; color: #f00;">'.__('An unknown error occured.', 'adrotate').'</span>';
 			return $default;
