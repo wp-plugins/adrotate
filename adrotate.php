@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.7.3
+Version: 3.7.3.1
 Author URI: http://www.ajdg.net
 License: GPL2
 */
@@ -16,7 +16,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
 define("ADROTATE_VERSION", 357);
-define("ADROTATE_DB_VERSION", 20);
+define("ADROTATE_DB_VERSION", 21);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -45,7 +45,7 @@ $adrotate_advert_status			= get_option("adrotate_advert_status");
 register_activation_hook(__FILE__, 'adrotate_activate');
 register_deactivation_hook(__FILE__, 'adrotate_deactivate');
 register_uninstall_hook(__FILE__, 'adrotate_uninstall');
-add_action('init', 'adrotate_check_upgrade', 1);
+add_action('admin_init', 'adrotate_check_upgrade');
 add_action('adrotate_ad_notification', 'adrotate_mail_notifications');
 add_action('adrotate_clean_trackerdata', 'adrotate_clean_trackerdata');
 add_filter('cron_schedules', 'adrotate_reccurences');

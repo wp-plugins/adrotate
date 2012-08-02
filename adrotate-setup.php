@@ -156,8 +156,8 @@ function adrotate_database_install() {
 										`gridfloat` varchar(6) NOT NULL DEFAULT 'none',
 										`gridpadding` int(2) NOT NULL DEFAULT '0',
 										`gridborder` varchar(20) NOT NULL DEFAULT '0',
-										`adwidth` int(4) NOT NULL DEFAULT '125',
-										`adheight` int(4) NOT NULL DEFAULT '125',
+										`adwidth` varchar(6) NOT NULL DEFAULT '125',
+										`adheight` varchar(6) NOT NULL DEFAULT '125',
 										`admargin` int(2) NOT NULL DEFAULT '1',
 										`adpadding` int(2) NOT NULL DEFAULT '0',
 										`adborder` varchar(20) NOT NULL DEFAULT '0',
@@ -452,9 +452,9 @@ function adrotate_database_upgrade() {
 			$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` CHANGE `adheight` `adheight` varchar(6)  NOT NULL  DEFAULT '125';");
 		}
 
-		// Database: 	20
-		// AdRotate:	3.7.3
-		if($adrotate_db_version < 20) {
+		// Database: 	21
+		// AdRotate:	3.7.3.1
+		if($adrotate_db_version < 21) {
 			$wpdb->query("ALTER TABLE `".$tables['adrotate']."` DROP `targetclicks`;");
 			$wpdb->query("ALTER TABLE `".$tables['adrotate']."` DROP `targetimpressions`;");
 		}
@@ -546,10 +546,9 @@ function adrotate_core_upgrade() {
  Since:		3.7.3
 -------------------------------------------------------------*/
 function adrotate_check_upgrade() {
-
 	$adrotate_version = get_option("adrotate_version");
 	$adrotate_db_version = get_option("adrotate_db_version");
-	
+
 	if($adrotate_version < ADROTATE_VERSION) adrotate_core_upgrade();
 	if($adrotate_db_version < ADROTATE_DB_VERSION) adrotate_database_upgrade();
 }
