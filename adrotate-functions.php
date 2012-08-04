@@ -757,29 +757,9 @@ function adrotate_check_config() {
 	if($debug['stats'] == '' OR !isset($debug['stats'])) 							$debug['stats'] 				= false;
 	if($debug['timers'] == '' OR !isset($debug['timers'])) 							$debug['timers'] 				= false;
 	if($debug['track'] == '' OR !isset($debug['track'])) 							$debug['track'] 				= false;
+	if($debug['upgrade'] == '' OR !isset($debug['upgrade'])) 						$debug['upgrade'] 				= false;
 	update_option('adrotate_debug', $debug);
 
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_get_sorted_roles
-
- Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest. (Code based on NextGen Gallery)
- Receive:   -none-
- Return:    $sorted
- Since:		3.2
--------------------------------------------------------------*/
-function adrotate_get_sorted_roles() {	
-	$editable_roles = get_option('wp_user_roles');
-	$sorted = array();
-	
-	foreach($editable_roles as $role => $details) {
-		$sorted[$details['name']] = get_role($role);
-	}
-
-	$sorted = array_reverse($sorted);
-
-	return $sorted;
 }
 
 /*-------------------------------------------------------------
@@ -799,6 +779,29 @@ function adrotate_get_remote_ip(){
 	$buffer = explode(',', $remote_ip, 2);
 
 	return $buffer[0];
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_get_sorted_roles
+
+ Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest. (Code based on NextGen Gallery)
+ Receive:   -none-
+ Return:    $sorted
+ Since:		3.2
+-------------------------------------------------------------*/
+function adrotate_get_sorted_roles() {	
+	global $wp_roles;
+
+	$editable_roles = apply_filters('editable_roles', $wp_roles->roles);
+	$sorted = array();
+	
+	foreach($editable_roles as $role => $details) {
+		$sorted[$details['name']] = get_role($role);
+	}
+
+	$sorted = array_reverse($sorted);
+
+	return $sorted;
 }
 
 /*-------------------------------------------------------------

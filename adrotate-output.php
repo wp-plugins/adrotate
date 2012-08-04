@@ -19,26 +19,26 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
-	$banner = $wpdb->get_row("SELECT 
-								`id`, 
-								`bannercode`, 
-								`tracker`, 
-								`link`, 
-								`image`, 
-								`timeframe`, 
-								`timeframelength`, 
-								`timeframeclicks`, 
-								`timeframeimpressions` 
-							FROM 
-								`".$wpdb->prefix."adrotate` 
-							WHERE 
-								`id` = '$banner_id' 
-								AND `type` = 'active'
-							;");
 
-	$selected[$banner->id] = 0;			
+	if($banner_id) {
+		$banner = $wpdb->get_row("SELECT 
+									`id`, 
+									`bannercode`, 
+									`tracker`, 
+									`link`, 
+									`image`, 
+									`timeframe`, 
+									`timeframelength`, 
+									`timeframeclicks`, 
+									`timeframeimpressions` 
+								FROM 
+									`".$wpdb->prefix."adrotate` 
+								WHERE 
+									`id` = '$banner_id' 
+									AND `type` = 'active'
+								;");
+		$selected[$banner->id] = 0;			
 
-	if($banner) {
 		if($individual == true) {
 			// Individual ad, check schedules and timeframe
 			// For groups and blocks these are checked elsewhere
@@ -59,12 +59,6 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 			echo "</pre></p>"; 
 		}
 			
-		if($adrotate_debug['timers'] == true) {
-			$impression_timer = $now;
-		} else {
-			$impression_timer = $now - $adrotate_config['impression_timer'];
-		}
-		
 		if($selected) {
 			$output = adrotate_ad_output($banner->id, $group, $block, $banner->bannercode, $banner->tracker, $banner->link, $banner->image);
 
@@ -72,6 +66,12 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 			if(is_array($adrotate_crawlers)) $crawlers = $adrotate_crawlers;
 				else $crawlers = array();
 
+			if($adrotate_debug['timers'] == true) {
+				$impression_timer = $now;
+			} else {
+				$impression_timer = $now - $adrotate_config['impression_timer'];
+			}
+		
 			$nocrawler = true;
 			foreach($crawlers as $crawler) {
 				if(preg_match("/$crawler/i", $useragent)) $nocrawler = false;
@@ -618,25 +618,27 @@ function adrotate_error($action, $arg = null) {
 	switch($action) {
 		// Ads
 		case "ad_expired" :
+			$ad_expired = __('is not available at this time due to schedule restrictions or does not exist!', 'adrotate');
 			if($adrotate_debug['general'] == true) {
-				$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, Ad', 'adrotate').' (ID: '.$arg[0].') '.__('is not available at this time due to schedule restrictions or does not exist!', 'adrotate').'</span>';
+				$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, Ad', 'adrotate').' (ID: '.$arg[0].') '.$ad_expired.'</span>';
 			} else {
-				$result = '<!-- '.__('Error, Ad', 'adrotate').' (ID: '.$arg[0].') '.__('is not available at this time due to schedule restrictions!', 'adrotate').' -->';
+				$result = '<!-- '.__('Error, Ad', 'adrotate').' (ID: '.$arg[0].') '.$ad_expired.' -->';
 			}
 			return $result;
 		break;
 		
 		case "ad_unqualified" :
+			$ad_unqualified = __('Either there are no banners, they are disabled or none qualified for this location!', 'adrotate');
 			if($adrotate_debug['general'] == true) {
-				$result = '<span style="font-weight: bold; color: #f00;">'.__('Either there are no banners, they are disabled or none qualified for this location!', 'adrotate').'</span>';
+				$result = '<span style="font-weight: bold; color: #f00;">'.$ad_unqualified.'</span>';
 			} else {
-				$result = '<!-- '.__('Either there are no banners, they are disabled or none qualified for this location!', 'adrotate').' -->';
+				$result = '<!-- '.$ad_unqualified.' -->';
 			}
 			return $result;
 		break;
 		
 		case "ad_no_id" :
-			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no valid AD ID set! Check your syntax!', 'adrotate').'</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no or no valid AD ID set! Check your syntax!', 'adrotate').'</span>';
 			return $result;
 		break;
 

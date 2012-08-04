@@ -905,7 +905,9 @@ function adrotate_options() {
 			<tr>
 				<td colspan="2"><span class="description"><?php _e('NOTE: The below options are not meant for normal use and are only there for developers to review saved settings or how ads are selected. These can be used as a measure of troubleshooting upon request but for normal use they SHOULD BE LEFT UNCHECKED!!', 'adrotate'); ?></span></td>
 			</tr>
-
+			<tr>
+				<td colspan="2">AdRotate build: <strong><?php echo get_option("adrotate_version"); ?></strong><br />AdRotate database version: <strong><?php echo get_option("adrotate_db_version"); ?></strong></td>
+			</tr>
 			<tr>
 				<th valign="top"><?php _e('Developer Debug', 'adrotate'); ?></th>
 				<td>
@@ -916,8 +918,21 @@ function adrotate_options() {
 					<input type="checkbox" name="adrotate_debug_stats" <?php if($adrotate_debug['stats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review global stats, per ad/group/block stats (admins)!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_timers" <?php if($adrotate_debug['timers'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable timers for clicks and impressions allowing you to test the impression and click counters or stats without having to wait for the timer!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_track" <?php if($adrotate_debug['track'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable encryption on the redirect url. This will NOT compromise any security!', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_upgrade" <?php if($adrotate_debug['upgrade'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show a list of errors that happened (if any) during the database upgrade.', 'adrotate'); ?></span><br />
 				</td>
 			</tr>
+			<?php if($adrotate_debug['upgrade'] == true) { ?>
+			<tr>
+				<td colspan="2">
+					<?php 
+					$upgradelog	= get_option('adrotate_upgrade_log');
+					echo "<p><strong>[DEBUG] List of errors during upgrade. Arrays only apply to database. 1 = GOOD - 0 = ERROR.</strong><pre>";
+					print_r($upgradelog); 
+					echo "</pre></p>"; 
+					?>
+				</td>
+			</tr>
+			<?php } ?>
 	    	</table>
 	    	
 		    <p class="submit">

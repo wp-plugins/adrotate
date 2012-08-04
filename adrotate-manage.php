@@ -751,6 +751,10 @@ function adrotate_options_submit() {
 		else 											$debug['stats']			= false;
 	if(isset($_POST['adrotate_debug_timers'])) 			$debug['timers'] 		= true;
 		else 											$debug['timers']		= false;
+	if(isset($_POST['adrotate_debug_track'])) 			$debug['track'] 		= true;
+		else 											$debug['track']			= false;
+	if(isset($_POST['adrotate_debug_upgrade'])) 		$debug['upgrade'] 		= true;
+		else 											$debug['upgrade']		= false;
 	update_option('adrotate_debug', $debug);
 
 	// Return to dashboard
