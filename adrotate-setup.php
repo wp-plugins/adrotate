@@ -336,7 +336,7 @@ function adrotate_database_upgrade() {
 	}
 		
 	// Database 13
-	if($adrotate_db_version < 11) {
+	if($adrotate_db_version < 13) {
 		// Upgrade tables with Indexes for faster processing
 		$migrate[13][] = $wpdb->query("CREATE INDEX `ad` ON `".$tables['adrotate_stats_tracker']."` (`ad`);");
 		$migrate[13][] = $wpdb->query("CREATE INDEX `ipaddress` ON `".$tables['adrotate_tracker']."` (`ipaddress`);");
@@ -368,18 +368,15 @@ function adrotate_database_upgrade() {
 	}
 				
 	// Database 14
-	if($adrotate_db_version < 5) {
+	if($adrotate_db_version < 14) {
 		$upgrade[21] = adrotate_add_column($tables['adrotate_schedule'], 'maxclicks', 'int(15) NOT NULL DEFAULT \'0\' AFTER `stoptime`');
 		$upgrade[22] = adrotate_add_column($tables['adrotate_schedule'], 'maximpressions', 'int(15) NOT NULL DEFAULT \'0\' AFTER `maxclicks`');
-	}
-
-	if($adrotate_db_version < 5) {
 		$upgrade[23] = adrotate_remove_column($tables['adrotate'], 'maxclicks');
 		$upgrade[24] = adrotate_remove_column($tables['adrotate'], 'maxshown');
 	}
 
 	// Database 15
-	if($adrotate_db_version < 5) {
+	if($adrotate_db_version < 15) {
 		$upgrade[25] = adrotate_add_column($tables['adrotate'], 'timeframe', 'varchar(6) NOT NULL DEFAULT \'\' AFTER `tracker`');
 		$upgrade[26] = adrotate_add_column($tables['adrotate'], 'timeframelength', 'int(15) NOT NULL DEFAULT \'0\' AFTER `timeframe`');
 		$upgrade[27] = adrotate_add_column($tables['adrotate'], 'timeframeclicks', 'int(15) NOT NULL DEFAULT \'0\' AFTER `timeframelength`');
@@ -402,7 +399,7 @@ function adrotate_database_upgrade() {
 	}
 
 	// Database 17
-	if($adrotate_db_version < 5) {
+	if($adrotate_db_version < 17) {
 		$upgrade[29] = adrotate_add_column($tables['adrotate_groups'], 'cat', 'longtext NOT NULL AFTER `sortorder`');
 		$upgrade[30] = adrotate_add_column($tables['adrotate_groups'], 'cat_loc', 'tinyint(1) NOT NULL DEFAULT \'0\' AFTER `cat`');
 		$upgrade[31] = adrotate_add_column($tables['adrotate_groups'], 'page', 'longtext NOT NULL AFTER `cat_loc`');
@@ -410,7 +407,7 @@ function adrotate_database_upgrade() {
 	}
 
 	// Database 18
-	if($adrotate_db_version < 5) {
+	if($adrotate_db_version < 18) {
 		$upgrade[33] = adrotate_change_column($tables['adrotate_blocks'], 'adcount', 'rows', 'INT(3)  NOT NULL  DEFAULT \'2\'');
 		$upgrade[34] = adrotate_change_column($tables['adrotate_blocks'], 'columns', 'columns', 'INT(3)  NOT NULL  DEFAULT \'2\'');
 		$upgrade[35] = adrotate_add_column($tables['adrotate_blocks'], 'gridpadding', 'int(2) NOT NULL DEFAULT \'0\' AFTER `columns`');
@@ -423,14 +420,14 @@ function adrotate_database_upgrade() {
 	}
 
 	// Database 19
-	if($adrotate_db_version < 5) {
+	if($adrotate_db_version < 19) {
 		$upgrade[42] = adrotate_change_column($tables['adrotate_blocks'], 'adwidth', 'adwidth', 'varchar(6) NOT NULL DEFAULT \'125\'');
 		$upgrade[43] = adrotate_change_column($tables['adrotate_blocks'], 'adheight', 'adheight', 'varchar(6) NOT NULL DEFAULT \'125\'');
 		$upgrade[44] = adrotate_add_column($tables['adrotate_blocks'], 'gridfloat', 'varchar(7) NOT NULL DEFAULT \'none\' AFTER `columns`');
 	}
 
 	// Database 21
-	if($adrotate_db_version < 5) {
+	if($adrotate_db_version < 21) {
 		$upgrade[45] = adrotate_remove_column($tables['adrotate'], 'targetclicks');
 		$upgrade[46] = adrotate_remove_column($tables['adrotate'], 'targetimpressions');
 	}
