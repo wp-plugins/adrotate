@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.7.3.3
+Version: 3.7.3.5
 Author URI: http://www.ajdg.net
 License: GPL2
 */
@@ -15,8 +15,8 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_VERSION", 357);
-define("ADROTATE_DB_VERSION", 21);
+define("ADROTATE_VERSION", 362);
+define("ADROTATE_DB_VERSION", 22);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -86,6 +86,7 @@ if(isset($_POST['adrotate_role_add_submit']))			add_action('init', 'adrotate_pre
 if(isset($_POST['adrotate_role_remove_submit'])) 		add_action('init', 'adrotate_prepare_roles');
 if(isset($_POST['adrotate_db_optimize_submit'])) 		add_action('init', 'adrotate_optimize_database');
 if(isset($_POST['adrotate_db_cleanup_submit'])) 		add_action('init', 'adrotate_cleanup_database');
+if(isset($_POST['adrotate_db_upgrade_submit'])) 		add_action('init', 'adrotate_check_upgrade');
 if(isset($_POST['adrotate_evaluate_submit'])) 			add_action('init', 'adrotate_prepare_evaluate_ads');
 if(isset($_POST['adrotate_export_submit'])) 			add_action('init', 'adrotate_export_csv');
 /*-----------------------------------------------------------*/
@@ -172,35 +173,31 @@ function adrotate_manage() {
 	<div class="wrap">
 		<h2><?php _e('Ad Management', 'adrotate'); ?></h2>
 
-		<?php if ($message == 'created') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Ad created', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'updated') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Ad updated', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'deleted') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Ad(s) deleted', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'reset') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Ad(s) statistics reset', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'renew') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Ad(s) renewed', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'deactivate') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Ad(s) deactivated', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'activate') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Ad(s) activated', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'field_error') { ?>
-			<div id="message" class="updated fade"><p><?php _e('The ad was saved but has an issue which might prevent it from working properly. Review the yellow marked ad.', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'no_access') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Action prohibited', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'nodata') { ?>
-			<div id="message" class="updated fade"><p><?php _e('No data found in selected time period', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'csvmail') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Email(s) with reports successfully sent', 'adrotate'); ?></p></div>
-		<?php } ?>
-
-		<?php
-		if(adrotate_check_database(array('adrotate', 'adrotate_groups', 'adrotate_linkmeta', 'adrotate_schedule')) == true) {
-		?>
-
-		
+		<?php if(adrotate_check_database(adrotate_list_tables()) == true) { ?>
+			<?php if ($message == 'created') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Ad created', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'updated') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Ad updated', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'deleted') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Ad(s) deleted', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'reset') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Ad(s) statistics reset', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'renew') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Ad(s) renewed', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'deactivate') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Ad(s) deactivated', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'activate') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Ad(s) activated', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'field_error') { ?>
+				<div id="message" class="updated fade"><p><?php _e('The ad was saved but has an issue which might prevent it from working properly. Review the yellow marked ad.', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'no_access') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Action prohibited', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'nodata') { ?>
+				<div id="message" class="updated fade"><p><?php _e('No data found in selected time period', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'csvmail') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Email(s) with reports successfully sent', 'adrotate'); ?></p></div>
+			<?php } ?>
+	
 			<?php
 			$allbanners = $wpdb->get_results("SELECT `id`, `title`, `type`, `tracker`, `weight` FROM `".$wpdb->prefix."adrotate` ORDER BY $order;");
 			
@@ -335,19 +332,19 @@ function adrotate_manage_group() {
 	<div class="wrap">
 		<h2><?php _e('Group Management', 'adrotate'); ?></h2>
 
-		<?php if ($message == 'created') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Group created', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'updated') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Group updated', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'deleted') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Group deleted', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'deleted_banners') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Group including it\'s Ads deleted', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'nodata') { ?>
-			<div id="message" class="updated fade"><p><?php _e('No data found in selected time period', 'adrotate'); ?></p></div>
-		<?php } ?>
+		<?php if(adrotate_check_database(adrotate_list_tables()) == true) { ?>
+			<?php if ($message == 'created') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Group created', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'updated') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Group updated', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'deleted') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Group deleted', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'deleted_banners') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Group including it\'s Ads deleted', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'nodata') { ?>
+				<div id="message" class="updated fade"><p><?php _e('No data found in selected time period', 'adrotate'); ?></p></div>
+			<?php } ?>
 
-		<?php if(adrotate_check_database(array('adrotate_groups', 'adrotate_linkmeta')) == true) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
 					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-groups&view=manage');?>"><?php _e('Manage', 'adrotate'); ?></a> | 
@@ -421,17 +418,17 @@ function adrotate_manage_block() {
 	<div class="wrap">
 		<h2><?php _e('Block Management', 'adrotate'); ?></h2>
 
-		<?php if ($message == 'created') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Block created', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'updated') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Block updated', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'deleted') { ?>
-			<div id="message" class="updated fade"><p><?php _e('Block deleted', 'adrotate'); ?></p></div>
-		<?php } else if ($message == 'nodata') { ?>
-			<div id="message" class="updated fade"><p><?php _e('No data found in selected time period', 'adrotate'); ?></p></div>
-		<?php } ?>
+		<?php if(adrotate_check_database(adrotate_list_tables()) == true) { ?>
+			<?php if ($message == 'created') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Block created', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'updated') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Block updated', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'deleted') { ?>
+				<div id="message" class="updated fade"><p><?php _e('Block deleted', 'adrotate'); ?></p></div>
+			<?php } else if ($message == 'nodata') { ?>
+				<div id="message" class="updated fade"><p><?php _e('No data found in selected time period', 'adrotate'); ?></p></div>
+			<?php } ?>
 
-		<?php if(adrotate_check_database(array('adrotate_blocks', 'adrotate_linkmeta')) == true) { ?>
 			<div class="tablenav">
 				<div class="alignleft actions">
 					<a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=manage');?>"><?php _e('Manage', 'adrotate'); ?></a> 
@@ -607,6 +604,8 @@ function adrotate_options() {
 	$adrotate_crawlers 			= get_option('adrotate_crawlers');
 	$adrotate_roles				= get_option('adrotate_roles');
 	$adrotate_debug				= get_option('adrotate_debug');
+	$adrotate_version 			= get_option("adrotate_version");
+	$adrotate_db_version 		= get_option("adrotate_db_version");
 	
 	$crawlers 			= implode(', ', $adrotate_crawlers);
 	$notification_mails	= implode(', ', $adrotate_config['notification_email']);
@@ -856,36 +855,22 @@ function adrotate_options() {
 			<tr>
 				<td colspan="2"><h2><?php _e('Maintenance', 'adrotate'); ?></h2></td>
 			</tr>
-
-			<?php if($adrotate_debug['dashboard'] == true) { ?>
 			<tr>
-				<td colspan="2">
-					<?php 
-					echo "<p><strong>[DEBUG] List of tables</strong><pre>";
-					$tables = adrotate_list_tables();
-					print_r($tables); 
-					echo "</pre></p>"; 
-					?>
-				</td>
-			</tr>
-			<?php } ?>
-			
-			<tr>
-				<td colspan="2"><span class="description"><?php _e('NOTE: The below functions are intented to be used to OPTIMIZE your database. They only apply to your ads/groups/blocks and stats. Not to other settings or other parts of Wordpress! Always always make a backup! These functions are to be used when you feel or notice your database is slow, unresponsive and sluggish.', 'adrotate'); ?></span></td>
+				<td colspan="2"><span class="description"><?php _e('DISCLAIMER: If for any reason your data is lost, damaged or otherwise becomes unusable in any way or by any means in whichever way I will not take responsibility. You should always have a backup of your database. These functions do NOT destroy data. If data is lost, damaged or unusable, your database likely was beyond repair already. Claiming it worked before clicking these buttons is not a valid point in any case.', 'adrotate'); ?></span></td>
 			</tr>
 			<tr>
 				<th valign="top"><?php _e('Optimize Database', 'adrotate'); ?></th>
 				<td>
 					<input type="submit" id="post-role-submit" name="adrotate_db_optimize_submit" value="<?php _e('Optimize Database', 'adrotate'); ?>" class="button-secondary" onclick="return confirm('<?php _e('You are about to optimize the AdRotate database.', 'adrotate'); ?>\n\n<?php _e('Did you make a backup of your database?', 'adrotate'); ?>\n\n<?php _e('This may take a moment and may cause your website to respond slow temporarily!', 'adrotate'); ?>\n\n<?php _e('OK to continue, CANCEL to stop.', 'adrotate'); ?>')" /><br />
 					<span class="description"><?php _e('Cleans up overhead data in the AdRotate tables.', 'adrotate'); ?><br />
-					<?php _e('Overhead data is accumulated garbage resulting from many changes you\'ve made. This can vary from nothing to hundreds of KiB of data.', 'adrotate'); ?></span>
+					<?php _e('Overhead data is accumulated garbage resulting from many changes you might have made. This can vary from nothing to hundreds of KiB of data.', 'adrotate'); ?></span>
 				</td>
 			</tr>
 			<tr>
 				<th valign="top"><?php _e('Clean-up Database', 'adrotate'); ?></th>
 				<td>
 					<input type="submit" id="post-role-submit" name="adrotate_db_cleanup_submit" value="<?php _e('Clean-up Database', 'adrotate'); ?>" class="button-secondary" onclick="return confirm('<?php _e('You are about to remove empty records from the AdRotate database.', 'adrotate'); ?>\n\n<?php _e('Did you make a backup of your database?', 'adrotate'); ?>\n\n<?php _e('OK to continue, CANCEL to stop.', 'adrotate'); ?>')" /><br />
-					<span class="description"><?php _e('AdRotate creates empty records when you start making ads, groups or blocks. In rare occasions these records are faulty. If you made an ad, group or block that does not save when you make it use this button to delete those empty records.', 'adrotate'); ?></span>
+					<span class="description"><?php _e('AdRotate creates empty records when you start making ads, groups or blocks. In rare occasions these records are faulty. If you made an ad, group or block that does not save when you make it use this button to delete those empty records. Faulty stats records are cleaned up as well.', 'adrotate'); ?></span>
 				</td>
 			</tr>
 			<tr>
@@ -895,18 +880,43 @@ function adrotate_options() {
 					<span class="description"><?php _e('This will apply all evaluation rules to all ads to see if any error slipped in. Normally you shouldn\t need this feature.', 'adrotate'); ?></span>
 				</td>
 			</tr>
-			<tr>
-				<td colspan="2"><span class="description"><?php _e('DISCLAIMER: If for any reason your data is lost, damaged or otherwise becomes unusable in any way or by any means in whichever way i will not take responsibility. You should always have a backup of your database. These functions do NOT destroy data. If data is lost, damaged or unusable, your database likely was beyond repair already. Claiming it worked before clicking these buttons is not a valid point in any case.', 'adrotate'); ?></span></td>
-			</tr>
 
 			<tr>
 				<td colspan="2"><h2><?php _e('Troubleshooting', 'adrotate'); ?></h2></td>
 			</tr>
 			<tr>
-				<td colspan="2"><span class="description"><?php _e('NOTE: The below options are not meant for normal use and are only there for developers to review saved settings or how ads are selected. These can be used as a measure of troubleshooting upon request but for normal use they SHOULD BE LEFT UNCHECKED!!', 'adrotate'); ?></span></td>
+				<td colspan="2"><span class="description"><?php _e('DISCLAIMER: If for any reason your data is lost, damaged or otherwise becomes unusable in any way or by any means in whichever way I will not take responsibility. You should always have a backup of your database. Use with caution and make a backup first!', 'adrotate'); ?></span></td>
+			</tr>
+			<?php if($adrotate_debug['upgrade'] == true) { ?>
+			<tr>
+				<td colspan="2">
+					<?php 
+					echo "<p><strong>[DEBUG] Saved build and database versions.</strong><pre>";
+					print_r($adrotate_version); 
+					print_r($adrotate_db_version); 
+					echo "</pre></p>"; 
+					?>
+				</td>
+			</tr>
+			<?php } ?>
+			<tr>
+				<td colspan="2">Current AdRotate build: <strong><?php echo $adrotate_version['current']; ?></strong><br />Required AdRotate build: <strong><?php echo ADROTATE_VERSION; ?></strong></td>
 			</tr>
 			<tr>
-				<td colspan="2">AdRotate build: <strong><?php echo get_option("adrotate_version"); ?></strong><br />AdRotate database version: <strong><?php echo get_option("adrotate_db_version"); ?></strong></td>
+				<td colspan="2">Current AdRotate database version: <strong><?php echo $adrotate_db_version['current']; ?></strong><br />Required AdRotate database version: <strong><?php echo ADROTATE_DB_VERSION; ?></strong></td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('Manual Upgrade', 'adrotate'); ?></th>
+				<td>
+				<?php if(($adrotate_version['current'] < ADROTATE_VERSION AND $adrotate_version['previous'] < ADROTATE_VERSION) OR ($adrotate_db_version['current'] < ADROTATE_DB_VERSION AND $adrotate_db_version['previous'] < ADROTATE_DB_VERSION)) { ?>
+					<input type="submit" id="post-role-submit" name="adrotate_db_upgrade_submit" value="<?php _e('Upgrade Database and Migrate Data', 'adrotate'); ?>" class="button-secondary" onclick="return confirm('<?php _e('You are about to upgrade your database and migrate data within the database.', 'adrotate'); ?>\n\n<?php _e('MAKE SURE YOU HAVE A BACKUP!!!', 'adrotate'); ?>\n\n<?php _e('OK to continue, CANCEL to stop.', 'adrotate'); ?>')" />
+				<?php } else { ?>
+					<strong><?php _e('It appears your database is up-to-date. If you believe this to be untrue, contact support and report your Plugin version, AdRotate build and database version.', 'adrotate'); ?></strong>
+				<?php } ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><span class="description"><?php _e('NOTE: The below options are not meant for normal use and are only there for developers to review saved settings or how ads are selected. These can be used as a measure of troubleshooting upon request but for normal use they SHOULD BE LEFT UNCHECKED!!', 'adrotate'); ?></span></td>
 			</tr>
 			<tr>
 				<th valign="top"><?php _e('Developer Debug', 'adrotate'); ?></th>
@@ -918,15 +928,32 @@ function adrotate_options() {
 					<input type="checkbox" name="adrotate_debug_stats" <?php if($adrotate_debug['stats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review global stats, per ad/group/block stats (admins)!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_timers" <?php if($adrotate_debug['timers'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable timers for clicks and impressions allowing you to test the impression and click counters or stats without having to wait for the timer!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_track" <?php if($adrotate_debug['track'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable encryption on the redirect url. This will NOT compromise any security!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_upgrade" <?php if($adrotate_debug['upgrade'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show a list of errors that happened (if any) during the database upgrade.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_upgrade" <?php if($adrotate_debug['upgrade'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Display version numbers and show a list of errors that happened (if any) during the database upgrade.', 'adrotate'); ?></span><br />
 				</td>
 			</tr>
+			<?php if($adrotate_debug['dashboard'] == true) { ?>
+			<tr>
+				<td colspan="2">
+					<?php 
+					$tables = adrotate_list_tables();
+					$found = adrotate_check_database($tables);
+					if($found == true) { $found = 'YES'; } else { $found = 'NO'; }
+
+					echo "<p><strong>[DEBUG] List of tables</strong><pre>";
+					print_r($tables); 
+					echo "</pre></p>"; 
+					echo "<p><strong>[DEBUG] Are all tables found?</strong> ".$found."</p>"; 
+					?>
+				</td>
+			</tr>
+			<?php } ?>
+			
 			<?php if($adrotate_debug['upgrade'] == true) { ?>
 			<tr>
 				<td colspan="2">
 					<?php 
 					$upgradelog	= get_option('adrotate_upgrade_log');
-					echo "<p><strong>[DEBUG] List of errors during upgrade. Arrays only apply to database. 1 = GOOD - 0 = ERROR.</strong><pre>";
+					echo "<p><strong>[DEBUG] List of events during upgrade. Arrays only apply to database. 1 = GOOD - 0 (or empty) = ERROR/SKIPPED.</strong><br />Errors/Skipped queries is not a bad thing per-se. Some items will be skipped over because they are not required for you.<br />This array merely serves as a troubleshooting tool to suggest a starting point to find a fix to a problem.<br />An empty array means no update was executed or not required.<pre>";
 					print_r($upgradelog); 
 					echo "</pre></p>"; 
 					?>

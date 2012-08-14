@@ -695,7 +695,7 @@ function adrotate_error($action, $arg = null) {
 function adrotate_notifications_dashboard() {
 	global $adrotate_advert_status;
 	if(current_user_can('adrotate_ad_manage')) {
-		$data = unserialize($adrotate_advert_status);
+		$data = $adrotate_advert_status;
 
 		if($data['total'] > 0) {
 			if($data['expired'] > 0 AND $data['expiressoon'] == 0 AND $data['error'] == 0) {
@@ -707,6 +707,13 @@ function adrotate_notifications_dashboard() {
 			} else {
 				echo '<div class="error"><p>'.$data['expired'].' '.__('ad(s) expired.', 'adrotate').' '.$data['expiressoon'].' '.__('ad(s) are about to expire.', 'adrotate').' There are '.$data['error'].' '.__('ad(s) with configuration errors.', 'adrotate').' <a href="admin.php?page=adrotate">'.__('Fix this as soon as possible', 'adrotate').'</a>!</p></div>';
 			}
+		}
+
+		$adrotate_version = get_option("adrotate_version");
+		$adrotate_db_version = get_option("adrotate_db_version");
+	
+		if($adrotate_db_version['current'] < ADROTATE_DB_VERSION OR $adrotate_version['current'] < ADROTATE_VERSION) {
+			echo '<div class="error"><p>SEVERE! Current AdRotate Build: '.$adrotate_version['current'].', requires version: '.ADROTATE_VERSION.'. AdRotate Database: '.$adrotate_db_version['current'].', requires version: '.ADROTATE_DB_VERSION.'.<br />Go to settings and click "Upgrade Database and Migrate Data" or contact support to try and resolve this issue!</p></div>';
 		}
 	}
 }
@@ -739,27 +746,36 @@ function adrotate_credits() {
 	echo '<thead>';
 	echo '<tr valign="top">';
 	echo '	<th width="27%">AdRotate '.__('Useful Links', 'adrotate').'</th>';
-	echo '	<th>'.__('Getting help', 'adrotate').'</th>';
+	echo '	<th>'.__('News and Promotions', 'adrotate').'</th>';
 	echo '	<th width="35%">'.__('Brought to you by', 'adrotate').'</th>';
 	echo '</tr>';
 	echo '</thead>';
 
 	echo '<tbody>';
 	echo '<tr><td><ul>';
-	echo '	<li>'.__('Find my website at', 'adrotate').' <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.</li>';
+	echo '	<li>'.__('Need help setting things up? Take a look at the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/services.php" target="_blank">'.__('services page', 'adrotate').'</a>!';
+	echo '	<li>'.__('Get free support on the', 'adrotate').' <a href="http://forum.adrotateplugin.com" target="_blank">'.__('forum', 'adrotate').'</a>!</li>';
+	echo '	<li>'.__('Subscribe to news and updates on the', 'adrotate').' <a href="http://blog.adrotateplugin.com" target="_blank">'.__('AdRotate Blog','adrotate').'</a>!</li>';
+	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('manuals', 'adrotate').'</a> '.__('where most features are explained.', 'adrotate').'</li>';
 	echo '	<li>'.__('Make a small donation to show that you', 'adrotate').' <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal%40ajdg%2enet&item_name=AdRotate%20Donation&item_number=Dashboard%20single%20donation&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=GB&bn=PP%2dDonationsBF&charset=UTF%2d8" target="_blank">'.__('like AdRotate', 'adrotate').'</a>. '.__('Thanks!', 'adrotate').'</li>';
-	echo '	<li>'.__('The plugin homepage is at', 'adrotate').' <a href="http://www.adrotateplugin.com" target="_blank">www.adrotateplugin.com</a>!</li>';
 	echo '</ul></td>';
 
-	echo '<td style="border-left:1px #ddd solid;"><ul>';
-	echo '	<li>'.__('Need fast and efficient assistance? Take a look at the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/services.php" target="_blank">'.__('services page', 'adrotate').'</a>! '.__('I also have a', 'adrotate').' <a href="http://forum.adrotateplugin.com" target="_blank">'.__('forum', 'adrotate').'</a>!</li>';
-	echo '	<li>'.__('Grab the latest news and updates on the', 'adrotate').' <a href="http://blog.adrotateplugin.com" target="_blank">'.__('AdRotate Blog','adrotate').'</a>. '.__('Be sure to subscribe!', 'adrotate').'</li>';
-	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('manuals', 'adrotate').'</a> '.__('and have the most popular features explained.', 'adrotate').'</li>';
-	echo '</ul></td>';
+	echo '<td style="border-left:1px #ddd solid;">';
+		wp_widget_rss_output(array(
+			'url' => array('http://www.ajdg.net/other/adrotate-news.xml'),
+			'title' => 'AdRotate News and Promotions',
+			'items' => 7,
+			'show_summary' => 0, 
+			'show_author' => 0,
+			'show_date' => 0
+		));
+	echo '</td>';
 
 	echo '<td style="border-left:1px #ddd solid;"><ul>';
 	echo '	<li><a href="http://www.ajdg.net" title="AJdG Solutions"><img src="'.WP_CONTENT_URL.'/plugins/adrotate/images/ajdg-logo-100x60.png" alt="ajdg-logo-100x60" width="100" height="60" align="left" style="padding: 0 5px 0 0;" /></a>';
 	echo '	'.__('Your one stop for Webdevelopment, consultancy and anything WordPress! If you need a custom plugin. Theme customizations or have your site moved/migrated entirely. Visit my website for details!', 'adrotate').' <a href="http://www.ajdg.net" title="AJdG Solutions">'.__('Find out more today', 'adrotate').'</a>!</li>';
+	echo '	<li>'.__('Find my website at', 'adrotate').' <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.</li>';
+	echo '	<li>'.__('The plugin homepage is at', 'adrotate').' <a href="http://www.adrotateplugin.com" target="_blank">www.adrotateplugin.com</a>!</li>';
 	echo '</ul></td></tr>';
 	echo '</tbody>';
 

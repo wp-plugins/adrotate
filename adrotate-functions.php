@@ -421,7 +421,7 @@ function adrotate_prepare_evaluate_ads() {
 					'total' => $count
 					);
 
-	update_option('adrotate_advert_status', serialize($result));
+	update_option('adrotate_advert_status', $result);
 }
 
 /*-------------------------------------------------------------
@@ -483,8 +483,7 @@ function adrotate_clean_trackerdata() {
 	global $wpdb;
 
 	$removeme = current_time('timestamp') - 86400;
-	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `timer` < ".$removeme." AND `ipaddress` > 0;");
-	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress`  = 'unknown';");
+	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `timer` < ".$removeme.";");
 }
 
 /*-------------------------------------------------------------
