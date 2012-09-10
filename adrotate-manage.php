@@ -367,7 +367,7 @@ function adrotate_insert_block() {
 		if((is_numeric($adheight) AND $adheight < 1 OR $adheight > 1000) OR $adheight == '' OR (!is_numeric($adheight) AND $adheight != 'auto')) $adheight = '125';
 		if($admargin < 0 OR $admargin > 99 OR $admargin == '' OR !is_numeric($admargin)) $admargin = 0;
 		if($adpadding < 0 OR $adpadding > 99 OR  $adpadding == '' OR !is_numeric($adpadding)) $adpadding = 0;
-		if($adpx >= 1 AND $adpx <= 99 AND is_numeric($adpx) AND $adcolor != '' AND preg_match('/^#[a-f0-9]{6}$/i', $adcolor) AND $adstyle != 'none') {
+		if($adpx >= 1 AND $adpx <= 99 AND is_numeric($adpx) AND $adcolor != '' AND preg_match('/^#[a-f0-9]{6}$/i', $adcolor) AND $adstyle != '') {
 			$adborder = $adpx."px ".$adcolor." ".$adstyle;
 		} else {
 			$adborder = 'none';
