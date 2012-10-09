@@ -82,7 +82,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 				if($block > 0) $grouporblock = " AND `block` = '$block'";
 				$stats = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '".$banner->id."'$grouporblock AND `thetime` = '$today';");
 				if($stats > 0) {
-					$wpdb->query($wpdb->prepare("UPDATE `".$wpdb->prefix."adrotate_stats_tracker` SET `impressions` = `impressions` + 1 WHERE `id` = '%s';", $stats);
+					$wpdb->query($wpdb->prepare("UPDATE `".$wpdb->prefix."adrotate_stats_tracker` SET `impressions` = `impressions` + 1 WHERE `id` = '%s';", $stats));
 				} else {
 					$wpdb->insert($wpdb->prefix."adrotate_stats_tracker", array('ad' => $banner_id, 'group' => $group, 'block' => $block, 'thetime' => $today, 'clicks' => 0, 'impressions' => 1));
 				}
