@@ -9,7 +9,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$today 			= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
 	$banner 		= $wpdb->get_row($wpdb->prepare("SELECT `title`, `tracker` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '%s';", $ad_edit_id));
 	$stats 			= $wpdb->get_row($wpdb->prepare("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '%s';", $ad_edit_id));
-	$stats_today 	= $wpdb->get_row($wpdb->prepare("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '%s' AND `thetime` = '$today';"), $ad_edit_id);
+	$stats_today 	= $wpdb->get_row($wpdb->prepare("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '%s' AND `thetime` = '$today';", $ad_edit_id));
 
 	// Prevent gaps in display
 	if($stats->impressions == 0) { 
