@@ -127,6 +127,8 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 		
 		if($weight > 0) {
 			$weightoverride = "	AND `".$prefix."adrotate`.`weight` >= '$weight'";
+		} else {
+			$weightoverride = "";
 		}
 
 		if($adrotate_debug['general'] == true) {
@@ -616,7 +618,7 @@ function adrotate_nonce_error() {
 	echo '	<h2 style="text-align: center;">'.__('Oh no! Something went wrong!', 'adrotate').'</h2>';
 	echo '	<p style="text-align: center;">'.__('WordPress was unable to verify your Nonce hash. Verify if the url used is valid and try again.', 'adrotate').'</p>';
 	echo '	<p style="text-align: center;">'.__('If you have received this url via email, you are being tricked!', 'adrotate').'</p>';
-	echo '	<p style="text-align: center;">'.__('Contact support if the issue persists:', 'adrotate').' <a href="http://forum.adrotateplugin.com" title="AdRotate Support" target="_blank">AdRotate Forum</a>.</p>';
+	echo '	<p style="text-align: center;">'.__('Contact support if the issue persists:', 'adrotate').' <a href="http://www.ajdg.net/support/" title="AdRotate Support" target="_blank">AJdG Solutions Support</a>.</p>';
 }
 
 /*-------------------------------------------------------------
@@ -681,7 +683,7 @@ function adrotate_error($action, $arg = null) {
 
 		// Database
 		case "db_error" :
-			$result = '<span style="font-weight: bold; color: #f00;">'.__('There was an error locating the database tables for AdRotate. Please deactivate and re-activate AdRotate from the plugin page!!', 'adrotate').'<br />'.__('If this does not solve the issue please seek support at', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php">www.adrotateplugin.com/page/support.php</a></span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('There was an error locating the database tables for AdRotate. Please deactivate and re-activate AdRotate from the plugin page!!', 'adrotate').'<br />'.__('If this does not solve the issue please seek support at', 'adrotate').' <a href="http://www.ajdg.net/support/">http://www.ajdg.net/support/</a></span>';
 			return $result;
 		break;
 
@@ -769,10 +771,10 @@ function adrotate_credits() {
 	echo '<tbody>';
 	echo '<tr><td><ul>';
 	echo '	<li>'.__('Need help setting things up? Take a look at the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/services.php" target="_blank">'.__('services page', 'adrotate').'</a>!';
-	echo '	<li>'.__('Get free support on the', 'adrotate').' <a href="http://forum.adrotateplugin.com" target="_blank">'.__('forum', 'adrotate').'</a>!</li>';
+	echo '	<li>'.__('Get free support on my', 'adrotate').' <a href="http://www.ajdg.net/support/" target="_blank">'.__('ticket system', 'adrotate').'</a>!</li>';
 	echo '	<li>'.__('Subscribe to news and updates on the', 'adrotate').' <a href="http://blog.adrotateplugin.com" target="_blank">'.__('AdRotate Blog','adrotate').'</a>!</li>';
-	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.adrotateplugin.com/page/support.php" target="_blank">'.__('manuals', 'adrotate').'</a> '.__('where most features are explained.', 'adrotate').'</li>';
-	echo '	<li>'.__('Make a small donation to show that you', 'adrotate').' <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal%40ajdg%2enet&item_name=AdRotate%20Donation&item_number=Dashboard%20single%20donation&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=GB&bn=PP%2dDonationsBF&charset=UTF%2d8" target="_blank">'.__('like AdRotate', 'adrotate').'</a>. '.__('Thanks!', 'adrotate').'</li>';
+	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.ajdg.net/support/knowledgebase/" target="_blank">'.__('knowledgebase', 'adrotate').'</a> '.__('where most features are explained.', 'adrotate').'</li>';
+	echo '	<li>'.__('Give AdRotate a future', 'adrotate').'. <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal%40ajdg%2enet&item_name=AdRotate%20Donation&item_number=Dashboard%20single%20donation&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=GB&bn=PP%2dDonationsBF&charset=UTF%2d8" target="_blank">'.__('Donate', 'adrotate').'</a>! '.__('Thanks!', 'adrotate').'</li>';
 	echo '</ul></td>';
 
 	echo '<td style="border-left:1px #ddd solid;">';

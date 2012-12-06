@@ -3,8 +3,8 @@ Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, analytics, advert, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.0, PHP5.2
-Tested up to: 3.4.2
-Stable tag: 3.7.4.2
+Tested up to: 3.5
+Stable tag: 3.7.4.3
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -21,7 +21,7 @@ Receive a periodic email when banners are (about to) expire(d) informing you to 
 
 * [Details](http://adrotateplugin.com) - Lots of Additional plugin information
 * [Manuals & Support](http://adrotateplugin.com/page/support.php) - Setup instructions and support
-* [Premium services](http://adrotateplugin.com/page/services.php) - Hire us to install or troubleshoot AdRotate
+* [Premium services](http://adrotateplugin.com/page/services.php) - Hire me to install or troubleshoot AdRotate
 
 **Some Features**
 
@@ -46,12 +46,12 @@ Receive a periodic email when banners are (about to) expire(d) informing you to 
 
 == Installation ==
 
-Find out how AdRotate works, more options and various ways to implement your ads. Visit the [knowledgebase](http://adrotateplugin.com/page/support.php)!
+Find out how AdRotate works, more options and various ways to implement your ads. Visit the [knowledgebase](http://www.ajdg.net/support/knowledgebase/)!
 
 == Frequently Asked Questions ==
 
-We have a [knowledgebase](http://adrotateplugin.com/page/support.php).
-If that's not enough you can post on our [forum](http://adrotateplugin.com/page/support.php) and ask your question there!
+I have a [knowledgebase](http://www.ajdg.net/support/knowledgebase/).
+If that's not enough you can post on my [support pages](http://www.ajdg.net/support/) and ask your question there!
 
 == Changelog ==
 
