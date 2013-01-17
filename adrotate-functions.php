@@ -75,31 +75,11 @@ function adrotate_filter_schedule($selected, $banner) {
 	}
 	
 	// Get schedules for advert
-	$schedules = $wpdb->get_results("
-		SELECT 
-			`starttime`, 
-			`stoptime`, 
-			`maxclicks`, 
-			`maximpressions`
-		FROM 
-			`".$prefix."adrotate_schedule` 
-		WHERE 
-			`ad` = '".$banner->id."'
-		;");
+	$schedules = $wpdb->get_results("SELECT `starttime`, `stoptime`, `maxclicks`, `maximpressions` FROM `".$prefix."adrotate_schedule` WHERE `ad` = '".$banner->id."' ORDER BY `starttime` ASC LIMIT 1 ;");
 
 	$current = array();
 	foreach($schedules as $schedule) {
-		$stat = $wpdb->get_row("
-			SELECT
-				SUM(`clicks`) as `clicks`,
-				SUM(`impressions`) as `impressions` 
-			FROM
-				`".$prefix."adrotate_stats`
-			WHERE 
-				`ad` = ".$banner->id."
-				AND `thetime` >= ".$schedule->starttime."
-				AND `thetime` <= ".$schedule->stoptime."
-			;");
+		$stat = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$prefix."adrotate_stats` WHERE `ad` = ".$banner->id."	AND `thetime` >= ".$schedule->starttime." AND `thetime` <= ".$schedule->stoptime.";");
 		
 		if($adrotate_debug['general'] == true) {
 			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule and limits</strong><pre>";
@@ -811,7 +791,7 @@ function adrotate_folder_contents($current) {
 				if((strtolower($fileinfo['extension']) == "jpg" OR strtolower($fileinfo['extension']) == "gif" OR strtolower($fileinfo['extension']) == "png" 
 				OR strtolower($fileinfo['extension']) == "jpeg" OR strtolower($fileinfo['extension']) == "swf" OR strtolower($fileinfo['extension']) == "flv")) {
 				    $output .= "<option value='".$file."'";
-				    if(($current == get_option('siteurl').'/wp-content/banners/'.$file) OR ($current == get_option('siteurl')."/%folder%".$file)) { $output .= "selected"; }
+				    if(($current == get_option('siteurl').'/wp-content/banners/'.$file) OR ($current == get_option('siteurl')."%folder%".$file)) { $output .= "selected"; }
 				    $output .= ">".$file."</option>";
 				}
 			}

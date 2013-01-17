@@ -374,24 +374,12 @@ function adrotate_database_upgrade() {
 			$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` CHANGE `adheight` `adheight` varchar(6)  NOT NULL  DEFAULT '125';");
 		}
 
-		// Database: 	20
-		// AdRotate:	3.8-b2
-		if($adrotate_db_version['current'] < 20) {
-			adrotate_add_column($tables['adrotate'], 'cbudget', 'double NOT NULL default \'0\' AFTER `sortorder`');
-			adrotate_add_column($tables['adrotate'], 'ibudget', 'double NOT NULL default \'0\' AFTER `cbudget`');
-			adrotate_add_column($tables['adrotate'], 'crate', 'double NOT NULL default \'0\' AFTER `ibudget`');
-			adrotate_add_column($tables['adrotate'], 'irate', 'double NOT NULL default \'0\' AFTER `crate`');
-		}
-
-		// Database: 	23
-		// AdRotate:	3.8-b3
-		if($adrotate_db_version['current'] < 23) {
-			$wpdb->query("RENAME TABLE `".$wpdb->prefix."adrotate_stats_tracker` TO `".$wpdb->prefix."adrotate_stats`;");
-		}
+		// 5 Versions missing, didn't make it into the final version.
 
 		// Database: 	24
 		// AdRotate:	3.8b412
 		if($adrotate_db_version['current'] < 24) {
+			$wpdb->query("RENAME TABLE `".$wpdb->prefix."adrotate_stats_tracker` TO `".$wpdb->prefix."adrotate_stats`;");
 			$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` DROP `gridborder`;");
 			$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` DROP `adpadding`;");
 		}
@@ -404,6 +392,15 @@ function adrotate_database_upgrade() {
 			$wpdb->query("CREATE INDEX `ad` ON `".$tables['adrotate_stats']."` (ad);");
 			$wpdb->query("CREATE INDEX `thetime` ON `".$tables['adrotate_stats']."` (thetime);");
 			$wpdb->query("CREATE INDEX `ad` ON `".$tables['adrotate_schedule']."` (ad);");
+		}
+
+		// Database: 	26
+		// AdRotate:	3.8.1
+		if($adrotate_db_version['current'] < 26) {
+			adrotate_add_column($tables['adrotate'], 'cbudget', 'double NOT NULL default \'0\' AFTER `sortorder`');
+			adrotate_add_column($tables['adrotate'], 'ibudget', 'double NOT NULL default \'0\' AFTER `cbudget`');
+			adrotate_add_column($tables['adrotate'], 'crate', 'double NOT NULL default \'0\' AFTER `ibudget`');
+			adrotate_add_column($tables['adrotate'], 'irate', 'double NOT NULL default \'0\' AFTER `crate`');
 		}
 
 		update_option("adrotate_db_version", array('current' => ADROTATE_DB_VERSION, 'previous' => $adrotate_db_version['current']));

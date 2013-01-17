@@ -98,7 +98,9 @@ $banners = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHER
 $groups = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '';");
 $blocks = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` != '';");
 $queued = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'queue';");
-$statuscache = unserialize($adrotate_advert_status);
+
+if(!is_array($adrotate_advert_status)) $statuscache = unserialize($adrotate_advert_status);
+	else $statuscache = $adrotate_advert_status;
 ?>
 
 <div id="dashboard-widgets-wrap">

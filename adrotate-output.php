@@ -24,15 +24,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 
 	if($banner_id) {
 		if($individual == true) {
-			$banner = $wpdb->get_row($wpdb->prepare("SELECT 
-										`id`, `bannercode`, `tracker`, 
-										`link`, `image` 
-									FROM 
-										`".$wpdb->prefix."adrotate` 
-									WHERE 
-										`id` = %d 
-										AND `type` = 'active'
-									;", $banner_id));
+			$banner = $wpdb->get_row($wpdb->prepare("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = %d AND `type` = 'active';", $banner_id));
 
 			if($adrotate_debug['general'] == true) {
 				if($banner->timeframe == '') $banner->timeframe = "not used";
@@ -220,10 +212,6 @@ function adrotate_block($block_id, $weight = 0) {
 			// Get groups in block
 			$groups = $wpdb->get_results($wpdb->prepare("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = %d AND `user` = 0;", $block->id));
 			if($groups) {
-				if($weight > 0) {
-					$weightoverride = "	AND `".$prefix."adrotate`.`weight` >= '$weight'";
-				}
-
 				// Get all ads in all groups and process them in an array
 				$results = array();
 				foreach($groups as $group) {
@@ -240,7 +228,6 @@ function adrotate_block($block_id, $weight = 0) {
 							AND `".$prefix."adrotate_linkmeta`.`user` = 0 
 							AND `".$prefix."adrotate`.`id` = `".$prefix."adrotate_linkmeta`.`ad` 
 							AND `".$prefix."adrotate`.`type` = 'active' 
-							".$weightoverride."
 						;");
 					$results = array_merge($ads, $results);
 					unset($ads);
@@ -274,6 +261,18 @@ function adrotate_block($block_id, $weight = 0) {
 				$array_count = count($selected);
 
 				if($array_count > 0) {
+					$block_count = $block->columns * $block->rows;
+					if($array_count < $block_count) $block_count = $array_count;
+
+					$selected = array_rand($selected, $block_count);
+					shuffle($selected);
+				
+					if($adrotate_debug['general'] == true) {
+						echo "<p><strong>[DEBUG][adrotate_block()] Reduced array randomly picked</strong><pre>"; 
+						print_r($selected); 
+						echo "</pre></p>"; 
+					}			
+	
 					// grab border width in px
 					list($adborder, $rest) = explode (" ", $block->adborder, 2);
 					$adborder = rtrim($adborder, "px");
@@ -298,10 +297,9 @@ function adrotate_block($block_id, $weight = 0) {
 					$output .= '</style>';
 
 					$output .='<div id="'.$block->id.'" class="block_outer">';
+					
 					$j = 1;
-					foreach($selected as $key => $value) {
-						$banner_id = array_rand($selected);
-
+					foreach($selected as $key => $banner_id) {
 						$output .= '<div id="'.$j.' '.$banner_id.'"class="block_inner';
 						if($j == $block->rows) {
 							$output .= ' block_last ';
@@ -645,7 +643,9 @@ function adrotate_error($action, $arg = null) {
 function adrotate_notifications_dashboard() {
 	global $adrotate_advert_status;
 	if(current_user_can('adrotate_ad_manage')) {
-		$data = unserialize($adrotate_advert_status);
+
+		if(!is_array($adrotate_advert_status)) $data = unserialize($adrotate_advert_status);
+			else $data = $adrotate_advert_status;
 
 		if($data['total'] > 0) {
 			if($data['expired'] > 0 AND $data['expiressoon'] == 0 AND $data['error'] == 0) {

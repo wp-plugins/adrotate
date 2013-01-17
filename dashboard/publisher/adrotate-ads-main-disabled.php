@@ -43,8 +43,8 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			$grouplist = adrotate_ad_is_in_groups($disbanner['id']);
 	
 			// Prevent gaps in display
-			if($stats->impressions == 0) 		$stats->impressions 		= 0;
-			if($stats->clicks == 0)				$stats->clicks 				= 0;
+			if($stats->impressions == null) $stats->impressions = 0;
+			if($stats->clicks == null) $stats->clicks = 0;
 			$ctr = adrotate_ctr($stats->clicks, $stats->impressions);						
 			
 			if($adrotate_debug['dashboard'] == true) {

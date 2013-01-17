@@ -45,7 +45,7 @@ function adrotate_insert_input() {
 		if(isset($_POST['adrotate_maxshown'])) $maxshown = strip_tags(trim($_POST['adrotate_maxshown'], "\t\n "));
 
 		// Advanced options
-		$advertiser = $image_field = $image_dropdown = $link = $tracker = $targetclicks = $targetimpressions = '';
+		$advertiser = $image_field = $image_dropdown = $link = $tracker = '';
 		if(isset($_POST['adrotate_advertiser'])) $advertiser = 0;
 		if(isset($_POST['adrotate_image'])) $image_field = strip_tags(trim($_POST['adrotate_image'], "\t\n "));
 		if(isset($_POST['adrotate_image_dropdown'])) $image_dropdown = strip_tags(trim($_POST['adrotate_image_dropdown'], "\t\n "));
@@ -118,14 +118,12 @@ function adrotate_insert_input() {
 			if(strlen($image_field) > 1) {
 				$imagetype = "field";
 				$image = $image_field;
+			} else if(strlen($image_dropdown) > 1) {
+				$imagetype = "dropdown";
+				$image = get_option('siteurl')."%folder%".$image_dropdown;
 			} else {
-				if($image_dropdown == "") {
-					$imagetype = "";
-					$image = "";
-				} else {
-					$imagetype = "dropdown";
-					$image = get_option('siteurl')."%folder%".$image_dropdown;
-				}
+				$imagetype = "";
+				$image = "";
 			}
 	
 			// Save initial schedule for new ads or update the existing one
