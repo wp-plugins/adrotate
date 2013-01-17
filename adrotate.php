@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: AdRotate Professional
+Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
