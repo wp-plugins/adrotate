@@ -1,6 +1,6 @@
 <?php
 /*  
-Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
+Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 */
 
 /*-------------------------------------------------------------
@@ -12,9 +12,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
  Since:		0.7
 -------------------------------------------------------------*/
 function adrotate_shortcode($atts, $content = null) {
-	global $adrotate_debug;
 
-	$banner_id = $group_ids = $block_id = $fallback = $weight = $columns = 0;
 	if(!empty($atts['banner'])) 	$banner_id 	= trim($atts['banner'], "\r\t ");
 	if(!empty($atts['group'])) 		$group_ids 	= trim($atts['group'], "\r\t ");
 	if(!empty($atts['block']))		$block_id	= trim($atts['block'], "\r\t ");
@@ -22,17 +20,6 @@ function adrotate_shortcode($atts, $content = null) {
 	if(!empty($atts['weight']))		$weight		= trim($atts['weight'], "\r\t "); // Optional for groups (override)
 	if(!empty($atts['column']))		$columns	= trim($atts['column'], "\r\t "); // OBSOLETE/UNUSED
 
-	if($adrotate_debug['general'] == true) {
-		echo "<p><strong>[DEBUG][adrotate_shortcode()] Attributes</strong><pre>";
-		echo "Banner ID: ".$banner_id."</br>"; 
-		echo "Group ID: ".$group_ids."</br>"; 
-		echo "Block ID: ".$block_id."</br>"; 
-		echo "Fallback: ".$fallback."</br>"; 
-		echo "Weight: ".$weight."</br>"; 
-		echo "Columns (Obsolete): ".$columns."</br>"; 
-		echo "</pre></p>";
-	}
-	
 	if($banner_id > 0 AND ($group_ids == 0 OR $group_ids > 0) AND $block_id == 0) // Show one Ad
 		return adrotate_ad($banner_id);
 
@@ -41,9 +28,6 @@ function adrotate_shortcode($atts, $content = null) {
 
 	if($banner_id == 0 AND $group_ids == 0 AND $block_id > 0) // Show block 
 		return adrotate_block($block_id, $weight);
-
-	if($banner_id == 0 AND $group_ids == 0 AND $block_id == 0) // Show error 
-		return adrotate_error('no_id');
 }
 
 /*-------------------------------------------------------------
@@ -71,56 +55,18 @@ function adrotate_banner($group_ids = 0, $banner_id = 0, $block_id = 0, $column 
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_pick_weight
-
- Purpose:   Sort out and pick a random ad based on weight
- Receive:   $selected
- Return:    $key
- Since:		3.1
--------------------------------------------------------------*/
-function adrotate_pick_weight($selected) { 
-
-    $rnd = mt_rand(0, array_sum($selected)-1);
-    
-    foreach($selected as $key => $var) { 
-        if($rnd < $var) return $key; 
-        $rnd -= $var; 
-    } 
-} 
-
-/*-------------------------------------------------------------
- Name:      adrotate_ctr
-
- Purpose:   Calculate Click-Through-Rate
- Receive:   $clicks, $impressions, $round
- Return:    $ctr
- Since:		3.7
--------------------------------------------------------------*/
-function adrotate_ctr($clicks = 0, $impressions = 0, $round = 2) { 
-
-	if($impressions > 0 AND $clicks > 0) {
-		$ctr = round($clicks/$impressions*100, $round);
-	} else {
-		$ctr = 0;
-	}
-	
-	return $ctr;
-} 
-
-/*-------------------------------------------------------------
  Name:      adrotate_filter_schedule
 
  Purpose:   Weed out ads that are over the limit of their schedule
  Receive:   $selected, $banner
  Return:    $selected
- Since:		3.7
+ Since:		3.6.11
 -------------------------------------------------------------*/
 function adrotate_filter_schedule($selected, $banner) { 
 	global $wpdb, $adrotate_debug;
 
-	$now = current_time('timestamp');
+	$now = date('U');
 	$prefix = $wpdb->prefix;
-	$current = array();
 
 	if($adrotate_debug['general'] == true) {
 		echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Filtering banner</strong><pre>";
@@ -141,35 +87,24 @@ function adrotate_filter_schedule($selected, $banner) {
 			`ad` = '".$banner->id."'
 		;");
 
+	$current = array();
 	foreach($schedules as $schedule) {
 		$stat = $wpdb->get_row("
 			SELECT
 				SUM(`clicks`) as `clicks`,
 				SUM(`impressions`) as `impressions` 
 			FROM
-				`".$prefix."adrotate_stats_tracker`
+				`".$prefix."adrotate_stats`
 			WHERE 
 				`ad` = ".$banner->id."
 				AND `thetime` >= ".$schedule->starttime."
 				AND `thetime` <= ".$schedule->stoptime."
 			;");
 		
-		if($schedule->maxclicks == null) $schedule->maxclicks = '0';
-		if($schedule->maximpressions == null) $schedule->maximpressions = '0';
-		if($stat->clicks == null) $stat->clicks = '0';
-		if($stat->impressions == null) $stat->impressions = '0';
-
 		if($adrotate_debug['general'] == true) {
 			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule and limits</strong><pre>";
-			echo 'Now: '.date("j M Y G:i",$now).' (According to server)<br>';
-			echo 'Saved start time: '.date("j M Y G:i",$schedule->starttime).'<br>';
-			echo 'Saved stop time: '.date("j M Y G:i",$schedule->stoptime).'<br>';
-			echo '<br>';
-			echo 'Max. allowed clicks: '.$schedule->maxclicks.'<br>';
-			echo 'Recorded clicks for this period: '.$stat->clicks.'<br>';
-			echo '<br>';
-			echo 'Max. allowed impressions: '.$schedule->maximpressions.'<br>';
-			echo 'Recorded impressions for this period: '.$stat->impressions.'<br>';
+			print_r($schedule); 
+			print_r($stat); 
 			echo "</pre></p>"; 
 		}
 	
@@ -183,14 +118,11 @@ function adrotate_filter_schedule($selected, $banner) {
 			$selected = array_diff_key($selected, array($banner->id => 0));
 		}
 
-		// Check if ad falls within time limits
 		if($schedule->starttime > $now OR $schedule->stoptime < $now) {
 			$current[] = 0;
 		} else {
 			$current[] = 1;
 		}
-		
-		unset($schedule, $stat);
 	}
 	
 	if($adrotate_debug['general'] == true) {
@@ -205,76 +137,6 @@ function adrotate_filter_schedule($selected, $banner) {
 	}
 	unset($current);
 	
-	return $selected;
-} 
-
-/*-------------------------------------------------------------
- Name:      adrotate_filter_timeframe
-
- Purpose:   Determine the active time and its limits and filter out expired ads
- Receive:  	$selected, $ad
- Return:    $selected
- Since:		3.6.11
--------------------------------------------------------------*/
-function adrotate_filter_timeframe($selected, $banner) { 
-	global $wpdb, $adrotate_debug;
-
-	// Determine timeframe limits
-	if($banner->timeframe == 'hour') {
-		$impression_start	= gmmktime(gmdate('H'), 0, 0); // Start of hour
-		$impression_end		= gmmktime(gmdate('H'), 59, 59); // End of hour
-		$multiplier = 3600 * ($banner->timeframelength - 1);
-		$impression_end = $impression_end + $multiplier;
-	} else if($banner->timeframe == 'day') {
-		$impression_start	= gmmktime(0, 0, 0, gmdate("m")  , gmdate("d")); // Start of day
-		$impression_end		= gmmktime(23, 59, 59, gmdate('m'), gmdate("d")); // End of day
-		$multiplier = 86400 * ($banner->timeframelength - 1);
-		$impression_end = $impression_end + $multiplier;
-	} else if($banner->timeframe == 'week') {
-		$impression_start	= strtotime('Last Monday', time()); // Start of week
-		$impression_end		= strtotime('Next Sunday', time()); // End of week
-		$multiplier = 604800 * ($banner->timeframelength - 1);
-		$impression_end = $impression_end + $multiplier;
-	} else if($banner->timeframe == 'month') {
-		$impression_start	= gmmktime(0, 0, 0, date('m'), 01); // Start of month
-		$impression_end		= gmmktime(23, 59, 59, date('m')+$banner->timeframelength, 00); // End of month
-	}
-
-	// Set addition to query
-	$timeframe_stat = $wpdb->get_row("
-		SELECT 
-			SUM(`clicks`) as `clicks`, 
-			SUM(`impressions`) as `impressions` 
-		FROM 
-			`".$wpdb->prefix."adrotate_stats_tracker` 
-		WHERE 
-			`ad` = '$banner->id' 
-			AND `thetime` >= '$impression_start' 
-			AND `thetime` <= '$impression_end'
-		;");
-
-	if($timeframe_stat) {
-		if($timeframe_stat->clicks == null) $timeframe_stat->clicks = '0';
-		if($timeframe_stat->impressions == null) $timeframe_stat->impressions = '0';
-	
-		if($adrotate_debug['general'] == true) {
-			echo "<p><strong>[DEBUG][adrotate_filter_timeframe()] Ad (id: ".$banner->id.") Timeframe</strong><pre>";
-			echo "Timeframe: ".$banner->timeframe;
-			echo "<br />Start: ".$impression_start." (".gmdate("F j, Y, g:i a", $impression_start).")";
-			echo "<br />End: ".$impression_end." (".gmdate("F j, Y, g:i a", $impression_end).")";
-			echo "<br />Clicks this period: ".$timeframe_stat->clicks;
-			echo "<br />Impressions this period: ".$timeframe_stat->impressions;
-			echo "</pre></p>";
-		}
-	
-		if($timeframe_stat->clicks > $banner->timeframeclicks AND $banner->timeframeclicks > 0) {
-			$selected = array_diff_key($selected, array($banner->id => 0));
-		}
-		if($timeframe_stat->impressions > $banner->timeframeimpressions AND $banner->timeframeimpressions > 0) {
-			$selected = array_diff_key($selected, array($banner->id => 0));
-		}
-	}
-
 	return $selected;
 } 
 
@@ -304,6 +166,25 @@ function adrotate_array_unique($array) {
 	} else {
 		return $array;
 	}
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_rand
+
+ Purpose:   Generate a random string
+ Receive:   $length
+ Return:    $result
+ Since:		3.8
+-------------------------------------------------------------*/
+function adrotate_rand($length = 8) {
+	$available_chars = "abcdefghijklmnopqrstuvwxyz";	
+
+	$size = strlen($available_chars);
+	for($i = 0; $i < $length; $i++) {
+		$result .= $available_chars[rand(0, $size - 1)];
+	}
+
+	return $result;
 }
 
 /*-------------------------------------------------------------
@@ -401,15 +282,15 @@ function adrotate_prepare_evaluate_ads() {
 				$expired++;
 			if($result == 'error')
 				$error++;
-			$wpdb->update($wpdb->prefix."adrotate", array('type' => 'error'), array('id' => $ad->id));
-		} else if($result == 'expires2days' OR $result == 'expires7days' OR $result == 'normal') {
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'error' WHERE `id` = '".$ad->id."';");
+		} 
+		
+		if($result == 'expires2days' OR $result == 'expires7days' OR $result == 'normal') {
 			if($result == 'expires2days' OR $result == 'expires7days')
 				$expiressoon++;
 			if($result == 'normal')
 				$normal++;
-			$wpdb->update($wpdb->prefix."adrotate", array('type' => 'active'), array('id' => $ad->id));
-		} else {
-			continue;	
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'active' WHERE `id` = '".$ad->id."';");
 		}
 	}
 
@@ -421,7 +302,8 @@ function adrotate_prepare_evaluate_ads() {
 					'total' => $count
 					);
 
-	update_option('adrotate_advert_status', $result);
+	update_option('adrotate_advert_status', serialize($result));
+	adrotate_return('db_evaluated');
 }
 
 /*-------------------------------------------------------------
@@ -440,10 +322,10 @@ function adrotate_evaluate_ad($ad_id) {
 	$in7days = $now + 604800;
 
 	// Fetch ad
-	$ad = $wpdb->get_row("SELECT `bannercode`, `tracker`, `link`, `imagetype`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$ad_id';");
-	$advertiser = $wpdb->get_var("SELECT `user` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$ad_id' AND `group` = 0 AND `block` = 0 AND `user` > 0;");
-	$schedules = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '$ad_id';");
-	$stoptime = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '$ad_id' ORDER BY `stoptime` DESC LIMIT 1;");
+	$ad = $wpdb->get_row($wpdb->prepare("SELECT `id`, `bannercode`, `tracker`, `link`, `imagetype`, `image`, `cbudget`, `ibudget`, `crate`, `irate` FROM `".$wpdb->prefix."adrotate` WHERE `id` = %d;", $ad_id));
+	$advertiser = $wpdb->get_var("SELECT `user` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '".$ad->id."' AND `group` = 0 AND `block` = 0 AND `user` > 0;");
+	$schedules = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."';");
+	$stoptime = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."' ORDER BY `stoptime` DESC LIMIT 1;");
 
 	// Determine error states
 	if(
@@ -456,11 +338,14 @@ function adrotate_evaluate_ad($ad_id) {
 		OR (!preg_match("/%image%/i", $ad->bannercode) AND $ad->image != '' AND $ad->imagetype != '')	// Didn't use %image% but selected an image
 		OR (preg_match("/%image%/i", $ad->bannercode) AND $ad->image == '' AND $ad->imagetype == '')	// Did use %image% but didn't select an image
 		OR ($ad->image == '' AND $ad->imagetype != '')													// Image and Imagetype mismatch
-		OR ($ad->image != '' AND $ad->imagetype == '')													// Image and Imagetype mismatch
 		OR $schedules < 1																				// No Schedules
 	) {
 		return 'error';
-	} else if($stoptime <= $now){
+	} else if(
+		$stoptime <= $now 																				// Past the enddate
+		OR ($ad->crate > 0 AND $ad->cbudget < 1)														// Ad ran out of of click budget
+		OR ($ad->irate > 0 AND $ad->ibudget < 1)														// Ad ran out of of impression budget
+	){
 		return 'expired';
 	} else if($stoptime <= $in2days AND $stoptime >= $now){
 		return 'expires2days';
@@ -483,155 +368,8 @@ function adrotate_clean_trackerdata() {
 	global $wpdb;
 
 	$removeme = current_time('timestamp') - 86400;
-	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `timer` < ".$removeme.";");
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_prepare_global_report
-
- Purpose:   Generate live stats for admins
- Receive:   -None-
- Return:    -None-
- Since:		3.5
--------------------------------------------------------------*/
-function adrotate_prepare_global_report() {
-	global $wpdb;
-	
-	$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
-
-	$stats['lastclicks']			= adrotate_array_unique($wpdb->get_results("SELECT `timer`, `bannerid`, `useragent` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `stat` = 'c' AND `ipaddress` != 0 ORDER BY `timer` DESC LIMIT 50;", ARRAY_A));
-	$stats['banners'] 				= $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'active';");
-	$stats['tracker']				= $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `tracker` = 'Y' AND `type` = 'active';");
-	$stats['clicks']				= $wpdb->get_var("SELECT SUM(`clicks`) as `clicks` FROM `".$wpdb->prefix."adrotate_stats_tracker`;");
-	$stats['impressions']			= $wpdb->get_var("SELECT SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker`;");
-	
-	if(!$stats['lastclicks']) 			array();
-	if(!$stats['banners']) 				$stats['banners'] = 0;
-	if(!$stats['tracker']) 				$stats['tracker'] = 0;
-	if(!$stats['clicks']) 				$stats['clicks'] = 0;
-	if(!$stats['impressions']) 			$stats['impressions'] = 0;
-
-	return $stats;
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_prepare_advertiser_report
-
- Purpose:   Generate live stats for advertisers
- Receive:   $user
- Return:    -None-
- Since:		3.5
--------------------------------------------------------------*/
-function adrotate_prepare_advertiser_report($user) {
-	global $wpdb;
-
-	$now = current_time('timestamp');
-	$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
-	$prefix = $wpdb->prefix;
-
-	$ads = $wpdb->get_results("SELECT `ad` FROM `".$prefix."adrotate_linkmeta` WHERE `group` = 0 AND `block` = 0 AND `user` = '$user' ORDER BY `ad` ASC;");
-	
-	if($ads) {		
-		$stats['thebest']	= $wpdb->get_row("
-											SELECT 
-												`".$prefix."adrotate`.`title`, 
-												SUM(`".$prefix."adrotate_stats_tracker`.`clicks`) as `clicks` 
-											FROM 
-												`".$prefix."adrotate`, 
-												`".$prefix."adrotate_linkmeta`, 
-												`".$prefix."adrotate_stats_tracker` 
-											WHERE 
-												`".$prefix."adrotate`.`id` = `".$prefix."adrotate_linkmeta`.`ad` 
-												AND `".$prefix."adrotate_linkmeta`.`ad` = `".$prefix."adrotate_stats_tracker`.`ad` 
-												AND `".$prefix."adrotate`.`tracker` = 'Y' 
-												AND `".$prefix."adrotate`.`type` = 'active' 
-												AND `".$prefix."adrotate_linkmeta`.`user` = '$user' 
-											ORDER BY 
-												`".$prefix."adrotate_stats_tracker`.`clicks` DESC 
-											LIMIT 1;"
-											, ARRAY_A);
-		$stats['theworst']	= $wpdb->get_row("
-											SELECT 
-												`".$prefix."adrotate`.`title`, 
-												SUM(`".$prefix."adrotate_stats_tracker`.`clicks`) as `clicks` 
-											FROM 
-												`".$prefix."adrotate`, 
-												`".$prefix."adrotate_linkmeta`, 
-												`".$prefix."adrotate_stats_tracker` 
-											WHERE 
-												`".$prefix."adrotate`.`id` = `".$prefix."adrotate_linkmeta`.`ad` 
-												AND `".$prefix."adrotate_linkmeta`.`ad` = `".$prefix."adrotate_stats_tracker`.`ad` 
-												AND `".$prefix."adrotate`.`tracker` = 'Y' 
-												AND `".$prefix."adrotate`.`type` = 'active' 
-												AND `".$prefix."adrotate_linkmeta`.`user` = '$user' 
-											ORDER BY 
-												`".$prefix."adrotate_stats_tracker`.`clicks` ASC 
-											LIMIT 1;"
-											, ARRAY_A);
-		$stats['ad_amount']	= count($ads);
-
-		$x = 0;
-		foreach($ads as $ad) {
-			// Fetch data
-			$meta = $wpdb->get_row("SELECT * FROM `".$prefix."adrotate` WHERE `id` = '$ad->ad' GROUP BY `id`;");
-			$startshow = $wpdb->get_var("SELECT `starttime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->ad."' ORDER BY `starttime` ASC LIMIT 1;");
-			$endshow = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->ad."' ORDER BY `stoptime` DESC LIMIT 1;");
-			$stat = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$prefix."adrotate_stats_tracker` WHERE `ad` = '$ad->ad';");
-			$stat_today = $wpdb->get_row("SELECT `clicks`, `impressions` FROM `".$prefix."adrotate_stats_tracker` WHERE `ad` = '$ad->ad' AND `thetime` = '$today';");
-			
-			// Prevent gaps in display
-			if($stat->impressions == 0) 		$stat->impressions 			= 0;
-			if($stat->clicks == 0) 				$stat->clicks 				= 0;
-			if($stat_today->impressions == 0) 	$stat_today->impressions 	= 0;
-			if($stat_today->clicks == 0) 		$stat_today->clicks 		= 0;
-
-			// Build array
-			$adstats[$x]['id']						= $meta->id;			
-			$adstats[$x]['title']					= $meta->title;			
-			$adstats[$x]['startshow']				= $startshow;
-			$adstats[$x]['endshow']					= $endshow;
-			$adstats[$x]['clicks']					= $stat->clicks;
-			$adstats[$x]['clicks_today']			= $stat_today->clicks;
-			$adstats[$x]['maxclicks']				= $meta->maxclicks;
-			$adstats[$x]['impressions']				= $stat->impressions;
-			$adstats[$x]['impressions_today']		= $stat_today->impressions;
-			$adstats[$x]['maximpressions']			= $meta->maxshown;
-	
-			$stats['total_clicks']			= $stats['total_clicks'] + $stat->clicks;
-			$stats['total_impressions']		= $stats['total_impressions'] + $stat->impressions;
-
-			$x++;
-		}
-			
-		$lastclicks	= adrotate_array_unique($wpdb->get_results("SELECT 
-																	`".$prefix."adrotate_tracker`.`timer`, 
-																	`".$prefix."adrotate_tracker`.`bannerid` 
-																FROM 
-																	`".$prefix."adrotate`, 
-																	`".$prefix."adrotate_tracker`, 
-																	`".$prefix."adrotate_linkmeta` 
-																WHERE 
-																	`".$prefix."adrotate_linkmeta`.`user` = '$user' 
-																	AND `".$prefix."adrotate_linkmeta`.`group` = 0 
-																	AND `".$prefix."adrotate_linkmeta`.`block` = 0 
-																	AND `".$prefix."adrotate_tracker`.`ipaddress` != 0 
-																	AND `".$prefix."adrotate_tracker`.`bannerid` = `".$prefix."adrotate_linkmeta`.`ad` 
-																	AND `".$prefix."adrotate`.`tracker` = 'Y' 
-																ORDER BY 
-																	`".$prefix."adrotate_tracker`.`timer` DESC 
-																LIMIT 8;"
-																, ARRAY_A));
-		
-		$stats['ads'] 					= $adstats;
-		$stats['last_clicks']			= $lastclicks;
-	
-		if(!$stats['thebest']) 			$stats['thebest']		= array('title' => 0, 'clicks' => 0);
-		if(!$stats['theworst']) 		$stats['theworst']		= array('title' => 0, 'clicks' => 0);
-		if(!$stats['ads']) 				$stats['ads'] 			= array();
-		if(!$stats['last_clicks']) 		$stats['last_clicks'] 	= array();
-		
-		return $stats;
-	}
+	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `timer` < ".$removeme." AND `ipaddress` > 0;");
+	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress`  = 'unknown';");
 }
 
 /*-------------------------------------------------------------
@@ -674,12 +412,46 @@ function adrotate_group_is_in_blocks($id) {
 	if($linkmeta) {
 		foreach($linkmeta as $meta) {
 			$blockname = $wpdb->get_var("SELECT `name` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '".$meta->block."';");
-			$output .= '<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=adrotate-blocks&view=edit&edit_block='.$meta->block.'" title="'.__('Edit Block', 'adrotate').'">'.$blockname.'</a>, ';
+			$output .= '<a href="'.admin_url('admin.php?page=adrotate-blocks&view=edit&edit_block='.$meta->block).'" title="'.__('Edit Block', 'adrotate').'">'.$blockname.'</a>, ';
 		}
 	} else {
 		$output .= __('This group is not in a block!', 'adrotate');
 	}
 	$output = rtrim($output, " ,");
+	
+	return $output;
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_ad_is_in_groups
+
+ Purpose:   Build list of groups the ad is in (overview)
+ Receive:   $id
+ Return:    $output
+ Since:		3.8
+-------------------------------------------------------------*/
+function adrotate_ad_is_in_groups($id) {
+	global $wpdb;
+
+	$output = '';
+	$groups	= $wpdb->get_results("
+		SELECT 
+			`".$wpdb->prefix."adrotate_groups`.`name` 
+		FROM 
+			`".$wpdb->prefix."adrotate_groups`, 
+			`".$wpdb->prefix."adrotate_linkmeta` 
+		WHERE 
+			`".$wpdb->prefix."adrotate_linkmeta`.`ad` = '".$id."'
+			AND `".$wpdb->prefix."adrotate_linkmeta`.`group` = `".$wpdb->prefix."adrotate_groups`.`id`
+			AND `".$wpdb->prefix."adrotate_linkmeta`.`block` = 0
+			AND `".$wpdb->prefix."adrotate_linkmeta`.`user` = 0
+		;");
+	if($groups) {
+		foreach($groups as $group) {
+			$output .= $group->name.", ";
+		}
+	}
+	$output = rtrim($output, ", ");
 	
 	return $output;
 }
@@ -693,7 +465,7 @@ function adrotate_group_is_in_blocks($id) {
  Since:		3.6.9
 -------------------------------------------------------------*/
 function adrotate_head() {
-	//wp_enqueue_script('AdRotate-Clicktracker', WP_CONTENT_URL.'/plugins/adrotate/library/clicktracker.js', 'jQuery');
+
 }   
 
 /*-------------------------------------------------------------
@@ -734,6 +506,7 @@ function adrotate_check_config() {
 	if($config['moderate'] == '' OR !isset($config['moderate'])) 					$config['moderate']				= 'switch_themes'; 	// Admin
 	if($config['moderate_approve'] == '' OR !isset($config['moderate_approve'])) 	$config['moderate_approve']		= 'switch_themes'; 	// Admin
 
+	if($config['banner_folder'] == '' OR !isset($config['banner_folder']))			$config['banner_folder']		= "/wp-content/banners/";
 	if($config['notification_email_switch'] == '' OR !isset($config['notification_email_switch']))	$config['notification_email_switch']	= 'Y';
 	if(($config['notification_email'] == '' OR !isset($config['notification_email']) OR !is_array($config['notification_email'])) AND $config['notification_email_switch'] == 'Y')	$config['notification_email']	= array(get_option('admin_email'));
 	if($config['advertiser_email'] == '' OR !isset($config['advertiser_email']) OR !is_array($config['advertiser_email']))	$config['advertiser_email']	= array(get_option('admin_email'));
@@ -752,9 +525,29 @@ function adrotate_check_config() {
 	if($debug['stats'] == '' OR !isset($debug['stats'])) 							$debug['stats'] 				= false;
 	if($debug['timers'] == '' OR !isset($debug['timers'])) 							$debug['timers'] 				= false;
 	if($debug['track'] == '' OR !isset($debug['track'])) 							$debug['track'] 				= false;
-	if($debug['upgrade'] == '' OR !isset($debug['upgrade'])) 						$debug['upgrade'] 				= false;
 	update_option('adrotate_debug', $debug);
 
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_get_sorted_roles
+
+ Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest. (Code based on NextGen Gallery)
+ Receive:   -none-
+ Return:    $sorted
+ Since:		3.2
+-------------------------------------------------------------*/
+function adrotate_get_sorted_roles() {	
+	$editable_roles = get_option('wp_user_roles');
+	$sorted = array();
+	
+	foreach($editable_roles as $role => $details) {
+		$sorted[$details['name']] = get_role($role);
+	}
+
+	$sorted = array_reverse($sorted);
+
+	return $sorted;
 }
 
 /*-------------------------------------------------------------
@@ -774,29 +567,6 @@ function adrotate_get_remote_ip(){
 	$buffer = explode(',', $remote_ip, 2);
 
 	return $buffer[0];
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_get_sorted_roles
-
- Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest. (Code based on NextGen Gallery)
- Receive:   -none-
- Return:    $sorted
- Since:		3.2
--------------------------------------------------------------*/
-function adrotate_get_sorted_roles() {	
-	global $wp_roles;
-
-	$editable_roles = apply_filters('editable_roles', $wp_roles->roles);
-	$sorted = array();
-	
-	foreach($editable_roles as $role => $details) {
-		$sorted[$details['name']] = get_role($role);
-	}
-
-	$sorted = array_reverse($sorted);
-
-	return $sorted;
 }
 
 /*-------------------------------------------------------------
@@ -843,120 +613,6 @@ function adrotate_remove_capability($capability){
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_mail_notifications
-
- Purpose:   Email the manager that his ads need help
- Receive:   -None-
- Return:    -None-
- Since:		3.0
--------------------------------------------------------------*/
-function adrotate_mail_notifications() {
-	global $adrotate_config, $adrotate_advert_status;
-	
-	$emails = $adrotate_config['notification_email'];
-	$x = count($emails);
-	if($x == 0) $emails = array(get_option('admin_email'));
-	
-	$blogname 		= get_option('blogname');
-	$siteurl 		= get_option('siteurl');
-	$dashboardurl	= $siteurl."/wp-admin/admin.php?page=adrotate";
-	$pluginurl		= "http://www.adrotateplugin.com";
-
-	$data = $adrotate_advert_status;
-	for($i=0;$i<$x;$i++) {
-		if($data['total'] > 0) {
-		    $headers = "MIME-Version: 1.0" . "\r\n" .
-		      		  "Content-Type: text/html; charset=iso-8859-1" . "\r\n" .
-		      		  "From: $author <".$emails[$i].">" . "\r\n";
-
-			$subject = __('[AdRotate Alert] Your ads need your help!', 'adrotate');
-			
-			$message = "<p>".__('Hello', 'adrotate').",</p>";
-			$message .= "<p>".__('This notification is send to you from your website', 'adrotate')." '$blogname'.</p>";
-			$message .= "<p>".__('You will receive a notification approximately every 24 hours until the issues are resolved.', 'adrotate')."</p>";
-			$message .= "<p>".__('Current issues:', 'adrotate')."<br />";
-			if($data['error'] > 0) $message .= $data['error']." ".__('ad(s) have configuration errors. This needs your immediate attention!', 'adrotate')."<br />";
-			if($data['expired'] > 0) $message .= $data['expired']." ".__('ad(s) expired. This needs your immediate attention!', 'adrotate')."<br />";
-			if($data['expiressoon'] > 0) $message .= $data['expiressoon']." ".__('ad(s) will expire in less than 2 days.', 'adrotate')."<br />";
-			$message .= "</p>";
-			$message .= "<p>".__('A total of', 'adrotate')." ".$data['total']." ".__('ad(s) are in need of your care!', 'adrotate')."</p>";
-			$message .= "<p>".__('Access your dashboard here:', 'adrotate')." $dashboardurl</p>";
-			$message .= "<p>".__('Have a nice day!', 'adrotate')."</p>";
-			$message .= "<p>".__('Your AdRotate Notifier', 'adrotate')."<br />";
-			$message .= "$pluginurl</p>";
-
-			wp_mail($emails[$i], $subject, $message, $headers);
-		}
-	}
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_mail_message
-
- Purpose:   Send advertiser messages
- Receive:   -None-
- Return:    -None-
- Since:		3.1
--------------------------------------------------------------*/
-function adrotate_mail_message() {
-	global $wpdb, $adrotate_config;
-
-	if(wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_email_advertiser')) {
-		$id 			= $_POST['adrotate_id'];
-		$request 		= $_POST['adrotate_request'];
-		$author 		= $_POST['adrotate_username'];
-		$useremail 		= $_POST['adrotate_email'];
-		$text	 		= strip_tags(stripslashes(trim($_POST['adrotate_message'], "\t\n ")));
-	
-		if(strlen($text) < 1) $text = "";
-		
-		$emails = $adrotate_config['advertiser_email'];
-		$x = count($emails);
-		if($x == 0) $emails = array(get_option('admin_email'));
-		
-		$siteurl 		= get_option('siteurl');
-		$adurl			= $siteurl."/wp-admin/admin.php?page=adrotate&view=edit&edit_ad=".$id;
-		$pluginurl		= "http://www.adrotateplugin.com";
-	
-		for($i=0;$i<$x;$i++) {
-		    $headers 		= "MIME-Version: 1.0" . "\r\n" .
-		      				  "Content-Type: text/html; charset=iso-8859-1" . "\r\n" .
-		      				  "From: $author <$useremail>" . "\r\n";
-			$now 			= current_time('timestamp');
-			
-			if($request == "renew") $subject = __('[AdRotate] An advertiser has put in a request for renewal!', 'adrotate');
-			if($request == "remove") $subject = __('[AdRotate] An advertiser wants his ad removed.', 'adrotate');
-			if($request == "other") $subject = __('[AdRotate] An advertiser wrote a comment on his ad!', 'adrotate');
-			if($request == "issue") $subject = __('[AdRotate] An advertiser has a problem!', 'adrotate');
-			
-			$message = "<p>Hello,</p>";
-		
-			if($request == "renew") $message .= "<p>$author ".__('requests ad', 'adrotate')." <strong>$id</strong> ".__('renewed!', 'adrotate')."</p>";
-			if($request == "remove") $message .= "<p>$author ".__('requests ad', 'adrotate')." <strong>$id</strong> ".__('removed.', 'adrotate')."</p>";
-			if($request == "other") $message .= "<p>$author ".__('has something to say about ad', 'adrotate')." <strong>$id</strong>.</p>";
-			if($request == "issue") $message .= "<p>$author ".__('has a problem with AdRotate.', 'adrotate')."</p>";
-			
-			$message .= "<p>".__('Attached message:', 'adrotate')." $text</p>";
-			
-			$message .= "<p>".__('You can reply to this message to contact', 'adrotate')." $author.<br />";
-			if($request != "issue") $message .= __('Review the ad here:', 'adrotate')." $adurl";
-			$message .= "</p>";
-			
-			$message .= "<p>".__('Have a nice day!', 'adrotate')."<br />";
-			$message .= __('Your AdRotate Notifier', 'adrotate')."<br />";
-			$message .= "$pluginurl</p>";
-		
-			wp_mail($emails[$i], $subject, $message, $headers);
-		}
-	
-		adrotate_return('mail_sent');
-	} else {
-		adrotate_nonce_error();
-		exit;
-	}
-}
-
-/*-------------------------------------------------------------
  Name:      adrotate_mail_beta
 
  Purpose:   Send beta feedback
@@ -982,11 +638,12 @@ function adrotate_mail_beta() {
 			$wplang			= get_bloginfo('language');
 			$pluginurl		= "http://www.adrotateplugin.com";
 		
-		    $headers 		= "MIME-Version: 1.0" . "\r\n" .
-		      				  "Content-Type: text/html; charset=iso-8859-1" . "\r\n" .
-		      				  "From: $author <$useremail>" . "\r\n" .
-							  "Cc: $useremail" . "\r\n";
-	
+			$to[] = $useremail;
+			$to[] = "feedback@adrotateplugin.com";
+
+			$headers[] = "Content-Type: text/html; charset=iso-8859-1";
+			$headers[] = "From: $author <$useremail>";
+				
 			$subject = "[AdRotate Beta] Feedback from $author!";
 		
 			$message = "<p>Hello,</p>";
@@ -995,70 +652,9 @@ function adrotate_mail_beta() {
 			$message .= "<p>You can reply to this message to contact $author.<br />";
 			$message .= "</p>";
 	
-			wp_mail("feedback@adrotateplugin.com", $subject, $message, $headers);
+			wp_mail($to, $subject, $message, $headers);
 			adrotate_return('beta_mail_sent');
 		}
-	} else {
-		adrotate_nonce_error();
-		exit;
-	}
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_mail_test
-
- Purpose:   Send test messages
- Receive:   -None-
- Return:    -None-
- Since:		3.5
--------------------------------------------------------------*/
-function adrotate_mail_test() {
-	global $wpdb, $adrotate_config;
-
-	if(wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_email_test')) {
-		if(isset($_POST['adrotate_notification_test_submit'])) {
-			$type = "notification";
-			$emails = $adrotate_config['notification_email'];
-		}
-		
-		if(isset($_POST['adrotate_advertiser_test_submit'])) {
-			$type = "advertiser";
-			$emails = $adrotate_config['advertiser_email'];
-		}
-		
-		$x = count($emails);
-		if($x == 0) $emails = array(get_option('admin_email'));
-		
-		$siteurl 		= get_option('siteurl');
-		$pluginurl		= "http://www.adrotateplugin.com";
-		$email 			= get_option('admin_email');
-		
-		for($i=0;$i<$x;$i++) {
-			$headers =	"MIME-Version: 1.0\n" .
-		      			"From: AdRotate Plugin <".$email.">\r\n\n" . 
-		      			"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
-			
-			if($type == "notification") $subject = __('[AdRotate] This is a test notification!', 'adrotate');
-			if($type == "advertiser") $subject = __('[AdRotate] This is a test email.', 'adrotate');
-			
-			$message = 	"<p>".__('Hello', 'adrotate').",</p>";
-		
-			$message .= "<p>".__('The administrator of', 'adrotate')." $siteurl ".__('has set your email address to receive', 'adrotate');
-			if($type == "notification") $message .= " ".__('notifications from AdRotate. These are to alert you of the state of advertisements posted on this website.', 'adrotate');
-			if($type == "advertiser") $message .= " ".__('messages from Advertisers using AdRotate. Your email is not shown to them until you reply to their messages.', 'adrotate');
-			$message .= "</p>";
-	
-			$message .= "<p>".__('If you believe this message to be in error, reply to this email with your complaint!', 'adrotate')."</p>";
-					
-			$message .= "<p>".__('Have a nice day!', 'adrotate')."<br />";
-			$message .= __('Your AdRotate Notifier', 'adrotate')."<br />";
-			$message .= "$pluginurl</p>";
-		
-			wp_mail($emails[$i], $subject, $message, $headers);
-		}
-	
-		if($type == "notification") adrotate_return('mail_test_notification_sent');
-		if($type == "advertiser") adrotate_return('mail_test_advertiser_sent');
 	} else {
 		adrotate_nonce_error();
 		exit;
@@ -1082,239 +678,104 @@ function adrotate_reccurences($schedules) {
 		'interval' => 10800,
 		'display' => __('Every 3 hours', 'adrotate')
 	);
+	$schedules['15minutes'] = array(
+		'interval' => 900,
+		'display' => __('Every 15 minutes', 'adrotate')
+	);
 	return $schedules;
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_export_csv
-
- Purpose:   Export CSV data of given month
- Receive:   -- None --
- Return:    -- None --
- Since:		3.6.11
--------------------------------------------------------------*/
-function adrotate_export_csv() {
-	global $wpdb;
-	
-	if(wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_report_ads') OR wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_report_blocks') 
-	OR wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_report_groups') OR wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_report_advertiser') 
-	OR wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_report_global')) {
-		$id	 				= strip_tags(htmlspecialchars(trim($_POST['adrotate_export_id'], "\t\n "), ENT_QUOTES));
-		$type	 			= strip_tags(htmlspecialchars(trim($_POST['adrotate_export_type'], "\t\n "), ENT_QUOTES));
-		$month	 			= strip_tags(htmlspecialchars(trim($_POST['adrotate_export_month'], "\t\n "), ENT_QUOTES));
-		$year	 			= strip_tags(htmlspecialchars(trim($_POST['adrotate_export_year'], "\t\n "), ENT_QUOTES));
-	
-		$csv_emails = trim($_POST['adrotate_export_addresses']);
-		if(strlen($csv_emails) > 0) {
-			$csv_emails = explode(',', trim($csv_emails));
-			foreach($csv_emails as $csv_email) {
-				$csv_email = strip_tags(htmlspecialchars(trim($csv_email), ENT_QUOTES));
-				if(strlen($csv_email) > 0) {
-						if(preg_match("/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i", $csv_email) ) {
-						$clean_advertiser_email[] = $csv_email;
-					}
-				}
-			}
-			$emails = array_unique(array_slice($clean_advertiser_email, 0, 3));
-		} else {
-			$emails = array();
-		}
-		
-		$emailcount = count($emails);
-	
-		if($month == 0) {
-			$from = gmmktime(0,0,0,1,1,$year);
-			$until = gmmktime(0,0,0,12,31,$year);
-		} else {
-			$from = gmmktime(0,0,0,$month,1,$year);
-			$until = gmmktime(0,0,0,$month+1,0,$year);
-		}
-		$now = time();
-		$from_name = date_i18n("M-d-Y", $from);
-		$until_name = date_i18n("M-d-Y", $until);
-	
-		$generated = array("Generated on ".date_i18n("M d Y, H:i"));
-	
-		if($type == "single" OR $type == "group" OR $type == "block" OR $type == "global") {
-			if($type == "single") {
-				$ads = $wpdb->get_results($wpdb->prepare("SELECT `thetime`, SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE (`thetime` >= '%s' AND `thetime` <= '%s') AND `ad` = '%s' GROUP BY `thetime` ASC;", $from, $until, $id));
-				$title = $wpdb->get_var($wpdb->prepare("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '%s';", $id));
-		
-				$filename = "Single-ad ID".$id." - ".$from_name." to ".$until_name." - exported ".$now.".csv";
-				$topic = array("Report for ad '".$title."'");
-				$period = array("Period - From: ".$from_name." Until: ".$until_name);
-				$keys = array("Day", "Clicks", "Impressions");
-			}
-		
-			if($type == "group") {
-				$ads = $wpdb->get_results($wpdb->prepare("SELECT `thetime`, SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE (`thetime` >= '%s' AND `thetime` <= '%s') AND  `group` = '%s' GROUP BY `thetime` ASC;", $from, $until, $id));
-				$title = $wpdb->get_var($wpdb->prepare("SELECT `name` FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = '%s';", $id));
-		
-				$filename = "Ad Group ID".$id." - ".$from_name." to ".$until_name." - exported ".$now.".csv";
-				$topic = array("Report for group '".$title."'");
-				$period = array("Period - From: ".$from_name." Until: ".$until_name);
-				$keys = array("Day", "Clicks", "Impressions");
-			}
-		
-			if($type == "block") {
-				$ads = $wpdb->get_results($wpdb->prepare("SELECT `thetime`, SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE (`thetime` >= '%s' AND `thetime` <= '%s') AND  `block` = '%s' GROUP BY `thetime` ASC;", $from, $until, $id));
-				$title = $wpdb->get_var($wpdb->prepare("SELECT `name` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '".$id."';", $id));
-		
-				$filename = "Ad Block ID".$id." - ".$from_name." to ".$until_name." - exported ".$now.".csv";
-				$topic = array("Report for ad '".$title."'");
-				$period = array("Period - From: ".$from_name." Until: ".$until_name);
-				$keys = array("Day", "Clicks", "Impressions");
-			}
-			
-			if($type == "global") {
-				$ads = $wpdb->get_results($wpdb->prepare("SELECT `thetime`, SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `thetime` >= '%s' AND `thetime` <= '%s' GROUP BY `thetime` ASC;", $from, $until));
-		
-				$filename = "Global report - ".$from_name." to ".$until_name." - exported ".$now.".csv";
-				$topic = array("Global report");
-				$period = array("Period - From: ".$from_name." Until: ".$until_name);
-				$keys = array("Day", "Clicks", "Impressions");
-			}
-	
-			$x=0;
-			foreach($ads as $ad) {
-				// Prevent gaps in display
-				if($ad->impressions == 0) 		$ad->impressions 			= 0;
-				if($ad->clicks == 0) 			$ad->clicks 				= 0;
-		
-				// Build array
-				$adstats[$x]['day']						= date_i18n("M d Y", $ad->thetime);			
-				$adstats[$x]['clicks']					= $ad->clicks;
-				$adstats[$x]['impressions']				= $ad->impressions;
-				$x++;
-			}
-		}
-	
-		if($type == "advertiser") {
-			$ads = $wpdb->get_results($wpdb->prepare("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = 0 AND `block` = 0 AND `user` = '%s' ORDER BY `ad` ASC;", $id));
-	
-			$x=0;
-			foreach($ads as $ad) {
-				$title = $wpdb->get_var("SELECT `title` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '".$ad->ad."';");
-				$startshow = $wpdb->get_var("SELECT `starttime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->ad."' ORDER BY `starttime` ASC LIMIT 1;");
-				$endshow = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->ad."' ORDER BY `stoptime` DESC LIMIT 1;");
-				$username = $wpdb->get_var("SELECT `display_name` FROM `$wpdb->users` WHERE `ID` = '".$id."' ORDER BY `user_nicename` ASC;");
-				$stat = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '$ad->ad';");
-				
-				// Prevent gaps in display
-				if($stat->impressions == 0) 		$stat->impressions 			= 0;
-				if($stat->clicks == 0) 				$stat->clicks 				= 0;
-				if($stat->impressions == 0 AND $stat->clicks == 0) {
-					$ctr = "0";
-				} else {
-					$ctr = round((100/$stat->impressions) * $stat->clicks,2);
-				}
-	
-				// Build array
-				$adstats[$x]['title']					= $title;			
-				$adstats[$x]['id']						= $ad->ad;			
-				$adstats[$x]['startshow']				= date_i18n("M d Y", $startshow);
-				$adstats[$x]['endshow']					= date_i18n("M d Y", $endshow);
-				$adstats[$x]['clicks']					= $stat->clicks;
-				$adstats[$x]['impressions']				= $stat->impressions;
-				$adstats[$x]['ctr']						= $ctr;
-				$x++;
-			}
-			
-			$filename = "Advertiser - ".$username." - export.csv";
-			$topic = array("Advertiser report for ".$username);
-			$period = array("Period - Not Applicable");
-			$keys = array("Title", "Ad ID", "First visibility", "Last visibility", "Clicks", "Impressions", "CTR (%)");
-		}
-	
-	 	if($adstats) {
-			if($emailcount > 0) {
-				$fp = fopen(WP_CONTENT_DIR . '/reports/'.$filename, 'w');
-			} else {
-				header('Content-Type: text/csv');
-				header('Content-Disposition: attachment;filename='.$filename);
-				$fp = fopen('php://output', 'w');
-			}
-			
-			fputcsv($fp, $topic);
-			fputcsv($fp, $period);
-			fputcsv($fp, $generated);
-			fputcsv($fp, $keys);
-			foreach($adstats as $stat) {
-				fputcsv($fp, $stat);
-			}
-			
-			fclose($fp);
-			
-			if($emailcount > 0) {
-				$y = count($emails);
-	
-				$attachments = array(WP_CONTENT_DIR . '/reports/'.$filename);
-			 	$siteurl 	= get_option('siteurl');
-				$pluginurl	= "http://www.adrotateplugin.com";
-				$email 		= get_option('admin_email');
-	
-			    $headers = "MIME-Version: 1.0\n" .
-	      				 	"From: AdRotate Plugin <".$email.">\r\n\n" . 
-	      				  	"Content-Type: text/html; charset=\"" . get_settings('blog_charset') . "\"\n";
-	
-				$subject = __('[AdRotate] CSV Report!', 'adrotate');
-				
-				$message = 	"<p>".__('Hello', 'adrotate').",</p>";
-				$message .= "<p>".__('Attached in this email you will find the exported CSV file you generated on ', 'adrotate')." $siteurl.</p>";
-				$message .= "<p>".__('Have a nice day!', 'adrotate')."<br />";
-				$message .= __('Your AdRotate Notifier', 'adrotate')."<br />";
-				$message .= "$pluginurl</p>";
-		
-				for($i=0;$i<$emailcount;$i++) {
-		 			wp_mail($emails[$i], $subject, $message, $headers, $attachments);
-		 		}	
-				adrotate_return('csv_success', array('adrotate', 'csvmail'));
-			} else {
-				// for some reason, downloading an attachment requires this exit;
-				exit;
-			}
-		} else {
-			if($type == "single")
-				adrotate_return('csv_error', array('adrotate', 'nodata', '&view=report', '&ad='.$id));
-			if($type == "group")
-				adrotate_return('csv_error', array('adrotate-groups', 'nodata', '&view=report', '&group='.$id));
-			if($type == "block")
-				adrotate_return('csv_error', array('adrotate-blocks', 'nodata', '&view=report', '&block='.$id));
-			if($type == "global")
-				adrotate_return('csv_error', array('adrotate-global-report', 'nodata'));
-			if($type == "advertiser")
-				adrotate_return('csv_error', array('adrotate-advertiser-report', 'nodata'));
-		}
-	} else {
-		adrotate_nonce_error();
-		exit;
-	}
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_filemanager_admin_scripts
+ Name:      adrotate_dashboard_scripts
 
  Purpose:   Load file uploaded popup
  Receive:   -None-
  Return:	-None-
  Since:		3.6
 -------------------------------------------------------------*/
-function adrotate_filemanager_admin_scripts() {
+function adrotate_dashboard_scripts() {
 	wp_enqueue_script('media-upload');
 	wp_enqueue_script('thickbox');
 	wp_enqueue_script('jquery');
+	wp_enqueue_script('raphael', '/wp-content/plugins/adrotate/library/raphael-min.js', array('jquery'));
+	wp_enqueue_script('elycharts', '/wp-content/plugins/adrotate/library/elycharts.min.js', array('jquery', 'raphael'));
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_filemanager_admin_styles
+ Name:      adrotate_dashboard_styles
 
  Purpose:   Load file uploaded popup style
  Receive:   -None-
  Return:	-None-
  Since:		3.6
 -------------------------------------------------------------*/
-function adrotate_filemanager_admin_styles() {
+function adrotate_dashboard_styles() {
 	wp_enqueue_style('thickbox');
+	
+	?>
+	<style type="text/css" media="screen">
+		/* style up the tooltips content */
+		.adrotate-label { font-size: 12px; line-height: 5px; margin: 2px; font-weight: bold }
+		.adrotate-clicks { color: #5Af; font-weight: normal }
+		.adrotate-impressions { color: #F80; font-weight: normal }
+​	</style>
+	<?php
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_generate_block_styles
+
+ Purpose:   Load file uploaded popup style
+ Receive:   $gridpadding, $gridfloat, $gridwidth, $gridheight, $gridborder, $admargin, $adpadding, $adwidth, $adheight, $adborder
+ Return:	-None-
+ Since:		3.8
+-------------------------------------------------------------*/
+function adrotate_generate_block_styles($gridpadding = 0, $gridfloat = 'none', $gridwidth = 254, $gridheight = 0, $gridborder = 0, $admargin = 2, $adpadding = 0, $adwidth = 125, $adheight = 125, $adborder = 0) {
+	?>
+	<style type="text/css" media="screen">
+		.block_outer { 
+			margin:0; 
+			padding:<?php echo $gridpadding; ?>px; 
+			clear:none; 
+			float:<?php echo $gridfloat; ?>;
+			width:<?php echo $gridwidth; ?>; 
+			height:<?php echo $gridheight; ?>; 
+			border:<?php echo $gridborder; ?>; 
+		}
+		.block_inner { 
+			margin:<?php echo $admargin; ?>px; 
+			padding:<?php echo $adpadding; ?>px; 
+			clear:none; 
+			float:left; 
+			width:<?php echo $adwidth; ?>; 
+			height:<?php echo $adheight; ?>; 
+			border:<?php echo $adborder; ?>; 
+		}
+​	</style>
+	<?php
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_home_path
+
+ Purpose:   Find sites root, using WP code since the original doesn't work
+ Receive:   -None-
+ Return:	$home_path
+ Since:		3.8
+-------------------------------------------------------------*/
+function adrotate_home_path() {
+	$home = get_option( 'home' );
+	$siteurl = get_option( 'siteurl' );
+	if ( $home != '' && $home != $siteurl ) {
+	        $wp_path_rel_to_home = str_replace($home, '', $siteurl); /* $siteurl - $home */
+	        $pos = strpos($_SERVER["SCRIPT_FILENAME"], $wp_path_rel_to_home);
+	        $home_path = substr($_SERVER["SCRIPT_FILENAME"], 0, $pos);
+		$home_path = trailingslashit( $home_path );
+	} else {
+		$home_path = ABSPATH;
+	}
+
+	return $home_path;
 }
 
 /*-------------------------------------------------------------
@@ -1330,10 +791,10 @@ function adrotate_folder_contents($current) {
 
 	$output = '';
 
-	// Read /wp-content/banners/
+	// Read Banner folder
 	$files = array();
 	$i = 0;
-	if($handle = opendir(ABSPATH.'/wp-content/banners/')) {
+	if($handle = opendir(adrotate_home_path().$adrotate_config['banner_folder'])) {
 	    while (false !== ($file = readdir($handle))) {
 	        if ($file != "." AND $file != ".." AND $file != "index.php") {
 	            $files[] = $file;
@@ -1350,7 +811,7 @@ function adrotate_folder_contents($current) {
 				if((strtolower($fileinfo['extension']) == "jpg" OR strtolower($fileinfo['extension']) == "gif" OR strtolower($fileinfo['extension']) == "png" 
 				OR strtolower($fileinfo['extension']) == "jpeg" OR strtolower($fileinfo['extension']) == "swf" OR strtolower($fileinfo['extension']) == "flv")) {
 				    $output .= "<option value='".$file."'";
-				    if($current == get_option('siteurl').'/wp-content/banners/'.$file) { $output .= "selected"; }
+				    if(($current == get_option('siteurl').'/wp-content/banners/'.$file) OR ($current == get_option('siteurl')."/%folder%".$file)) { $output .= "selected"; }
 				    $output .= ">".$file."</option>";
 				}
 			}
@@ -1378,43 +839,39 @@ function adrotate_return($action, $arg = null) {
 	switch($action) {
 		// Manage Ads
 		case "new" :
-			wp_redirect('admin.php?page=adrotate&message=created');
+			wp_redirect('admin.php?page=adrotate-ads&message=new');
 		break;
 
 		case "update" :
-			wp_redirect('admin.php?page=adrotate&view=edit&message=updated&ad='.$arg[0]);
+			wp_redirect('admin.php?page=adrotate-ads&view=edit&message=updated&ad='.$arg[0]);
 		break;
 
 		case "update_manage" :
-			wp_redirect('admin.php?page=adrotate&message=updated');
+			wp_redirect('admin.php?page=adrotate-ads&message=updated');
 		break;
 
 		case "delete" :
-			wp_redirect('admin.php?page=adrotate&message=deleted');
+			wp_redirect('admin.php?page=adrotate-ads&message=deleted');
 		break;
 
 		case "reset" :
-			wp_redirect('admin.php?page=adrotate&message=reset');
+			wp_redirect('admin.php?page=adrotate-ads&message=reset');
 		break;
 
 		case "renew" :
-			wp_redirect('admin.php?page=adrotate&message=renew');
-		break;
-
-		case "weight" :
-			wp_redirect('admin.php?page=adrotate&message=weight');
+			wp_redirect('admin.php?page=adrotate-ads&message=renew');
 		break;
 
 		case "deactivate" :
-			wp_redirect('admin.php?page=adrotate&message=deactivate');
+			wp_redirect('admin.php?page=adrotate-ads&message=deactivate');
 		break;
 
 		case "activate" :
-			wp_redirect('admin.php?page=adrotate&message=activate');
+			wp_redirect('admin.php?page=adrotate-ads&message=activate');
 		break;
 
 		case "field_error" :
-			wp_redirect('admin.php?page=adrotate&message=field_error');
+			wp_redirect('admin.php?page=adrotate-ads&message=field_error');
 		break;
 
 		// Groups
@@ -1468,6 +925,23 @@ function adrotate_return($action, $arg = null) {
 			wp_redirect('admin.php?page='.$arg[0].'&message='.$arg[1]);
 		break;
 
+		// Advertisers
+		case "a_new" :
+			wp_redirect('admin.php?page=adrotate-advertiser&message=new');
+		break;
+
+		case "a_update" :
+			wp_redirect('admin.php?page=adrotate-advertiser&message=updated');
+		break;
+
+		case "a_field_error" :
+			wp_redirect('admin.php?page=adrotate-advertiser&message=field_error');
+		break;
+
+		case "a_no_access" :
+			wp_redirect('admin.php?page=adrotate-advertiser&message=no_access');
+		break;
+
 		// Settings
 		case "settings_saved" :
 			wp_redirect('admin.php?page=adrotate-settings&message=updated');
@@ -1494,8 +968,8 @@ function adrotate_return($action, $arg = null) {
 			wp_redirect('admin.php?page=adrotate-settings&message=db_optimized');
 		break;
 
-		case "db_converted" :
-			wp_redirect('admin.php?page=adrotate-settings&message=db_converted');
+		case "db_evaluated" :
+			wp_redirect('admin.php?page=adrotate-settings&message=db_evaluated');
 		break;
 
 		case "db_repaired" :

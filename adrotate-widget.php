@@ -1,6 +1,6 @@
 <?php
 /*  
-Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
+Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 */
 
 /*-------------------------------------------------------------
@@ -122,49 +122,5 @@ class adrotate_widgets extends WP_Widget {
 <?php
 	}
 
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_dashboard_widget
-
- Purpose:   Add a WordPress dashboard widget
- Receive:   -none-
- Return:    -none-
- Since:		2.1
--------------------------------------------------------------*/
-function adrotate_dashboard_widget() {
-
-	/* Changelog:
-	// Jan 20 2011 - Added current_user_can()
-	*/
-
-	if(current_user_can('adrotate_ad_manage')) {
-		wp_add_dashboard_widget('meandmymac_rss_widget', 'AdRotate Plugin Updates & Authors Blog', 'meandmymac_rss_widget');
-	}
-}
-
-/*-------------------------------------------------------------
- Name:      meandmymac_rss_widget
-
- Purpose:   Shows the Meandmymac RSS feed on the dashboard and selected locations
- Receive:   -none-
- Return:    -none-
- Since:		2.4.3
- Revised: 	3.7
--------------------------------------------------------------*/
-if(!function_exists('meandmymac_rss_widget')) {
-	function meandmymac_rss_widget() {
-		echo '<div class="rss-widget">';
-		wp_widget_rss_output(array(
-			'url' => array('http://feeds.feedburner.com/AdrotatePlugin/',
-							'http://meandmymac.net/feed/'),
-			'title' => 'AdRotate Plugin Updates & Authors Blog',
-			'items' => 4,
-			'show_summary' => 1, 
-			'show_author' => 0,
-			'show_date' => 1
-		));
-		echo "</div>";
-	}
 }
 ?>

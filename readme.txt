@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: Arnan de Gans
 Donate link: http://meandmymac.net/donate/
-Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, analytics, advert, publisher, adsense, referrer, email, menu, statistics, stats
-Requires at least: 3.0, PHP5.2
+Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
+Requires at least: 3.5, PHP5.2
 Tested up to: 3.5
-Stable tag: 3.7.4.3
+Stable tag: 3.8
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -17,13 +17,19 @@ Easy management from the dashboard allows you to quickly oversee, add and edit b
 Previewing of banners when editing them. And even some statistical values.
 Receive a periodic email when banners are (about to) expire(d) informing you to take action.
 
+AdRotate is now also available as a premium plugin. Offering more features and faster support! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
+
 **Important links**
 
-* [Details](http://adrotateplugin.com) - Lots of Additional plugin information
-* [Manuals & Support](http://adrotateplugin.com/page/support.php) - Setup instructions and support
-* [Premium services](http://adrotateplugin.com/page/services.php) - Hire me to install or troubleshoot AdRotate
+* [Details](http://www.adrotateplugin.com) - Lots of Additional plugin information
+* [Manuals & Support](http://www.adrotateplugin.com/support/) - Setup instructions and support
+* [AdRotate Store](http://www.adrotateplugin.com/shop/) - Buy AdRotate Pro or hire me to install or troubleshoot AdRotate
+
+[Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
 
 **Some Features**
+
+[Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
 
 * Super easy management of ads, groups and blocks of ads
 * Get email notifications when your ads need you
@@ -46,17 +52,18 @@ Receive a periodic email when banners are (about to) expire(d) informing you to 
 
 == Installation ==
 
-Find out how AdRotate works, more options and various ways to implement your ads. Visit the [knowledgebase](http://www.ajdg.net/support/knowledgebase/)!
+Find out how AdRotate works, more options and various ways to implement your ads. Visit the [knowledgebase](http://www.adrotateplugin.com/support/knowledgebase/installing-adrotate-on-your-website/)!
 
 == Frequently Asked Questions ==
 
-I have a [knowledgebase](http://www.ajdg.net/support/knowledgebase/).
-If that's not enough you can post on my [support pages](http://www.ajdg.net/support/) and ask your question there!
+We have a [knowledge base](http://www.adrotateplugin.com/support/knowledgebase/).
+If that's not enough you can post on our [forum](http://www.adrotateplugin.com/support/forums/) and ask your question there!
 
 == Changelog ==
 
-The full changelog can be found [here](http://adrotateplugin.com/page/get/changelog.php).
+The full changelog can be found [here](http://www.adrotateplugin.com/download/changelog/).
+[Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
 
 == Screenshots ==
 
-Visit [adrotateplugin.com](http://adrotateplugin.com/)
+Visit [adrotateplugin.com](http://www.adrotateplugin.com/)

@@ -1,13 +1,12 @@
 <?php
 /*  
-Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
+Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 */
 ?>
 <h3><?php _e('Ads that need immediate attention', 'adrotate'); ?></h3>
 
-<form name="errorbanners" id="post" method="post" action="admin.php?page=adrotate">
+<form name="errorbanners" id="post" method="post" action="admin.php?page=adrotate-ads">
 	<?php wp_nonce_field('adrotate_bulk_ads_error','adrotate_nonce'); ?>
-
 	<div class="tablenav">
 		<div class="alignleft actions">
 			<select name="adrotate_error_action" id="cat" class="postform">
@@ -40,6 +39,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			<tbody>
 		<?php foreach($errorbanners as $errbanner) {
 			$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+			$grouplist = adrotate_ad_is_in_groups($errbanner['id']);
 			
 			if($adrotate_debug['dashboard'] == true) {
 				echo "<tr><td>&nbsp;</td><td><strong>[DEBUG]</strong></td><td colspan='9'><pre>";
@@ -51,51 +51,38 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 				print_r($errbanner); 
 				echo "</pre></td></tr>"; 
 			}
-						
-			$groups	= $wpdb->get_results("
-				SELECT 
-					`".$wpdb->prefix."adrotate_groups`.`name` 
-				FROM 
-					`".$wpdb->prefix."adrotate_groups`, 
-					`".$wpdb->prefix."adrotate_linkmeta` 
-				WHERE 
-					`".$wpdb->prefix."adrotate_linkmeta`.`ad` = '".$errbanner['id']."'
-					AND `".$wpdb->prefix."adrotate_linkmeta`.`group` = `".$wpdb->prefix."adrotate_groups`.`id`
-					AND `".$wpdb->prefix."adrotate_linkmeta`.`block` = 0
-					AND `".$wpdb->prefix."adrotate_linkmeta`.`user` = 0
-				;");
-			$grouplist = '';
-			foreach($groups as $group) {
-				$grouplist .= $group->name.", ";
-			}
-			$grouplist = rtrim($grouplist, ", ");
 			
-			if($errbanner['type'] == 'error') {
-				$errorclass = ' row_error';
-			} else {
-				$errorclass = '';
-			}
-	
-			if($errbanner['lastactive'] <= $now OR $errbanner['lastactive'] <= $in2days) {
-				$expiredclass = ' row_urgent';
-			} else {
-				$expiredclass = '';
-			}
-	
+			$errorclass = '';
+			if($errbanner['type'] == 'error') $errorclass = ' row_error'; 
+			if($errbanner['type'] == 'expired') $errorclass = ' row_inactive';
+			if($errbanner['type'] == 'expiressoon') $errorclass = ' row_urgent';
+
 			if($class != 'alternate') {
 				$class = 'alternate';
 			} else {
 				$class = '';
 			}
 			?>
-		    <tr id='adrotateindex' class='<?php echo $class.$expiredclass.$errorclass; ?>'>
+		    <tr id='adrotateindex' class='<?php echo $class.$errorclass; ?>'>
 				<th class="check-column"><input type="checkbox" name="errorbannercheck[]" value="<?php echo $errbanner['id']; ?>" /></th>
 				<td><center><?php echo $errbanner['id'];?></center></td>
 				<td><?php echo date_i18n("F d, Y", $errbanner['firstactive']);?></td>
 				<td><span style="color: <?php echo adrotate_prepare_color($errbanner['lastactive']);?>;"><?php echo date_i18n("F d, Y", $errbanner['lastactive']);?></span></td>
-				<td><strong><a class="row-title" href="<?php echo admin_url("/admin.php?page=adrotate&view=edit&ad=".$errbanner['id']);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo stripslashes(html_entity_decode($errbanner['title']));?></a></strong> - <a href="<?php echo admin_url("/admin.php?page=adrotate&view=report&ad=".$errbanner['id']);?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a><?php if($groups) echo '<br /><em style="color:#999">'.$grouplist.'</em>'; ?></td>
+				<td><strong><a class="row-title" href="<?php echo admin_url("/admin.php?page=adrotate-ads&view=edit&ad=".$errbanner['id']);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo stripslashes(html_entity_decode($errbanner['title']));?></a></strong> - <a href="<?php echo admin_url("/admin.php?page=adrotate-ads&view=report&ad=".$errbanner['id']);?>" title="<?php _e('Stats', 'adrotate'); ?>"><?php _e('Stats', 'adrotate'); ?></a><?php if(strlen($grouplist) > 0) echo '<br /><em style="color:#999">'.$grouplist.'</em>'; ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>
+
+		<thead>
+		<tr>
+			<th colspan="5">
+				<center>
+					<span style="border: 1px solid #e6db55; height: 12px; width: 12px; background-color: #ffffe0">&nbsp;&nbsp;&nbsp;&nbsp;</span> <?php _e("Configuration errors.", "adrotate"); ?>
+					&nbsp;&nbsp;&nbsp;&nbsp;<span style="border: 1px solid #c00; height: 12px; width: 12px; background-color: #ffebe8">&nbsp;&nbsp;&nbsp;&nbsp;</span> <?php _e("Expires soon.", "adrotate"); ?>
+					&nbsp;&nbsp;&nbsp;&nbsp;<span style="border: 1px solid #466f82; height: 12px; width: 12px; background-color: #8dcede">&nbsp;&nbsp;&nbsp;&nbsp;</span> <?php _e("Has expired.", "adrotate"); ?>
+				</center>
+			</th>
+		</tr>
+		</thead>
 	</table>
 </form>

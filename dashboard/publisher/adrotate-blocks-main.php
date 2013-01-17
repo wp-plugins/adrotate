@@ -1,13 +1,13 @@
 <?php
 /*  
-Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
+Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 */
 ?>
 <h3><?php _e('Manage Blocks', 'adrotate'); ?></h3>
 
 <form name="blocks" id="post" method="post" action="admin.php?page=adrotate-blocks">
 	<?php wp_nonce_field('adrotate_bulk_blocks','adrotate_nonce'); ?>
-	
+
 	<div class="tablenav">
 		<div class="alignleft">
 			<select name="adrotate_action" id="cat" class="postform">
@@ -40,8 +40,8 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 		if ($blocks) {
 			foreach($blocks as $block) {
 				$today 			= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
-				$stats 			= $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `block` = '$block->id';");
-				$stats_today	= $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `block` = '$block->id' AND `thetime` = '$today';");
+				$stats 			= $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats` WHERE `block` = '$block->id';");
+				$stats_today	= $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats` WHERE `block` = '$block->id' AND `thetime` = '$today';");
 
 				// Prevent gaps in display
 				if($stats->impressions == 0) 		$stats->impressions 		= 0;
@@ -54,7 +54,7 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			    <tr class='<?php echo $class; ?>'>
 					<th class="check-column"><input type="checkbox" name="blockcheck[]" value="<?php echo $block->id; ?>" /></th>
 					<td><center><?php echo $block->id;?></center></td>
-					<td><strong><a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=edit&block='.$block->id);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo $block->name;?></a></strong><br /><a href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=report&block='.$block->id);?>" title="<?php _e('Report', 'adrotate'); ?>"><?php _e('Report', 'adrotate'); ?></a></td>
+					<td><strong><a class="row-title" href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=edit&block='.$block->id);?>" title="<?php _e('Edit', 'adrotate'); ?>"><?php echo $block->name;?></a></strong><br /><a href="<?php echo admin_url('/admin.php?page=adrotate-blocks&view=report&block='.$block->id);?>" title="<?php _e('Stats', 'adrotate'); ?>"><?php _e('Stats', 'adrotate'); ?></a></td>
 					<td><center><?php echo $groups_in_block;?></center></td>
 					<td><center><?php echo $stats->impressions;?></center></td>
 					<td><center><?php echo $stats_today->impressions;?></center></td>

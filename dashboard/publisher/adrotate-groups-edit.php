@@ -1,6 +1,6 @@
 <?php
 /*  
-Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
+Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 */
 ?>
 <?php if(!$group_edit_id) { ?>
@@ -10,8 +10,8 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;";
 	$edit_id = $wpdb->get_var($query);
 	if($edit_id == 0) {
-	    $wpdb->insert($wpdb->prefix."adrotate_groups", array('name' => '', 'fallback' => 0, 'sortorder' => 0, 'cat' => '', 'cat_loc' => 0, 'page' => '', 'page_loc' => 0));
-	    $edit_id = $wpdb->insert_id;
+		$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_groups` (`name`, `fallback`, `sortorder`, `cat`, `cat_loc`,`page`,`page_loc`) VALUES ('', 0, '', '', 0, '', 0);");
+		$edit_id = $wpdb->get_var($query);
 	}
 	$group_edit_id = $edit_id;
 	?>
@@ -21,10 +21,10 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$action = "group_edit";
 }
 
-$edit_group = $wpdb->get_row($wpdb->prepare("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = '%s';", $group_edit_id));
+$edit_group = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = '$group_edit_id';");
 $groups		= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' ORDER BY `id` ASC;"); 
 $ads 		= $wpdb->get_results("SELECT `id`, `title`, `tracker`, `weight` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'active' ORDER BY `id` ASC;");
-$linkmeta	= $wpdb->get_results("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = '".$edit_group->id."' AND `block` = 0 AND `user` = 0;");
+$linkmeta	= $wpdb->get_results("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = '$group_edit_id' AND `block` = 0 AND `user` = 0;");
 foreach($linkmeta as $meta) {
 	$meta_array[] = $meta->ad;
 }
@@ -38,11 +38,11 @@ if(!is_array($meta_array)) $meta_array = array();
 
    	<table class="widefat" style="margin-top: .5em">
 
-			<thead>
-			<tr>
+		<thead>
+		<tr>
 			<th colspan="4"><?php _e('The basics (required)', 'adrotate'); ?></th>
 		</tr>
-			</thead>
+		</thead>
 
 		<tbody>
 	    <tr>
@@ -71,18 +71,10 @@ if(!is_array($meta_array)) $meta_array = array();
 
 		<tbody>
 	    <tr>
-			<th><?php _e('Fallback group?', 'adrotate'); ?></th>
+			<th valign="top"><?php _e('Fallback group?', 'adrotate'); ?></th>
 			<td colspan="3">
-				<label for="adrotate_fallback">
-				<select tabindex="2" name="adrotate_fallback">
-		        <option value="0"><?php _e('No', 'adrotate'); ?></option>
-			<?php if ($groups) { ?>
-				<?php foreach($groups as $group) { ?>
-			        <option value="<?php echo $group->id;?>" <?php if($edit_group->fallback == $group->id) { echo 'selected'; } ?>><?php echo $group->id;?> - <?php echo $group->name;?></option>
-	 			<?php } ?>
-			<?php } ?>
-				</select> <em><?php _e('You need atleast two groups to use this feature!', 'adrotate'); ?></em>
-				</label>
+				<p><?php adrotate_pro_notice(); ?></p>
+				<p><em>No adverts left in a group? Set-up a fallback group so your pages are never without their advertisements.</em></p>
 			</td>
 		</tr>
       	<tr>
@@ -175,32 +167,19 @@ if(!is_array($meta_array)) $meta_array = array();
 		<tbody>
 		<?php if($ads) {
 			foreach($ads as $ad) {
-				$stats = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats_tracker` WHERE `ad` = '".$ad->id.";");
+				$stats = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats` WHERE `ad` = '".$ad->id."';");
 				$stoptime = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."' ORDER BY `stoptime` DESC LIMIT 1;");						
 
 				// Prevent gaps in display
-				if($stats->impressions == 0) { 
-					$impressions = 0;
-				} else {
-					$impressions = $stats->impressions;
-				}
-				
-				if($ad->tracker == 'Y') {
-					if($stats->clicks == 0) { 
-						$clicks = 0;
-					} else { 
-						$clicks = $stats->clicks;
-					}
-				} else {
-					$clicks = '--';
-				}
+				if($stats->impressions == 0) 		$stats->impressions 		= 0;
+				if($stats->clicks == 0) 			$stats->clicks 				= 0;
 
 				$class = ('alternate' != $class) ? 'alternate' : ''; ?>
 			    <tr class='<?php echo $class; ?>'>
 					<th width="2%"><input type="checkbox" name="adselect[]" value="<?php echo $ad->id; ?>" <?php if(in_array($ad->id, $meta_array)) echo "checked"; ?> /></th>
 					<td><?php echo $ad->id; ?> - <strong><?php echo $ad->title; ?></strong></td>
-					<td><center><?php echo $impressions; ?></center></td>
-					<td><center><?php echo $clicks; ?></center></td>
+					<td><center><?php echo $stats->impressions; ?></center></td>
+					<td><center><?php if($ad->tracker == 'Y') { echo $stats->clicks; } else { ?>--<?php } ?></center></td>
 					<td><center><?php echo $ad->weight; ?></center></td>
 					<td><span style="color: <?php echo adrotate_prepare_color($stoptime);?>;"><?php echo date_i18n("F d, Y", $stoptime); ?></span></td>
 				</tr>

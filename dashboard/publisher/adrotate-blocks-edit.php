@@ -1,6 +1,6 @@
 <?php
 /*  
-Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
+Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 */
 ?>
 <?php if(!$block_edit_id) { ?>
@@ -10,8 +10,8 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;";
 	$edit_id = $wpdb->get_var($query);
 	if($edit_id == 0) {
-	    $wpdb->insert($wpdb->prefix."adrotate_blocks", array('name' => '', 'rows' => 2, 'columns' => 2, 'gridfloat' => 'none', 'gridpadding' => 1, 'gridborder' => 0, 'adwidth' => 125, 'adheight' => 125, 'admargin' => 1, 'adpadding' => 0, 'adborder' => 0, 'wrapper_before' => '', 'wrapper_after' => '', 'sortorder' => 0));
-	    $edit_id = $wpdb->insert_id;
+		$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_blocks` (`name`, `rows`, `columns`, `gridfloat`, `gridpadding`, `adwidth`, `adheight`, `admargin`, `adborder`, `wrapper_before`, `wrapper_after`, `sortorder`) VALUES ('', 2, 2, 'none', 1, 125, 125, 1, 0, '', '', 0);");
+		$edit_id = $wpdb->get_var($query);
 	}
 	$block_edit_id = $edit_id;
 	?>
@@ -21,9 +21,9 @@ Copyright 2010-2012 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$action = "block_edit";
 } 
 
-$edit_block = $wpdb->get_row($wpdb->prepare("SELECT * FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '%s';", $block_edit_id));
+$edit_block = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '$block_edit_id';");
 $groups		= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' ORDER BY `id` ASC;"); 
-$linkmeta	= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = '".$edit_block->id."' AND `user` = 0;");
+$linkmeta	= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = '$block_edit_id' AND `user` = 0;");
 foreach($linkmeta as $meta) {
 	$meta_array[] = $meta->group;
 }
@@ -108,38 +108,6 @@ if($adbordercolor == '') $adbordercolor = '#fff';
 		        <p><em><?php _e('An invisible border inside the block in pixels. (Default: 1)', 'adrotate'); ?></em></p>
 			</td>
 		</tr>
-	    <tr>
-			<th valign="top"><?php _e('Block Border', 'adrotate'); ?></strong></th>
-			<td>
-				<label for="adrotate_gridborderstyle"><?php _e('Style', 'adrotate'); ?> 
-		        <select tabindex="6" name="adrotate_gridborderstyle">
-		        	<option value="" <?php if($gridborderstyle == '') { echo 'selected'; } ?>><?php _e('None', 'adrotate'); ?></option>
-		        	<option value="solid" <?php if($gridborderstyle == "solid") { echo 'selected'; } ?>><?php _e('Solid', 'adrotate'); ?></option>
-		        	<option value="dotted" <?php if($gridborderstyle == "dotted") { echo 'selected'; } ?>><?php _e('Dotted', 'adrotate'); ?></option>
-		        	<option value="dashed" <?php if($gridborderstyle == "dashed") { echo 'selected'; } ?>><?php _e('Dashed', 'adrotate'); ?></option>
-		        	<option value="double" <?php if($gridborderstyle == "double") { echo 'selected'; } ?>><?php _e('Double', 'adrotate'); ?></option>
-		        	<option value="groove" <?php if($gridborderstyle == "groove") { echo 'selected'; } ?>><?php _e('Groove', 'adrotate'); ?></option>
-		        	<option value="ridge" <?php if($gridborderstyle == "ridge") { echo 'selected'; } ?>><?php _e('Ridge', 'adrotate'); ?></option>
-		        	<option value="inset" <?php if($gridborderstyle == "inset") { echo 'selected'; } ?>><?php _e('Inset', 'adrotate'); ?></option>
-		        	<option value="outset" <?php if($gridborderstyle == "outset") { echo 'selected'; } ?>><?php _e('Outset', 'adrotate'); ?></option>
-		        </select></label> 
-				<label for="adrotate_gridborderpx"><?php _e('Width', 'adrotate'); ?> <input tabindex="7" name="adrotate_gridborderpx" type="text" class="search-input" size="3" value="<?php echo $gridborderpx; ?>" autocomplete="off" /> <?php _e('pixel(s). Color', 'adrotate'); ?> </label>
-				<label for="adrotate_gridbordercolor"><input tabindex="8" type="text" id="gridcolor" name="adrotate_gridbordercolor" size="8" value="<?php echo $gridbordercolor; ?>" /></label> 
-		        <div id="adrotate_grid_colorpicker"></div>
-		        <script type="text/javascript">
-				jQuery(document).ready(function() {
-					jQuery('#adrotate_grid_colorpicker').hide();
-					jQuery('#adrotate_grid_colorpicker').farbtastic("#gridcolor");
-					jQuery("#gridcolor").click(function(){jQuery('#adrotate_grid_colorpicker').slideDown()});
-					jQuery("#gridcolor").blur(function(){jQuery('#adrotate_grid_colorpicker').slideUp()});
-				});
-					</script>
-
-			</td>
-			<td colspan="2">
-				<p><em><?php _e('Set the border width to 0 to disable. Color must be a valid hex value. (Default: 0/#fff/none)', 'adrotate'); ?></em></p>
-			</td>
-		</tr>
 		</tbody>
 
 			<thead>
@@ -159,12 +127,12 @@ if($adbordercolor == '') $adbordercolor = '#fff';
 			</td>
 		</tr>
 	    <tr>
-			<th valign="top"><?php _e('Advert Margin and Padding', 'adrotate'); ?></strong></th>
+			<th valign="top"><?php _e('Advert Margin', 'adrotate'); ?></strong></th>
 			<td>
-				<label for="adrotate_admargin"><input tabindex="11" name="adrotate_admargin" type="text" class="search-input" size="3" value="<?php echo $edit_block->admargin; ?>" autocomplete="off" /> <?php _e('pixel(s) margin', 'adrotate'); ?>,</label> <label for="adrotate_adpadding"><input tabindex="12" name="adrotate_adpadding" type="text" class="search-input" size="3" value="<?php echo $edit_block->adpadding; ?>" autocomplete="off" /> <?php _e('pixel(s) padding.', 'adrotate'); ?></label>
+				<label for="adrotate_admargin"><input tabindex="11" name="adrotate_admargin" type="text" class="search-input" size="3" value="<?php echo $edit_block->admargin; ?>" autocomplete="off" /> <?php _e('pixel(s) margin', 'adrotate'); ?>.</label>
 				</td>
 			<td colspan="2">
-		        <p><em><?php _e('An invisible border outside and inside the advert in pixels. (Default: 1/0)', 'adrotate'); ?></em></p>
+		        <p><em><?php _e('An invisible border outside the advert in pixels. (Default: 1)', 'adrotate'); ?></em></p>
 			</td>
 		</tr>
 	    <tr>
@@ -195,7 +163,7 @@ if($adbordercolor == '') $adbordercolor = '#fff';
 					</script>
 			</td>
 			<td colspan="2">
-				<p><em><?php _e('Set the border width to 0 to disable. Color must be a valid hex value. (Default: 0/#fff/none)', 'adrotate'); ?></em></p>
+				<p><em><?php _e('Set the border width to 0 to disable. Color must be a valid hex value. (Default: none/0/#fff)', 'adrotate'); ?></em></p>
 			</td>
 		</tr>
 		</tbody>
@@ -209,7 +177,7 @@ if($adbordercolor == '') $adbordercolor = '#fff';
 		<tbody>
 	    <tr>
 			<th valign="top"><?php _e('Before ad', 'adrotate'); ?></strong></th>
-			<td colspan="2"><textarea tabindex="15" name="adrotate_wrapper_before" cols="65" rows="3"><?php echo stripslashes($edit_block->wrapper_before); ?></textarea></td>
+			<td colspan="2"><textarea tabindex="15" name="adrotate_wrapper_before" cols="65" rows="3"><?php echo $edit_block->wrapper_before; ?></textarea></td>
 			<td>
 		        <p><strong><?php _e('Example:', 'adrotate'); ?></strong></p>
 		        <p><em>&lt;span style="margin: 2px;"&gt;</em></p>
@@ -217,7 +185,7 @@ if($adbordercolor == '') $adbordercolor = '#fff';
 		</tr>
 	    <tr>
 			<th valign="top"><?php _e('After ad', 'adrotate'); ?></strong></th>
-			<td colspan="2"><textarea tabindex="16" name="adrotate_wrapper_after" cols="65" rows="3"><?php echo stripslashes($edit_block->wrapper_after); ?></textarea></td>
+			<td colspan="2"><textarea tabindex="16" name="adrotate_wrapper_after" cols="65" rows="3"><?php echo $edit_block->wrapper_after; ?></textarea></td>
 			<td>
 				<p><strong><?php _e('Example:', 'adrotate'); ?></strong></p>
 				<p><em>&lt;/span&gt;</em></p>
