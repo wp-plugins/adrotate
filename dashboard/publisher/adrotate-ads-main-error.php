@@ -14,11 +14,6 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 		        <option value="deactivate"><?php _e('Deactivate', 'adrotate'); ?></option>
 		        <option value="delete"><?php _e('Delete', 'adrotate'); ?></option>
 		        <option value="reset"><?php _e('Reset stats', 'adrotate'); ?></option>
-		        <option value="" disabled><?php _e('-- Renew --', 'adrotate'); ?></option>
-		        <option value="renew-31536000"><?php _e('For 1 year', 'adrotate'); ?></option>
-		        <option value="renew-5184000"><?php _e('For 180 days', 'adrotate'); ?></option>
-		        <option value="renew-2592000"><?php _e('For 30 days', 'adrotate'); ?></option>
-		        <option value="renew-604800"><?php _e('For 7 days', 'adrotate'); ?></option>
 			</select>
 			<input type="submit" id="post-action-submit" name="adrotate_error_action_submit" value="Go" class="button-secondary" />
 		</div>
