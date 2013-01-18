@@ -7,15 +7,12 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 <?php if(!$ad_edit_id) { ?>
 	<h3><?php _e('New Ad', 'adrotate'); ?></h3>
 <?php
-	// Initial date for new entries
-	list($sday, $smonth, $syear, $shour, $sminute) = split(" ", gmdate("d m Y H i", $now));
-	list($eday, $emonth, $eyear, $ehour, $eminute) = split(" ", gmdate("d m Y H i", $in84days));
-
 	$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty' ORDER BY `id` DESC LIMIT 1;";
 	$edit_id = $wpdb->get_var($query);
 	if($edit_id == 0) {
 	    $wpdb->insert($wpdb->prefix."adrotate", array('title' => '', 'bannercode' => '', 'thetime' => $now, 'updated' => $now, 'author' => $current_user->user_login, 'imagetype' => '', 'image' => '', 'link' => '', 'tracker' => 'N', 'timeframe' => '', 'timeframelength' => 0, 'timeframeclicks' => 0, 'timeframeimpressions' => 0, 'type' => 'empty', 'weight' => 6, 'cbudget' => 0, 'ibudget' => 0, 'crate' => 0, 'irate' => 0, 'sortorder' => 0));
 	    $edit_id = $wpdb->insert_id;
+		$wpdb->insert($wpdb->prefix.'adrotate_schedule', array('ad' => $edit_id, 'starttime' => $now, 'stoptime' => $in84days, 'maxclicks' => 0, 'maximpressions' => 0));
 	}
 	$ad_edit_id = $edit_id;
 } else { ?>
@@ -28,6 +25,9 @@ $groups			= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups`
 $schedules		= $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '$edit_banner->id';"); 
 $linkmeta		= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$edit_banner->id' AND `block` = 0 AND `user` = 0;");
 
+list($sday, $smonth, $syear, $shour, $sminute) = split(" ", gmdate("d m Y H i", $schedules->starttime));
+list($eday, $emonth, $eyear, $ehour, $eminute) = split(" ", gmdate("d m Y H i", $schedules->stoptime));
+
 foreach($linkmeta as $meta) {
 	$meta_array[] = $meta->group;
 }
@@ -35,9 +35,6 @@ foreach($linkmeta as $meta) {
 if(!is_array($meta_array)) $meta_array = array();
 
 if($ad_edit_id) {
-	list($sday, $smonth, $syear, $shour, $sminute) = split(" ", gmdate("d m Y H i", $schedules->starttime));
-	list($eday, $emonth, $eyear, $ehour, $eminute) = split(" ", gmdate("d m Y H i", $schedules->stoptime));
-
 	if($edit_banner->type != 'empty') {
 		// Errors
 		if(strlen($edit_banner->bannercode) < 1 AND $edit_banner->type != 'empty') 
@@ -172,9 +169,7 @@ jQuery(document).ready(function() {
 		        <label for="adrotate_active">
 			        <select tabindex="3" name="adrotate_active">
 						<option value="active" <?php if($edit_banner->type == "active") { echo 'selected'; } ?>><?php _e('Yes, this ad will be used', 'adrotate'); ?></option>
-						<option value="disabled" <?php if($edit_banner->type == "disabled") { echo 'selected'; } ?>><?php _e('No, no do not show this ad anywhere', 'adrotate'); ?></option>
-						<option value="queue" <?php if($edit_banner->type == "queue") { echo 'selected'; } ?>><?php _e('No, this ad is queued for review', 'adrotate'); ?></option>
-						<option value="reject" <?php if($edit_banner->type == "reject") { echo 'selected'; } ?>><?php _e('No, this ad is rejected', 'adrotate'); ?></option>
+						<option value="disabled" <?php if($edit_banner->type == "disabled") { echo 'selected'; } ?>><?php _e('No, do not show this ad anywhere', 'adrotate'); ?></option>
 					</select>
 				</label>
 			</td>

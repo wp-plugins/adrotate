@@ -13,6 +13,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 -------------------------------------------------------------*/
 function adrotate_shortcode($atts, $content = null) {
 
+	$banner_id = $group_ids = $block_id = $fallback = $weight = $columns = '';
 	if(!empty($atts['banner'])) 	$banner_id 	= trim($atts['banner'], "\r\t ");
 	if(!empty($atts['group'])) 		$group_ids 	= trim($atts['group'], "\r\t ");
 	if(!empty($atts['block']))		$block_id	= trim($atts['block'], "\r\t ");
@@ -251,7 +252,7 @@ function adrotate_prepare_evaluate_ads() {
 	global $wpdb;
 	
 	// Fetch ads
-	$ads = $wpdb->get_results("SELECT `id`, `type` FROM `".$wpdb->prefix."adrotate`WHERE `type` != 'disabled' AND `type` != 'empty' ORDER BY `id` ASC;");
+	$ads = $wpdb->get_results("SELECT `id`, `type` FROM `".$wpdb->prefix."adrotate` WHERE `type` != 'disabled' AND `type` != 'empty' ORDER BY `id` ASC;");
 
 	// Determine error states
 	$error = $expired = $expiressoon = 0;
@@ -323,8 +324,6 @@ function adrotate_evaluate_ad($ad_id) {
 		return 'error';
 	} else if(
 		$stoptime <= $now 																				// Past the enddate
-		OR ($ad->crate > 0 AND $ad->cbudget < 1)														// Ad ran out of of click budget
-		OR ($ad->irate > 0 AND $ad->ibudget < 1)														// Ad ran out of of impression budget
 	){
 		return 'expired';
 	} else if($stoptime <= $in2days AND $stoptime >= $now){

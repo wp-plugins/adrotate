@@ -265,6 +265,7 @@ function adrotate_block($block_id, $weight = 0) {
 					if($array_count < $block_count) $block_count = $array_count;
 
 					$selected = array_rand($selected, $block_count);
+					if(!is_array($selected)) $selected = array($selected);
 					shuffle($selected);
 				
 					if($adrotate_debug['general'] == true) {
@@ -301,7 +302,7 @@ function adrotate_block($block_id, $weight = 0) {
 					$j = 1;
 					foreach($selected as $key => $banner_id) {
 						$output .= '<div id="'.$j.' '.$banner_id.'"class="block_inner';
-						if($j == $block->rows) {
+						if($j == $block->columns) {
 							$output .= ' block_last ';
 							$j = 1;
 						} else if($j == 1) {
@@ -324,6 +325,7 @@ function adrotate_block($block_id, $weight = 0) {
 							echo "</pre></p>"; 
 						}
 					}
+					$output .= '</div>';
 				} else {
 					$output = adrotate_error('ad_unqualified');
 				}

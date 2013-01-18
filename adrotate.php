@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.1
+Version: 3.8.2
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,7 +15,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.1'.ADROTATE_BETA);
+define("ADROTATE_DISPLAY", '3.8.2'.ADROTATE_BETA);
 define("ADROTATE_VERSION", 362);
 define("ADROTATE_DB_VERSION", 26);
 /*-----------------------------------------------------------*/
@@ -226,26 +226,24 @@ function adrotate_manage() {
 			
 			foreach($allbanners as $singlebanner) {
 				
-				$starttime = $wpdb->get_var("SELECT `starttime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$singlebanner->id."' ORDER BY `starttime` ASC LIMIT 1;");
-				$stoptime = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$singlebanner->id."' ORDER BY `stoptime` DESC LIMIT 1;");
+				$schedule = $wpdb->get_row("SELECT `starttime`, `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$singlebanner->id."';");
 				
 				$type = $singlebanner->type;
-				if($stoptime <= $now) {
+				if($schedule->stoptime <= $now) {
 					$type = 'expired';
 				} 
-				if($stoptime <= $in7days) {
+				if($schedule->stoptime <= $in7days) {
 					$type = 'expiressoon';
 				}
 	
-
 				if($type == 'active') {
 					$activebanners[$singlebanner->id] = array(
 						'id' => $singlebanner->id,
 						'title' => $singlebanner->title,
 						'type' => $type,
 						'tracker' => $singlebanner->tracker,
-						'firstactive' => $starttime,
-						'lastactive' => $stoptime
+						'firstactive' => $schedule->starttime,
+						'lastactive' => $schedule->stoptime
 					);
 				}
 				
@@ -255,8 +253,8 @@ function adrotate_manage() {
 						'title' => $singlebanner->title,
 						'type' => $type,
 						'tracker' => $singlebanner->tracker,
-						'firstactive' => $starttime,
-						'lastactive' => $stoptime
+						'firstactive' => $schedule->starttime,
+						'lastactive' => $schedule->stoptime
 					);
 				}
 				
@@ -266,8 +264,8 @@ function adrotate_manage() {
 						'title' => $singlebanner->title,
 						'type' => $type,
 						'tracker' => $singlebanner->tracker,
-						'firstactive' => $starttime,
-						'lastactive' => $stoptime
+						'firstactive' => $schedule->starttime,
+						'lastactive' => $schedule->stoptime
 					);
 				}
 			}

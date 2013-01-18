@@ -37,11 +37,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			$grouplist = adrotate_ad_is_in_groups($errbanner['id']);
 			
 			if($adrotate_debug['dashboard'] == true) {
-				echo "<tr><td>&nbsp;</td><td><strong>[DEBUG]</strong></td><td colspan='9'><pre>";
-				$memory = (memory_get_usage() / 1024 / 1024);
-				echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
-				$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
-				echo "Peak memory usage: " . round($peakmemory, 2) ." MB</pre><br />"; 
+				echo "<tr><td>&nbsp;</td><td><strong>[DEBUG]</strong></td><td colspan='9'>";
 				echo "Ad Specs: <pre>";
 				print_r($errbanner); 
 				echo "</pre></td></tr>"; 
