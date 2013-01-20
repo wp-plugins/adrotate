@@ -223,7 +223,7 @@ function adrotate_manage() {
 
 			<?php
 			$allbanners = $wpdb->get_results("SELECT `id`, `title`, `type`, `tracker` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'active' OR `type` = 'error' OR `type` = 'disabled' ORDER BY `sortorder` ASC, `id` ASC;");
-			
+			$activebanners = $errorbanner = $disabledbanners = false;
 			foreach($allbanners as $singlebanner) {
 				
 				$schedule = $wpdb->get_row("SELECT `starttime`, `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$singlebanner->id."';");
