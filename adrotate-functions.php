@@ -255,7 +255,7 @@ function adrotate_prepare_evaluate_ads() {
 	$ads = $wpdb->get_results("SELECT `id`, `type` FROM `".$wpdb->prefix."adrotate` WHERE `type` != 'disabled' AND `type` != 'empty' ORDER BY `id` ASC;");
 
 	// Determine error states
-	$error = $expired = $expiressoon = 0;
+	$error = $expired = $expiressoon = $normal = $unknown = 0;
 	foreach($ads as $ad) {
 		$result = adrotate_evaluate_ad($ad->id);
 		if($result == 'error' OR $result == 'expired') {
@@ -273,6 +273,10 @@ function adrotate_prepare_evaluate_ads() {
 				$normal++;
 			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'active' WHERE `id` = '".$ad->id."';");
 		}
+		
+		if($result == 'unknown') {
+			$unknown++;
+		}
 	}
 
 	$count = $expired + $expiressoon + $error;
@@ -280,7 +284,8 @@ function adrotate_prepare_evaluate_ads() {
 					'expired' => $expired,
 					'expiressoon' => $expiressoon,
 					'normal' => $normal,
-					'total' => $count
+					'total' => $count,
+					'unknown' => $unknown
 					);
 
 	update_option('adrotate_advert_status', serialize($result));
@@ -304,34 +309,39 @@ function adrotate_evaluate_ad($ad_id) {
 
 	// Fetch ad
 	$ad = $wpdb->get_row($wpdb->prepare("SELECT `id`, `bannercode`, `tracker`, `link`, `imagetype`, `image`, `cbudget`, `ibudget`, `crate`, `irate` FROM `".$wpdb->prefix."adrotate` WHERE `id` = %d;", $ad_id));
-	$advertiser = $wpdb->get_var("SELECT `user` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '".$ad->id."' AND `group` = 0 AND `block` = 0 AND `user` > 0;");
-	$schedules = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."';");
-	$stoptime = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."' ORDER BY `stoptime` DESC LIMIT 1;");
 
-	// Determine error states
-	if(
-		strlen($ad->bannercode) < 1 																	// AdCode empty
-		OR ($ad->tracker == 'N' AND strlen($ad->link) < 1 AND $advertiser > 0) 							// Didn't enable click-tracking, didn't provide a link, DID set a advertiser
-		OR ($ad->tracker == 'Y' AND strlen($ad->link) < 1) 												// Enabled clicktracking but provided no url (link)
-		OR ($ad->tracker == 'N' AND strlen($ad->link) > 0) 												// Didn't enable click-tracking but did provide an url (link)
-		OR (!preg_match("/%link%/i", $ad->bannercode) AND $ad->tracker == 'Y')							// Didn't use %link% but enabled clicktracking
-		OR (preg_match("/%link%/i", $ad->bannercode) AND $ad->tracker == 'N')							// Did use %link% but didn't enable clicktracking
-		OR (!preg_match("/%image%/i", $ad->bannercode) AND $ad->image != '' AND $ad->imagetype != '')	// Didn't use %image% but selected an image
-		OR (preg_match("/%image%/i", $ad->bannercode) AND $ad->image == '' AND $ad->imagetype == '')	// Did use %image% but didn't select an image
-		OR ($ad->image == '' AND $ad->imagetype != '')													// Image and Imagetype mismatch
-		OR $schedules < 1																				// No Schedules
-	) {
-		return 'error';
-	} else if(
-		$stoptime <= $now 																				// Past the enddate
-	){
-		return 'expired';
-	} else if($stoptime <= $in2days AND $stoptime >= $now){
-		return 'expires2days';
-	} else if($stoptime <= $in7days AND $stoptime >= $now){
-		return 'expires7days';
+	if($ad) {
+		$advertiser = $wpdb->get_var("SELECT `user` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '".$ad->id."' AND `group` = 0 AND `block` = 0 AND `user` > 0;");
+		$schedules = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."';");
+		$stoptime = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."' ORDER BY `stoptime` DESC LIMIT 1;");
+
+		// Determine error states
+		if(
+			strlen($ad->bannercode) < 1 																	// AdCode empty
+			OR ($ad->tracker == 'N' AND strlen($ad->link) < 1 AND $advertiser > 0) 							// Didn't enable click-tracking, didn't provide a link, DID set a advertiser
+			OR ($ad->tracker == 'Y' AND strlen($ad->link) < 1) 												// Enabled clicktracking but provided no url (link)
+			OR ($ad->tracker == 'N' AND strlen($ad->link) > 0) 												// Didn't enable click-tracking but did provide an url (link)
+			OR (!preg_match("/%link%/i", $ad->bannercode) AND $ad->tracker == 'Y')							// Didn't use %link% but enabled clicktracking
+			OR (preg_match("/%link%/i", $ad->bannercode) AND $ad->tracker == 'N')							// Did use %link% but didn't enable clicktracking
+			OR (!preg_match("/%image%/i", $ad->bannercode) AND $ad->image != '' AND $ad->imagetype != '')	// Didn't use %image% but selected an image
+			OR (preg_match("/%image%/i", $ad->bannercode) AND $ad->image == '' AND $ad->imagetype == '')	// Did use %image% but didn't select an image
+			OR ($ad->image == '' AND $ad->imagetype != '')													// Image and Imagetype mismatch
+			OR $schedules < 1																				// No Schedules
+		) {
+			return 'error';
+		} else if(
+			$stoptime <= $now 																				// Past the enddate
+		){
+			return 'expired';
+		} else if($stoptime <= $in2days AND $stoptime >= $now){
+			return 'expires2days';
+		} else if($stoptime <= $in7days AND $stoptime >= $now){
+			return 'expires7days';
+		} else {
+			return 'normal';
+		}
 	} else {
-		return 'normal';
+		return 'unknown';
 	}
 }
 
@@ -474,16 +484,12 @@ function adrotate_check_config() {
 	$crawlers 	= get_option('adrotate_crawlers');
 	$debug 		= get_option('adrotate_debug');
 
-	if($config['advertiser'] == '' OR !isset($config['advertiser'])) 				$config['advertiser']			= 'switch_themes'; 	// Admin
-	if($config['global_report'] == '' OR !isset($config['global_report'])) 			$config['global_report']		= 'switch_themes'; 	// Admin
 	if($config['ad_manage'] == '' OR !isset($config['ad_manage'])) 					$config['ad_manage'] 			= 'switch_themes'; 	// Admin
 	if($config['ad_delete'] == '' OR !isset($config['ad_delete'])) 					$config['ad_delete']			= 'switch_themes'; 	// Admin
 	if($config['group_manage'] == '' OR !isset($config['group_manage'])) 			$config['group_manage']			= 'switch_themes'; 	// Admin
 	if($config['group_delete'] == '' OR !isset($config['group_delete'])) 			$config['group_delete']			= 'switch_themes'; 	// Admin
 	if($config['block_manage'] == '' OR !isset($config['block_manage'])) 			$config['block_manage']			= 'switch_themes'; 	// Admin
 	if($config['block_delete'] == '' OR !isset($config['block_delete'])) 			$config['block_delete']			= 'switch_themes'; 	// Admin
-	if($config['moderate'] == '' OR !isset($config['moderate'])) 					$config['moderate']				= 'switch_themes'; 	// Admin
-	if($config['moderate_approve'] == '' OR !isset($config['moderate_approve'])) 	$config['moderate_approve']		= 'switch_themes'; 	// Admin
 
 	if($config['banner_folder'] == '' OR !isset($config['banner_folder']))			$config['banner_folder']		= "/wp-content/banners/";
 	if($config['notification_email_switch'] == '' OR !isset($config['notification_email_switch']))	$config['notification_email_switch']	= 'Y';
@@ -702,36 +708,39 @@ function adrotate_dashboard_styles() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_generate_block_styles
+ Name:      adrotate_custom_css
 
  Purpose:   Load file uploaded popup style
- Receive:   $gridpadding, $gridfloat, $gridwidth, $gridheight, $gridborder, $admargin, $adpadding, $adwidth, $adheight, $adborder
+ Receive:   -None-
  Return:	-None-
  Since:		3.8
 -------------------------------------------------------------*/
-function adrotate_generate_block_styles($gridpadding = 0, $gridfloat = 'none', $gridwidth = 254, $gridheight = 0, $gridborder = 0, $admargin = 2, $adpadding = 0, $adwidth = 125, $adheight = 125, $adborder = 0) {
-	?>
-	<style type="text/css" media="screen">
-		.block_outer { 
-			margin:0; 
-			padding:<?php echo $gridpadding; ?>px; 
-			clear:none; 
-			float:<?php echo $gridfloat; ?>;
-			width:<?php echo $gridwidth; ?>; 
-			height:<?php echo $gridheight; ?>; 
-			border:<?php echo $gridborder; ?>; 
+function adrotate_custom_css() {
+	global $wpdb;
+	
+	$blocks = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_blocks` WHERE `name` != '' ORDER BY `id` ASC;");
+	
+	if($blocks) {
+		$output = '<!-- AdRotate CSS for Blocks -->';
+		$output = '<style type="text/css" media="screen">';
+		foreach($blocks as $block) {
+			$adwidth = $block->adwidth.'px';
+			if($block->adheight == 'auto') $adheight = 'auto';
+				else $adheight = $block->adheight.'px';
+	
+			$output .= '.b-'.$block->id.' { float:'.$block->gridfloat.'; margin:0;padding:'.$block->gridpadding.'px;clear:none;width:auto;height:auto; }';
+			$output .= '.a-'.$block->id.' { margin:'.$block->admargin.'px;clear:none;float:left;width:'.$adwidth.';height:'.$adheight.';border:'.$block->adborder.'; }';
 		}
-		.block_inner { 
-			margin:<?php echo $admargin; ?>px; 
-			padding:<?php echo $adpadding; ?>px; 
-			clear:none; 
-			float:left; 
-			width:<?php echo $adwidth; ?>; 
-			height:<?php echo $adheight; ?>; 
-			border:<?php echo $adborder; ?>; 
-		}
-​	</style>
-	<?php
+
+		$output .= '.block_first { clear:left; }';
+		$output .= '.block_last { clear:right; }';
+		$output .= '</style>';
+		$output .= '<!-- / AdRotate CSS for Blocks -->';
+		
+		unset($blocks, $block);
+		
+		echo $output;
+	}
 }
 
 /*-------------------------------------------------------------

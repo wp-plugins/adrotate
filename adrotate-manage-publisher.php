@@ -612,16 +612,12 @@ function adrotate_options_submit() {
 
 	if(wp_verify_nonce($_POST['adrotate_nonce_settings'],'adrotate_settings')) {
 		// Set and save user roles
-		adrotate_set_capability($_POST['adrotate_advertiser'], "adrotate_advertiser");
-		adrotate_set_capability($_POST['adrotate_global_report'], "adrotate_global_report");
 		adrotate_set_capability($_POST['adrotate_ad_manage'], "adrotate_ad_manage");
 		adrotate_set_capability($_POST['adrotate_ad_delete'], "adrotate_ad_delete");
 		adrotate_set_capability($_POST['adrotate_group_manage'], "adrotate_group_manage");
 		adrotate_set_capability($_POST['adrotate_group_delete'], "adrotate_group_delete");
 		adrotate_set_capability($_POST['adrotate_block_manage'], "adrotate_block_manage");
 		adrotate_set_capability($_POST['adrotate_block_delete'], "adrotate_block_delete");
-		$config['advertiser'] 			= $_POST['adrotate_advertiser'];
-		$config['global_report']	 	= $_POST['adrotate_global_report'];
 		$config['ad_manage'] 			= $_POST['adrotate_ad_manage'];
 		$config['ad_delete'] 			= $_POST['adrotate_ad_delete'];
 		$config['group_manage'] 		= $_POST['adrotate_group_manage'];

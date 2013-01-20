@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.2
+Version: 3.8.3
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,7 +15,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.2'.ADROTATE_BETA);
+define("ADROTATE_DISPLAY", '3.8.3'.ADROTATE_BETA);
 define("ADROTATE_VERSION", 362);
 define("ADROTATE_DB_VERSION", 26);
 /*-----------------------------------------------------------*/
@@ -47,12 +47,14 @@ $adrotate_advert_status			= get_option("adrotate_advert_status");
 register_activation_hook(__FILE__, 'adrotate_activate');
 register_deactivation_hook(__FILE__, 'adrotate_deactivate');
 register_uninstall_hook(__FILE__, 'adrotate_uninstall');
+add_action('admin_init', 'adrotate_check_upgrade');
 add_filter('cron_schedules', 'adrotate_reccurences');
 add_action('adrotate_clean_trackerdata', 'adrotate_clean_trackerdata');
 /*-----------------------------------------------------------*/
 
 /*--- Front end ---------------------------------------------*/
 add_shortcode('adrotate', 'adrotate_shortcode');
+add_action('wp_head', 'adrotate_custom_css');
 add_filter('the_content', 'adrotate_inject_posts');
 //add_action('wp_enqueue_scripts', 'adrotate_head');
 add_action('widgets_init', create_function('', 'return register_widget("adrotate_widgets");'));
@@ -821,6 +823,15 @@ function adrotate_options() {
 					echo "<p><strong>[DEBUG] List of tables</strong><pre>";
 					$tables = adrotate_list_tables();
 					print_r($tables); 
+					echo "</pre></p>"; 
+					?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<?php 
+					echo "<p><strong>[DEBUG] Current ad states</strong><pre>";
+					print_r(get_option("adrotate_advert_status")); 
 					echo "</pre></p>"; 
 					?>
 				</td>

@@ -274,34 +274,12 @@ function adrotate_block($block_id, $weight = 0) {
 						echo "</pre></p>"; 
 					}			
 	
-					// grab border width in px
-					list($adborder, $rest) = explode (" ", $block->adborder, 2);
-					$adborder = rtrim($adborder, "px");
-
-					// set definitive block size
-					$adwidth = $block->adwidth.'px';
-					if($block->adheight == 'auto') $adheight = 'auto';
-						else $adheight = $block->adheight.'px';
-					
-					//Set float
-					if($block->gridfloat == 'none') $gridfloat = 'none';
-					if($block->gridfloat == 'left') $gridfloat = 'left;';
-					if($block->gridfloat == 'right') $gridfloat = 'right;';
-					if($block->gridfloat == 'inherit') $gridfloat = 'inherit;';
-					
 					$output = '';
-					$output .= '<style type="text/css" media="screen">';
-					$output .= '.block_outer { margin:0; padding:'.$block->gridpadding.'px; display:block; float:'.$gridfloat.'; }';
-					$output .= '.block_inner { margin:'.$block->admargin.'px; padding:0; display:block; float:left; width:'.$block->adwidth.'; height:'.$block->adheight.'; border:'.$block->adborder.'; }';
-					$output .= '.block_first { clear:left; }';
-					$output .= '.block_last { clear:right; }';
-					$output .= '</style>';
-
-					$output .='<div id="'.$block->id.'" class="block_outer">';
+					$output .='<div id="'.$block->id.'" class="block_outer b-'.$block->id.'">';
 					
 					$j = 1;
 					foreach($selected as $key => $banner_id) {
-						$output .= '<div id="'.$j.' '.$banner_id.'"class="block_inner';
+						$output .= '<div id="'.$j.' '.$banner_id.'"class="block_inner a-'.$block->id;
 						if($j == $block->columns) {
 							$output .= ' block_last ';
 							$j = 1;

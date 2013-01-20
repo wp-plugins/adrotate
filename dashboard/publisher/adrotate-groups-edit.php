@@ -171,8 +171,8 @@ if(!is_array($meta_array)) $meta_array = array();
 				$stoptime = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."' ORDER BY `stoptime` DESC LIMIT 1;");						
 
 				// Prevent gaps in display
-				if($stats->impressions == 0) 		$stats->impressions 		= 0;
-				if($stats->clicks == 0) 			$stats->clicks 				= 0;
+				if($stats->impressions == null)	$stats->impressions = 0;
+				if($stats->clicks == null) $stats->clicks = 0;
 
 				$class = ('alternate' != $class) ? 'alternate' : ''; ?>
 			    <tr class='<?php echo $class; ?>'>
