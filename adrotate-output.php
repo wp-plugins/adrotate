@@ -201,7 +201,7 @@ function adrotate_block($block_id, $weight = 0) {
 		$prefix = $wpdb->prefix;
 		
 		// Get block specs
-		$block = $wpdb->get_row($wpdb->prepare("SELECT * FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = %d;", $block_id));
+		$block = $wpdb->get_row($wpdb->prepare("SELECT * FROM `".$prefix."adrotate_blocks` WHERE `id` = %d;", $block_id));
 		if($block) {
 			if($adrotate_debug['general'] == true) {
 				echo "<p><strong>[DEBUG][adrotate_block()] Selected block</strong><pre>"; 
@@ -210,7 +210,7 @@ function adrotate_block($block_id, $weight = 0) {
 			}			
 
 			// Get groups in block
-			$groups = $wpdb->get_results($wpdb->prepare("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = %d AND `user` = 0;", $block->id));
+			$groups = $wpdb->get_results($wpdb->prepare("SELECT `group` FROM `".$prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = %d AND `user` = 0;", $block->id));
 			if($groups) {
 				// Get all ads in all groups and process them in an array
 				$results = array();
@@ -275,21 +275,22 @@ function adrotate_block($block_id, $weight = 0) {
 					}			
 	
 					$output = '';
-					$output .='<div id="'.$block->id.'" class="block_outer b-'.$block->id.'">';
+					$output .= '<div id="'.$block->id.'" class="block_outer b-'.$block->id.'">';
 					
 					$j = 1;
 					foreach($selected as $key => $banner_id) {
 						$output .= '<div id="'.$j.' '.$banner_id.'"class="block_inner a-'.$block->id;
 						if($j == $block->columns) {
-							$output .= ' block_last ';
+							$output .= ' block_right ';
 							$j = 1;
 						} else if($j == 1) {
-							$output .= ' block_first ';
+							$output .= ' block_left ';
 							$j++;
 						} else {
 							$j++;
 						}
 						$output .= '">';
+
 						if($block->wrapper_before != '') {$output .= stripslashes(html_entity_decode($block->wrapper_before, ENT_QUOTES)); }
 						$output .= adrotate_ad($banner_id, false, 0, $block-id);
 						if($block->wrapper_after != '') { $output .= stripslashes(html_entity_decode($block->wrapper_after, ENT_QUOTES)); }

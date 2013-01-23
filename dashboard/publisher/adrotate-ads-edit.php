@@ -241,7 +241,7 @@ jQuery(document).ready(function() {
       	<tr>
 	        <th valign="top"><?php _e('Clicktracking:', 'adrotate'); ?></th>
 	        <td colspan="3">
-	        	<label for="adrotate_tracker"><?php _e('Enable?', 'adrotate'); ?> <input tabindex="10" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> <label for="adrotate_link">url: <input tabindex="11" name="adrotate_link" type="text" size="80" class="search-input" value="<?php echo $edit_banner->link;?>" /><br />
+	        	<label for="adrotate_tracker"><?php _e('Enable?', 'adrotate'); ?> <input tabindex="5" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> <label for="adrotate_link">url: <input tabindex="6" name="adrotate_link" type="text" size="80" class="search-input" value="<?php echo $edit_banner->link;?>" /><br />
 		        <em><?php _e('Use %link% in the adcode instead of the actual url.', 'adrotate'); ?><br />
 		        <?php _e('For a random seed you can use %random%. A generated timestamp you can use.', 'adrotate'); ?><br />
 		        <?php _e('If you use remote clicktracking (ads in emails for example) add "&remote=1" to the very end of the tracking url.', 'adrotate'); ?></em>
@@ -252,9 +252,9 @@ jQuery(document).ready(function() {
 	        <th valign="top"><?php _e('Banner image:', 'adrotate'); ?></th>
 			<td colspan="3">
 				<label for="adrotate_image">
-					<?php _e('Media:', 'adrotate'); ?> <input tabindex="12" size="100" id="adrotate_image" type="text" name="adrotate_image" value="<?php echo $image_field; ?>" /> <input tabindex="15" id="adrotate_image_button" type="button" value="<?php _e('Select Image', 'adrotate'); ?>" /><br />
+					<?php _e('Media:', 'adrotate'); ?> <input tabindex="7" size="100" id="adrotate_image" type="text" name="adrotate_image" value="<?php echo $image_field; ?>" /> <input tabindex="8" id="adrotate_image_button" type="button" value="<?php _e('Select Image', 'adrotate'); ?>" /><br />
 					<?php _e('- OR -', 'adrotate'); ?><br />
-					<?php _e('Banner folder:', 'adrotate'); ?> <select tabindex="13" name="adrotate_image_dropdown" style="min-width: 200px;">
+					<?php _e('Banner folder:', 'adrotate'); ?> <select tabindex="9" name="adrotate_image_dropdown" style="min-width: 200px;">
    						<option value=""><?php _e('No image selected', 'adrotate'); ?></option>
 						<?php echo adrotate_folder_contents($image_dropdown); ?>
 					</select><br />
@@ -274,7 +274,7 @@ jQuery(document).ready(function() {
 	</table>
 
 	<p class="submit">
-		<input tabindex="21" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save Advert', 'adrotate'); ?>" />
+		<input tabindex="10" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save Advert', 'adrotate'); ?>" />
 		<a href="admin.php?page=adrotate-ads&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
 	</p>
 
@@ -296,8 +296,8 @@ jQuery(document).ready(function() {
 	        <th><?php _e('Start time (day/month/year hh:mm):', 'adrotate'); ?></th>
 	        <td>
 	        	<label for="adrotate_sday">
-	        	<input tabindex="25" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
-				<select tabindex="26" name="adrotate_smonth">
+	        	<input tabindex="11" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
+				<select tabindex="12" name="adrotate_smonth">
 					<option value="01" <?php if($smonth == "01") { echo 'selected'; } ?>><?php _e('January', 'adrotate'); ?></option>
 					<option value="02" <?php if($smonth == "02") { echo 'selected'; } ?>><?php _e('February', 'adrotate'); ?></option>
 					<option value="03" <?php if($smonth == "03") { echo 'selected'; } ?>><?php _e('March', 'adrotate'); ?></option>
@@ -311,16 +311,16 @@ jQuery(document).ready(function() {
 					<option value="11" <?php if($smonth == "11") { echo 'selected'; } ?>><?php _e('November', 'adrotate'); ?></option>
 					<option value="12" <?php if($smonth == "12") { echo 'selected'; } ?>><?php _e('December', 'adrotate'); ?></option>
 				</select> /
-				<input tabindex="23" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />&nbsp;&nbsp;&nbsp; 
-				<input tabindex="24" name="adrotate_shour" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $shour;?>" /> :
-				<input tabindex="25" name="adrotate_sminute" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $sminute;?>" />
+				<input tabindex="13" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />&nbsp;&nbsp;&nbsp; 
+				<input tabindex="14" name="adrotate_shour" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $shour;?>" /> :
+				<input tabindex="15" name="adrotate_sminute" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $sminute;?>" />
 				</label>
 	        </td>
 	        <th><?php _e('End time (day/month/year hh:mm):', 'adrotate'); ?></th>
 	        <td>
 	        	<label for="adrotate_eday">
-	        	<input tabindex="27" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>"  /> /
-				<select tabindex="28" name="adrotate_emonth">
+	        	<input tabindex="16" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>"  /> /
+				<select tabindex="17" name="adrotate_emonth">
 					<option value="01" <?php if($emonth == "01") { echo 'selected'; } ?>><?php _e('January', 'adrotate'); ?></option>
 					<option value="02" <?php if($emonth == "02") { echo 'selected'; } ?>><?php _e('February', 'adrotate'); ?></option>
 					<option value="03" <?php if($emonth == "03") { echo 'selected'; } ?>><?php _e('March', 'adrotate'); ?></option>
@@ -334,17 +334,17 @@ jQuery(document).ready(function() {
 					<option value="11" <?php if($emonth == "11") { echo 'selected'; } ?>><?php _e('November', 'adrotate'); ?></option>
 					<option value="12" <?php if($emonth == "12") { echo 'selected'; } ?>><?php _e('December', 'adrotate'); ?></option>
 				</select> /
-				<input tabindex="29" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />&nbsp;&nbsp;&nbsp; 
-				<input tabindex="30" name="adrotate_ehour" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $ehour;?>" /> :
-				<input tabindex="31" name="adrotate_eminute" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $eminute;?>" />
+				<input tabindex="18" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />&nbsp;&nbsp;&nbsp; 
+				<input tabindex="19" name="adrotate_ehour" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $ehour;?>" /> :
+				<input tabindex="20" name="adrotate_eminute" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $eminute;?>" />
 				</label>
 			</td>
       	</tr>	
       	<tr>
       		<th><?php _e('Maximum Clicks:', 'adrotate'); ?></th>
-	        <td><input tabindex="32" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
+	        <td><input tabindex="21" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
 		    <th><?php _e('Maximum Impressions:', 'adrotate'); ?></th>
-	        <td><input tabindex="33" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
+	        <td><input tabindex="22" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
 		</tr>
 		</tbody>					
 	</table>
@@ -392,7 +392,7 @@ jQuery(document).ready(function() {
 	</table>
 
 	<p class="submit">
-		<input tabindex="34" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save Advert', 'adrotate'); ?>" />
+		<input tabindex="23" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save Advert', 'adrotate'); ?>" />
 		<a href="admin.php?page=adrotate-ads&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
 	</p>
 
@@ -421,7 +421,7 @@ jQuery(document).ready(function() {
 	</table>
 
 	<p class="submit">
-		<input tabindex="35" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save Advert', 'adrotate'); ?>" />
+		<input tabindex="24" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save Advert', 'adrotate'); ?>" />
 		<a href="admin.php?page=adrotate&view=manage" class="button"><?php _e('Cancel', 'adrotate'); ?></a>
 	</p>
 	<?php } ?>

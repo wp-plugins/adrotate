@@ -145,12 +145,12 @@ function adrotate_insert_input() {
 					$action = 'field_error';
 					$active = 'error';
 				} else {
-					if($type == "empty") {
-						$action = 'new';
-					} else {
-						$action = 'update';
-					}
+					if($type == "empty") $action = 'new';
+						else $action = 'update';
 				}
+			} else {
+				if($type == "empty") $action = 'new';
+					else $action = 'update';
 			} 
 		    $wpdb->update($wpdb->prefix."adrotate", array('type' => $active), array('id' => $id));
 	

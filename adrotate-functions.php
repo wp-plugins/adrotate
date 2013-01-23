@@ -66,7 +66,7 @@ function adrotate_banner($group_ids = 0, $banner_id = 0, $block_id = 0, $column 
 function adrotate_filter_schedule($selected, $banner) { 
 	global $wpdb, $adrotate_debug;
 
-	$now = date('U');
+	$now = current_time('timestamp');
 	$prefix = $wpdb->prefix;
 
 	if($adrotate_debug['general'] == true) {
@@ -728,12 +728,12 @@ function adrotate_custom_css() {
 			if($block->adheight == 'auto') $adheight = 'auto';
 				else $adheight = $block->adheight.'px';
 	
-			$output .= '.b-'.$block->id.' { float:'.$block->gridfloat.'; margin:0;padding:'.$block->gridpadding.'px;clear:none;width:auto;height:auto; }';
+			$output .= '.b-'.$block->id.' { float:'.$block->gridfloat.';overflow:auto;margin:0;padding:'.$block->gridpadding.'px;clear:none;width:auto;height:auto; }';
 			$output .= '.a-'.$block->id.' { margin:'.$block->admargin.'px;clear:none;float:left;width:'.$adwidth.';height:'.$adheight.';border:'.$block->adborder.'; }';
 		}
 
-		$output .= '.block_first { clear:left; }';
-		$output .= '.block_last { clear:right; }';
+		$output .= '.block_left { clear:left; }';
+		$output .= '.block_right { clear:right; }';
 		$output .= '</style>';
 		$output .= '<!-- / AdRotate CSS for Blocks -->';
 		
@@ -904,51 +904,9 @@ function adrotate_return($action, $arg = null) {
 			wp_redirect('admin.php?page=adrotate-blocks&view=templates&message=deleted_template');
 		break;
 
-		// Reports
-		case "csv_error" :
-			wp_redirect('admin.php?page='.$arg[0].'&message='.$arg[1].$arg[2].$arg[3]);
-		break;
-
-		case "csv_success" :
-			wp_redirect('admin.php?page='.$arg[0].'&message='.$arg[1]);
-		break;
-
-		// Advertisers
-		case "a_new" :
-			wp_redirect('admin.php?page=adrotate-advertiser&message=new');
-		break;
-
-		case "a_update" :
-			wp_redirect('admin.php?page=adrotate-advertiser&message=updated');
-		break;
-
-		case "a_field_error" :
-			wp_redirect('admin.php?page=adrotate-advertiser&message=field_error');
-		break;
-
-		case "a_no_access" :
-			wp_redirect('admin.php?page=adrotate-advertiser&message=no_access');
-		break;
-
 		// Settings
 		case "settings_saved" :
 			wp_redirect('admin.php?page=adrotate-settings&message=updated');
-		break;
-
-		case "role_add" :
-			wp_redirect('admin.php?page=adrotate-settings&message=role_add');
-		break;
-
-		case "role_remove" :
-			wp_redirect('admin.php?page=adrotate-settings&message=role_remove');
-		break;
-
-		case "mail_test_notification_sent" :
-			wp_redirect('admin.php?page=adrotate-settings&message=mail_notification_sent');
-		break;
-
-		case "mail_test_advertiser_sent" :
-			wp_redirect('admin.php?page=adrotate-settings&message=mail_advertiser_sent');
 		break;
 
 		// Maintenance
