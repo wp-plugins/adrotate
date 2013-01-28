@@ -60,23 +60,6 @@ Find out how AdRotate works, more options and various ways to implement your ads
 We have a [knowledge base](http://www.adrotateplugin.com/support/knowledgebase/).
 If that's not enough you can post on our [forum](http://www.adrotateplugin.com/support/forums/) and ask your question there!
 
-=== Scrollbars in blocks ===
-Answer: This happens if your ads are overflowing the allotted space. This means that you need to re-do the sizing of your ads. Perhaps remove or lessen the margin on them. Make the sidebar wider (or which ever area). Or use smaller ads all-together.
-
-=== Why do I get this error when I want to activate AdRotate? ===
-Parse error: syntax error, unexpected '&amp;', expecting T_VARIABLE or '$' in /path/to/www/example.com/wp-content/plugins/adrotate/adrotate-manage.php on line 136
-Answer: Upgrade your server to use PHP5. Contact your webhost for more information.
-
-=== Why does AdRotate show me this error when I activate the plugin? ===
-The plugin generated X characters of unexpected output during activation. If you notice “headers already sent” messages, problems with syndication feeds or other issues, try deactivating or removing this plugin.
-Answer: Because the WordPress file manager can not handle hidden OS X Files which are sometimes included in the download. This error can be safely ignored.
-
-=== I’m getting errors about duplicate entries in the stats or the tracker table! ===
-Answer: This means your database is full and needs to be “upgraded”. More on the how and why in this article!
-
-=== Why do my ads not rotate when I reload the page? ===
-Answer: In most cases you have a cache plugin active. WP-Super Cache or something similar. AdRotate uses a static ad which means the ad will also be cached. Therefor, AdRotate is not (yet?) compatible with any caching plugins.
-
 == Changelog ==
 
 = 3.8.3.2 =
