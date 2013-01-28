@@ -47,14 +47,8 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			if($errbanner['type'] == 'error') $errorclass = ' row_error'; 
 			if($errbanner['type'] == 'expired') $errorclass = ' row_inactive';
 			if($errbanner['type'] == 'expiressoon') $errorclass = ' row_urgent';
-
-			if($class != 'alternate') {
-				$class = 'alternate';
-			} else {
-				$class = '';
-			}
 			?>
-		    <tr id='adrotateindex' class='<?php echo $class.$errorclass; ?>'>
+		    <tr id='adrotateindex' class='<?php echo $errorclass; ?>'>
 				<th class="check-column"><input type="checkbox" name="errorbannercheck[]" value="<?php echo $errbanner['id']; ?>" /></th>
 				<td><center><?php echo $errbanner['id'];?></center></td>
 				<td><?php echo date_i18n("F d, Y", $errbanner['firstactive']);?></td>

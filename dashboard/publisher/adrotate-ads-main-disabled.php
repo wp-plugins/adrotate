@@ -61,19 +61,11 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			
 			if($disbanner['type'] == 'disabled') {
 				$errorclass = ' row_inactive';
-			} else if($disbanner['type'] == 'error') {
-				$errorclass = ' row_error';
 			} else {
 				$errorclass = '';
 			}
-	
-			if($class != 'alternate') {
-				$class = 'alternate';
-			} else {
-				$class = '';
-			}
 			?>
-		    <tr id='adrotateindex' class='<?php echo $class.$errorclass; ?>'>
+		    <tr id='adrotateindex' class='<?php echo $errorclass; ?>'>
 				<th class="check-column"><input type="checkbox" name="disabledbannercheck[]" value="<?php echo $disbanner['id']; ?>" /></th>
 				<td><center><?php echo $disbanner['id'];?></center></td>
 				<td><?php echo date_i18n("F d, Y", $disbanner['firstactive']);?></td>

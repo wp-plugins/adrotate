@@ -679,17 +679,16 @@ function adrotate_credits() {
 	echo '<tr>';
 	if(!stristr(ADROTATE_DISPLAY, 'Professional')) { 
 		echo '<td><ul>';
-		echo '	<li>'.__('The plugin homepage is at', 'adrotate').' <a href="http://www.adrotateplugin.com" target="_blank">www.adrotateplugin.com</a>!</li>';
-		echo '	<li>'.__('Your gift will ensure the continued development of AdRotate!', 'adrotate').'</li>';
-		echo '	<li><center><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal%40ajdg%2enet&item_name=AdRotate%20Donation&item_number=Dashboard%20single%20donation&no_shipping=0&no_note=1&tax=0&currency_code=EUR&lc=GB&bn=PP%2dDonationsBF&charset=UTF%2d8" target="_blank"><img src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" /></a></center></li>';
+		echo '	<li><center>'.__('Your awesome gift will ensure the continued development of AdRotate! Thanks for your consideration!', 'adrotate').'</center></li>';
+		echo '	<li><center><a href="http://www.adrotateplugin.com/donate/" target="_blank"><img src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" /></a></center></li>';
 		echo '</ul></td>';
 	}
 
 	echo '<td style="border-left:1px #ddd solid;"><ul>';
-	echo '	<li>'.__('Find my website at', 'adrotate').' <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>.</li>';
-	echo '	<li>'.__('Need fast and efficient assistance? Take a look at the', 'adrotate').' <a href="http://www.adrotateplugin.com/shop/" target="_blank">'.__('AdRotate Store', 'adrotate').'</a>! '.__('I also have a', 'adrotate').' <a href="http://www.adrotateplugin.com/support/" target="_blank">'.__('forum', 'adrotate').'</a>!</li>';
+	echo '	<li>'.__('Like the plugin?', 'adrotate').' <a href="http://wordpress.org/support/view/plugin-reviews/adrotate?rate=5#postform" target="_blank">'.__('Rate and review', 'adrotate').'</a> AdRotate.</li>';
+	echo '	<li>'.__('Find my website at', 'adrotate').' <a href="http://meandmymac.net" target="_blank">meandmymac.net</a>. '.__('More on AdRotate on', 'adrotate').' <a href="http://www.adrotateplugin.com" target="_blank">adrotateplugin.com</a>!</li>';
 	echo '	<li>'.__('Grab the latest news and updates on the', 'adrotate').' <a href="http://www.adrotateplugin.com/news/" target="_blank">'.__('AdRotate Blog','adrotate').'</a>. '.__('Be sure to subscribe!', 'adrotate').'</li>';
-	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.adrotateplugin.com/support/" target="_blank">'.__('manuals', 'adrotate').'</a> '.__('and have the most popular features explained.', 'adrotate').'</li>';
+	echo '	<li>'.__('Check out the', 'adrotate').' <a href="http://www.adrotateplugin.com/support/knowledgebase/" target="_blank">'.__('manuals', 'adrotate').'</a> '.__('and have the most popular features explained.', 'adrotate').'</li>';
 	echo '</ul></td>';
 
 	echo '<td style="border-left:1px #ddd solid;"><ul>';

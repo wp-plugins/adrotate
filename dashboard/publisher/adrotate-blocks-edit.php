@@ -7,11 +7,10 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 <h3><?php _e('New Block', 'adrotate'); ?></h3>
 	<?php
 	$action = "block_new";
-	$query = "SELECT `id` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;";
-	$edit_id = $wpdb->get_var($query);
+	$edit_id = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;");
 	if($edit_id == 0) {
-		$wpdb->query("INSERT INTO `".$wpdb->prefix."adrotate_blocks` (`name`, `rows`, `columns`, `gridfloat`, `gridpadding`, `adwidth`, `adheight`, `admargin`, `adborder`, `wrapper_before`, `wrapper_after`, `sortorder`) VALUES ('', 2, 2, 'none', 1, 125, 125, 1, 0, '', '', 0);");
-		$edit_id = $wpdb->get_var($query);
+	    $wpdb->insert($wpdb->prefix."adrotate_blocks", array('name' => '', 'rows' => 2, 'columns' => 0, 'gridfloat' => 'none', 'gridpadding' => 1, 'adwidth' => '125', 'adheight' => '125', 'admargin' => 1, 'adborder' => '', 'wrapper_before' => '', 'wrapper_after' => '', 'sortorder' => 0));
+	    $edit_id = $wpdb->insert_id;
 	}
 	$block_edit_id = $edit_id;
 	?>

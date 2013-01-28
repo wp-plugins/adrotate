@@ -682,29 +682,36 @@ function adrotate_dashboard_scripts() {
 	wp_enqueue_script('media-upload');
 	wp_enqueue_script('thickbox');
 	wp_enqueue_script('jquery');
-	wp_enqueue_script('raphael', '/wp-content/plugins/adrotate/library/raphael-min.js', array('jquery'));
-	wp_enqueue_script('elycharts', '/wp-content/plugins/adrotate/library/elycharts.min.js', array('jquery', 'raphael'));
+	wp_enqueue_script('raphael', plugins_url('/library/raphael-min.js', __FILE__), array('jquery'));
+	wp_enqueue_script('elycharts', plugins_url('/library/elycharts.min.js', __FILE__), array('jquery', 'raphael'));
+
+	wp_enqueue_style('thickbox');
 }
 
 /*-------------------------------------------------------------
  Name:      adrotate_dashboard_styles
 
- Purpose:   Load file uploaded popup style
+ Purpose:   Load file uploaded popup
  Receive:   -None-
  Return:	-None-
  Since:		3.6
 -------------------------------------------------------------*/
 function adrotate_dashboard_styles() {
-	wp_enqueue_style('thickbox');
+?>
+<style type="text/css" media="screen">
+	/* styles for graphs */
+	.adrotate-label { font-size: 12px; line-height: 5px; margin: 2px; font-weight: bold }
+	.adrotate-clicks { color: #5Af; font-weight: normal }
+	.adrotate-impressions { color: #F80; font-weight: normal }
 	
-	?>
-	<style type="text/css" media="screen">
-		/* style up the tooltips content */
-		.adrotate-label { font-size: 12px; line-height: 5px; margin: 2px; font-weight: bold }
-		.adrotate-clicks { color: #5Af; font-weight: normal }
-		.adrotate-impressions { color: #F80; font-weight: normal }
-​	</style>
-	<?php
+	/* styles for advert statuses and stats */
+	.row_urgent { background-color:#ffebe8; border-color:#c00; }
+	.row_error { background-color:#ffffe0; border-color:#e6db55; }
+	.row_inactive { background-color:#ebf3fa; border-color:#466f82; }
+	.stats_large { display: block; margin-bottom: 10px; margin-top: 10px; text-align: center; font-weight: bold; }
+	.number_large {	margin: 20px; font-size: 28px; }
+</style>
+<?php
 }
 
 /*-------------------------------------------------------------

@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.3.1
+Version: 3.8.3.2
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,7 +15,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.3'.ADROTATE_BETA);
+define("ADROTATE_DISPLAY", '3.8.3.2'.ADROTATE_BETA);
 define("ADROTATE_VERSION", 362);
 define("ADROTATE_DB_VERSION", 27);
 /*-----------------------------------------------------------*/
@@ -56,7 +56,6 @@ add_action('adrotate_clean_trackerdata', 'adrotate_clean_trackerdata');
 add_shortcode('adrotate', 'adrotate_shortcode');
 add_action('wp_head', 'adrotate_custom_css');
 add_filter('the_content', 'adrotate_inject_posts');
-//add_action('wp_enqueue_scripts', 'adrotate_head');
 add_action('widgets_init', create_function('', 'return register_widget("adrotate_widgets");'));
 add_action('wp_meta', 'adrotate_meta');
 /*-----------------------------------------------------------*/
@@ -64,6 +63,8 @@ add_action('wp_meta', 'adrotate_meta');
 /*--- Dashboard ---------------------------------------------*/
 add_action('admin_init', 'adrotate_colorpicker');
 add_action('admin_menu', 'adrotate_dashboard');
+add_action("admin_enqueue_scripts", 'adrotate_dashboard_scripts');
+add_action("admin_print_styles", 'adrotate_dashboard_styles');
 add_action('admin_notices','adrotate_notifications_dashboard');
 /*-----------------------------------------------------------*/
 
@@ -98,22 +99,15 @@ function adrotate_dashboard() {
 	
 	get_currentuserinfo();
 
-	$admin_pages = array();
-
 	add_object_page('AdRotate', 'AdRotate', 'adrotate_ad_manage', 'adrotate', 'adrotate_info');
-	$admin_pages[] = add_submenu_page('adrotate', 'AdRotate > '.__('General Info', 'adrotate'), __('General Info', 'adrotate'), 'adrotate_ad_manage', 'adrotate', 'adrotate_info');
-	$admin_pages[] = add_submenu_page('adrotate', 'AdRotate > '.__('Manage Ads', 'adrotate'), __('Manage Ads', 'adrotate'), 'adrotate_ad_manage', 'adrotate-ads', 'adrotate_manage');
-	$admin_pages[] = add_submenu_page('adrotate', 'AdRotate > '.__('Manage Groups', 'adrotate'), __('Manage Groups', 'adrotate'), 'adrotate_group_manage', 'adrotate-groups', 'adrotate_manage_group');
-	$admin_pages[] = add_submenu_page('adrotate', 'AdRotate > '.__('Manage Blocks', 'adrotate'), __('Manage Blocks', 'adrotate'), 'adrotate_block_manage', 'adrotate-blocks', 'adrotate_manage_block');
-	$admin_pages[] = add_submenu_page('adrotate', 'AdRotate > '.__('Moderate', 'adrotate'), __('Moderate Adverts', 'adrotate'), 'manage_options', 'adrotate-moderate', 'adrotate_moderate');
-	$admin_pages[] = add_submenu_page('adrotate', 'AdRotate > '.__('Global Reports', 'adrotate'), __('Global Reports', 'adrotate'), 'manage_options', 'adrotate-global-report', 'adrotate_global_report');
-	$admin_pages[] = add_submenu_page('adrotate', 'AdRotate > '.__('Settings', 'adrotate'), __('Settings', 'adrotate'), 'manage_options', 'adrotate-settings', 'adrotate_options');
-	if(strlen(ADROTATE_BETA) > 0) $admin_pages[] = add_submenu_page('adrotate', 'AdRotate > Beta Feedback', 'Beta Feedback', 'adrotate_ad_manage', 'adrotate-beta', 'adrotate_beta');
-	
-	foreach($admin_pages as $admin_page) {
-		add_action("admin_print_styles-{$admin_page}", 'adrotate_dashboard_scripts');
-		add_action("admin_print_scripts-{$admin_page}", 'adrotate_dashboard_styles');
-	}
+	add_submenu_page('adrotate', 'AdRotate > '.__('General Info', 'adrotate'), __('General Info', 'adrotate'), 'adrotate_ad_manage', 'adrotate', 'adrotate_info');
+	add_submenu_page('adrotate', 'AdRotate > '.__('Manage Ads', 'adrotate'), __('Manage Ads', 'adrotate'), 'adrotate_ad_manage', 'adrotate-ads', 'adrotate_manage');
+	add_submenu_page('adrotate', 'AdRotate > '.__('Manage Groups', 'adrotate'), __('Manage Groups', 'adrotate'), 'adrotate_group_manage', 'adrotate-groups', 'adrotate_manage_group');
+	add_submenu_page('adrotate', 'AdRotate > '.__('Manage Blocks', 'adrotate'), __('Manage Blocks', 'adrotate'), 'adrotate_block_manage', 'adrotate-blocks', 'adrotate_manage_block');
+	add_submenu_page('adrotate', 'AdRotate > '.__('Moderate', 'adrotate'), __('Moderate Adverts', 'adrotate'), 'manage_options', 'adrotate-moderate', 'adrotate_moderate');
+	add_submenu_page('adrotate', 'AdRotate > '.__('Global Reports', 'adrotate'), __('Global Reports', 'adrotate'), 'manage_options', 'adrotate-global-report', 'adrotate_global_report');
+	add_submenu_page('adrotate', 'AdRotate > '.__('Settings', 'adrotate'), __('Settings', 'adrotate'), 'manage_options', 'adrotate-settings', 'adrotate_options');
+	if(strlen(ADROTATE_BETA) > 0) add_submenu_page('adrotate', 'AdRotate > Beta Feedback', 'Beta Feedback', 'adrotate_ad_manage', 'adrotate-beta', 'adrotate_beta');
 }
 
 /*-------------------------------------------------------------
@@ -169,33 +163,6 @@ function adrotate_manage() {
 	$monthstart = mktime(0, 0, 0, $month, 1, $year);
 	$monthend = mktime(0, 0, 0, $month+1, 0, $year);	
 	?>
-
-	<style type="text/css" media="screen">
-	.row_urgent {
-		background-color:#ffebe8;
-		border-color:#c00;
-	}
-	.row_error {
-		background-color:#ffffe0;
-		border-color:#e6db55;
-	}
-	.row_inactive {
-		background-color:#ebf3fa;
-		border-color:#466f82;
-	}
-	.stats_large {
-		display: block;
-		margin-bottom: 10px;
-		margin-top: 10px;
-		text-align: center;
-		font-weight: bold;
-	}
-	.number_large {
-		margin: 20px;
-		font-size: 28px;
-	}
-	</style>
-
 	<div class="wrap">
 		<h2><?php _e('Ad Management', 'adrotate'); ?></h2>
 
@@ -231,12 +198,12 @@ function adrotate_manage() {
 				$schedule = $wpdb->get_row("SELECT `starttime`, `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$singlebanner->id."';");
 				
 				$type = $singlebanner->type;
-				if($schedule->stoptime <= $now) {
-					$type = 'expired';
-				} 
 				if($schedule->stoptime <= $in7days) {
 					$type = 'expiressoon';
 				}
+				if($schedule->stoptime <= $now) {
+					$type = 'expired';
+				} 
 	
 				if($type == 'active') {
 					$activebanners[$singlebanner->id] = array(
@@ -353,21 +320,6 @@ function adrotate_manage_group() {
 	$monthstart = mktime(0, 0, 0, $month, 1, $year);
 	$monthend = mktime(0, 0, 0, $month+1, 0, $year);	
 	?>
-
-	<style type="text/css" media="screen">
-	.stats_large {
-		display: block;
-		margin-bottom: 10px;
-		margin-top: 10px;
-		text-align: center;
-		font-weight: bold;
-	}
-	.number_large {
-		margin: 20px;
-		font-size: 28px;
-	}
-	</style>
-
 	<div class="wrap">
 		<h2><?php _e('Group Management', 'adrotate'); ?></h2>
 
@@ -450,21 +402,6 @@ function adrotate_manage_block() {
 	$monthstart = mktime(0, 0, 0, $month, 1, $year);
 	$monthend = mktime(0, 0, 0, $month+1, 0, $year);	
 	?>
-
-	<style type="text/css" media="screen">
-	.stats_large {
-		display: block;
-		margin-bottom: 10px;
-		margin-top: 10px;
-		text-align: center;
-		font-weight: bold;
-	}
-	.number_large {
-		margin: 20px;
-		font-size: 28px;
-	}
-	</style>
-
 	<div class="wrap">
 		<h2><?php _e('Block Management', 'adrotate'); ?></h2>
 

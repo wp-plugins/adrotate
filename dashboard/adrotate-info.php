@@ -205,9 +205,7 @@ if(!is_array($adrotate_advert_status)) $statuscache = unserialize($adrotate_adve
 				<div class="postbox-adrotate">
 					<h3><span><?php _e('AdRotate Store', 'adrotate'); ?></span></h3>
 					<div class="inside">
-						<?php if(!stristr(ADROTATE_DISPLAY, 'Professional')) { ?>
-						<p><h4><?php _e('AdRotate Pro', 'adrotate'); ?></h4> <?php _e('Get more AdRotate! Go Professional.', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/child-themes/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
-						<?php } ?>
+						<p><h4><?php _e('AdRotate Pro', 'adrotate'); ?></h4> <?php _e('Get more AdRotate! Go Professional.', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/adrotate-plugin/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
 						<p><h4><?php _e('Child Themes', 'adrotate'); ?></h4> <?php _e('Make your AdRotate better with better integration!', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/child-themes/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
 						<p><h4><?php _e('Installations', 'adrotate'); ?></h4> <?php _e('Not sure how to set up AdRotate? Get me to do it!', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/installation-and-upgrades/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
 						<p><h4><?php _e('Premium Support', 'adrotate'); ?></h4> <?php _e("Stuck with AdRotate? I'll help!", 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/premium-support/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
@@ -230,23 +228,13 @@ if(!is_array($adrotate_advert_status)) $statuscache = unserialize($adrotate_adve
 					</div>
 				</div>
 
-				<?php if(!stristr(ADROTATE_DISPLAY, 'Professional')) { ?>
 				<div class="postbox-adrotate">
 					<h3><span><?php _e('Support AdRotate', 'adrotate'); ?></span></h3>
 					<div class="inside">
 						<p><center><?php _e('Your gift will ensure the continued development of AdRotate!', 'adrotate'); ?></center></p>
-						<p><center><form name="_xclick" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-							<input type="hidden" name="cmd" value="_xclick">
-							<input type="hidden" name="lc" value="en_US">
-							<input type="hidden" name="business" value="paypal@ajdg.net">
-							<input type="hidden" name="item_name" value="AdRotate Plugin Donation">
-							<input type="hidden" name="currency_code" value="EUR">
-							<input type="hidden" name="amount" value="10" disabled="">
-							<input type="image" src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
-						</form></center></p>
+						<p><center><a href="http://www.adrotateplugin.com/donate/" target="_blank"><img src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" /></a></center></p>
 					</div>
 				</div>
-				<?php } ?>
 
 				<div class="postbox-adrotate">
 					<h3><span><?php _e('AdRotate is brought to you by', 'adrotate'); ?></span></h3>
