@@ -102,11 +102,7 @@ function adrotate_insert_input() {
 			// Sort out click and impressions restrictions
 			if(strlen($maxclicks) < 1 OR !is_numeric($maxclicks))	$maxclicks	= 0;
 			if(strlen($maxshown) < 1 OR !is_numeric($maxshown))		$maxshown	= 0;
-	
-			// Format the targets
-			if(strlen($targetclicks) < 1 OR !is_numeric($targetclicks))				$targetclicks	= 0;
-			if(strlen($targetimpressions) < 1 OR !is_numeric($targetimpressions))	$targetimpressions	= 0;
-	
+		
 			// Set tracker value
 			if(isset($tracker) AND strlen($tracker) != 0) $tracker = 'Y';
 				else $tracker = 'N';
@@ -132,13 +128,13 @@ function adrotate_insert_input() {
 			}
 			$wpdb->insert($wpdb->prefix.'adrotate_schedule', array('ad' => $id, 'starttime' => $startdate, 'stoptime' => $enddate, 'maxclicks' => $maxclicks, 'maximpressions' => $maxshown));
 		
-			// Check all ads and update ad cache
-			adrotate_prepare_evaluate_ads();		
-	
 			// Save the ad to the DB
 			$wpdb->update($wpdb->prefix.'adrotate', array('title' => $title, 'bannercode' => $bannercode, 'updated' => $thetime, 'author' => $author, 'imagetype' => $imagetype, 'image' => $image, 'link' => $link, 'tracker' => $tracker, 'sortorder' => $sortorder), array('id' => $id));
 
 			if($active == "active") {
+				// Check all ads and update ad cache
+				adrotate_prepare_evaluate_ads();		
+	
 				// Determine status of ad 
 				$adstate = adrotate_evaluate_ad($id);
 				if($adstate == 'error' OR $adstate == 'expired') {
@@ -595,10 +591,10 @@ function adrotate_renew($id, $howlong = 2592000) {
 	global $wpdb;
 
 	if($id > 0) {
-		$starttime = $wpdb->get_var($wpdb->prepare("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = %d ORDER BY `id` DESC LIMIT 1;", $id));
-		$stoptime = $starttime + $howlong;
+		$stopwhen = $wpdb->get_var($wpdb->prepare("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = %d ORDER BY `id` DESC LIMIT 1;", $id));
+		$stoptime = $stopwhen + $howlong;
 
-		$wpdb->insert($wpdb->prefix.'adrotate_schedule', array('ad' => $id, 'starttime' => $starttime, 'stoptime' => $stoptime, 'maxclicks' => 0, 'maximpressions' => 0));
+		$wpdb->update($wpdb->prefix.'adrotate_schedule', array('stoptime' => $stoptime, 'maxclicks' => 0, 'maximpressions' => 0), array('ad' => $id));
 	}
 }
 
@@ -644,7 +640,8 @@ function adrotate_options_submit() {
 		}
 	
 		// Miscellaneous Options
-		$config['credits'] 		= 'Y';
+		if(isset($_POST['adrotate_credits'])) 					$config['credits'] 		= 'Y';
+			else 												$config['credits'] 		= 'N';
 		if(isset($_POST['adrotate_widgetalign'])) 				$config['widgetalign'] 	= 'Y';
 			else 												$config['widgetalign'] 	= 'N';
 		update_option('adrotate_config', $config);
@@ -729,20 +726,8 @@ function adrotate_add_roles() {
  Since:		3.0
 -------------------------------------------------------------*/
 function adrotate_remove_roles() {
-	global $wp_roles;
-	
-	// Current
+
 	remove_role('adrotate_advertiser');
 
-	// Remove in version 4 or so (also remove global!)
-	remove_role('adrotate_clientstats'); 
-	$wp_roles->remove_cap('administrator','adrotate_clients');
-	$wp_roles->remove_cap('editor','adrotate_clients');
-	$wp_roles->remove_cap('author','adrotate_clients');
-	$wp_roles->remove_cap('contributor','adrotate_clients');
-	$wp_roles->remove_cap('subscriber','adrotate_clients');
-	$wp_roles->remove_cap('adrotate_advertisers','adrotate_clients');
-	$wp_roles->remove_cap('adrotate_clientstats','adrotate_clients');
-	// End remove
 }
 ?>

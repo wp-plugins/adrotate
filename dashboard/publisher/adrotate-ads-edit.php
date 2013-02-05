@@ -27,6 +27,7 @@ $linkmeta		= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_
 list($sday, $smonth, $syear, $shour, $sminute) = split(" ", gmdate("d m Y H i", $schedules->starttime));
 list($eday, $emonth, $eyear, $ehour, $eminute) = split(" ", gmdate("d m Y H i", $schedules->stoptime));
 
+$meta_array = '';
 foreach($linkmeta as $meta) {
 	$meta_array[] = $meta->group;
 }
@@ -88,12 +89,13 @@ if($ad_edit_id) {
 	if($edit_banner->imagetype == "field") {
 		$image_field = $edit_banner->image;
 		$image_dropdown = '';
-	}
-	
-	if($edit_banner->imagetype == "dropdown") {
+	} else if($edit_banner->imagetype == "dropdown") {
 		$image_field = '';
 		$image_dropdown = $edit_banner->image;
-	}
+	} else {
+		$image_field = '';
+		$image_dropdown = '';
+	}		
 }
 ?>
 
@@ -407,7 +409,9 @@ jQuery(document).ready(function() {
 			</thead>
 
 		<tbody>
-		<?php foreach($groups as $group) {
+		<?php 
+		$class = '';
+		foreach($groups as $group) {
 			$ads_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = ".$group->id." AND `block` = 0;");
 			$class = ('alternate' != $class) ? 'alternate' : ''; ?>
 		    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
@@ -415,7 +419,7 @@ jQuery(document).ready(function() {
 				<td><?php echo $group->id; ?> - <strong><?php echo $group->name; ?></strong></td>
 				<td width="15%"><?php echo $ads_in_group; ?> <?php _e('Ads', 'adrotate'); ?></td>
 			</tr>
-			<?php } ?>
+		<?php } ?>
 		</tbody>					
 	</table>
 

@@ -19,9 +19,11 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
+	$grouporblock = '';
 	if($group > 0) $grouporblock = " AND `group` = '$group'";
 	if($block > 0) $grouporblock = " AND `block` = '$block'";
 
+	$output = '';
 	if($banner_id) {
 		if($individual == true) {
 			$banner = $wpdb->get_row($wpdb->prepare("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = %d AND `type` = 'active';", $banner_id));
@@ -56,7 +58,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 		
 		if($selected) {
 			$image = str_replace('%folder%', $adrotate_config['banner_folder'], $banner->image);		
-			$output = adrotate_ad_output($banner->id, $group, $block, $banner->bannercode, $banner->tracker, $banner->link, $image);
+			$output .= adrotate_ad_output($banner->id, $group, $block, $banner->bannercode, $banner->tracker, $banner->link, $image);
 
 			$remote_ip 	= adrotate_get_remote_ip();
 			if(is_array($adrotate_crawlers)) $crawlers = $adrotate_crawlers;
@@ -77,12 +79,12 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 				$wpdb->insert($wpdb->prefix."adrotate_tracker", array('ipaddress' => $remote_ip, 'timer' => $now, 'bannerid' => $banner_id, 'stat' => 'i', 'useragent' => ''));
 			}
 		} else {
-			$output = adrotate_error('ad_expired', array($banner_id));
+			$output .= adrotate_error('ad_expired', array($banner_id));
 		}
 		unset($banner, $schedules);
 		
 	} else {
-		$output = adrotate_error('ad_no_id');
+		$output .= adrotate_error('ad_no_id');
 	}
 	return $output;
 }
@@ -98,6 +100,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 	global $wpdb, $adrotate_debug;
 
+	$output = '';
 	if($group_ids) {
 		$now = current_time('timestamp');
 		if(!is_array($group_ids)) {
@@ -171,15 +174,14 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 					print_r($banner_id); 
 					echo "</pre></p>"; 
 				}			
-
-				$output = adrotate_ad($banner_id, false, $group_array[$group_choice], 0);
+				$output .= adrotate_ad($banner_id, false, $group_array[$group_choice], 0);
 			}
 		}
 		
 		unset($results, $selected);
 		
 	} else {
-		$output = adrotate_error('group_no_id');
+		$output .= adrotate_error('group_no_id');
 	}
 
 	return $output;
@@ -196,6 +198,7 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 function adrotate_block($block_id, $weight = 0) {
 	global $wpdb, $adrotate_debug;
 
+	$output = '';
 	if($block_id) {
 		$now = current_time('timestamp');
 		$prefix = $wpdb->prefix;
@@ -274,13 +277,14 @@ function adrotate_block($block_id, $weight = 0) {
 						echo "</pre></p>"; 
 					}			
 	
-					$output = '';
-					$output .= '<div id="'.$block->id.'" class="block_outer b-'.$block->id.'">';
+					$output .= '<div id="b-'.$block->id.'" class="block_outer b-'.$block->id.'">';
 					
 					$j = 1;
 					foreach($selected as $key => $banner_id) {
-						$output .= '<div id="'.$j.' '.$banner_id.'"class="block_inner a-'.$block->id;
-						if($j == $block->columns) {
+						$output .= '<div id="a-'.$banner_id.'" class="block_inner a-'.$block->id;
+						if($block->columns == 1) {
+							$output .= ' block_both ';						
+						} else if($j == $block->columns) {
 							$output .= ' block_right ';
 							$j = 1;
 						} else if($j == 1) {
@@ -292,7 +296,7 @@ function adrotate_block($block_id, $weight = 0) {
 						$output .= '">';
 
 						if($block->wrapper_before != '') {$output .= stripslashes(html_entity_decode($block->wrapper_before, ENT_QUOTES)); }
-						$output .= adrotate_ad($banner_id, false, 0, $block-id);
+						$output .= adrotate_ad($banner_id, false, 0, $block->id);
 						if($block->wrapper_after != '') { $output .= stripslashes(html_entity_decode($block->wrapper_after, ENT_QUOTES)); }
 						$output .= '</div>';
 	
@@ -306,7 +310,7 @@ function adrotate_block($block_id, $weight = 0) {
 					}
 					$output .= '</div>';
 				} else {
-					$output = adrotate_error('ad_unqualified');
+					$output .= adrotate_error('ad_unqualified');
 				}
 			}
 			
@@ -314,10 +318,10 @@ function adrotate_block($block_id, $weight = 0) {
 			unset($groups, $results, $selected, $block);
 			
 		} else {
-			$output = adrotate_error('block_not_found', array($block_id));
+			$output .= adrotate_error('block_not_found', array($block_id));
 		}
 	} else {
-		$output = adrotate_error('block_no_id');
+		$output .= adrotate_error('block_no_id');
 	}
 
 	return $output;
@@ -605,10 +609,10 @@ function adrotate_error($action, $arg = null) {
 
 		// Misc
 		default:
-			$default = '<span style="font-weight: bold; color: #f00;">'.__('An unknown error occured.', 'adrotate').'</span>';
+			$result = '<span style="font-weight: bold; color: #f00;">'.__('An unknown error occured.', 'adrotate').'</span>';
 		break;
 
-		return $default;
+		return $result;
 
 	}
 }

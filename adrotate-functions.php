@@ -199,9 +199,8 @@ function adrotate_dropdown_categories($savedcats, $count = 2, $child_of = 0, $pa
 			$output .= adrotate_dropdown_categories($savedcats, $count, $category->parent, $category->cat_ID);
 			$child_of = $parent;
 		}
+		return $output;
 	}
-
-	return $output;
 }
 
 /*-------------------------------------------------------------
@@ -235,9 +234,8 @@ function adrotate_dropdown_pages($savedpages, $count = 2, $child_of = 0, $parent
 			$output .= adrotate_dropdown_pages($savedpages, $count, $page->post_parent, $page->ID);
 			$child_of = $parent;
 		}
+		return $output;
 	}
-
-	return $output;
 }
 
 /*-------------------------------------------------------------
@@ -484,32 +482,36 @@ function adrotate_check_config() {
 	$crawlers 	= get_option('adrotate_crawlers');
 	$debug 		= get_option('adrotate_debug');
 
-	if($config['ad_manage'] == '' OR !isset($config['ad_manage'])) 					$config['ad_manage'] 			= 'switch_themes'; 	// Admin
-	if($config['ad_delete'] == '' OR !isset($config['ad_delete'])) 					$config['ad_delete']			= 'switch_themes'; 	// Admin
-	if($config['group_manage'] == '' OR !isset($config['group_manage'])) 			$config['group_manage']			= 'switch_themes'; 	// Admin
-	if($config['group_delete'] == '' OR !isset($config['group_delete'])) 			$config['group_delete']			= 'switch_themes'; 	// Admin
-	if($config['block_manage'] == '' OR !isset($config['block_manage'])) 			$config['block_manage']			= 'switch_themes'; 	// Admin
-	if($config['block_delete'] == '' OR !isset($config['block_delete'])) 			$config['block_delete']			= 'switch_themes'; 	// Admin
+	if(empty($config)) $config = array();
+	if(empty($crawlers)) $crawlers = array();
+	if(empty($debug)) $debug = array();
+	
+	if(empty($config['ad_manage'])) $config['ad_manage'] = 'switch_themes'; // Admin
+	if(empty($config['ad_delete'])) $config['ad_delete'] = 'switch_themes'; // Admin
+	if(empty($config['group_manage'])) $config['group_manage'] = 'switch_themes'; // Admin
+	if(empty($config['group_delete'])) $config['group_delete'] = 'switch_themes'; // Admin
+	if(empty($config['block_manage'])) $config['block_manage'] = 'switch_themes'; // Admin
+	if(empty($config['block_delete'])) $config['block_delete'] = 'switch_themes'; // Admin
 
-	if($config['banner_folder'] == '' OR !isset($config['banner_folder']))			$config['banner_folder']		= "/wp-content/banners/";
-	if($config['notification_email_switch'] == '' OR !isset($config['notification_email_switch']))	$config['notification_email_switch']	= 'Y';
-	if(($config['notification_email'] == '' OR !isset($config['notification_email']) OR !is_array($config['notification_email'])) AND $config['notification_email_switch'] == 'Y')	$config['notification_email']	= array(get_option('admin_email'));
-	if($config['advertiser_email'] == '' OR !isset($config['advertiser_email']) OR !is_array($config['advertiser_email']))	$config['advertiser_email']	= array(get_option('admin_email'));
-	if($config['credits'] == '' OR !isset($config['credits']))						$config['credits'] 				= 'Y';
-	if($config['widgetalign'] == '' OR !isset($config['widgetalign']))				$config['widgetalign'] 			= 'N';
-	if($config['impression_timer'] == '' OR !isset($config['impression_timer']))	$config['impression_timer'] 	= '10';
+	if(empty($config['banner_folder'])) $config['banner_folder'] = "/wp-content/banners/";
+	if(empty($config['notification_email_switch']))	$config['notification_email_switch'] = 'Y';
+	if((empty($config['notification_email']) OR !is_array($config['notification_email'])) AND $config['notification_email_switch'] == 'Y') $config['notification_email'] = array(get_option('admin_email'));
+	if(empty($config['advertiser_email']) OR !is_array($config['advertiser_email'])) $config['advertiser_email'] = array(get_option('admin_email'));
+	if(empty($config['credits'])) $config['credits'] = 'Y';
+	if(empty($config['widgetalign'])) $config['widgetalign'] = 'N';
+	if(empty($config['impression_timer'])) $config['impression_timer'] = '10';
 	update_option('adrotate_config', $config);
 
-	if($crawlers == '' OR !isset($crawlers)) 										$crawlers 						= array("Teoma", "alexa", "froogle", "Gigabot", "inktomi","looksmart", "URL_Spider_SQL", "Firefly", "NationalDirectory","Ask Jeeves", "TECNOSEEK", "InfoSeek", "WebFindBot", "girafabot","www.galaxy.com", "Googlebot", "Scooter", "Slurp","msnbot", "appie", "FAST", "WebBug", "Spade", "ZyBorg", "rabaz","Baiduspider", "Feedfetcher-Google", "TechnoratiSnoop", "Rankivabot","Mediapartners-Google", "Sogou web spider", "WebAlta Crawler","bot", "crawler", "yahoo", "msn", "ask", "ia_archiver");
+	if(empty($crawlers)) $crawlers = array("Teoma", "alexa", "froogle", "Gigabot", "inktomi","looksmart", "URL_Spider_SQL", "Firefly", "NationalDirectory","Ask Jeeves", "TECNOSEEK", "InfoSeek", "WebFindBot", "girafabot","www.galaxy.com", "Googlebot", "Scooter", "Slurp","msnbot", "appie", "FAST", "WebBug", "Spade", "ZyBorg", "rabaz","Baiduspider", "Feedfetcher-Google", "TechnoratiSnoop", "Rankivabot","Mediapartners-Google", "Sogou web spider", "WebAlta Crawler","bot", "crawler", "yahoo", "msn", "ask", "ia_archiver");
 	update_option('adrotate_crawlers', $crawlers);
 
-	if($debug['general'] == '' OR !isset($debug['general'])) 						$debug['general'] 				= false;
-	if($debug['dashboard'] == '' OR !isset($debug['dashboard'])) 					$debug['dashboard'] 			= false;
-	if($debug['userroles'] == '' OR !isset($debug['userroles'])) 					$debug['userroles'] 			= false;
-	if($debug['userstats'] == '' OR !isset($debug['userstats'])) 					$debug['userstats'] 			= false;
-	if($debug['stats'] == '' OR !isset($debug['stats'])) 							$debug['stats'] 				= false;
-	if($debug['timers'] == '' OR !isset($debug['timers'])) 							$debug['timers'] 				= false;
-	if($debug['track'] == '' OR !isset($debug['track'])) 							$debug['track'] 				= false;
+	if(empty($debug['general'])) $debug['general'] = false;
+	if(empty($debug['dashboard'])) $debug['dashboard'] = false;
+	if(empty($debug['userroles'])) $debug['userroles'] = false;
+	if(empty($debug['userstats'])) $debug['userstats'] = false;
+	if(empty($debug['stats'])) $debug['stats'] = false;
+	if(empty($debug['timers'])) $debug['timers'] = false;
+	if(empty($debug['track'])) $debug['track'] = false;
 	update_option('adrotate_debug', $debug);
 
 }
@@ -741,6 +743,7 @@ function adrotate_custom_css() {
 
 		$output .= '.block_left { clear:left; }';
 		$output .= '.block_right { clear:right; }';
+		$output .= '.block_both { clear:both; }';
 		$output .= '</style>';
 		$output .= '<!-- / AdRotate CSS for Blocks -->';
 		

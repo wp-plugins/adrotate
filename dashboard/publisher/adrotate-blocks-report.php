@@ -15,17 +15,13 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$ctr = adrotate_ctr($stats->clicks, $stats->impressions);						
 
 	// Prevent gaps in display
-	if($stats->impressions == 0) 		$stats->impressions 		= 0;
-	if($stats->clicks == 0) 			$stats->clicks 				= 0;
-	if($stats_today->impressions == 0) 	$stats_today->impressions 	= 0;
-	if($stats_today->clicks == 0) 		$stats_today->clicks 		= 0;
+	if(empty($stats->impressions))		 	$stats->impressions 		= 0;
+	if(empty($stats->clicks))	 			$stats->clicks 				= 0;
+	if(empty($stats_today->impressions)) 	$stats_today->impressions 	= 0;
+	if(empty($stats_today->clicks)) 		$stats_today->clicks 		= 0;
 
 	if($adrotate_debug['stats'] == true) {
 		echo "<p><strong>[DEBUG] Block (all time)</strong><pre>";
-		$memory = (memory_get_usage() / 1024 / 1024);
-		echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
-		$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
-		echo "Peak memory usage: " . round($peakmemory, 2) ." MB <br />"; 
 		print_r($stats); 
 		echo "</pre></p>"; 
 		echo "<p><strong>[DEBUG] Block (today)</strong><pre>";

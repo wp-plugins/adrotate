@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.3.2
+Version: 3.8.3.3
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,7 +15,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.3.2'.ADROTATE_BETA);
+define("ADROTATE_DISPLAY", '3.8.3.3'.ADROTATE_BETA);
 define("ADROTATE_VERSION", 362);
 define("ADROTATE_DB_VERSION", 27);
 /*-----------------------------------------------------------*/
@@ -27,7 +27,6 @@ include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-functions.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-statistics.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-output.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-widget.php');
-include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-network.php');
 // wp-content/plugins/adrotate/adrotate-out.php
 /*-----------------------------------------------------------*/
 
@@ -192,16 +191,16 @@ function adrotate_manage() {
 
 			<?php
 			$allbanners = $wpdb->get_results("SELECT `id`, `title`, `type`, `tracker` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'active' OR `type` = 'error' OR `type` = 'disabled' ORDER BY `sortorder` ASC, `id` ASC;");
-			
+			$activebanners = $errorbanners = $disabledbanners = false;
 			foreach($allbanners as $singlebanner) {
 				
 				$schedule = $wpdb->get_row("SELECT `starttime`, `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$singlebanner->id."';");
 				
 				$type = $singlebanner->type;
-				if($schedule->stoptime <= $in7days) {
+				if($type == 'active' AND $schedule->stoptime <= $in7days) {
 					$type = 'expiressoon';
 				}
-				if($schedule->stoptime <= $now) {
+				if($type == 'active' AND $schedule->stoptime <= $now) {
 					$type = 'expired';
 				} 
 	
@@ -549,6 +548,8 @@ function adrotate_options() {
 	$adrotate_crawlers 			= get_option('adrotate_crawlers');
 	$adrotate_roles				= get_option('adrotate_roles');
 	$adrotate_debug				= get_option('adrotate_debug');
+	$adrotate_version			= get_option('adrotate_version');
+	$adrotate_db_version		= get_option('adrotate_db_version');
 	
 	$crawlers 			= implode(', ', $adrotate_crawlers);
 	$notification_mails	= implode(', ', $adrotate_config['notification_email']);
@@ -748,6 +749,10 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Widget alignment', 'adrotate'); ?></th>
 				<td><input type="checkbox" name="adrotate_widgetalign" <?php if($adrotate_config['widgetalign'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Check this box if your widgets do not align in your themes sidebar. (Does not always help!)', 'adrotate'); ?></span></td>
 			</tr>
+			<tr>
+				<th valign="top"><?php _e('Credits', 'adrotate'); ?></th>
+				<td><input type="checkbox" name="adrotate_credits" <?php if($adrotate_config['credits'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show a simple token that you\'re using AdRotate in the themes Meta part.', 'adrotate'); ?></span></td>
+			</tr>
 
 			<tr>
 				<td colspan="2"><h2><?php _e('Maintenance', 'adrotate'); ?></h2></td>
@@ -806,6 +811,14 @@ function adrotate_options() {
 
 			<tr>
 				<td colspan="2"><h2><?php _e('Troubleshooting', 'adrotate'); ?></h2></td>
+			</tr>
+			<tr>
+				<td>Current version: <?php echo $adrotate_version['current']; ?></td>
+				<td>Previous version: <?php echo $adrotate_version['current']; ?></td>
+			</tr>
+			<tr>
+				<td>Current database version: <?php echo $adrotate_db_version['current']; ?></td>
+				<td>Previous database version: <?php echo $adrotate_db_version['current']; ?></td>
 			</tr>
 			<tr>
 				<td colspan="2"><span class="description"><?php _e('NOTE: The below options are not meant for normal use and are only there for developers to review saved settings or how ads are selected. These can be used as a measure of troubleshooting upon request but for normal use they SHOULD BE LEFT UNCHECKED!!', 'adrotate'); ?></span></td>

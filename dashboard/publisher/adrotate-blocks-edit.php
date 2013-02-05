@@ -9,7 +9,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$action = "block_new";
 	$edit_id = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;");
 	if($edit_id == 0) {
-	    $wpdb->insert($wpdb->prefix."adrotate_blocks", array('name' => '', 'rows' => 2, 'columns' => 0, 'gridfloat' => 'none', 'gridpadding' => 1, 'adwidth' => '125', 'adheight' => '125', 'admargin' => 1, 'adborder' => '', 'wrapper_before' => '', 'wrapper_after' => '', 'sortorder' => 0));
+	    $wpdb->insert($wpdb->prefix."adrotate_blocks", array('name' => '', 'rows' => 2, 'columns' => 0, 'gridfloat' => 'none', 'gridpadding' => 1, 'adwidth' => '125', 'adheight' => '125', 'admargin' => 1, 'adborder' => '0px #fff none', 'wrapper_before' => '', 'wrapper_after' => '', 'sortorder' => 0));
 	    $edit_id = $wpdb->insert_id;
 	}
 	$block_edit_id = $edit_id;
@@ -23,19 +23,19 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 $edit_block = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '$block_edit_id';");
 $groups		= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' ORDER BY `id` ASC;"); 
 $linkmeta	= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = 0 AND `block` = '$block_edit_id' AND `user` = 0;");
+
+$meta_array = '';
 foreach($linkmeta as $meta) {
 	$meta_array[] = $meta->group;
 }
 if(!is_array($meta_array)) $meta_array = array();
 
-// Split and make the grid border settings useful
-list($gridborderpx, $gridbordercolor, $gridborderstyle) = explode(" ", $edit_block->gridborder, 3);
-$gridborderpx = rtrim($gridborderpx, "px");
-if($gridbordercolor == '') $gridbordercolor = '#fff';
 // And for adverts
-list($adborderpx, $adbordercolor, $adborderstyle) = explode(" ", $edit_block->adborder, 3);
-$adborderpx = rtrim($adborderpx, "px");
-if($adbordercolor == '') $adbordercolor = '#fff';
+if(strlen($edit_block->adborder) > 0) {
+	list($adborderpx, $adbordercolor, $adborderstyle) = explode(" ", $edit_block->adborder, 3);
+	$adborderpx = rtrim($adborderpx, "px");
+	if($adbordercolor == '') $adbordercolor = '#fff';
+}
 ?>
 
 <form name="editblock" id="post" method="post" action="admin.php?page=adrotate-blocks">
@@ -176,7 +176,7 @@ if($adbordercolor == '') $adbordercolor = '#fff';
 		<tbody>
 	    <tr>
 			<th valign="top"><?php _e('Before ad', 'adrotate'); ?></strong></th>
-			<td colspan="2"><textarea tabindex="15" name="adrotate_wrapper_before" cols="65" rows="3"><?php echo $edit_block->wrapper_before; ?></textarea></td>
+			<td colspan="2"><textarea tabindex="15" name="adrotate_wrapper_before" cols="65" rows="3"><?php echo stripslashes($edit_block->wrapper_before); ?></textarea></td>
 			<td>
 		        <p><strong><?php _e('Example:', 'adrotate'); ?></strong></p>
 		        <p><em>&lt;span style="margin: 2px;"&gt;</em></p>
@@ -184,7 +184,7 @@ if($adbordercolor == '') $adbordercolor = '#fff';
 		</tr>
 	    <tr>
 			<th valign="top"><?php _e('After ad', 'adrotate'); ?></strong></th>
-			<td colspan="2"><textarea tabindex="16" name="adrotate_wrapper_after" cols="65" rows="3"><?php echo $edit_block->wrapper_after; ?></textarea></td>
+			<td colspan="2"><textarea tabindex="16" name="adrotate_wrapper_after" cols="65" rows="3"><?php echo stripslashes($edit_block->wrapper_after); ?></textarea></td>
 			<td>
 				<p><strong><?php _e('Example:', 'adrotate'); ?></strong></p>
 				<p><em>&lt;/span&gt;</em></p>
@@ -224,6 +224,7 @@ if($adbordercolor == '') $adbordercolor = '#fff';
 
 		<tbody>
 		<?php if($groups) {
+			$class = '';
 			foreach($groups as $group) {
 				$ads_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = ".$group->id." AND `block` = 0;");
 				$class = ('alternate' != $class) ? 'alternate' : ''; ?>

@@ -212,7 +212,7 @@ function adrotate_stats_nav($type, $id, $month, $year) {
  Since:		3.8
 -------------------------------------------------------------*/
 function adrotate_stats_graph($type, $id, $chartid, $start, $end) {
-	global $wpdb;
+	global $wpdb, $adrotate_debug;
 
 	if($type == 'ads') {
 		$stats = $wpdb->get_results($wpdb->prepare("SELECT `thetime`, SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats` WHERE `ad` = %d AND `thetime` >= %d AND `thetime` <= %d GROUP BY `thetime` ASC;", $id, $start, $end));

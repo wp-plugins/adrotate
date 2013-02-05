@@ -24,6 +24,8 @@ $edit_group = $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_groups` W
 $groups		= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' ORDER BY `id` ASC;"); 
 $ads 		= $wpdb->get_results("SELECT `id`, `title`, `tracker`, `weight` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'active' ORDER BY `id` ASC;");
 $linkmeta	= $wpdb->get_results("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = '$group_edit_id' AND `block` = 0 AND `user` = 0;");
+
+$meta_array = '';
 foreach($linkmeta as $meta) {
 	$meta_array[] = $meta->ad;
 }
@@ -165,6 +167,7 @@ if(!is_array($meta_array)) $meta_array = array();
 
 		<tbody>
 		<?php if($ads) {
+			$class = '';
 			foreach($ads as $ad) {
 				$stats = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats` WHERE `ad` = '".$ad->id."';");
 				$stoptime = $wpdb->get_var("SELECT `stoptime` FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '".$ad->id."' ORDER BY `stoptime` DESC LIMIT 1;");						
