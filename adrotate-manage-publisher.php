@@ -640,8 +640,6 @@ function adrotate_options_submit() {
 		}
 	
 		// Miscellaneous Options
-		if(isset($_POST['adrotate_credits'])) 					$config['credits'] 		= 'Y';
-			else 												$config['credits'] 		= 'N';
 		if(isset($_POST['adrotate_widgetalign'])) 				$config['widgetalign'] 	= 'Y';
 			else 												$config['widgetalign'] 	= 'N';
 		update_option('adrotate_config', $config);

@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.5.1
-Stable tag: 3.8.3.2
+Stable tag: 3.8.3.4
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -62,22 +62,16 @@ If that's not enough you can post on our [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.3.2 =
-* [fix] Blocks now allow 'auto' for adheight and adwidth
-* [fix] Group creation not using $wpdb->insert()
-* [fix] Block creation not using $wpdb->insert()
-* [change] Improved CSS for advert statuses on dashboards
+= 3.8.3.4 =
+* [change] "I'm using AdRotate" removed to conform with guidelines
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/download/changelog/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
 
 == Upgrade Notice ==
 
-= 3.8.3.2 =
-* [fix] Blocks now allow 'auto' for adheight and adwidth
-* [fix] Group creation not using $wpdb->insert()
-* [fix] Block creation not using $wpdb->insert()
-* [change] Improved CSS for advert statuses on dashboards
+= 3.8.3.4 =
+* [change] "I'm using AdRotate" removed to conform with guidelines
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/download/changelog/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!

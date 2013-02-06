@@ -497,7 +497,6 @@ function adrotate_check_config() {
 	if(empty($config['notification_email_switch']))	$config['notification_email_switch'] = 'Y';
 	if((empty($config['notification_email']) OR !is_array($config['notification_email'])) AND $config['notification_email_switch'] == 'Y') $config['notification_email'] = array(get_option('admin_email'));
 	if(empty($config['advertiser_email']) OR !is_array($config['advertiser_email'])) $config['advertiser_email'] = array(get_option('admin_email'));
-	if(empty($config['credits'])) $config['credits'] = 'Y';
 	if(empty($config['widgetalign'])) $config['widgetalign'] = 'N';
 	if(empty($config['impression_timer'])) $config['impression_timer'] = '10';
 	update_option('adrotate_config', $config);
@@ -702,55 +701,18 @@ function adrotate_dashboard_styles() {
 ?>
 <style type="text/css" media="screen">
 	/* styles for graphs */
-	.adrotate-label { font-size: 12px; line-height: 5px; margin: 2px; font-weight: bold }
-	.adrotate-clicks { color: #5Af; font-weight: normal }
-	.adrotate-impressions { color: #F80; font-weight: normal }
+	.adrotate-label { font-size:12px;line-height:5px;margin:2px;font-weight:bold; }
+	.adrotate-clicks { color:#5Af;font-weight:normal; }
+	.adrotate-impressions { color:#F80;font-weight:normal; }
 	
 	/* styles for advert statuses and stats */
-	.row_urgent { background-color:#ffebe8; border-color:#c00; }
-	.row_error { background-color:#ffffe0; border-color:#e6db55; }
-	.row_inactive { background-color:#ebf3fa; border-color:#466f82; }
-	.stats_large { display: block; margin-bottom: 10px; margin-top: 10px; text-align: center; font-weight: bold; }
-	.number_large {	margin: 20px; font-size: 28px; }
+	.row_urgent { background-color:#ffebe8;border-color:#c00; }
+	.row_error { background-color:#ffffe0;border-color:#e6db55; }
+	.row_inactive { background-color:#ebf3fa;border-color:#466f82; }
+	.stats_large { display:block;margin-bottom:10px;margin-top:10px;text-align:center;font-weight:bold; }
+	.number_large {	margin:20px;font-size:28px; }
 </style>
 <?php
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_custom_css
-
- Purpose:   Load file uploaded popup style
- Receive:   -None-
- Return:	-None-
- Since:		3.8
--------------------------------------------------------------*/
-function adrotate_custom_css() {
-	global $wpdb;
-	
-	$blocks = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_blocks` WHERE `name` != '' ORDER BY `id` ASC;");
-	
-	if($blocks) {
-		$output = '<!-- AdRotate CSS for Blocks -->';
-		$output = '<style type="text/css" media="screen">';
-		foreach($blocks as $block) {
-			$adwidth = $block->adwidth.'px';
-			if($block->adheight == 'auto') $adheight = 'auto';
-				else $adheight = $block->adheight.'px';
-	
-			$output .= '.b-'.$block->id.' { float:'.$block->gridfloat.';overflow:auto;margin:0;padding:'.$block->gridpadding.'px;clear:none;width:auto;height:auto; }';
-			$output .= '.a-'.$block->id.' { margin:'.$block->admargin.'px;clear:none;float:left;width:'.$adwidth.';height:'.$adheight.';border:'.$block->adborder.'; }';
-		}
-
-		$output .= '.block_left { clear:left; }';
-		$output .= '.block_right { clear:right; }';
-		$output .= '.block_both { clear:both; }';
-		$output .= '</style>';
-		$output .= '<!-- / AdRotate CSS for Blocks -->';
-		
-		unset($blocks, $block);
-		
-		echo $output;
-	}
 }
 
 /*-------------------------------------------------------------

@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.3.3
+Version: 3.8.3.4
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,9 +15,9 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.3.3'.ADROTATE_BETA);
-define("ADROTATE_VERSION", 362);
-define("ADROTATE_DB_VERSION", 27);
+define("ADROTATE_DISPLAY", '3.8.3.4'.ADROTATE_BETA);
+define("ADROTATE_VERSION", 363);
+define("ADROTATE_DB_VERSION", 30);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -56,7 +56,6 @@ add_shortcode('adrotate', 'adrotate_shortcode');
 add_action('wp_head', 'adrotate_custom_css');
 add_filter('the_content', 'adrotate_inject_posts');
 add_action('widgets_init', create_function('', 'return register_widget("adrotate_widgets");'));
-add_action('wp_meta', 'adrotate_meta');
 /*-----------------------------------------------------------*/
 
 /*--- Dashboard ---------------------------------------------*/
@@ -748,10 +747,6 @@ function adrotate_options() {
 			<tr>
 				<th valign="top"><?php _e('Widget alignment', 'adrotate'); ?></th>
 				<td><input type="checkbox" name="adrotate_widgetalign" <?php if($adrotate_config['widgetalign'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Check this box if your widgets do not align in your themes sidebar. (Does not always help!)', 'adrotate'); ?></span></td>
-			</tr>
-			<tr>
-				<th valign="top"><?php _e('Credits', 'adrotate'); ?></th>
-				<td><input type="checkbox" name="adrotate_credits" <?php if($adrotate_config['credits'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show a simple token that you\'re using AdRotate in the themes Meta part.', 'adrotate'); ?></span></td>
 			</tr>
 
 			<tr>

@@ -401,6 +401,41 @@ function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, 
 }
 
 /*-------------------------------------------------------------
+ Name:      adrotate_custom_css
+
+ Purpose:   Load file uploaded popup style
+ Receive:   -None-
+ Return:	-None-
+ Since:		3.8
+-------------------------------------------------------------*/
+function adrotate_custom_css() {
+	global $wpdb;
+	
+	$blocks = $wpdb->get_results("SELECT * FROM `".$wpdb->prefix . "adrotate_blocks` WHERE `name` != '' ORDER BY `id` ASC;");
+	
+	$output = "\n<!-- This site is using AdRotate v".ADROTATE_DISPLAY." to display their advertisements - http://www.adrotateplugin.com/ -->\n";
+	if($blocks) {
+		$output .= "<!-- AdRotate CSS for Blocks -->\n";
+		$output .= "<style type=\"text/css\" media=\"screen\">\n";
+		foreach($blocks as $block) {
+			$adwidth = $block->adwidth.'px';
+			if($block->adheight == 'auto') $adheight = 'auto';
+				else $adheight = $block->adheight.'px';
+	
+			$output .= ".b-".$block->id." { float:".$block->gridfloat.";overflow:auto;margin:0;padding:".$block->gridpadding."px;clear:none;width:auto;height:auto; }\n";
+			$output .= ".a-".$block->id." { margin:".$block->admargin."px;clear:none;float:left;width:".$adwidth.";height:".$adheight.";border:".$block->adborder."; }\n";
+		}
+		$output .= ".block_left { clear:left; }\n";
+		$output .= ".block_right { clear:right; }\n";
+		$output .= ".block_both { clear:both; }\n";
+		$output .= "</style>\n";
+		$output .= "<!-- / AdRotate CSS for Blocks -->\n\n";
+		unset($blocks, $block);
+	}
+	echo $output;
+}
+
+/*-------------------------------------------------------------
  Name:      adrotate_inject_posts
 
  Purpose:   Add an advert to a single post
@@ -525,18 +560,6 @@ function adrotate_inject_posts($post_content) {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_meta
-
- Purpose:   Sidebar meta
- Receive:   -none-
- Return:    -none-
- Since:		0.1
--------------------------------------------------------------*/
-function adrotate_meta() {
-	echo "<li>". __('I\'m using', 'adrotate') ." <a href=\"http://www.adrotateplugin.com/\" target=\"_blank\" title=\"AdRotate\">AdRotate</a></li>\n";
-}
-
-/*-------------------------------------------------------------
  Name:      adrotate_nonce_error
 
  Purpose:   Display a formatted error if Nonce fails
@@ -570,6 +593,7 @@ function adrotate_error($action, $arg = null) {
 			} else {
 				$result = '<!-- '.__('Error, Ad', 'adrotate').' (ID: '.$arg[0].') '.__('is not available at this time due to schedule restrictions!', 'adrotate').' -->';
 			}
+			return $result;
 		break;
 		
 		case "ad_unqualified" :
@@ -578,42 +602,47 @@ function adrotate_error($action, $arg = null) {
 			} else {
 				$result = '<!-- '.__('Either there are no banners, they are disabled or none qualified for this location!', 'adrotate').' -->';
 			}
+			return $result;
 		break;
 		
 		case "ad_no_id" :
 			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no Ad ID set! Check your syntax!', 'adrotate').'</span>';
+			return $result;
 		break;
 
 		case "ad_not_found" :
 			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, ad could not be found! Make sure it exists.', 'adrotate').'</span>';
+			return $result;
 		break;
 
 		// Groups
 		case "group_no_id" :
 			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no group set! Check your syntax!', 'adrotate').'</span>';
+			return $result;
 		break;
 
 		// Blocks
 		case "block_not_found" :
 			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, Block', 'adrotate').' (ID: '.$arg[0].') '.__('does not exist! Check your syntax!', 'adrotate').'</span>';
+			return $result;
 		break;
 
 		case "block_no_id" :
 			$result = '<span style="font-weight: bold; color: #f00;">'.__('Error, no Block ID set! Check your syntax!', 'adrotate').'</span>';
+			return $result;
 		break;
 
 		// Database
 		case "db_error" :
 			$result = '<span style="font-weight: bold; color: #f00;">'.__('There was an error locating the database tables for AdRotate. Please deactivate and re-activate AdRotate from the plugin page!!', 'adrotate').'<br />'.__('If this does not solve the issue please seek support at', 'adrotate').' <a href="http://www.adrotateplugin.com/support/">www.adrotateplugin.com/support/</a></span>';
+			return $result;
 		break;
 
 		// Misc
 		default:
 			$result = '<span style="font-weight: bold; color: #f00;">'.__('An unknown error occured.', 'adrotate').'</span>';
+			return $result;
 		break;
-
-		return $result;
-
 	}
 }
 

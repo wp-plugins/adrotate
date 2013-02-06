@@ -136,6 +136,8 @@ function adrotate_database_install() {
 			`cat_loc` tinyint(1) NOT NULL default '0',
 			`page` longtext NOT NULL,
 			`page_loc` tinyint(1) NOT NULL default '0',
+			`wrapper_before` longtext NOT NULL,
+			`wrapper_after` longtext NOT NULL,
 			PRIMARY KEY  (`id`)
 		) ".$charset_collate." ENGINE=InnoDB;");
 
@@ -352,8 +354,6 @@ function adrotate_database_upgrade() {
 		$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` CHANGE `adheight` `adheight` varchar(6)  NOT NULL  DEFAULT '125';");
 	}
 
-	// 5 Versions missing, didn't make it into the final version.
-
 	// Database: 	24
 	// AdRotate:	3.8b412
 	if($adrotate_db_version['current'] < 24) {
@@ -388,6 +388,13 @@ function adrotate_database_upgrade() {
 	if($adrotate_db_version['current'] < 27) {
 		$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` CHANGE `adwidth` `adwidth` varchar(6)  NOT NULL  DEFAULT '125';");
 		$wpdb->query("ALTER TABLE `".$tables['adrotate_blocks']."` CHANGE `adheight` `adheight` varchar(6)  NOT NULL  DEFAULT '125';");
+	}
+
+	// Database: 	30
+	// AdRotate:	3.8.3.4
+	if($adrotate_db_version['current'] < 30) {
+		adrotate_add_column($tables['adrotate_groups'], 'wrapper_before', 'longtext NOT NULL AFTER `page_loc`');
+		adrotate_add_column($tables['adrotate_groups'], 'wrapper_after', 'longtext NOT NULL AFTER `wrapper_before`');
 	}
 
 	update_option("adrotate_db_version", array('current' => ADROTATE_DB_VERSION, 'previous' => $adrotate_db_version['current']));
@@ -675,7 +682,7 @@ function adrotate_add_column($table_name, $column_name, $attributes) {
  Name:      adrotate_del_column
 
  Purpose:   Check if the column exists in the table remove if it does
- Receive:   $table_name, $column_name, $attributes
+ Receive:   $table_name, $column_name
  Return:	Boolean
  Since:		3.8.3.3
 -------------------------------------------------------------*/
