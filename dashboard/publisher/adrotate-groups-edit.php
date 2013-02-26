@@ -94,9 +94,9 @@ if(!is_array($meta_array)) $meta_array = array();
 	        <th valign="top"><?php _e('Which categories?', 'adrotate'); ?></th>
 	        <td colspan="3">
 	        <label for="adrotate_categories">
-		        <select multiple="true" tabindex="2" name="adrotate_categories[]">
-		        <?php echo adrotate_dropdown_categories($edit_group->cat, 0, 0, 0); ?>
-		        </select> <em><?php _e('Click the categories you want the adverts to show in. Hold down CTRL (CMD for Apple OS X) to select multiple.', 'adrotate'); ?></em>
+				<div class="adrotate-select">
+		        <?php echo adrotate_select_categories($edit_group->cat, 0, 0, 0); ?>
+				</div><em><?php _e('Click the categories posts you want the adverts to show in.', 'adrotate'); ?></em>
 	        </label>
 	        </td>
       	</tr>
@@ -117,9 +117,9 @@ if(!is_array($meta_array)) $meta_array = array();
 	        <th valign="top"><?php _e('Which pages?', 'adrotate'); ?></th>
 	        <td colspan="3">
 	        <label for="adrotate_pages">
-		        <select multiple="true" tabindex="2" name="adrotate_pages[]">
-		        <?php echo adrotate_dropdown_pages($edit_group->page, 0, 0, 0); ?>
-		        </select> <em><?php _e('Click the pages you want the adverts to show in. Hold down CTRL (CMD for Apple OS X) to select multiple.', 'adrotate'); ?></em>
+		        <div class="adrotate-select">
+		        <?php echo adrotate_select_pages($edit_group->page, 0, 0, 0); ?>
+				</div><em><?php _e('Click the pages you want the adverts to show in.', 'adrotate'); ?></em>
 	        </label>
 	        </td>
       	</tr>

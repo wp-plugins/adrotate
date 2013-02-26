@@ -60,23 +60,25 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 			$image = str_replace('%folder%', $adrotate_config['banner_folder'], $banner->image);		
 			$output .= adrotate_ad_output($banner->id, $group, $block, $banner->bannercode, $banner->tracker, $banner->link, $image);
 
-			$remote_ip 	= adrotate_get_remote_ip();
-			if(is_array($adrotate_crawlers)) $crawlers = $adrotate_crawlers;
-				else $crawlers = array();
+			if($adrotate_config['enable_stats'] == 'Y') {
+				$remote_ip 	= adrotate_get_remote_ip();
+				if(is_array($adrotate_crawlers)) $crawlers = $adrotate_crawlers;
+					else $crawlers = array();
 
-			$nocrawler = true;
-			foreach($crawlers as $crawler) {
-				if(preg_match("/$crawler/i", $useragent)) $nocrawler = false;
-			}
-			$ip = $wpdb->get_var($wpdb->prepare("SELECT `timer` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` = '%s' AND `stat` = 'i' AND `bannerid` = %d ORDER BY `timer` DESC LIMIT 1;", $remote_ip, $banner_id));
-			if($ip < $impression_timer AND $nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
-				$stats = $wpdb->get_var($wpdb->prepare("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats` WHERE `ad` = %d $grouporblock AND `thetime` = '$today';", $banner_id));
-				if($stats > 0) {
-					$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_stats` SET `impressions` = `impressions` + 1 WHERE `id` = '$stats';");
-				} else {
-					$wpdb->insert($wpdb->prefix.'adrotate_stats', array('ad' => $banner_id, 'group' => $group, 'block' => $block, 'thetime' => $today, 'clicks' => 0, 'impressions' => 1));
+				$nocrawler = true;
+				foreach($crawlers as $crawler) {
+					if(preg_match("/$crawler/i", $useragent)) $nocrawler = false;
 				}
-				$wpdb->insert($wpdb->prefix."adrotate_tracker", array('ipaddress' => $remote_ip, 'timer' => $now, 'bannerid' => $banner_id, 'stat' => 'i', 'useragent' => ''));
+				$ip = $wpdb->get_var($wpdb->prepare("SELECT `timer` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress` = '%s' AND `stat` = 'i' AND `bannerid` = %d ORDER BY `timer` DESC LIMIT 1;", $remote_ip, $banner_id));
+				if($ip < $impression_timer AND $nocrawler == true AND (strlen($useragent_trim) > 0 OR !empty($useragent))) {
+					$stats = $wpdb->get_var($wpdb->prepare("SELECT `id` FROM `".$wpdb->prefix."adrotate_stats` WHERE `ad` = %d $grouporblock AND `thetime` = '$today';", $banner_id));
+					if($stats > 0) {
+						$wpdb->query("UPDATE `".$wpdb->prefix."adrotate_stats` SET `impressions` = `impressions` + 1 WHERE `id` = '$stats';");
+					} else {
+						$wpdb->insert($wpdb->prefix.'adrotate_stats', array('ad' => $banner_id, 'group' => $group, 'block' => $block, 'thetime' => $today, 'clicks' => 0, 'impressions' => 1));
+					}
+					$wpdb->insert($wpdb->prefix."adrotate_tracker", array('ipaddress' => $remote_ip, 'timer' => $now, 'bannerid' => $banner_id, 'stat' => 'i', 'useragent' => ''));
+				}
 			}
 		} else {
 			$output .= adrotate_error('ad_expired', array($banner_id));
@@ -421,8 +423,10 @@ function adrotate_custom_css() {
 			$adwidth = $block->adwidth.'px';
 			if($block->adheight == 'auto') $adheight = 'auto';
 				else $adheight = $block->adheight.'px';
+			if($block->gridfloat == 'none') $gridfloat = '';
+				else $gridfloat = 'float:'.$block->gridfloat.';';
 	
-			$output .= ".b-".$block->id." { float:".$block->gridfloat.";overflow:auto;margin:0;padding:".$block->gridpadding."px;clear:none;width:auto;height:auto; }\n";
+			$output .= ".b-".$block->id." { ".$gridfloat."overflow:auto;margin:0;padding:".$block->gridpadding."px;clear:none;width:auto;height:auto; }\n";
 			$output .= ".a-".$block->id." { margin:".$block->admargin."px;clear:none;float:left;width:".$adwidth.";height:".$adheight.";border:".$block->adborder."; }\n";
 		}
 		$output .= ".block_left { clear:left; }\n";
@@ -726,7 +730,7 @@ function adrotate_credits() {
 
 	echo '<td style="border-left:1px #ddd solid;"><ul>';
 	echo '	<li><a href="http://www.ajdg.net" title="AJdG Solutions"><img src="'.WP_CONTENT_URL.'/plugins/adrotate/images/ajdg-logo-100x60.png" alt="ajdg-logo-100x60" width="100" height="60" align="left" style="padding: 0 10px 10px 0;" /></a>';
-	echo '	'.__('Your one stop for Webdevelopment, consultancy and anything WordPress! When you need a custom plugin, theme customizations or have your site moved/migrated entirely. Find out more about what I can do for you on my website!', 'adrotate').' '.__('Visit the', 'adrotate').' <a href="http://www.ajdg.net" target="_blank">'.__('AJdG Solutions', 'adrotate').'</a> '.__('website', 'adrotate').'.</li>';
+	echo '	<a href="http://www.ajdg.net" title="AJdG Solutions">AJdG Solutions</a> - '.__('Your one stop for Webdevelopment, consultancy and anything WordPress! When you need a custom plugin, theme customizations or have your site moved/migrated entirely. Find out more about what I can do for you on my website!', 'adrotate').' '.__('Visit the', 'adrotate').' <a href="http://www.ajdg.net" target="_blank">'.__('AJdG Solutions', 'adrotate').'</a> '.__('website', 'adrotate').'.</li>';
 	echo '</ul></td>';
 	echo '</tr>';
 	echo '</tbody>';

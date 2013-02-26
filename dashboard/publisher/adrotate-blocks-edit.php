@@ -9,7 +9,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$action = "block_new";
 	$edit_id = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;");
 	if($edit_id == 0) {
-	    $wpdb->insert($wpdb->prefix."adrotate_blocks", array('name' => '', 'rows' => 2, 'columns' => 0, 'gridfloat' => 'none', 'gridpadding' => 1, 'adwidth' => '125', 'adheight' => '125', 'admargin' => 1, 'adborder' => '0px #fff none', 'wrapper_before' => '', 'wrapper_after' => '', 'sortorder' => 0));
+	    $wpdb->insert($wpdb->prefix."adrotate_blocks", array('name' => '', 'rows' => 2, 'columns' => 2, 'gridfloat' => 'none', 'gridpadding' => 1, 'adwidth' => '125', 'adheight' => '125', 'admargin' => 1, 'adborder' => '0px #fff none', 'wrapper_before' => '', 'wrapper_after' => '', 'sortorder' => 0));
 	    $edit_id = $wpdb->insert_id;
 	}
 	$block_edit_id = $edit_id;
@@ -88,7 +88,7 @@ if(strlen($edit_block->adborder) > 0) {
 			<th valign="top"><?php _e('Float', 'adrotate'); ?></strong></th>
 			<td>
 				<label for="adrotate_gridfloat"><select tabindex="6" name="adrotate_gridfloat">
-		        	<option value="none" <?php if($edit_block->gridfloat == 'none') { echo 'selected'; } ?>><?php _e('None', 'adrotate'); ?></option>
+		        	<option value="none" <?php if($edit_block->gridfloat == 'none') { echo 'selected'; } ?>><?php _e('No Float', 'adrotate'); ?></option>
 		        	<option value="left" <?php if($edit_block->gridfloat == "left") { echo 'selected'; } ?>><?php _e('Left', 'adrotate'); ?></option>
 		        	<option value="right" <?php if($edit_block->gridfloat == "right") { echo 'selected'; } ?>><?php _e('Right', 'adrotate'); ?></option>
 		        	<option value="inherit" <?php if($edit_block->gridfloat == "inherit") { echo 'selected'; } ?>><?php _e('Inherit', 'adrotate'); ?></option>

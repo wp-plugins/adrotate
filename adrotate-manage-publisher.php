@@ -195,17 +195,22 @@ function adrotate_insert_input() {
 function adrotate_insert_group() {
 	global $wpdb, $adrotate_config;
 
-	if(wp_verify_nonce($_POST['adrotate_nonce'], 'adrotate_save_group')) {
-		$action			= $_POST['adrotate_action'];
-		$id 			= $_POST['adrotate_id'];
-		$name 			= strip_tags(trim($_POST['adrotate_groupname'], "\t\n "));
-		$ads			= $_POST['adselect'];
-		$sortorder		= strip_tags(htmlspecialchars(trim($_POST['adrotate_sortorder'], "\t\n "), ENT_QUOTES));
-		$categories		= $_POST['adrotate_categories'];
-		$category_loc	= $_POST['adrotate_cat_location'];
-		$pages			= $_POST['adrotate_pages'];
-		$page_loc		= $_POST['adrotate_page_location'];
-	
+	if(wp_verify_nonce($_POST['adrotate_nonce'], 'adrotate_save_group')) {	
+		$action = $id = $name = '';
+		if(isset($_POST['adrotate_action'])) $action = $_POST['adrotate_action'];
+		if(isset($_POST['adrotate_id'])) $id = $_POST['adrotate_id'];
+		if(isset($_POST['adrotate_groupname'])) $name = strip_tags(trim($_POST['adrotate_groupname'], "\t\n "));
+
+		$ads = $sortorder = '';
+		if(isset($_POST['adselect'])) $ads = $_POST['adselect'];
+		if(isset($_POST['adrotate_sortorder'])) $sortorder = strip_tags(htmlspecialchars(trim($_POST['adrotate_sortorder'], "\t\n "), ENT_QUOTES));
+
+		$categories = $category_loc = $pages = $page_loc = '';
+		if(isset($_POST['adrotate_categories'])) $categories = $_POST['adrotate_categories'];
+		if(isset($_POST['adrotate_cat_location'])) $category_loc = $_POST['adrotate_cat_location'];
+		if(isset($_POST['adrotate_pages'])) $pages = $_POST['adrotate_pages'];
+		if(isset($_POST['adrotate_page_location'])) $page_loc = $_POST['adrotate_page_location'];
+
 		if(current_user_can('adrotate_group_manage')) {
 			if(strlen($name) < 1) $name = 'Group '.$id;
 	
@@ -232,14 +237,14 @@ function adrotate_insert_group() {
 			if(strlen($page) < 1) $page = '';
 			if($page_loc < 0 OR $page_loc > 3) $page_loc = 0;
 	
+			if(empty($meta_array)) $meta_array = array();
+			if(empty($ads)) $ads = array();
+
 			// Fetch records for the group
 			$linkmeta = $wpdb->get_results($wpdb->prepare("SELECT `ad` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = %d AND `block` = 0 AND `user` = 0;", $id));
 			foreach($linkmeta as $meta) {
 				$meta_array[] = $meta->ad;
 			}
-			
-			if(!is_array($meta_array)) 	$meta_array = array();
-			if(!is_array($ads)) 		$ads = array();
 			
 			// Add new ads to this group
 			$insert = array_diff($ads,$meta_array);
@@ -280,26 +285,30 @@ function adrotate_insert_block() {
 	global $wpdb, $adrotate_config;
 
 	if(wp_verify_nonce($_POST['adrotate_nonce'], 'adrotate_save_block')) {
-		$action			= $_POST['adrotate_action'];
-		$id 			= $_POST['adrotate_id'];
-		$name 			= strip_tags(trim($_POST['adrotate_blockname'], "\t\n "));
+		$action = $id = $name = '';
+		if(isset($_POST['adrotate_action'])) $action = $_POST['adrotate_action'];
+		if(isset($_POST['adrotate_id'])) $id = $_POST['adrotate_id'];
+		if(isset($_POST['adrotate_blockname'])) $name = strip_tags(trim($_POST['adrotate_blockname'], "\t\n "));
 	
-		$rows			= strip_tags(trim($_POST['adrotate_gridrows'], "\t\n "));
-		$columns 		= strip_tags(trim($_POST['adrotate_gridcolumns'], "\t\n "));
-		$gridfloat 		= strip_tags(trim($_POST['adrotate_gridfloat'], "\t\n "));
-		$gridpadding	= strip_tags(trim($_POST['adrotate_gridpadding'], "\t\n "));
-	
-		$adwidth		= strip_tags(trim($_POST['adrotate_adwidth'], "\t\n "));
-		$adheight 		= strip_tags(trim($_POST['adrotate_adheight'], "\t\n "));
-		$admargin		= strip_tags(trim($_POST['adrotate_admargin'], "\t\n "));
-		$adpx			= strip_tags(trim($_POST['adrotate_adborderpx'], "\t\n "));
-		$adcolor		= strip_tags(trim($_POST['adrotate_adbordercolor'], "\t\n "));
-		$adstyle		= strip_tags(trim($_POST['adrotate_adborderstyle'], "\t\n "));
-	
-		$wrapper_before	= trim($_POST['adrotate_wrapper_before'], "\t\n ");
-		$wrapper_after	= trim($_POST['adrotate_wrapper_after'], "\t\n ");
-		$groups 		= $_POST['groupselect'];
-		$sortorder		= strip_tags(htmlspecialchars(trim($_POST['adrotate_sortorder'], "\t\n "), ENT_QUOTES));
+		$rows = $columns = $gridfloat = $gridpadding = '';
+		if(isset($_POST['adrotate_gridrows'])) $rows = strip_tags(trim($_POST['adrotate_gridrows'], "\t\n "));
+		if(isset($_POST['adrotate_gridcolumns'])) $columns = strip_tags(trim($_POST['adrotate_gridcolumns'], "\t\n "));
+		if(isset($_POST['adrotate_gridfloat'])) $gridfloat = strip_tags(trim($_POST['adrotate_gridfloat'], "\t\n "));
+		if(isset($_POST['adrotate_gridpadding'])) $gridpadding = strip_tags(trim($_POST['adrotate_gridpadding'], "\t\n "));
+
+		$adwidth = $adheight = $admargin = $adpx = $adcolor = $adstyle = '';
+		if(isset($_POST['adrotate_adwidth'])) $adwidth = strip_tags(trim($_POST['adrotate_adwidth'], "\t\n "));
+		if(isset($_POST['adrotate_adheight'])) $adheight = strip_tags(trim($_POST['adrotate_adheight'], "\t\n "));
+		if(isset($_POST['adrotate_admargin'])) $admargin = strip_tags(trim($_POST['adrotate_admargin'], "\t\n "));
+		if(isset($_POST['adrotate_adborderpx'])) $adpx = strip_tags(trim($_POST['adrotate_adborderpx'], "\t\n "));
+		if(isset($_POST['adrotate_adbordercolor'])) $adcolor = strip_tags(trim($_POST['adrotate_adbordercolor'], "\t\n "));
+		if(isset($_POST['adrotate_adborderstyle'])) $adstyle = strip_tags(trim($_POST['adrotate_adborderstyle'], "\t\n "));
+
+		$wrapper_before = $wrapper_after = $groups = $sortorder = '';
+		if(isset($_POST['adrotate_wrapper_before'])) $wrapper_before	= trim($_POST['adrotate_wrapper_before'], "\t\n ");
+		if(isset($_POST['adrotate_wrapper_after'])) $wrapper_after = trim($_POST['adrotate_wrapper_after'], "\t\n ");
+		if(isset($_POST['groupselect'])) $groups = $_POST['groupselect'];
+		if(isset($_POST['adrotate_sortorder'])) $sortorder = strip_tags(htmlspecialchars(trim($_POST['adrotate_sortorder'], "\t\n "), ENT_QUOTES));
 	
 		if(current_user_can('adrotate_block_manage')) {
 			if(strlen($name) < 1) $name = 'Block '.$id;
@@ -318,7 +327,7 @@ function adrotate_insert_block() {
 			if($adpx >= 1 AND $adpx <= 99 AND is_numeric($adpx) AND $adcolor != '' AND preg_match('/^#[a-f0-9]{6}$/i', $adcolor) AND $adstyle != 'none') {
 				$adborder = $adpx."px ".$adcolor." ".$adstyle;
 			} else {
-				$adborder = 'none';
+				$adborder = '0px #fff none';
 			}
 	
 			// Validate sort order
@@ -374,13 +383,12 @@ function adrotate_request_action() {
 	if(wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_bulk_ads_active') OR wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_bulk_ads_disable') 
 	OR wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_bulk_ads_error') OR wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_bulk_ads_queue') OR 
 	wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_bulk_blocks') OR wp_verify_nonce($_POST['adrotate_nonce'],'adrotate_bulk_groups')) {
-		if(isset($_POST['bannercheck'])) 			$banner_ids = $_POST['bannercheck'];
-		if(isset($_POST['disabledbannercheck'])) 	$banner_ids = $_POST['disabledbannercheck'];
-		if(isset($_POST['errorbannercheck'])) 		$banner_ids = $_POST['errorbannercheck'];
-		if(isset($_POST['groupcheck'])) 			$group_ids = $_POST['groupcheck'];
-		if(isset($_POST['blockcheck'])) 			$block_ids = $_POST['blockcheck'];
-		
-		if(isset($_POST['adrotate_id'])) 			$banner_ids = array($_POST['adrotate_id']);
+		if(isset($_POST['bannercheck'])) $banner_ids = $_POST['bannercheck'];
+		if(isset($_POST['disabledbannercheck'])) $banner_ids = $_POST['disabledbannercheck'];
+		if(isset($_POST['errorbannercheck'])) $banner_ids = $_POST['errorbannercheck'];
+		if(isset($_POST['groupcheck'])) $group_ids = $_POST['groupcheck'];
+		if(isset($_POST['blockcheck'])) $block_ids = $_POST['blockcheck'];
+		if(isset($_POST['adrotate_id'])) $banner_ids = array($_POST['adrotate_id']);
 		
 		// Determine which kind of action to use
 		if(isset($_POST['adrotate_action'])) {
@@ -616,12 +624,20 @@ function adrotate_options_submit() {
 		adrotate_set_capability($_POST['adrotate_group_delete'], "adrotate_group_delete");
 		adrotate_set_capability($_POST['adrotate_block_manage'], "adrotate_block_manage");
 		adrotate_set_capability($_POST['adrotate_block_delete'], "adrotate_block_delete");
+		$config['advertiser'] 			= $_POST['adrotate_advertiser'];
+		$config['global_report']	 	= $_POST['adrotate_global_report'];
 		$config['ad_manage'] 			= $_POST['adrotate_ad_manage'];
 		$config['ad_delete'] 			= $_POST['adrotate_ad_delete'];
 		$config['group_manage'] 		= $_POST['adrotate_group_manage'];
 		$config['group_delete'] 		= $_POST['adrotate_group_delete'];
 		$config['block_manage'] 		= $_POST['adrotate_block_manage'];
 		$config['block_delete'] 		= $_POST['adrotate_block_delete'];
+		$config['moderate'] 			= $_POST['adrotate_moderate'];
+		$config['moderate_approve'] 	= $_POST['adrotate_moderate_approve'];
+
+		//Advertisers
+		if(isset($_POST['adrotate_enable_stats'])) $config['enable_stats'] = 'Y';
+			else $config['enable_stats'] = 'N';
 
 		// Set the banner folder, reset if empty
 		$config['banner_folder'] = "/wp-content/banners/";

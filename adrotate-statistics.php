@@ -188,7 +188,7 @@ function adrotate_stats_nav($type, $id, $month, $year) {
 		$nextmonth = 1;
 		$nextyear = $year + 1;
 	}
-	$months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+	$months = array(__('January', 'adrotate'), __('February', 'adrotate'), __('March', 'adrotate'), __('April', 'adrotate'), __('May', 'adrotate'), __('June', 'adrotate'), __('July', 'adrotate'), __('August', 'adrotate'), __('September', 'adrotate'), __('October', 'adrotate'), __('November', 'adrotate'), __('December', 'adrotate'));
 	
 	if($type == 'ads') $page = '&view=report&ad='.$id;
 	if($type == 'groups') $page = '&view=report&group='.$id;

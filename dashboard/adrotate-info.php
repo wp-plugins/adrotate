@@ -94,6 +94,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 </style>
 
 <?php
+$banners = $groups = $blocks = $queued = $data['expiressoon'] = $data['error'] = 0;
 $banners = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `type` != 'empty' AND `type` != 'a_empty';");
 $groups = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '';");
 $blocks = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_blocks` WHERE `name` != '';");
@@ -240,7 +241,7 @@ if(!is_array($adrotate_advert_status)) $statuscache = unserialize($adrotate_adve
 					<h3><span><?php _e('AdRotate is brought to you by', 'adrotate'); ?></span></h3>
 					<div class="inside">
 						<p><a href="http://www.ajdg.net" title="AJdG Solutions"><img src="<?php echo WP_CONTENT_URL; ?>/plugins/adrotate/images/ajdg-logo-100x60.png" alt="ajdg-logo-100x60" width="100" height="60" align="left" style="padding: 0 10px 10px 0;" /></a>
-						<?php _e('Your one stop for Webdevelopment, consultancy and anything WordPress! If you need a custom plugin. Theme customizations or have your site moved/migrated entirely. Visit my website for details!', 'adrotate'); ?> <a href="http://www.ajdg.net" title="AJdG Solutions"><?php _e('Find out more', 'adrotate'); ?></a>!</p>
+						<a href="http://www.ajdg.net" title="AJdG Solutions">AJdG Solutions</a> - <?php _e('Your one stop for Webdevelopment, consultancy and anything WordPress! If you need a custom plugin. Theme customizations or have your site moved/migrated entirely. Visit my website for details!', 'adrotate'); ?> <a href="http://www.ajdg.net" title="AJdG Solutions"><?php _e('Find out more', 'adrotate'); ?></a>!</p>
 
 						<p><center><a href="https://twitter.com/AJdGSolutions" class="twitter-follow-button" data-show-count="false" data-size="large" data-dnt="true">Follow @AJdGSolutions</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></center></p>

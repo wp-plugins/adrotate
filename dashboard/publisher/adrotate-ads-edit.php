@@ -148,20 +148,20 @@ jQuery(document).ready(function() {
       	<tr>
 	        <th valign="top"><?php _e('AdCode:', 'adrotate'); ?></th>
 	        <td colspan="2">
-	        	<label for="adrotate_bannercode"><textarea tabindex="2" name="adrotate_bannercode" cols="65" rows="15"><?php echo stripslashes($edit_banner->bannercode); ?></textarea></label>
+	        	<label for="adrotate_bannercode"><textarea tabindex="2" id="adrotate_bannercode" name="adrotate_bannercode" cols="65" rows="15"><?php echo stripslashes($edit_banner->bannercode); ?></textarea></label>
 	        </td>
 	        <td>
+		        <p><strong><?php _e('Advertise using Broadstreet Ads', 'adrotate'); ?> (<a href="http://broadstreetads.com/ad-platform/editable-ads/" target="_blank"><?php _e('Learn more', 'adrotate'); ?></a>):</strong></p>
+	        	<p><?php Broadstreet_Mini_Utility::editableLink(); ?></p>
+		        
 		        <p><strong><?php _e('Options:', 'adrotate'); ?></strong></p>
 		        <p><em>%id%, %image%, %link%</em><br />
 		        <?php _e('HTML/JavaScript allowed, use with care!', 'adrotate'); ?></p>
 		        
 		        <p><strong><?php _e('Basic Examples:', 'adrotate'); ?></strong></p>
-		        <p><?php _e('Clicktracking:', 'adrotate'); ?> <em>&lt;a href="%link%"&gt;This ad is great!&lt;/a&gt;</em></p>
-		        <p><?php _e('Image:', 'adrotate'); ?> <em>&lt;a href="http://example.com"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p>
-		        <p><?php _e('Combination:', 'adrotate'); ?> <em>&lt;a href="%link%"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p>
-		        
-		        <p><strong><?php _e('Advanced Example:', 'adrotate'); ?></strong></p>
-		        <p><?php _e('Clicktracking:', 'adrotate'); ?> <em>&lt;span class="ad-%id%"&gt;&lt;a href="%link%"&gt;Text Link Ad!&lt;/a&gt;&lt;/span&gt;</em></p>
+		        <p>1. <em>&lt;a href="%link%"&gt;This ad is great!&lt;/a&gt;</em></p>
+		        <p>2. <em>&lt;a href="http://example.com"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p>
+		        <p>3. <em>&lt;span class="ad-%id%"&gt;&lt;a href="%link%"&gt;Text Link Ad!&lt;/a&gt;&lt;/span&gt;</em></p>
 	        </td>
       	</tr>
       	<tr>
@@ -239,16 +239,18 @@ jQuery(document).ready(function() {
 		</thead>
 
 		<tbody>
+		<?php if($adrotate_config['enable_stats'] == 'Y') { ?>
       	<tr>
 	        <th valign="top"><?php _e('Clicktracking:', 'adrotate'); ?></th>
 	        <td colspan="3">
 	        	<label for="adrotate_tracker"><?php _e('Enable?', 'adrotate'); ?> <input tabindex="5" type="checkbox" name="adrotate_tracker" <?php if($edit_banner->tracker == 'Y') { ?>checked="checked" <?php } ?> /> <label for="adrotate_link">url: <input tabindex="6" name="adrotate_link" type="text" size="80" class="search-input" value="<?php echo $edit_banner->link;?>" /><br />
 		        <em><?php _e('Use %link% in the adcode instead of the actual url.', 'adrotate'); ?><br />
-		        <?php _e('For a random seed you can use %random%. A generated timestamp you can use.', 'adrotate'); ?><br />
+		        <?php _e('For a random seed you can use %random%.', 'adrotate'); ?><br />
 		        <?php _e('If you use remote clicktracking (ads in emails for example) add "&remote=1" to the very end of the tracking url.', 'adrotate'); ?></em>
 		        </label>
 	        </td>
       	</tr>
+		<?php } ?>
 		<tr>
 	        <th valign="top"><?php _e('Banner image:', 'adrotate'); ?></th>
 			<td colspan="3">
@@ -341,12 +343,14 @@ jQuery(document).ready(function() {
 				</label>
 			</td>
       	</tr>	
+		<?php if($adrotate_config['enable_stats'] == 'Y') { ?>
       	<tr>
       		<th><?php _e('Maximum Clicks:', 'adrotate'); ?></th>
 	        <td><input tabindex="21" name="adrotate_maxclicks" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxclicks;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
 		    <th><?php _e('Maximum Impressions:', 'adrotate'); ?></th>
 	        <td><input tabindex="22" name="adrotate_maxshown" type="text" size="5" class="search-input" autocomplete="off" value="<?php echo $edit_banner->maxshown;?>" /> <em><?php _e('Leave empty or 0 to skip this.', 'adrotate'); ?></em></td>
 		</tr>
+		<?php } ?>
 		</tbody>					
 	</table>
 
@@ -373,6 +377,7 @@ jQuery(document).ready(function() {
 
 	</table>
 
+	<?php if($adrotate_config['enable_stats'] == 'Y') { ?>
 	<h3><?php _e('Timeframe', 'adrotate'); ?></h3>
 
 	<table class="widefat" style="margin-top: .5em">
@@ -391,6 +396,7 @@ jQuery(document).ready(function() {
       	</tr>
 		</tbody>					
 	</table>
+	<?php } ?>
 
 	<p class="submit">
 		<input tabindex="23" type="submit" name="adrotate_ad_submit" class="button-primary" value="<?php _e('Save Advert', 'adrotate'); ?>" />

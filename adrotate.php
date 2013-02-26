@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.3.4
+Version: 3.8.4
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,8 +15,8 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.3.4'.ADROTATE_BETA);
-define("ADROTATE_VERSION", 363);
+define("ADROTATE_DISPLAY", '3.8.4'.ADROTATE_BETA);
+define("ADROTATE_VERSION", 364);
 define("ADROTATE_DB_VERSION", 30);
 /*-----------------------------------------------------------*/
 
@@ -27,6 +27,7 @@ include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-functions.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-statistics.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-output.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-widget.php');
+include_once WP_CONTENT_DIR.'/plugins/adrotate/library/broadstreet/lib/Utility.php';
 // wp-content/plugins/adrotate/adrotate-out.php
 /*-----------------------------------------------------------*/
 
@@ -47,7 +48,6 @@ register_activation_hook(__FILE__, 'adrotate_activate');
 register_deactivation_hook(__FILE__, 'adrotate_deactivate');
 register_uninstall_hook(__FILE__, 'adrotate_uninstall');
 add_action('admin_init', 'adrotate_check_upgrade');
-add_filter('cron_schedules', 'adrotate_reccurences');
 add_action('adrotate_clean_trackerdata', 'adrotate_clean_trackerdata');
 /*-----------------------------------------------------------*/
 
@@ -63,6 +63,7 @@ add_action('admin_init', 'adrotate_colorpicker');
 add_action('admin_menu', 'adrotate_dashboard');
 add_action("admin_enqueue_scripts", 'adrotate_dashboard_scripts');
 add_action("admin_print_styles", 'adrotate_dashboard_styles');
+add_action('admin_head', 'adrotate_dashboard_head');
 add_action('admin_notices','adrotate_notifications_dashboard');
 /*-----------------------------------------------------------*/
 
@@ -541,7 +542,7 @@ function adrotate_global_report() {
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_options() {
-	global $wpdb;
+	global $wpdb, $wp_roles;
 
 	$adrotate_config 			= get_option('adrotate_config');
 	$adrotate_crawlers 			= get_option('adrotate_crawlers');
@@ -590,7 +591,7 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Advertiser page', 'adrotate'); ?></th>
 				<td>
 					<select name="adrotate_advertiser" disabled>
-						<?php wp_dropdown_roles($adrotate_config['advertiser']); ?>
+						<option value="">Administrator</option>
 					</select> <span class="description"><?php _e('Role to allow users/advertisers to see their advertisement page.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?></span>
 				</td>
 			</tr>
@@ -598,7 +599,7 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Global report page', 'adrotate'); ?></th>
 				<td>
 					<select name="adrotate_global_report" disabled>
-						<?php wp_dropdown_roles($adrotate_config['global_report']); ?>
+						<option value="">Administrator</option>
 					</select> <span class="description"><?php _e('Role to review the global report.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?></span>
 				</td>
 			</tr>
@@ -654,7 +655,7 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Moderate new adverts', 'adrotate'); ?></th>
 				<td>
 					<select name="adrotate_moderate" disabled>
-						<?php wp_dropdown_roles($adrotate_config['moderate']); ?>
+						<option value="">Administrator</option>
 					</select> <span class="description"><?php _e('Role to approve ads submitted by advertisers.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?></span>
 				</td>
 			</tr>
@@ -662,7 +663,7 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Approve/Reject adverts in Moderation Queue', 'adrotate'); ?></th>
 				<td>
 					<select name="adrotate_moderate_approve" disabled>
-						<?php wp_dropdown_roles($adrotate_config['moderate_approve']); ?>
+						<option value="">Administrator</option>
 					</select> <span class="description"><?php _e('Role to approve or reject ads submitted by advertisers.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?></span>
 				</td>
 			</tr>
@@ -687,7 +688,7 @@ function adrotate_options() {
 					print_r($adrotate_roles); 
 					echo "</pre></p>"; 
 					echo "<p><strong>[DEBUG] Current User Capabilities</strong><pre>"; 
-					print_r(get_option('wp_user_roles')); 
+					print_r($wp_roles); 
 					echo "</pre></p>"; 
 					?>
 				</td>
@@ -697,20 +698,77 @@ function adrotate_options() {
 			<tr>
 				<td colspan="2"><h2><?php _e('Banner Folder', 'adrotate'); ?></h2></td>
 			</tr>
-			<tr><td colspan="2"><?php adrotate_pro_notice(); ?></td></tr>
-			<tr><td colspan="2"><em><?php _e('Move the banner folder to a different location with this option.', 'adrotate'); ?></em></td></tr>
-
+			<tr>
+				<th scope="row" valign="top">&nbsp;</th>
+				<td><span class="description"><?php adrotate_pro_notice(); ?></span></td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('Where are your banner ads?', 'adrotate'); ?></th>
+				<td>
+					<?php echo get_option('siteurl'); ?><input name="adrotate_banner_folder" type="text" class="search-input" size="50" value="<?php echo $adrotate_config['banner_folder']; ?>" disabled /><br />
+					<span class="description"><?php _e('Set a location where your banner images will be stored. (Default: /wp-content/banners/).', 'adrotate'); ?><br />
+					<?php _e('To try and trick ad blockers you could set the folder to something crazy like:', 'adrotate'); ?> "/wp-content/<?php echo adrotate_rand(12); ?>/".<br />
+					<?php _e("This folder will not be automatically created if it doesn't exist. AdRotate will show errors when the folder is missing.", 'adrotate'); ?></span>
+				</td>
+			</tr>
 
 			<tr>
 				<td colspan="2"><h2><?php _e('Email Notifications', 'adrotate'); ?></h2></td>
 			</tr>
-			<tr><td colspan="2"><?php adrotate_pro_notice(); ?></td></tr>
-			<tr><td colspan="2"><em><?php _e('Receive email notifications from AdRotate when Adverts are about to expire or otherwise need your attention!', 'adrotate'); ?></em></td></tr>
-			
 			<tr>
-				<td colspan="2"><h2><?php _e('Clicktracker / Impressiontracker', 'adrotate'); ?></h2></td>
+				<th scope="row" valign="top">&nbsp;</th>
+				<td><span class="description"><?php adrotate_pro_notice(); ?></span></td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('Notifications', 'adrotate'); ?></th>
+				<td>
+					<textarea name="adrotate_notification_email" cols="90" rows="3" disabled><?php echo get_option('admin_email'); ?></textarea><br />
+					<span class="description"><?php _e('A comma separated list of email addresses. Maximum of 5 addresses. Keep this list to a minimum!', 'adrotate'); ?><br />
+					<?php _e('Messages are sent once every 24 hours when needed. If this field is empty the function will be disabled.', 'adrotate'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top"><?php _e('Test', 'adrotate'); ?></th>
+				<td>
+					<input type="submit" name="adrotate_notification_test_submit" class="button-secondary" value="<?php _e('Test', 'adrotate'); ?>" disabled /> 
+					<span class="description"><?php _e('This sends a test notification. Before you test, for example, with a new email address. Save the options first!', 'adrotate'); ?></span>
+				</td>
 			</tr>
 
+			<tr>
+				<td colspan="2"><h2><?php _e('Advertiser Messages', 'adrotate'); ?></h2></td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">&nbsp;</th>
+				<td><span class="description"><?php adrotate_pro_notice(); ?></span></td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('Advertiser Messages', 'adrotate'); ?></th>
+				<td>
+					<textarea name="adrotate_advertiser_email" cols="90" rows="2" disabled><?php echo get_option('admin_email'); ?></textarea><br />
+					<span class="description"><?php _e('Maximum of 2 addresses. Comma seperated. This field cannot be empty!', 'adrotate'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top"><?php _e('Test', 'adrotate'); ?></th>
+				<td>
+					<input type="submit" name="adrotate_advertiser_test_submit" class="button-secondary" value="<?php _e('Test', 'adrotate'); ?>" disabled /> 
+					<span class="description"><?php _e('This sends a test message. Before you test, for example, with a new email address. Save the options first!', 'adrotate'); ?></span>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="2"><h2><?php _e('Statistics', 'adrotate'); ?></h2></td>
+			</tr>
+
+			<tr>
+				<th valign="top"><?php _e('Track visitors', 'adrotate'); ?></th>
+				<td>
+					<input type="checkbox" name="adrotate_enable_stats" <?php if($adrotate_config['enable_stats'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Track clicks and impressions. Disabling this also disables click and impression limits on schedules and disables timeframes.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_enable_loggedin_impressions" disabled checked /> <span class="description"><?php _e('Track impressions from logged in users.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?></span><br />
+					<input type="checkbox" name="adrotate_enable_loggedin_clicks" disabled checked /> <span class="description"><?php _e('Track clicks from logged in users.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?></span>
+				</td>
+			</tr>
 			<?php if($adrotate_debug['dashboard'] == true) { ?>
 			<tr>
 				<td colspan="2">
@@ -808,12 +866,23 @@ function adrotate_options() {
 				<td colspan="2"><h2><?php _e('Troubleshooting', 'adrotate'); ?></h2></td>
 			</tr>
 			<tr>
-				<td>Current version: <?php echo $adrotate_version['current']; ?></td>
-				<td>Previous version: <?php echo $adrotate_version['current']; ?></td>
+				<td><?php _e('Current version:', 'adrotate'); ?> <?php echo $adrotate_version['current']; ?></td>
+				<td><?php _e('Previous version:', 'adrotate'); ?> <?php echo $adrotate_version['current']; ?></td>
 			</tr>
 			<tr>
-				<td>Current database version: <?php echo $adrotate_db_version['current']; ?></td>
-				<td>Previous database version: <?php echo $adrotate_db_version['current']; ?></td>
+				<td><?php _e('Current database version:', 'adrotate'); ?> <?php echo $adrotate_db_version['current']; ?></td>
+				<td><?php _e('Previous database version:', 'adrotate'); ?> <?php echo $adrotate_db_version['current']; ?></td>
+			</tr>
+			<?php
+			$adtracker = wp_next_scheduled('adrotate_clean_trackerdata');
+			?>
+			<tr>
+				<td><?php _e('Ad Notifications last run:', 'adrotate'); ?></td>
+				<td><?php adrotate_pro_notice(); ?></td>
+			</tr>
+			<tr>
+				<td><?php _e('Clean Trackerdata last run:', 'adrotate'); ?></td>
+				<td><?php if(!$adtracker) _e('Not scheduled!', 'adrotate'); else echo date_i18n(get_option('date_format')." H:i", $adtracker); ?></td>
 			</tr>
 			<tr>
 				<td colspan="2"><span class="description"><?php _e('NOTE: The below options are not meant for normal use and are only there for developers to review saved settings or how ads are selected. These can be used as a measure of troubleshooting upon request but for normal use they SHOULD BE LEFT UNCHECKED!!', 'adrotate'); ?></span></td>

@@ -64,7 +64,7 @@ function adrotate_banner($group_ids = 0, $banner_id = 0, $block_id = 0, $column 
  Since:		3.6.11
 -------------------------------------------------------------*/
 function adrotate_filter_schedule($selected, $banner) { 
-	global $wpdb, $adrotate_debug;
+	global $wpdb, $adrotate_config, $adrotate_debug;
 
 	$now = current_time('timestamp');
 	$prefix = $wpdb->prefix;
@@ -80,23 +80,25 @@ function adrotate_filter_schedule($selected, $banner) {
 
 	$current = array();
 	foreach($schedules as $schedule) {
-		$stat = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$prefix."adrotate_stats` WHERE `ad` = ".$banner->id."	AND `thetime` >= ".$schedule->starttime." AND `thetime` <= ".$schedule->stoptime.";");
 		
 		if($adrotate_debug['general'] == true) {
 			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule and limits</strong><pre>";
 			print_r($schedule); 
-			print_r($stat); 
 			echo "</pre></p>"; 
 		}
 	
-		// Ad exceeded max clicks?
-		if($stat->clicks >= $schedule->maxclicks AND $schedule->maxclicks > 0 AND $banner->tracker == "Y") {
-			$selected = array_diff_key($selected, array($banner->id => 0));
-		}
-	
-		// Ad exceeded max impressions?
-		if($stat->impressions >= $schedule->maximpressions AND $schedule->maximpressions > 0) {
-			$selected = array_diff_key($selected, array($banner->id => 0));
+		if($adrotate_config['enable_stats'] == 'Y') {
+			$stat = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$prefix."adrotate_stats` WHERE `ad` = ".$banner->id." AND `thetime` >= ".$schedule->starttime." AND `thetime` <= ".$schedule->stoptime.";");
+
+			// Ad exceeded max clicks?
+			if($stat->clicks >= $schedule->maxclicks AND $schedule->maxclicks > 0 AND $banner->tracker == "Y") {
+				$selected = array_diff_key($selected, array($banner->id => 0));
+			}
+		
+			// Ad exceeded max impressions?
+			if($stat->impressions >= $schedule->maximpressions AND $schedule->maximpressions > 0) {
+				$selected = array_diff_key($selected, array($banner->id => 0));
+			}
 		}
 
 		if($schedule->starttime > $now OR $schedule->stoptime < $now) {
@@ -160,6 +162,7 @@ function adrotate_array_unique($array) {
 function adrotate_rand($length = 8) {
 	$available_chars = "abcdefghijklmnopqrstuvwxyz";	
 
+	$result = '';
 	$size = strlen($available_chars);
 	for($i = 0; $i < $length; $i++) {
 		$result .= $available_chars[rand(0, $size - 1)];
@@ -169,14 +172,14 @@ function adrotate_rand($length = 8) {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_dropdown_categories
+ Name:      adrotate_select_categories
 
- Purpose:   Create dropdown menu of all categories.
+ Purpose:   Create scrolling menu of all categories.
  Receive:   $savedcats, $count, $child_of, $parent
  Return:    $output
- Since:		3.7rc8
+ Since:		3.8.4
 -------------------------------------------------------------*/
-function adrotate_dropdown_categories($savedcats, $count = 2, $child_of = 0, $parent = 0) {
+function adrotate_select_categories($savedcats, $count = 2, $child_of = 0, $parent = 0) {
 	if(!is_array($savedcats)) $savedcats = explode(',', $savedcats);
 	$categories = get_categories(array('child_of' => $parent, 'parent' => $parent,  'orderby' => 'id', 'order' => 'asc', 'hide_empty' => 0));
 
@@ -191,12 +194,12 @@ function adrotate_dropdown_categories($savedcats, $count = 2, $child_of = 0, $pa
 			} else {
 				$indent = '';
 			}
-			$output .= '<option value="'.$category->cat_ID.'"';
+			$output .= '<input type="checkbox" name="adrotate_categories[]" value="'.$category->cat_ID.'"';
 			if(in_array($category->cat_ID, $savedcats)) {
-				$output .= ' selected';
+				$output .= ' checked';
 			}
-			$output .= '>'.$indent.$category->name.' ('.$category->category_count.')</option>';
-			$output .= adrotate_dropdown_categories($savedcats, $count, $category->parent, $category->cat_ID);
+			$output .= '>&nbsp;&nbsp;'.$indent.$category->name.' ('.$category->category_count.')<br />';
+			$output .= adrotate_select_categories($savedcats, $count, $category->parent, $category->cat_ID);
 			$child_of = $parent;
 		}
 		return $output;
@@ -204,14 +207,14 @@ function adrotate_dropdown_categories($savedcats, $count = 2, $child_of = 0, $pa
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_dropdown_pages
+ Name:      adrotate_select_pages
 
- Purpose:   Create dropdown menu of all pages.
- Receive:   $savedcats, $count, $child_of, $parent
+ Purpose:   Create scrolling menu of all pages.
+ Receive:   $savedpages, $count, $child_of, $parent
  Return:    $output
- Since:		3.7rc8
+ Since:		3.8.4
 -------------------------------------------------------------*/
-function adrotate_dropdown_pages($savedpages, $count = 2, $child_of = 0, $parent = 0) {
+function adrotate_select_pages($savedpages, $count = 2, $child_of = 0, $parent = 0) {
 	if(!is_array($savedpages)) $savedpages = explode(',', $savedpages);
 	$pages = get_pages(array('child_of' => $parent, 'parent' => $parent, 'sort_column' => 'ID', 'sort_order' => 'asc'));
 
@@ -226,12 +229,12 @@ function adrotate_dropdown_pages($savedpages, $count = 2, $child_of = 0, $parent
 			} else {
 				$indent = '';
 			}
-			$output .= '<option value="'.$page->ID.'"';
+			$output .= '<input type="checkbox" name="adrotate_pages[]" value="'.$page->ID.'"';
 			if(in_array($page->ID, $savedpages)) {
-				$output .= ' selected';
+				$output .= ' checked';
 			}
-			$output .= '>'.$indent.$page->post_title.'</option>';
-			$output .= adrotate_dropdown_pages($savedpages, $count, $page->post_parent, $page->ID);
+			$output .= '>&nbsp;&nbsp;'.$indent.$page->post_title.'<br />';
+			$output .= adrotate_select_pages($savedpages, $count, $page->post_parent, $page->ID);
 			$child_of = $parent;
 		}
 		return $output;
@@ -341,22 +344,6 @@ function adrotate_evaluate_ad($ad_id) {
 	} else {
 		return 'unknown';
 	}
-}
-
-/*-------------------------------------------------------------
- Name:      adrotate_clean_trackerdata
-
- Purpose:   Removes old trackerdata
- Receive:   -none-
- Return:    -none-
- Since:		2.0
--------------------------------------------------------------*/
-function adrotate_clean_trackerdata() {
-	global $wpdb;
-
-	$removeme = current_time('timestamp') - 86400;
-	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `timer` < ".$removeme." AND `ipaddress` > 0;");
-	$wpdb->query("DELETE FROM `".$wpdb->prefix."adrotate_tracker` WHERE `ipaddress`  = 'unknown';");
 }
 
 /*-------------------------------------------------------------
@@ -486,12 +473,22 @@ function adrotate_check_config() {
 	if(empty($crawlers)) $crawlers = array();
 	if(empty($debug)) $debug = array();
 	
+	if(empty($config['advertiser'])) $config['advertiser'] = 'switch_themes'; // Admin
+	if(empty($config['global_report'])) $config['global_report'] = 'switch_themes'; // Admin
 	if(empty($config['ad_manage'])) $config['ad_manage'] = 'switch_themes'; // Admin
 	if(empty($config['ad_delete'])) $config['ad_delete'] = 'switch_themes'; // Admin
 	if(empty($config['group_manage'])) $config['group_manage'] = 'switch_themes'; // Admin
 	if(empty($config['group_delete'])) $config['group_delete'] = 'switch_themes'; // Admin
 	if(empty($config['block_manage'])) $config['block_manage'] = 'switch_themes'; // Admin
 	if(empty($config['block_delete'])) $config['block_delete'] = 'switch_themes'; // Admin
+	if(empty($config['moderate'])) $config['moderate'] = 'switch_themes'; // Admin
+	if(empty($config['moderate_approve'])) $config['moderate_approve'] = 'switch_themes'; // Admin
+
+	if(empty($config['enable_advertisers'])) $config['enable_advertisers'] = 'Y';
+	if(empty($config['enable_editing'])) $config['enable_editing'] = 'N';
+	if(empty($config['enable_stats'])) $config['enable_stats'] = 'Y';
+	if(empty($config['enable_loggedin_impressions'])) $config['enable_loggedin_impressions'] = 'Y';
+	if(empty($config['enable_loggedin_clicks'])) $config['enable_loggedin_clicks'] = 'Y';
 
 	if(empty($config['banner_folder'])) $config['banner_folder'] = "/wp-content/banners/";
 	if(empty($config['notification_email_switch']))	$config['notification_email_switch'] = 'Y';
@@ -516,27 +513,6 @@ function adrotate_check_config() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_get_sorted_roles
-
- Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest. (Code based on NextGen Gallery)
- Receive:   -none-
- Return:    $sorted
- Since:		3.2
--------------------------------------------------------------*/
-function adrotate_get_sorted_roles() {	
-	$editable_roles = get_option('wp_user_roles');
-	$sorted = array();
-	
-	foreach($editable_roles as $role => $details) {
-		$sorted[$details['name']] = get_role($role);
-	}
-
-	$sorted = array_reverse($sorted);
-
-	return $sorted;
-}
-
-/*-------------------------------------------------------------
  Name:      adrotate_get_remote_ip
 
  Purpose:   Get the remote IP from the visitor
@@ -556,6 +532,30 @@ function adrotate_get_remote_ip(){
 }
 
 /*-------------------------------------------------------------
+ Name:      adrotate_get_sorted_roles
+
+ Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest. (Code based on NextGen Gallery)
+ Receive:   -none-
+ Return:    $sorted
+ Since:		3.2
+-------------------------------------------------------------*/
+function adrotate_get_sorted_roles() {	
+	global $wp_roles;
+
+	$sorted = array();
+	
+	foreach($wp_roles as $roles) {
+		foreach($roles as $role => $capabilities) {
+			$sorted[$role] = get_role($role);
+		}
+	}
+
+	$sorted = array_reverse($sorted);
+
+	return $sorted;
+}
+
+/*-------------------------------------------------------------
  Name:      adrotate_set_capability
 
  Purpose:   Grant or revoke capabilities to a role (Code borrowed from NextGen Gallery)
@@ -564,7 +564,6 @@ function adrotate_get_remote_ip(){
  Since:		3.2
 -------------------------------------------------------------*/
 function adrotate_set_capability($lowest_role, $capability){
-
 	$check_order = adrotate_get_sorted_roles();
 	$add_capability = false;
 	
@@ -648,30 +647,6 @@ function adrotate_mail_beta() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_reccurences
-
- Purpose:   Add more reccurances to the wp_cron feature
- Receive:   -none-
- Return:    -none-
- Since:		3.0
--------------------------------------------------------------*/
-function adrotate_reccurences($schedules) {
-	$schedules['1day'] = array(
-		'interval' => 86400,
-		'display' => __('Daily', 'adrotate')
-	);
-	$schedules['3hour'] = array(
-		'interval' => 10800,
-		'display' => __('Every 3 hours', 'adrotate')
-	);
-	$schedules['15minutes'] = array(
-		'interval' => 900,
-		'display' => __('Every 15 minutes', 'adrotate')
-	);
-	return $schedules;
-}
-
-/*-------------------------------------------------------------
  Name:      adrotate_dashboard_scripts
 
  Purpose:   Load file uploaded popup
@@ -687,6 +662,18 @@ function adrotate_dashboard_scripts() {
 	wp_enqueue_script('elycharts', plugins_url('/library/elycharts.min.js', __FILE__), array('jquery', 'raphael'));
 
 	wp_enqueue_style('thickbox');
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_dashboard_head
+
+ Purpose:   Add even more stuff to <head> in the dashboard right behind adrotate_dashboard_scripts()
+ Receive:   -None-
+ Return:	-None-
+ Since:		3.8.4
+-------------------------------------------------------------*/
+function adrotate_dashboard_head(){
+	Broadstreet_Mini_Utility::editableJS();
 }
 
 /*-------------------------------------------------------------
@@ -711,6 +698,9 @@ function adrotate_dashboard_styles() {
 	.row_inactive { background-color:#ebf3fa;border-color:#466f82; }
 	.stats_large { display:block;margin-bottom:10px;margin-top:10px;text-align:center;font-weight:bold; }
 	.number_large {	margin:20px;font-size:28px; }
+	
+	/* Fancy select box for group and page injection*/
+	.adrotate-select { padding:3px; border:1px solid #ccc; max-width:500px; max-height:100px; overflow-y:scroll; }
 </style>
 <?php
 }
