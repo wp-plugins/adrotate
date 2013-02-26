@@ -56,10 +56,11 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 					$wpdb->insert($prefix.'adrotate_tracker', array('ipaddress' => $remote_ip, 'timer' => $now, 'bannerid' => $ad, 'stat' => 'c', 'useragent' => $useragent));
 				}
 			}
+		}
 
-			wp_redirect(htmlspecialchars_decode($bannerurl), 302);
-			unset($nocrawler, $crawlers, $ip, $remote_ip, $useragent, $track, $meta, $ad, $group, $block, $bannerurl);
-			exit();
+		wp_redirect(htmlspecialchars_decode($bannerurl), 302);
+		unset($nocrawler, $crawlers, $ip, $remote_ip, $useragent, $track, $meta, $ad, $group, $block, $bannerurl);
+		exit();
 	} else {
 		echo 'There was an error retrieving the ad! Contact an administrator!';
 	}

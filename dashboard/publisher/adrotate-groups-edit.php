@@ -9,7 +9,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$action = "group_new";
 	$edit_id = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;");
 	if($edit_id == 0) {
-	    $wpdb->insert($wpdb->prefix."adrotate_groups", array('name' => '', 'fallback' => '0', 'sortorder' => 0, 'cat' => '', 'cat_loc' => 0, 'page' => '', 'page_loc' => 0));
+	    $wpdb->insert($wpdb->prefix."adrotate_groups", array('name' => '', 'fallback' => '0', 'sortorder' => 0, 'cat' => '', 'cat_loc' => 0, 'page' => '', 'page_loc' => 0, 'wrapper_before' => '', 'wrapper_after' => ''));
 	    $edit_id = $wpdb->insert_id;
 	}
 	$group_edit_id = $edit_id;

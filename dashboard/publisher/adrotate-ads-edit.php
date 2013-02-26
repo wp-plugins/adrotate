@@ -112,7 +112,6 @@ jQuery(document).ready(function() {
 		jQuery('#adrotate_image').val(imgurl);
 		tb_remove();
 	}
-
 });
 </script>
 
@@ -160,8 +159,8 @@ jQuery(document).ready(function() {
 		        
 		        <p><strong><?php _e('Basic Examples:', 'adrotate'); ?></strong></p>
 		        <p>1. <em>&lt;a href="%link%"&gt;This ad is great!&lt;/a&gt;</em></p>
-		        <p>2. <em>&lt;a href="http://example.com"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p>
-		        <p>3. <em>&lt;span class="ad-%id%"&gt;&lt;a href="%link%"&gt;Text Link Ad!&lt;/a&gt;&lt;/span&gt;</em></p>
+		        <p>2. <em>&lt;a href="%link%"&gt;&lt;img src="%image%" /&gt;&lt;/a&gt;</em></p>
+		        <p>3. <em>&lt;span class="ad-%id%"&gt;&lt;a href="http://example.com"&gt;Text Link Ad!&lt;/a&gt;&lt;/span&gt;</em></p>
 	        </td>
       	</tr>
       	<tr>

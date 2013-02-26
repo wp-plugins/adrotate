@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.5.1
-Stable tag: 3.8.4
+Stable tag: 3.8.4.1
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -63,61 +63,38 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.4 FREE =
-* [fix] Number of undefined value notices
-* [fix] Improper use of global $wp_roles
-* [fix] Single column blocks not applying line break
-* [fix] adrotate_clean_trackerdata() not always active
-* [new] Broadstreet Ads integration
-* [new] Statistics tracking now optional
-* [change] Purged and reinstated all AdRotate automation schedules
-* [change] Improved page/post injection select box
-* [change] Improved user-agent filter check
-* [change] Blocks: float setting “none” now has no float instead of “float:none;”
-* [i18n] Updated translation strings
+= 3.8.4.1 FREE =
+* [fix] Missing } in adrotate-out.php
+* [fix] Unable to add new groups
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
 = 3.8.4 PRO =
 * [fix] Number of undefined value notices
-* [fix] Advertiser and Moderation access roles not being applied (pro)
+* [fix] Advertiser and Moderation access roles not being applied
 * [fix] Improper use of global $wp_roles
 * [fix] Single column blocks not applying line break
-* [fix] Advertiser username not showing when advertiser edits his/her own advert (pro)
-* [fix] Moderation queue now actually works (pro)
-* [fix] adrotate_clean_trackerdata() not always active
-* [fix] adrotate_mail_notification() not always active (pro)
+* [fix] Advertiser username not showing when advertiser edits his/her own advert
+* [fix] Moderation queue now actually works
 * [new] Broadstreet Ads integration
-* [new] Advertiser ad creation now optional (pro)
-* [new] Advertiser ad linking now optional (pro)
-* [new] AdCode field for ads now supports registered shortcodes (pro)
+* [new] Advertiser ad creation now optional
+* [new] Advertiser ad linking now optional
+* [new] AdCode field for ads now supports registered shortcodes
 * [new] Statistics tracking now optional
-* [new] Tracking logged in users now optional (pro)
-* [change] Purged and reinstated all AdRotate automation schedules
-* [change] Advertiser ad creation optimized (pro)
-* [change] Improved page/post injection select box
+* [new] Tracking logged in users now optional
+* [change] Advertiser ad creation optimized
 * [change] Improved user-agent filter check
-* [change] Restored missing export options for advertisers (pro)
-* [change] Blocks: float setting “none” now has no float instead of “float:none;”
-* [i18n] Updated translation strings
+* [change] Restored missing export options for advertisers
+* [change] Blocks: float setting "none" now has no float instead of "float:none;"
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/download/changelog/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
 
 == Upgrade Notice ==
 
-= 3.8.4 =
-* [fix] Number of undefined value notices
-* [fix] Improper use of global $wp_roles
-* [fix] Single column blocks not applying line break
-* [fix] adrotate_clean_trackerdata() not always active
-* [new] Broadstreet Ads integration
-* [new] Statistics tracking now optional
-* [change] Purged and reinstated all AdRotate automation schedules
-* [change] Improved page/post injection select box
-* [change] Improved user-agent filter check
-* [change] Blocks: float setting “none” now has no float instead of “float:none;”
-* [i18n] Updated translation strings
+= 3.8.4.1 =
+* [fix] Missing } in adrotate-out.php
+* [fix] Unable to add new groups
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
