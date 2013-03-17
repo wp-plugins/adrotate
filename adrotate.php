@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.4.1
+Version: 3.8.4.2
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,7 +15,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.4.1'.ADROTATE_BETA);
+define("ADROTATE_DISPLAY", '3.8.4.2'.ADROTATE_BETA);
 define("ADROTATE_VERSION", 364);
 define("ADROTATE_DB_VERSION", 30);
 /*-----------------------------------------------------------*/
@@ -806,6 +806,17 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Widget alignment', 'adrotate'); ?></th>
 				<td><input type="checkbox" name="adrotate_widgetalign" <?php if($adrotate_config['widgetalign'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Check this box if your widgets do not align in your themes sidebar. (Does not always help!)', 'adrotate'); ?></span></td>
 			</tr>
+			<tr>
+				<th valign="top"><?php _e('W3 Total Caching', 'adrotate'); ?></th>
+				<td><input type="checkbox" name="adrotate_w3caching" <?php if($adrotate_config['w3caching'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Check this box if you use W3 Total Caching on your site.', 'adrotate'); ?></span></td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('WP Super Cache', 'adrotate'); ?></th>
+				<td><input type="checkbox" name="adrotate_supercache" <?php if($adrotate_config['supercache'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Check this box if you use WP Super Cache on your site.', 'adrotate'); ?></span></td>
+			</tr>
+			<tr>
+				<td colspan="2"><span class="description"><?php _e('It may take a while for the ad to start rotating. The caching plugin needs to refresh the cache. This can take up to a week if not done manually.', 'adrotate'); ?><br /><?php _e('Check the manual of your caching plugin to see how this works.', 'adrotate'); ?></td>
+			</tr>
 
 			<tr>
 				<td colspan="2"><h2><?php _e('Maintenance', 'adrotate'); ?></h2></td>
@@ -848,7 +859,7 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Clean-up Database', 'adrotate'); ?></th>
 				<td>
 					<input type="submit" id="post-role-submit" name="adrotate_db_cleanup_submit" value="<?php _e('Clean-up Database', 'adrotate'); ?>" class="button-secondary" onclick="return confirm('<?php _e('You are about to remove empty records from the AdRotate database.', 'adrotate'); ?>\n\n<?php _e('Did you make a backup of your database?', 'adrotate'); ?>\n\n<?php _e('OK to continue, CANCEL to stop.', 'adrotate'); ?>')" /><br />
-					<span class="description"><?php _e('AdRotate creates empty records when you start making ads, groups or blocks. In rare occasions these records are faulty. If you made an ad, group or block that does not save when you make it use this button to delete those empty records.', 'adrotate'); ?></span>
+					<span class="description"><?php _e('AdRotate creates empty records when you start making ads, groups or blocks. In rare occasions these records are faulty. If you made an ad, group or block that does not save when you make it use this button to delete those empty records.', 'adrotate'); ?> <?php _e('Additionally the statistics are cleaned up. Old temporary data will be removed.', 'adrotate'); ?></span>
 				</td>
 			</tr>
 			<tr>
@@ -891,12 +902,12 @@ function adrotate_options() {
 			<tr>
 				<th valign="top"><?php _e('Developer Debug', 'adrotate'); ?></th>
 				<td>
-					<input type="checkbox" name="adrotate_debug" <?php if($adrotate_debug['general'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Troubleshoot ads and how (if) they are selected, will mess up your theme!', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug" <?php if($adrotate_debug['general'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Troubleshoot ads and how (if) they are selected, has front-end output!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_dashboard" <?php if($adrotate_debug['dashboard'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show all settings, dashboard routines and related values!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_userroles" <?php if($adrotate_debug['userroles'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show array of all userroles and capabilities!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_userstats" <?php if($adrotate_debug['userstats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review saved user stats (users)! Visible to advertisers!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_stats" <?php if($adrotate_debug['stats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review global stats, per ad/group/block stats (admins)!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_timers" <?php if($adrotate_debug['timers'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable timers for clicks and impressions allowing you to test the impression and click counters or stats without having to wait for the timer!', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_userstats" <?php if($adrotate_debug['userstats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review saved advertisers! Visible to advertisers!', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_stats" <?php if($adrotate_debug['stats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review global stats, per ad/group/block stats. Visible to publishers!', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_timers" <?php if($adrotate_debug['timers'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable timers for clicks and impressions allowing you to test the impression and click counters or stats without having to wait!', 'adrotate'); ?></span><br />
 					<input type="checkbox" name="adrotate_debug_track" <?php if($adrotate_debug['track'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable encryption on the redirect url. This will NOT compromise any security!', 'adrotate'); ?></span><br />
 				</td>
 			</tr>

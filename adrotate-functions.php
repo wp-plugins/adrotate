@@ -12,47 +12,45 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
  Since:		0.7
 -------------------------------------------------------------*/
 function adrotate_shortcode($atts, $content = null) {
+	global $adrotate_config;
 
 	$banner_id = $group_ids = $block_id = $fallback = $weight = $columns = '';
-	if(!empty($atts['banner'])) 	$banner_id 	= trim($atts['banner'], "\r\t ");
-	if(!empty($atts['group'])) 		$group_ids 	= trim($atts['group'], "\r\t ");
-	if(!empty($atts['block']))		$block_id	= trim($atts['block'], "\r\t ");
-	if(!empty($atts['fallback']))	$fallback	= trim($atts['fallback'], "\r\t "); // Optional for groups (override)
-	if(!empty($atts['weight']))		$weight		= trim($atts['weight'], "\r\t "); // Optional for groups (override)
-	if(!empty($atts['column']))		$columns	= trim($atts['column'], "\r\t "); // OBSOLETE/UNUSED
+	if(!empty($atts['banner'])) $banner_id = trim($atts['banner'], "\r\t ");
+	if(!empty($atts['group'])) $group_ids = trim($atts['group'], "\r\t ");
+	if(!empty($atts['block'])) $block_id = trim($atts['block'], "\r\t ");
+	if(!empty($atts['fallback'])) $fallback	= trim($atts['fallback'], "\r\t "); // Optional for groups (override)
+	if(!empty($atts['weight']))	$weight	= trim($atts['weight'], "\r\t "); // Optional for groups (override)
 
-	if($banner_id > 0 AND ($group_ids == 0 OR $group_ids > 0) AND $block_id == 0) // Show one Ad
-		return adrotate_ad($banner_id);
+	$output = '';
+	if($banner_id > 0 AND ($group_ids == 0 OR $group_ids > 0) AND $block_id == 0) { // Show one Ad
+		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- mfunc -->';
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc adrotate_ad( $banner_id ) -->';
+		$output .= adrotate_ad($banner_id);
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--/mfunc-->';
+		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- /mfunc -->';
 
-	if($banner_id == 0 AND $group_ids > 0 AND $block_id == 0) // Show group 
-		return adrotate_group($group_ids, $fallback, $weight);
+		return $output;
+	}
 
-	if($banner_id == 0 AND $group_ids == 0 AND $block_id > 0) // Show block 
-		return adrotate_block($block_id, $weight);
-}
+	if($banner_id == 0 AND $group_ids > 0 AND $block_id == 0) { // Show group 
+		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- mfunc -->';
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc adrotate_group( $group_ids, $fallback, $weight ) -->';
+		$output .= adrotate_group($group_ids, $fallback, $weight);
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--/mfunc-->';
+		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- /mfunc -->';
 
-/*-------------------------------------------------------------
- Name:      adrotate_banner DEPRECATED
+		return $output;
+	}
 
- Purpose:   Compatibility layer for old setups 
- Receive:   $group_ids, $banner_id, $block_id, $column
- Return:    Function()
- Added: 	0.1
--------------------------------------------------------------*/
-function adrotate_banner($group_ids = 0, $banner_id = 0, $block_id = 0, $column = 0) {
+	if($banner_id == 0 AND $group_ids == 0 AND $block_id > 0) { // Show block 
+		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- mfunc -->';
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc adrotate_block( $block_id, $weight ) -->';
+		$output .= adrotate_block($block_id, $weight);
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--/mfunc-->';
+		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- /mfunc -->';
 
-	/*
-	// Dec 6 2010 - Function DEPRECATED, maintained for backward compatibility
-	*/
-	
-	if(($banner_id > 0 AND ($group_ids == 0 OR $group_ids == '')) OR ($banner_id > 0 AND $group_ids > 0 AND ($block_id == 0 OR $block_id == ''))) // Show one Ad
-		return adrotate_ad($banner_id);
-
-	if($group_ids != 0 AND ($banner_id == 0 OR $banner_id == '')) // Show group 
-		return adrotate_group($group_ids);
-
-	if($block_id > 0 AND ($banner_id == 0 OR $banner_id == '') AND ($group_ids == 0 OR $group_ids == '')) // Show block
-		return adrotate_block($block_id);
+		return $output;
+	}
 }
 
 /*-------------------------------------------------------------
@@ -76,17 +74,18 @@ function adrotate_filter_schedule($selected, $banner) {
 	}
 	
 	// Get schedules for advert
-	$schedules = $wpdb->get_results("SELECT `starttime`, `stoptime`, `maxclicks`, `maximpressions` FROM `".$prefix."adrotate_schedule` WHERE `ad` = '".$banner->id."' ORDER BY `starttime` ASC LIMIT 1 ;");
+	$schedules = $wpdb->get_results("SELECT `id`, `starttime`, `stoptime`, `maxclicks`, `maximpressions` FROM `".$prefix."adrotate_schedule` WHERE `ad` = '".$banner->id."' ORDER BY `starttime` ASC LIMIT 1 ;");
 
 	$current = array();
 	foreach($schedules as $schedule) {
 		
 		if($adrotate_debug['general'] == true) {
-			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule and limits</strong><pre>";
-			print_r($schedule); 
-			echo "</pre></p>"; 
+			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule (id: ".$schedule->id.") Timeframe</strong><pre>";
+			echo "<br />Start: ".$schedule->starttime." (".gmdate("F j, Y, g:i a", $schedule->starttime).")";
+			echo "<br />End: ".$schedule->stoptime." (".gmdate("F j, Y, g:i a", $schedule->stoptime).")";
+			echo "</pre></p>";
 		}
-	
+
 		if($adrotate_config['enable_stats'] == 'Y') {
 			$stat = $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$prefix."adrotate_stats` WHERE `ad` = ".$banner->id." AND `thetime` >= ".$schedule->starttime." AND `thetime` <= ".$schedule->stoptime.";");
 
@@ -495,6 +494,8 @@ function adrotate_check_config() {
 	if((empty($config['notification_email']) OR !is_array($config['notification_email'])) AND $config['notification_email_switch'] == 'Y') $config['notification_email'] = array(get_option('admin_email'));
 	if(empty($config['advertiser_email']) OR !is_array($config['advertiser_email'])) $config['advertiser_email'] = array(get_option('admin_email'));
 	if(empty($config['widgetalign'])) $config['widgetalign'] = 'N';
+	if(empty($config['w3caching'])) $config['w3caching'] = 'N';
+	if(empty($config['supercache'])) $config['supercache'] = 'N';
 	if(empty($config['impression_timer'])) $config['impression_timer'] = '10';
 	update_option('adrotate_config', $config);
 
@@ -532,69 +533,40 @@ function adrotate_get_remote_ip(){
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_get_sorted_roles
-
- Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest. (Code based on NextGen Gallery)
- Receive:   -none-
- Return:    $sorted
- Since:		3.2
--------------------------------------------------------------*/
-function adrotate_get_sorted_roles() {	
-	global $wp_roles;
-
-	$sorted = array();
-	
-	foreach($wp_roles as $roles) {
-		foreach($roles as $role => $capabilities) {
-			$sorted[$role] = get_role($role);
-		}
-	}
-
-	$sorted = array_reverse($sorted);
-
-	return $sorted;
-}
-
-/*-------------------------------------------------------------
  Name:      adrotate_set_capability
 
- Purpose:   Grant or revoke capabilities to a role (Code borrowed from NextGen Gallery)
+ Purpose:   Grant or revoke capabilities to a role and all higher roles
  Receive:   $lowest_role, $capability
  Return:    -None-
  Since:		3.2
 -------------------------------------------------------------*/
 function adrotate_set_capability($lowest_role, $capability){
-	$check_order = adrotate_get_sorted_roles();
-	$add_capability = false;
-	
-	foreach($check_order as $role) {
-		if($lowest_role == $role->name) 
-			$add_capability = true;
-			
-		if(empty($role)) 
-			continue;
-			
-		$add_capability ? $role->add_cap($capability) : $role->remove_cap($capability) ;
+	global $wp_roles;
+
+	foreach($wp_roles->roles as $role) {
+		if(empty($role)) continue;
+
+		($lowest_role == $role['name']) ? $add_capability = true : $add_capability = false ;
+		$add_capability ? $wp_roles->add_cap($role['name'], $capability) : $wp_roles->remove_cap($role['name'], $capability) ;
 	}
+	unset($lowest_role, $capability, $role);
 }
 
 /*-------------------------------------------------------------
  Name:      adrotate_remove_capability
 
- Purpose:   Remove the $capability from the all roles (Based on NextGen Gallery)
+ Purpose:   Remove the $capability from the all roles
  Receive:   $capability
  Return:    -None-
  Since:		3.2
 -------------------------------------------------------------*/
 function adrotate_remove_capability($capability){
+	global $wp_roles;
 
-	$check_order = adrotate_get_sorted_roles();
-
-	foreach($check_order as $role) {
-		$role = get_role($role->name);
-		$role->remove_cap($capability);
+	foreach($wp_roles->roles as $role) {
+		$wp_roles->remove_cap($role['name'], $capability);
 	}
-
+	unset($capability, $role);
 }
 
 /*-------------------------------------------------------------

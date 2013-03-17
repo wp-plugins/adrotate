@@ -123,9 +123,7 @@ function adrotate_insert_input() {
 			}
 	
 			// Save initial schedule for new ads or update the existing one
-			if($type != 'empty') {
-				$wpdb->query($wpdb->prepare("DELETE FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = %d;", $id)); 
-			}
+			$wpdb->query($wpdb->prepare("DELETE FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = %d;", $id)); 
 			$wpdb->insert($wpdb->prefix.'adrotate_schedule', array('ad' => $id, 'starttime' => $startdate, 'stoptime' => $enddate, 'maxclicks' => $maxclicks, 'maximpressions' => $maxshown));
 		
 			// Save the ad to the DB
@@ -658,6 +656,10 @@ function adrotate_options_submit() {
 		// Miscellaneous Options
 		if(isset($_POST['adrotate_widgetalign'])) 				$config['widgetalign'] 	= 'Y';
 			else 												$config['widgetalign'] 	= 'N';
+		if(isset($_POST['adrotate_w3caching'])) 				$config['w3caching'] 	= 'Y';
+			else 												$config['w3caching'] 	= 'N';
+		if(isset($_POST['adrotate_supercache'])) 				$config['supercache'] 	= 'Y';
+			else 												$config['supercache'] 	= 'N';
 		update_option('adrotate_config', $config);
 	
 		// Sort out crawlers

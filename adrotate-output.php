@@ -29,7 +29,6 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 			$banner = $wpdb->get_row($wpdb->prepare("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = %d AND `type` = 'active';", $banner_id));
 
 			if($adrotate_debug['general'] == true) {
-				if($banner->timeframe == '') $banner->timeframe = "not used";
 				echo "<p><strong>[DEBUG][adrotate_ad()] Selected Ad, specs</strong><pre>";
 				print_r($banner); 
 				echo "</pre></p>"; 
@@ -268,21 +267,12 @@ function adrotate_block($block_id, $weight = 0) {
 				if($array_count > 0) {
 					$block_count = $block->columns * $block->rows;
 					if($array_count < $block_count) $block_count = $array_count;
-
-					$selected = array_rand($selected, $block_count);
-					if(!is_array($selected)) $selected = array($selected);
-					shuffle($selected);
 				
-					if($adrotate_debug['general'] == true) {
-						echo "<p><strong>[DEBUG][adrotate_block()] Reduced array randomly picked</strong><pre>"; 
-						print_r($selected); 
-						echo "</pre></p>"; 
-					}			
-	
 					$output .= '<div id="b-'.$block->id.'" class="block_outer b-'.$block->id.'">';
-					
 					$j = 1;
-					foreach($selected as $key => $banner_id) {
+					for($i=0;$i<$block_count;$i++) {
+						$banner_id = array_rand($selected);
+
 						$output .= '<div id="a-'.$banner_id.'" class="block_inner a-'.$block->id;
 						if($block->columns == 1) {
 							$output .= ' block_both ';						
@@ -298,17 +288,17 @@ function adrotate_block($block_id, $weight = 0) {
 						$output .= '">';
 
 						if($block->wrapper_before != '') {$output .= stripslashes(html_entity_decode($block->wrapper_before, ENT_QUOTES)); }
-						$output .= adrotate_ad($banner_id, false, 0, $block->id);
+						$output .= adrotate_ad($banner_id, false, 0, $block_id);
 						if($block->wrapper_after != '') { $output .= stripslashes(html_entity_decode($block->wrapper_after, ENT_QUOTES)); }
 						$output .= '</div>';
 	
 						$selected = array_diff_key($selected, array($banner_id => 0));
 
 						if($adrotate_debug['general'] == true) {
-							echo "<p><strong>[DEBUG][adrotate_block()] Selected ad</strong><pre>"; 
+							echo "<p><strong>[DEBUG][adrotate_block()] Selected ad (Cycle ".$i.")</strong><pre>"; 
 							echo "Selected ad: ".$banner_id."<br />";
 							echo "</pre></p>"; 
-						}
+						}			
 					}
 					$output .= '</div>';
 				} else {
@@ -347,10 +337,6 @@ function adrotate_preview($banner_id) {
 
 		if($adrotate_debug['general'] == true) {
 			echo "<p><strong>[DEBUG][adrotate_preview()] Ad information</strong><pre>"; 
-			$memory = (memory_get_usage() / 1024 / 1024);
-			echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
-			$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
-			echo "Peak memory usage: " . round($peakmemory, 2) ." MB <br />"; 
 			print_r($banner); 
 			echo "</pre></p>"; 
 		}			

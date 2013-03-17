@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.5.1
-Stable tag: 3.8.4.1
+Stable tag: 3.8.4.2
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -63,9 +63,13 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.4.1 FREE =
-* [fix] Missing } in adrotate-out.php
-* [fix] Unable to add new groups
+= 3.8.4.2 FREE =
+* [fix] Undefined value notices when creating an advert
+* [fix] AdRotate throwing errors on deactivation for some users
+* [fix] Start / End date not saved when it was different from the default when creating new ads
+* [new] Experimental compatibility for W3 Total Cache
+* [new] Experimental compatibility for WP Super Cache
+* [change] Easier to read and use debug output
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
@@ -92,9 +96,13 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/c
 
 == Upgrade Notice ==
 
-= 3.8.4.1 =
-* [fix] Missing } in adrotate-out.php
-* [fix] Unable to add new groups
+= 3.8.4.2 FREE =
+* [fix] Undefined value notices when creating an advert
+* [fix] AdRotate throwing errors on deactivation for some users
+* [fix] Start / End date not saved when it was different from the default when creating new ads
+* [new] Experimental compatibility for W3 Total Cache
+* [new] Experimental compatibility for WP Super Cache
+* [change] Easier to read and use debug output
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
