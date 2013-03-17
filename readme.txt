@@ -70,6 +70,7 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 * [new] Experimental compatibility for W3 Total Cache
 * [new] Experimental compatibility for WP Super Cache
 * [change] Easier to read and use debug output
+* [change] Dropped support for the now obsolete adrotate_banner() function
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
@@ -103,6 +104,7 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/c
 * [new] Experimental compatibility for W3 Total Cache
 * [new] Experimental compatibility for WP Super Cache
 * [change] Easier to read and use debug output
+* [change] Dropped support for the now obsolete adrotate_banner() function
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
