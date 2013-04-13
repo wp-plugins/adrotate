@@ -51,19 +51,19 @@ class adrotate_widgets extends WP_Widget {
 		if($adrotate_config['w3caching'] == 'Y') echo '<!-- mfunc -->';
 		
 		if($instance['type'] == "single") {
-			if($adrotate_config['supercache'] == "Y") echo '<!--mfunc adrotate_ad( ' . $instance['id'] . ' ) -->';
+			if($adrotate_config['supercache'] == "Y") echo '<!--mfunc echo adrotate_ad( ' . $instance['id'] . ' ) -->';
 			echo adrotate_ad($instance['id']);
 			if($adrotate_config['supercache'] == "Y") echo '<!--/mfunc-->';
 		}
 
 		if($instance['type'] == "group") {
-			if($adrotate_config['supercache'] == "Y") echo '<!--mfunc adrotate_group( ' . $instance['id'] . ' ) -->';
+			if($adrotate_config['supercache'] == "Y") echo '<!--mfunc echo adrotate_group( ' . $instance['id'] . ' ) -->';
 			echo adrotate_group($instance['id']);
 			if($adrotate_config['supercache'] == "Y") echo '<!--/mfunc-->';
 		}
 		
 		if($instance['type'] == "block") {
-			if($adrotate_config['supercache'] == "Y") echo '<!--mfunc adrotate_block( ' . $instance['id'] . ' ) -->';
+			if($adrotate_config['supercache'] == "Y") echo '<!--mfunc echo adrotate_block( ' . $instance['id'] . ' ) -->';
 			echo adrotate_block($instance['id']);
 			if($adrotate_config['supercache'] == "Y") echo '<!--/mfunc-->';
 		}

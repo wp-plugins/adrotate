@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.5.1
-Stable tag: 3.8.4.2
+Stable tag: 3.8.4.3
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -18,7 +18,7 @@ Previewing of banners when editing them. And even some statistical values.
 Receive a periodic email when banners are (about to) expire(d) informing you to take action.
 
 AdRotate is now also available as a premium plugin. Offering more features and faster support! 
-Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
+Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 **Important links**
 
@@ -26,7 +26,7 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/c
 * [Manuals & Support](http://www.adrotateplugin.com/support/) - Setup instructions and support
 * [AdRotate Store](http://www.adrotateplugin.com/shop/) - Buy AdRotate Pro or hire me to install or troubleshoot AdRotate
 
-Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
+Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 **Some Features**
 
@@ -50,7 +50,7 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/c
 * Warns you on the dashboard when ads are about to expire
 * Use shortcodes, widgets or PHP to put ads on your site
 
-Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
+Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Installation ==
 
@@ -63,48 +63,36 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.4.2 FREE =
-* [fix] Undefined value notices when creating an advert
-* [fix] AdRotate throwing errors on deactivation for some users
-* [fix] Start / End date not saved when it was different from the default when creating new ads
-* [new] Experimental compatibility for W3 Total Cache
-* [new] Experimental compatibility for WP Super Cache
-* [change] Easier to read and use debug output
-* [change] Dropped support for the now obsolete adrotate_banner() function
+= 3.8.4.3 FREE =
+* [fix] Incorrect path for banner folder when WordPress is in subfolder
+* [fix] Missing bulk actions for renewing ads in some dashboards
+* [fix] Shortcode support for adcode field
+* [fix] User roles not being applied for some users
+* [new] Group wrappers
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.4 PRO =
-* [fix] Number of undefined value notices
-* [fix] Advertiser and Moderation access roles not being applied
-* [fix] Improper use of global $wp_roles
-* [fix] Single column blocks not applying line break
-* [fix] Advertiser username not showing when advertiser edits his/her own advert
-* [fix] Moderation queue now actually works
-* [new] Broadstreet Ads integration
-* [new] Advertiser ad creation now optional
-* [new] Advertiser ad linking now optional
-* [new] AdCode field for ads now supports registered shortcodes
-* [new] Statistics tracking now optional
-* [new] Tracking logged in users now optional
-* [change] Advertiser ad creation optimized
-* [change] Improved user-agent filter check
-* [change] Restored missing export options for advertisers
-* [change] Blocks: float setting "none" now has no float instead of "float:none;"
+= 3.8.5 PRO =
+* [fix] Ad weight not correctly applied to blocks
+* [fix] AdRotate throwing errors on deactivation for some users
+* [fix] AdRotate throwing errors for some users when saving settings
+* [new] Extra save button on Ad editing/creation
+* [new] Export/Import adverts via CSV files
+* [change] Added option to moderate queue in Admin menu
+* [change] Easier to read and use debug output
+* [change] Better redirects
 
-The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/download/changelog/).
-Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/shop/category/adrotate-plugin/)!
+The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
+Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.4.2 FREE =
-* [fix] Undefined value notices when creating an advert
-* [fix] AdRotate throwing errors on deactivation for some users
-* [fix] Start / End date not saved when it was different from the default when creating new ads
-* [new] Experimental compatibility for W3 Total Cache
-* [new] Experimental compatibility for WP Super Cache
-* [change] Easier to read and use debug output
-* [change] Dropped support for the now obsolete adrotate_banner() function
+= 3.8.4.3 FREE =
+* [fix] Incorrect path for banner folder when WordPress is in subfolder
+* [fix] Missing bulk actions for renewing ads in some dashboards
+* [fix] Shortcode support for adcode field
+* [fix] User roles not being applied for some users
+* [new] Group wrappers
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 

@@ -22,35 +22,30 @@ function adrotate_shortcode($atts, $content = null) {
 	if(!empty($atts['weight']))	$weight	= trim($atts['weight'], "\r\t "); // Optional for groups (override)
 
 	$output = '';
+
+	if($adrotate_config['w3caching'] == "Y") $output .= '<!-- mfunc -->';
+
 	if($banner_id > 0 AND ($group_ids == 0 OR $group_ids > 0) AND $block_id == 0) { // Show one Ad
-		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- mfunc -->';
-		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc adrotate_ad( $banner_id ) -->';
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc echo adrotate_ad( $banner_id ) -->';
 		$output .= adrotate_ad($banner_id);
 		if($adrotate_config['supercache'] == "Y") $output .= '<!--/mfunc-->';
-		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- /mfunc -->';
-
-		return $output;
 	}
 
 	if($banner_id == 0 AND $group_ids > 0 AND $block_id == 0) { // Show group 
-		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- mfunc -->';
-		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc adrotate_group( $group_ids, $fallback, $weight ) -->';
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc echo adrotate_group( $group_ids, $fallback, $weight ) -->';
 		$output .= adrotate_group($group_ids, $fallback, $weight);
 		if($adrotate_config['supercache'] == "Y") $output .= '<!--/mfunc-->';
-		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- /mfunc -->';
-
-		return $output;
 	}
 
 	if($banner_id == 0 AND $group_ids == 0 AND $block_id > 0) { // Show block 
-		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- mfunc -->';
-		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc adrotate_block( $block_id, $weight ) -->';
+		if($adrotate_config['supercache'] == "Y") $output .= '<!--mfunc echo adrotate_block( $block_id, $weight ) -->';
 		$output .= adrotate_block($block_id, $weight);
 		if($adrotate_config['supercache'] == "Y") $output .= '<!--/mfunc-->';
-		if($adrotate_config['w3caching'] == "Y") $output .= '<!-- /mfunc -->';
-
-		return $output;
 	}
+
+	if($adrotate_config['w3caching'] == "Y") $output .= '<!-- /mfunc -->';
+
+	return $output;
 }
 
 /*-------------------------------------------------------------
@@ -533,6 +528,29 @@ function adrotate_get_remote_ip(){
 }
 
 /*-------------------------------------------------------------
+ Name:      adrotate_get_sorted_roles
+
+ Purpose:   Returns all roles and capabilities, sorted by user level. Lowest to highest.
+ Receive:   -none-
+ Return:    $sorted
+ Since:		3.2
+-------------------------------------------------------------*/
+function adrotate_get_sorted_roles() {	
+	global $wp_roles;
+
+	$editable_roles = apply_filters('editable_roles', $wp_roles->roles);
+	$sorted = array();
+	
+	foreach($editable_roles as $role => $details) {
+		$sorted[$details['name']] = get_role($role);
+	}
+
+	$sorted = array_reverse($sorted);
+
+	return $sorted;
+}
+
+/*-------------------------------------------------------------
  Name:      adrotate_set_capability
 
  Purpose:   Grant or revoke capabilities to a role and all higher roles
@@ -541,15 +559,14 @@ function adrotate_get_remote_ip(){
  Since:		3.2
 -------------------------------------------------------------*/
 function adrotate_set_capability($lowest_role, $capability){
-	global $wp_roles;
-
-	foreach($wp_roles->roles as $role) {
+	$check_order = adrotate_get_sorted_roles();
+	$add_capability = false;
+	
+	foreach($check_order as $role) {
+		if($lowest_role == $role->name) $add_capability = true;
 		if(empty($role)) continue;
-
-		($lowest_role == $role['name']) ? $add_capability = true : $add_capability = false ;
-		$add_capability ? $wp_roles->add_cap($role['name'], $capability) : $wp_roles->remove_cap($role['name'], $capability) ;
+		$add_capability ? $role->add_cap($capability) : $role->remove_cap($capability) ;
 	}
-	unset($lowest_role, $capability, $role);
 }
 
 /*-------------------------------------------------------------
@@ -561,12 +578,12 @@ function adrotate_set_capability($lowest_role, $capability){
  Since:		3.2
 -------------------------------------------------------------*/
 function adrotate_remove_capability($capability){
-	global $wp_roles;
+	$check_order = adrotate_get_sorted_roles();
 
-	foreach($wp_roles->roles as $role) {
-		$wp_roles->remove_cap($role['name'], $capability);
+	foreach($check_order as $role) {
+		$role = get_role($role->name);
+		$role->remove_cap($capability);
 	}
-	unset($capability, $role);
 }
 
 /*-------------------------------------------------------------
@@ -678,29 +695,6 @@ function adrotate_dashboard_styles() {
 }
 
 /*-------------------------------------------------------------
- Name:      adrotate_home_path
-
- Purpose:   Find sites root, using WP code since the original doesn't work
- Receive:   -None-
- Return:	$home_path
- Since:		3.8
--------------------------------------------------------------*/
-function adrotate_home_path() {
-	$home = get_option( 'home' );
-	$siteurl = get_option( 'siteurl' );
-	if ( $home != '' && $home != $siteurl ) {
-	        $wp_path_rel_to_home = str_replace($home, '', $siteurl); /* $siteurl - $home */
-	        $pos = strpos($_SERVER["SCRIPT_FILENAME"], $wp_path_rel_to_home);
-	        $home_path = substr($_SERVER["SCRIPT_FILENAME"], 0, $pos);
-		$home_path = trailingslashit( $home_path );
-	} else {
-		$home_path = ABSPATH;
-	}
-
-	return $home_path;
-}
-
-/*-------------------------------------------------------------
  Name:      adrotate_folder_contents
 
  Purpose:   List folder contents of /wp-content/banners and /wp-content/uploads
@@ -712,11 +706,12 @@ function adrotate_folder_contents($current) {
 	global $wpdb, $adrotate_config;
 
 	$output = '';
+	$siteurl = get_option('siteurl');
 
 	// Read Banner folder
 	$files = array();
 	$i = 0;
-	if($handle = opendir(adrotate_home_path().$adrotate_config['banner_folder'])) {
+	if($handle = opendir(ABSPATH.$adrotate_config['banner_folder'])) {
 	    while (false !== ($file = readdir($handle))) {
 	        if ($file != "." AND $file != ".." AND $file != "index.php") {
 	            $files[] = $file;
@@ -733,7 +728,7 @@ function adrotate_folder_contents($current) {
 				if((strtolower($fileinfo['extension']) == "jpg" OR strtolower($fileinfo['extension']) == "gif" OR strtolower($fileinfo['extension']) == "png" 
 				OR strtolower($fileinfo['extension']) == "jpeg" OR strtolower($fileinfo['extension']) == "swf" OR strtolower($fileinfo['extension']) == "flv")) {
 				    $output .= "<option value='".$file."'";
-				    if(($current == get_option('siteurl').'/wp-content/banners/'.$file) OR ($current == get_option('siteurl')."%folder%".$file)) { $output .= "selected"; }
+				    if(($current == $siteurl.'/wp-content/banners/'.$file) OR ($current == $siteurl."%folder%".$file)) { $output .= "selected"; }
 				    $output .= ">".$file."</option>";
 				}
 			}

@@ -133,6 +133,31 @@ if(!is_array($meta_array)) $meta_array = array();
 
 		<thead>
 		<tr>
+			<th colspan="4"><?php _e('Wrapper code (Optional) - Wraps around each ad', 'adrotate'); ?></th>
+		</tr>
+		</thead>
+			
+		<tbody>
+	    <tr>
+			<th valign="top"><?php _e('Before ad', 'adrotate'); ?></strong></th>
+			<td colspan="2"><textarea tabindex="7" name="adrotate_wrapper_before" cols="65" rows="3"><?php echo stripslashes($edit_group->wrapper_before); ?></textarea></td>
+			<td>
+		        <p><strong><?php _e('Example:', 'adrotate'); ?></strong></p>
+		        <p><em>&lt;span style="margin: 2px;"&gt;</em></p>
+			</td>
+		</tr>
+	    <tr>
+			<th valign="top"><?php _e('After ad', 'adrotate'); ?></strong></th>
+			<td colspan="2"><textarea tabindex="8" name="adrotate_wrapper_after" cols="65" rows="3"><?php echo stripslashes($edit_group->wrapper_after); ?></textarea></td>
+			<td>
+				<p><strong><?php _e('Example:', 'adrotate'); ?></strong></p>
+				<p><em>&lt;/span&gt;</em></p>
+			</td>
+		</tr>
+		</tbody>
+
+		<thead>
+		<tr>
 			<th colspan="4"><?php _e('Usage', 'adrotate'); ?></th>
 		</tr>
 		</thead>

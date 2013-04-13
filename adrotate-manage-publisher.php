@@ -209,6 +209,10 @@ function adrotate_insert_group() {
 		if(isset($_POST['adrotate_pages'])) $pages = $_POST['adrotate_pages'];
 		if(isset($_POST['adrotate_page_location'])) $page_loc = $_POST['adrotate_page_location'];
 
+		$wrapper_before = $wrapper_after = '';
+		if(isset($_POST['adrotate_wrapper_before'])) $wrapper_before = trim($_POST['adrotate_wrapper_before'], "\t\n ");
+		if(isset($_POST['adrotate_wrapper_after'])) $wrapper_after = trim($_POST['adrotate_wrapper_after'], "\t\n ");
+	
 		if(current_user_can('adrotate_group_manage')) {
 			if(strlen($name) < 1) $name = 'Group '.$id;
 	
@@ -259,7 +263,7 @@ function adrotate_insert_group() {
 			unset($value);
 	
 			// Update the group itself
-			$wpdb->update($wpdb->prefix.'adrotate_groups', array('name' => $name, 'sortorder' => $sortorder, 'cat' => $category, 'cat_loc' => $category_loc, 'page' => $page, 'page_loc' => $page_loc), array('id' => $id));
+			$wpdb->update($wpdb->prefix.'adrotate_groups', array('name' => $name, 'token' => $token, 'fallback' => $fallback, 'sortorder' => $sortorder, 'cat' => $category, 'cat_loc' => $category_loc, 'page' => $page, 'page_loc' => $page_loc, 'wrapper_before' => $wrapper_before, 'wrapper_after' => $wrapper_after), array('id' => $id));
 			adrotate_return($action, array($id));
 			exit;
 		} else {

@@ -124,6 +124,7 @@ function adrotate_database_install() {
 	dbDelta("CREATE TABLE IF NOT EXISTS `".$tables['adrotate_groups']."` (
 			`id` mediumint(8) unsigned NOT NULL auto_increment,
 			`name` varchar(255) NOT NULL default 'group',
+			`token` varchar(10) NOT NULL default '0',
 			`fallback` varchar(5) NOT NULL default '0',
 			`sortorder` int(5) NOT NULL default '0',
 			`cat` longtext NOT NULL,
@@ -395,6 +396,12 @@ function adrotate_database_upgrade() {
 	if($adrotate_db_version['current'] < 30) {
 		adrotate_add_column($tables['adrotate_groups'], 'wrapper_before', 'longtext NOT NULL AFTER `page_loc`');
 		adrotate_add_column($tables['adrotate_groups'], 'wrapper_after', 'longtext NOT NULL AFTER `wrapper_before`');
+	}
+
+	// Database: 	31
+	// AdRotate:	3.8.5
+	if($adrotate_db_version['current'] < 31) {
+		adrotate_add_column($tables['adrotate_groups'], 'token', 'varchar(10) NOT NULL default \'0\' AFTER `name`');
 	}
 
 	update_option("adrotate_db_version", array('current' => ADROTATE_DB_VERSION, 'previous' => $adrotate_db_version['current']));

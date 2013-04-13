@@ -113,22 +113,14 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 		$group_choice = array_rand($group_array, 1);
 		$prefix = $wpdb->prefix;
 
-		if($fallback == 0 OR $fallback == '') {
-			$fallback = $wpdb->get_var($wpdb->prepare("SELECT `fallback` FROM `".$prefix."adrotate_groups` WHERE `id` = %d;", $group_array[$group_choice]));
-		}
-		
-		if($weight > 0) {
-			$weightoverride = "	AND `".$prefix."adrotate`.`weight` >= '$weight'";
-		} else {
-			$weightoverride = "";
-		}
-
 		if($adrotate_debug['general'] == true) {
 			echo "<p><strong>[DEBUG][adrotate_group()] Group array</strong><pre>"; 
 			print_r($group_array); 
 			print_r("Group choice: ".$group_array[$group_choice]); 
 			echo "</pre></p>"; 
 		}			
+
+		$group = $wpdb->get_row($wpdb->prepare("SELECT * FROM `".$wpdb->prefix."adrotate_groups` WHERE `id` = %d;", $group_array[$group_choice]));
 
 		$results = $wpdb->get_results($wpdb->prepare("
 			SELECT 
@@ -143,7 +135,6 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 				AND `".$prefix."adrotate_linkmeta`.`user` = 0
 				AND `".$prefix."adrotate`.`id` = `".$prefix."adrotate_linkmeta`.`ad`
 				AND `".$prefix."adrotate`.`type` = 'active'
-				".$weightoverride."
 			;", $group_array[$group_choice]));
 
 		if($adrotate_debug['general'] == true) {
@@ -175,7 +166,9 @@ function adrotate_group($group_ids, $fallback = 0, $weight = 0) {
 					print_r($banner_id); 
 					echo "</pre></p>"; 
 				}			
+				if($group->wrapper_before != '') { $output .= stripslashes(html_entity_decode($group->wrapper_before, ENT_QUOTES)); }
 				$output .= adrotate_ad($banner_id, false, $group_array[$group_choice], 0);
+				if($group->wrapper_after != '') { $output .= stripslashes(html_entity_decode($group->wrapper_after, ENT_QUOTES)); }
 			}
 		}
 		
@@ -384,6 +377,7 @@ function adrotate_ad_output($id, $group = 0, $block = 0, $bannercode, $tracker, 
 	$banner_output = str_replace('%image%', $image, $banner_output);
 	$banner_output = str_replace('%id%', $id, $banner_output);
 	$banner_output = stripslashes(htmlspecialchars_decode($banner_output, ENT_QUOTES));
+	$banner_output = do_shortcode($banner_output);
 
 	return $banner_output;
 }
@@ -692,7 +686,7 @@ function adrotate_credits() {
 
 	echo '<thead>';
 	echo '<tr valign="top">';
-	if(!stristr(ADROTATE_DISPLAY, 'Professional')) { echo '	<th width="27%">'.__('Your support makes a difference', 'adrotate').'</th>'; }
+	echo '	<th width="27%">'.__('Your support makes a difference', 'adrotate').'</th>';
 	echo '	<th>'.__('Useful links', 'adrotate').'</th>';
 	echo '	<th width="35%">'.__('Brought to you by', 'adrotate').'</th>';
 	echo '</tr>';
@@ -700,12 +694,10 @@ function adrotate_credits() {
 
 	echo '<tbody>';
 	echo '<tr>';
-	if(!stristr(ADROTATE_DISPLAY, 'Professional')) { 
-		echo '<td><ul>';
-		echo '	<li><center>'.__('Your awesome gift will ensure the continued development of AdRotate! Thanks for your consideration!', 'adrotate').'</center></li>';
-		echo '	<li><center><a href="http://www.adrotateplugin.com/donate/" target="_blank"><img src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" /></a></center></li>';
-		echo '</ul></td>';
-	}
+	echo '<td><ul>';
+	echo '	<li><center>'.__('Your awesome gift will ensure the continued development of AdRotate! Thanks for your consideration!', 'adrotate').'</center></li>';
+	echo '	<li><center><a href="http://www.adrotateplugin.com/donate/" target="_blank"><img src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" /></a></center></li>';
+	echo '</ul></td>';
 
 	echo '<td style="border-left:1px #ddd solid;"><ul>';
 	echo '	<li>'.__('Like the plugin?', 'adrotate').' <a href="http://wordpress.org/support/view/plugin-reviews/adrotate?rate=5#postform" target="_blank">'.__('Rate and review', 'adrotate').'</a> AdRotate.</li>';
