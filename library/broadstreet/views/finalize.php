@@ -3,15 +3,7 @@
 <?php if(@$done): ?>
 <script>
     var win = window.dialogArguments || opener || parent || top;
-            
-    if(typeof win.send_to_editor === 'function') 
-    {
-        win.send_to_editor('<?php echo $data['ad_html_output'] ?>');
-    }
-    else
-    {
-        win.tb_remove();
-    }
+    win.send_to_editor('<?php echo $data['ad_html_output'] ?>');
 </script>
 <?php endif; ?>
 
@@ -141,5 +133,4 @@
         _gaq.push(['_trackEvent', 'Pages', 'Purchase', '<?php echo $data['ad_source'] ?>']);
         _gaq.push(['_trackEvent', 'Milestones', 'Purchase', 'Network: <?php echo Broadstreet_Mini_Utility::getNetworkID() ?>']);
     });
-</script>    
 <?php require dirname(__FILE__) . '/global/_footer.php' ?>
