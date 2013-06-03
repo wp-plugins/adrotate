@@ -243,7 +243,7 @@ function adrotate_select_pages($savedpages, $count = 2, $child_of = 0, $parent =
  Return:    -None-
  Since:		3.6.5
 -------------------------------------------------------------*/
-function adrotate_prepare_evaluate_ads() {
+function adrotate_prepare_evaluate_ads($return = '') {
 	global $wpdb;
 	
 	// Fetch ads
@@ -253,19 +253,23 @@ function adrotate_prepare_evaluate_ads() {
 	$error = $expired = $expiressoon = $normal = $unknown = 0;
 	foreach($ads as $ad) {
 		$result = adrotate_evaluate_ad($ad->id);
-		if($result == 'error' OR $result == 'expired') {
-			if($result == 'expired')
-				$expired++;
-			if($result == 'error')
-				$error++;
+		if($result == 'error') {
+			if($result == 'error') $error++;
 			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'error' WHERE `id` = '".$ad->id."';");
 		} 
+
+		if($result == 'expired') {
+			if($result == 'expired') $expired++;
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'expired' WHERE `id` = '".$ad->id."';");
+		} 
 		
-		if($result == 'expires2days' OR $result == 'expires7days' OR $result == 'normal') {
-			if($result == 'expires2days' OR $result == 'expires7days')
-				$expiressoon++;
-			if($result == 'normal')
-				$normal++;
+		if($result == 'expiring') {
+			if($result == 'expiring') $expiressoon++;
+			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'expiring' WHERE `id` = '".$ad->id."';");
+		}
+		
+		if($result == 'active') {
+			if($result == 'normal') $normal++;
 			$wpdb->query("UPDATE `".$wpdb->prefix."adrotate` SET `type` = 'active' WHERE `id` = '".$ad->id."';");
 		}
 		
@@ -284,7 +288,7 @@ function adrotate_prepare_evaluate_ads() {
 					);
 
 	update_option('adrotate_advert_status', serialize($result));
-	adrotate_return('db_evaluated');
+	if($return == '') adrotate_return('db_evaluated');
 }
 
 /*-------------------------------------------------------------
@@ -328,12 +332,12 @@ function adrotate_evaluate_ad($ad_id) {
 			$stoptime <= $now 																				// Past the enddate
 		){
 			return 'expired';
-		} else if($stoptime <= $in2days AND $stoptime >= $now){
-			return 'expires2days';
-		} else if($stoptime <= $in7days AND $stoptime >= $now){
-			return 'expires7days';
+		} else if(
+			($stoptime <= $in2days OR $stoptime <= $in7days) AND $stoptime >= $now							// Expires soon
+		){
+			return 'expiring';
 		} else {
-			return 'normal';
+			return 'active';
 		}
 	} else {
 		return 'unknown';
@@ -677,19 +681,19 @@ function adrotate_dashboard_styles() {
 ?>
 <style type="text/css" media="screen">
 	/* styles for graphs */
-	.adrotate-label { font-size:12px;line-height:5px;margin:2px;font-weight:bold; }
-	.adrotate-clicks { color:#5Af;font-weight:normal; }
-	.adrotate-impressions { color:#F80;font-weight:normal; }
+	.adrotate-label { font-size: 12px; line-height: 5px; margin: 2px; font-weight: bold }
+	.adrotate-clicks { color: #5Af; font-weight: normal }
+	.adrotate-impressions { color: #F80; font-weight: normal }
 	
 	/* styles for advert statuses and stats */
-	.row_urgent { background-color:#ffebe8;border-color:#c00; }
-	.row_error { background-color:#ffffe0;border-color:#e6db55; }
-	.row_inactive { background-color:#ebf3fa;border-color:#466f82; }
-	.stats_large { display:block;margin-bottom:10px;margin-top:10px;text-align:center;font-weight:bold; }
-	.number_large {	margin:20px;font-size:28px; }
+	.row_urgent { background-color:#ffebe8; border-color:#c00; }
+	.row_error { background-color:#ffffe0; border-color:#e6db55; }
+	.row_inactive { background-color:#ebf3fa; border-color:#466f82; }
+	.stats_large { display: block; margin-bottom: 10px; margin-top: 10px; text-align: center; font-weight: bold; }
+	.number_large {	margin: 20px; font-size: 28px; }
 	
 	/* Fancy select box for group and page injection*/
-	.adrotate-select { padding:3px; border:1px solid #ccc; max-width:500px; max-height:100px; overflow-y:scroll; }
+	.adrotate-select { padding:3px; border:1px solid #ccc; max-width:500px; max-height:100px; overflow-y:scroll; background-color:#fff; }
 </style>
 <?php
 }

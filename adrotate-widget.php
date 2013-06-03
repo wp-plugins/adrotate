@@ -22,10 +22,6 @@ class adrotate_widgets extends WP_Widget {
 	-------------------------------------------------------------*/
 	function adrotate_widgets() {
 
-		/* Changelog:
-		// Feb 28 2011 - New method to construct widgets in line with new standards
-		*/
-
         parent::WP_Widget(false, 'AdRotate', array('description' => "Show unlimited ads in the sidebar."));	
 
 	}
@@ -35,10 +31,6 @@ class adrotate_widgets extends WP_Widget {
 	-------------------------------------------------------------*/
 	function widget($args, $instance) {
 		global $adrotate_config;
-
-		/* Changelog:
-		// Feb 28 2011 - Minor tweaks, updated title filter
-		*/
 
 		extract($args);
         $title = apply_filters('widget_title', $instance['title']);
@@ -93,11 +85,6 @@ class adrotate_widgets extends WP_Widget {
 	 Purpose:   Display the widget options for admins
 	-------------------------------------------------------------*/
 	function form($instance) {
-
-		/* Changelog:
-		// Feb 28 2011 - New method to construct widgets in line with new standards
-		// Mar 29 2011 - Internationalization support
-		*/
 
 		$defaults = array();
 		$instance = wp_parse_args( (array) $instance, $defaults );

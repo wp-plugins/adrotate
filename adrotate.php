@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.4.3
+Version: 3.8.4.4
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,9 +15,9 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.4.3'.ADROTATE_BETA);
+define("ADROTATE_DISPLAY", '3.8.4.4'.ADROTATE_BETA);
 define("ADROTATE_VERSION", 364);
-define("ADROTATE_DB_VERSION", 31);
+define("ADROTATE_DB_VERSION", 32);
 /*-----------------------------------------------------------*/
 
 /*--- Load Files --------------------------------------------*/
@@ -27,7 +27,7 @@ include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-functions.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-statistics.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-output.php');
 include_once(WP_CONTENT_DIR.'/plugins/adrotate/adrotate-widget.php');
-include_once WP_CONTENT_DIR.'/plugins/adrotate/library/broadstreet/lib/Utility.php';
+if(is_admin()) include_once(WP_CONTENT_DIR.'/plugins/adrotate/library/broadstreet/lib/Utility.php');
 // wp-content/plugins/adrotate/adrotate-out.php
 /*-----------------------------------------------------------*/
 
@@ -151,16 +151,17 @@ function adrotate_manage() {
 	$in2days 		= $now + 172800;
 	$in7days 		= $now + 604800;
 	$in84days 		= $now + 7257600;
+	$locale			= get_option('gmt_offset') * 3600;
 
 	if(isset($_GET['month']) AND isset($_GET['year'])) {
 		$month = $_GET['month'];
 		$year = $_GET['year'];
 	} else {
-		$month = date("m");
-		$year = date("Y");
+		$month = gmdate("m");
+		$year = gmdate("Y");
 	}
-	$monthstart = mktime(0, 0, 0, $month, 1, $year);
-	$monthend = mktime(0, 0, 0, $month+1, 0, $year);	
+	$monthstart = gmmktime(0, 0, 0, $month, 1, $year) - $locale;
+	$monthend = gmmktime(0, 0, 0, $month+1, 0, $year) - $locale;	
 	?>
 	<div class="wrap">
 		<h2><?php _e('Ad Management', 'adrotate'); ?></h2>
@@ -190,7 +191,7 @@ function adrotate_manage() {
 		<?php if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_groups';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_schedule';") AND $wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."adrotate_linkmeta';")) { ?>
 
 			<?php
-			$allbanners = $wpdb->get_results("SELECT `id`, `title`, `type`, `tracker` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'active' OR `type` = 'error' OR `type` = 'disabled' ORDER BY `sortorder` ASC, `id` ASC;");
+			$allbanners = $wpdb->get_results("SELECT `id`, `title`, `type`, `tracker` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'active' OR `type` = 'error' OR `type` = 'expired' OR `type` = 'expiring' OR `type` = 'disabled' ORDER BY `sortorder` ASC, `id` ASC;");
 			$activebanners = $errorbanners = $disabledbanners = false;
 			foreach($allbanners as $singlebanner) {
 				
@@ -198,7 +199,7 @@ function adrotate_manage() {
 				
 				$type = $singlebanner->type;
 				if($type == 'active' AND $schedule->stoptime <= $in7days) {
-					$type = 'expiressoon';
+					$type = 'expiring';
 				}
 				if($type == 'active' AND $schedule->stoptime <= $now) {
 					$type = 'expired';
@@ -215,7 +216,7 @@ function adrotate_manage() {
 					);
 				}
 				
-				if($type == 'error' OR $type == 'expired' OR $type == 'expiressoon') {
+				if($type == 'error' OR $type == 'expired' OR $type == 'expiring') {
 					$errorbanners[$singlebanner->id] = array(
 						'id' => $singlebanner->id,
 						'title' => $singlebanner->title,
@@ -559,6 +560,8 @@ function adrotate_options() {
 	if(isset($_GET['message'])) $message = $_GET['message'];
 
 	$converted = base64_decode($converted);
+	$adschedule = wp_next_scheduled('adrotate_ad_notification');
+	$adtracker = wp_next_scheduled('adrotate_clean_trackerdata');
 ?>
 	<div class="wrap">
 	  	<h2><?php _e('AdRotate Settings', 'adrotate'); ?></h2>
@@ -584,7 +587,7 @@ function adrotate_options() {
 
 	    	<table class="form-table">
 			<tr>
-				<td colspan="2"><h2><?php _e('Access Rights', 'adrotate'); ?></h2></td>
+				<td colspan="2"><a name="access_rights"></a><h3><?php _e('Access Rights', 'adrotate'); ?></h3></td>
 			</tr>
 
 			<tr>
@@ -668,24 +671,6 @@ function adrotate_options() {
 				</td>
 			</tr>
 
-			<?php if($adrotate_debug['dashboard'] == true) { ?>
-			<tr>
-				<td colspan="2">
-					<?php 
-					echo "<p><strong>[DEBUG] Globalized Config</strong>"; 
-					echo "<pre>"; 
-					print_r($adrotate_config); 
-					echo "</pre>"; 
-					echo "<pre> ABSPATH: ";
-					print_r(ABSPATH);
-					echo "</pre>";
-					echo "<pre> Siteurl: ";
-					print_r(get_option('siteurl'));
-					echo "</pre></p>";
-					?>
-				</td>
-			</tr>
-			<?php } ?>
 			<?php if($adrotate_debug['userroles'] == true) { ?>
 			<tr>
 				<td colspan="2">
@@ -702,7 +687,47 @@ function adrotate_options() {
 			<?php } ?>
 
 			<tr>
-				<td colspan="2"><h2><?php _e('Banner Folder', 'adrotate'); ?></h2></td>
+				<td colspan="2"><a name="advertisers"></a><h3><?php _e('Advertisers', 'adrotate'); ?></h3></td>
+			</tr>
+			<tr>
+				<th scope="row" valign="top">&nbsp;</th>
+				<td><span class="description"><?php adrotate_pro_notice(); ?></span></td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('Enable Advertisers', 'adrotate'); ?></th>
+				<td>
+					<input type="checkbox" name="adrotate_enable_advertisers" disabled /> <span class="description"><?php _e('Allow adverts to be coupled to users (Advertisers).', 'adrotate'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('Edit/update adverts', 'adrotate'); ?></th>
+				<td>
+					<input type="checkbox" name="adrotate_enable_editing" disabled /> <span class="description"><?php _e('Allow advertisers to add new or edit their adverts.', 'adrotate'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('Advertiser role', 'adrotate'); ?></th>
+				<td>
+					<input type="submit" id="post-role-submit" name="adrotate_role_add_submit" value="<?php _e('Create Role', 'adrotate'); ?>" class="button-secondary" disabled />
+					<br /><span class="description"><?php _e('This role has no capabilities unless you assign them using the above options. Obviously you should use this with care.', 'adrotate'); ?><br />
+					<?php _e('This type of user is NOT required to use AdRotate or any of it\'s features. It merely helps you to seperate advertisers from regular subscribers without giving them too much access to your dashboard.', 'adrotate'); ?></span>
+				</td>
+			</tr>
+
+			<?php if($adrotate_debug['dashboard'] == true) { ?>
+			<tr>
+				<td colspan="2">
+					<?php 
+					echo "<p><strong>[DEBUG] Globalized Config</strong><pre>"; 
+					print_r($adrotate_config); 
+					echo "</pre></p>"; 
+					?>
+				</td>
+			</tr>
+			<?php } ?>
+
+			<tr>
+				<td colspan="2"><a name="banner_folder"></a><h3><?php _e('Banner Folder', 'adrotate'); ?></h3></td>
 			</tr>
 			<tr>
 				<th scope="row" valign="top">&nbsp;</th>
@@ -719,7 +744,7 @@ function adrotate_options() {
 			</tr>
 
 			<tr>
-				<td colspan="2"><h2><?php _e('Email Notifications', 'adrotate'); ?></h2></td>
+				<td colspan="2"><a name="email"></a><h3><?php _e('Email Notifications', 'adrotate'); ?></h3></td>
 			</tr>
 			<tr>
 				<th scope="row" valign="top">&nbsp;</th>
@@ -764,15 +789,18 @@ function adrotate_options() {
 			</tr>
 
 			<tr>
-				<td colspan="2"><h2><?php _e('Statistics', 'adrotate'); ?></h2></td>
+				<td colspan="2"><a name="statistics"></a><h3><?php _e('Statistics', 'adrotate'); ?></h3></td>
 			</tr>
 
 			<tr>
 				<th valign="top"><?php _e('Track visitors', 'adrotate'); ?></th>
 				<td>
-					<input type="checkbox" name="adrotate_enable_stats" <?php if($adrotate_config['enable_stats'] == 'Y') { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Track clicks and impressions. Disabling this also disables click and impression limits on schedules and disables timeframes.', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_enable_loggedin_impressions" disabled checked /> <span class="description"><?php _e('Track impressions from logged in users.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?></span><br />
-					<input type="checkbox" name="adrotate_enable_loggedin_clicks" disabled checked /> <span class="description"><?php _e('Track clicks from logged in users.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?></span>
+					<input type="checkbox" name="adrotate_enable_stats" <?php if($adrotate_config['enable_stats'] == 'Y') { ?>checked="checked" <?php } ?> /> <?php _e('Track clicks and impressions.', 'adrotate'); ?><br />
+					<span class="description"><?php _e('Disabling this also disables click and impression limits on schedules and disables timeframes.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_enable_loggedin_impressions" checked disabled /> <?php _e('Track impressions from logged in users (Recommended).', 'adrotate'); ?> <?php adrotate_pro_notice(); ?><br />
+					<span class="description"><?php _e('Has no effect when click and impression tracking is disabled.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_enable_loggedin_clicks" checked disabled /> <?php _e('Track clicks from logged in users.', 'adrotate'); ?> <?php adrotate_pro_notice(); ?><br />
+					<span class="description"><?php _e('Has no effect when click and impression tracking is disabled.', 'adrotate'); ?></span>
 				</td>
 			</tr>
 			<?php if($adrotate_debug['dashboard'] == true) { ?>
@@ -803,10 +831,26 @@ function adrotate_options() {
 					<span class="description"><?php _e('Default: 10. Set to 0 to disable this timer.', 'adrotate'); ?><br /><?php _e('This number may not be empty, negative or exceed 3600 (1 hour).', 'adrotate'); ?></span>
 				</td>
 			</tr>
-
 			
 			<tr>
-				<td colspan="2"><h2><?php _e('Miscellaneous', 'adrotate'); ?></h2></td>
+				<td colspan="2"><a name="geotargeting"></a><h3><?php _e('GeoTargeting', 'adrotate'); ?></h3></td>
+			</tr>
+
+			<tr>
+				<th scope="row" valign="top">&nbsp;</th>
+				<td><span class="description"><?php adrotate_pro_notice(); ?></span></td>
+			</tr>
+			<tr>
+				<th valign="top"><?php _e('GeoLocation', 'adrotate'); ?></th>
+				<td>
+					<input type="checkbox" name="adrotate_enable_geo" disabled /> <?php _e('Enable GeoLocation for adverts.', 'adrotate'); ?><br />
+					<input type="checkbox" name="adrotate_enable_geo_advertisers" disabled /> <?php _e('Allow advertisers to specify where their ads will show.', 'adrotate'); ?><br />
+					<span class="description"><?php _e('Using GeoLocation requires a free account from', 'adrotate'); ?> <a href="http://www.geoplugin.com" target="_blank">geoPlugin</a>.<br />geoPlugin includes GeoLite data created by MaxMind, available from <a href="http://www.maxmind.com" target="_blank">maxmind.com</a>.</span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="2"><a name="misc"></a><h3><?php _e('Miscellaneous', 'adrotate'); ?></h3></td>
 			</tr>
 			<tr>
 				<th valign="top"><?php _e('Widget alignment', 'adrotate'); ?></th>
@@ -825,7 +869,7 @@ function adrotate_options() {
 			</tr>
 
 			<tr>
-				<td colspan="2"><h2><?php _e('Maintenance', 'adrotate'); ?></h2></td>
+				<td colspan="2"><a name="maintenance"></a><h3><?php _e('Maintenance', 'adrotate'); ?></h3></td>
 			</tr>
 
 			<?php if($adrotate_debug['dashboard'] == true) { ?>
@@ -851,7 +895,7 @@ function adrotate_options() {
 			<?php } ?>
 			
 			<tr>
-				<td colspan="2"><span class="description"><?php _e('NOTE: The below functions are intented to be used to OPTIMIZE your database. They only apply to your ads/groups/blocks and stats. Not to other settings or other parts of Wordpress! Always always make a backup! These functions are to be used when you feel or notice your database is slow, unresponsive and sluggish.', 'adrotate'); ?></span></td>
+				<td colspan="2"><span class="description"><?php _e('NOTE: The below functions are intented to be used to OPTIMIZE your database. They only apply to your ads/groups/blocks and stats. Not to other settings or other parts of WordPress! Always always make a backup! These functions are to be used when you feel or notice your database is slow, unresponsive and sluggish.', 'adrotate'); ?></span></td>
 			</tr>
 			<tr>
 				<th valign="top"><?php _e('Optimize Database', 'adrotate'); ?></th>
@@ -872,33 +916,30 @@ function adrotate_options() {
 				<th valign="top"><?php _e('Re-evaluate Ads', 'adrotate'); ?></th>
 				<td>
 					<input type="submit" id="post-role-submit" name="adrotate_evaluate_submit" value="<?php _e('Re-evaluate all ads', 'adrotate'); ?>" class="button-secondary" onclick="return confirm('<?php _e('You are about to check all ads for errors.', 'adrotate'); ?>\n\n<?php _e('This might take a while and make slow down your site during this action!', 'adrotate'); ?>\n\n<?php _e('OK to continue, CANCEL to stop.', 'adrotate'); ?>')" /><br />
-					<span class="description"><?php _e('This will apply all evaluation rules to all ads to see if any error slipped in. Normally you shouldn\t need this feature.', 'adrotate'); ?></span>
+					<span class="description"><?php _e('This will apply all evaluation rules to all ads to see if any error slipped in. Normally you should not need this feature.', 'adrotate'); ?></span>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2"><span class="description"><?php _e('DISCLAIMER: If for any reason your data is lost, damaged or otherwise becomes unusable in any way or by any means in whichever way i will not take responsibility. You should always have a backup of your database. These functions do NOT destroy data. If data is lost, damaged or unusable, your database likely was beyond repair already. Claiming it worked before clicking these buttons is not a valid point in any case.', 'adrotate'); ?></span></td>
+				<td colspan="2"><span class="description"><?php _e('DISCLAIMER: If for any reason your data is lost, damaged or otherwise becomes unusable in any way or by any means in whichever way I will not take responsibility. You should always have a backup of your database. These functions do NOT destroy data. If data is lost, damaged or unusable, your database likely was beyond repair already. Claiming it worked before clicking these buttons is not a valid point in any case.', 'adrotate'); ?></span></td>
 			</tr>
 
 			<tr>
-				<td colspan="2"><h2><?php _e('Troubleshooting', 'adrotate'); ?></h2></td>
+				<td colspan="2"><a name="debug"></a><h3><?php _e('Troubleshooting', 'adrotate'); ?></h3></td>
 			</tr>
 			<tr>
 				<td><?php _e('Current version:', 'adrotate'); ?> <?php echo $adrotate_version['current']; ?></td>
-				<td><?php _e('Previous version:', 'adrotate'); ?> <?php echo $adrotate_version['current']; ?></td>
+				<td><?php _e('Previous version:', 'adrotate'); ?> <?php echo $adrotate_version['previous']; ?></td>
 			</tr>
 			<tr>
 				<td><?php _e('Current database version:', 'adrotate'); ?> <?php echo $adrotate_db_version['current']; ?></td>
-				<td><?php _e('Previous database version:', 'adrotate'); ?> <?php echo $adrotate_db_version['current']; ?></td>
-			</tr>
-			<?php
-			$adtracker = wp_next_scheduled('adrotate_clean_trackerdata');
-			?>
-			<tr>
-				<td><?php _e('Ad Notifications last run:', 'adrotate'); ?></td>
-				<td><?php adrotate_pro_notice(); ?></td>
+				<td><?php _e('Previous database version:', 'adrotate'); ?> <?php echo $adrotate_db_version['previous']; ?></td>
 			</tr>
 			<tr>
-				<td><?php _e('Clean Trackerdata last run:', 'adrotate'); ?></td>
+				<td><?php _e('Ad Notifications next run:', 'adrotate'); ?></td>
+				<td><?php if(!$adschedule) _e('Not scheduled!', 'adrotate'); else echo date_i18n(get_option('date_format')." H:i", $adschedule); ?></td>
+			</tr>
+			<tr>
+				<td><?php _e('Clean Trackerdata next run:', 'adrotate'); ?></td>
 				<td><?php if(!$adtracker) _e('Not scheduled!', 'adrotate'); else echo date_i18n(get_option('date_format')." H:i", $adtracker); ?></td>
 			</tr>
 			<tr>
@@ -908,13 +949,13 @@ function adrotate_options() {
 			<tr>
 				<th valign="top"><?php _e('Developer Debug', 'adrotate'); ?></th>
 				<td>
-					<input type="checkbox" name="adrotate_debug" <?php if($adrotate_debug['general'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Troubleshoot ads and how (if) they are selected, has front-end output!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_dashboard" <?php if($adrotate_debug['dashboard'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show all settings, dashboard routines and related values!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_userroles" <?php if($adrotate_debug['userroles'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Show array of all userroles and capabilities!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_userstats" <?php if($adrotate_debug['userstats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review saved advertisers! Visible to advertisers!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_stats" <?php if($adrotate_debug['stats'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Review global stats, per ad/group/block stats. Visible to publishers!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_timers" <?php if($adrotate_debug['timers'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable timers for clicks and impressions allowing you to test the impression and click counters or stats without having to wait!', 'adrotate'); ?></span><br />
-					<input type="checkbox" name="adrotate_debug_track" <?php if($adrotate_debug['track'] == true) { ?>checked="checked" <?php } ?> /> <span class="description"><?php _e('Disable encryption on the redirect url. This will NOT compromise any security!', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug" <?php if($adrotate_debug['general'] == true) { ?>checked="checked" <?php } ?> /> General - <span class="description"><?php _e('Troubleshoot ads and how (if) they are selected, has front-end output.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_dashboard" <?php if($adrotate_debug['dashboard'] == true) { ?>checked="checked" <?php } ?> /> Dashboard - <span class="description"><?php _e('Show all settings, dashboard routines and related values.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_userroles" <?php if($adrotate_debug['userroles'] == true) { ?>checked="checked" <?php } ?> /> User Roles - <span class="description"><?php _e('Show array of all userroles and capabilities.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_userstats" <?php if($adrotate_debug['userstats'] == true) { ?>checked="checked" <?php } ?> /> Userstats - <span class="description"><?php _e('Review saved advertisers! Visible to advertisers.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_stats" <?php if($adrotate_debug['stats'] == true) { ?>checked="checked" <?php } ?> /> Stats - <span class="description"><?php _e('Review global stats, per ad/group/block stats. Visible only to publishers.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_timers" <?php if($adrotate_debug['timers'] == true) { ?>checked="checked" <?php } ?> /> Timers - <span class="description"><?php _e('Disable timers for clicks and impressions.', 'adrotate'); ?></span><br />
+					<input type="checkbox" name="adrotate_debug_track" <?php if($adrotate_debug['track'] == true) { ?>checked="checked" <?php } ?> /> Tracking Encryption - <span class="description"><?php _e('Temporarily disable encryption on the redirect url.', 'adrotate'); ?></span><br />
 				</td>
 			</tr>
 	    	</table>

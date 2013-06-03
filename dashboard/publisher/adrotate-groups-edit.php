@@ -9,7 +9,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	$action = "group_new";
 	$edit_id = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` = '' ORDER BY `id` DESC LIMIT 1;");
 	if($edit_id == 0) {
-	    $wpdb->insert($wpdb->prefix."adrotate_groups", array('name' => '', 'fallback' => '0', 'sortorder' => 0, 'cat' => '', 'cat_loc' => 0, 'page' => '', 'page_loc' => 0, 'wrapper_before' => '', 'wrapper_after' => ''));
+	    $wpdb->insert($wpdb->prefix."adrotate_groups", array('name' => '', 'token' => '', 'fallback' => '0', 'sortorder' => 0, 'cat' => '', 'cat_loc' => 0, 'page' => '', 'page_loc' => 0, 'geo' => 0, 'wrapper_before' => '', 'wrapper_after' => ''));
 	    $edit_id = $wpdb->insert_id;
 	}
 	$group_edit_id = $edit_id;
@@ -182,7 +182,8 @@ if(!is_array($meta_array)) $meta_array = array();
    	<table class="widefat" style="margin-top: .5em">
 			<thead>
 			<tr>
-			<th colspan="2"><?php _e('Choose the ads to use in this group', 'adrotate'); ?></th>
+			<th scope="col" class="manage-column column-cb check-column"><input type="checkbox" /></th>
+			<th><?php _e('Choose the ads to use in this group', 'adrotate'); ?></th>
 			<th width="5%"><center><?php _e('Impressions', 'adrotate'); ?></center></th>
 			<th width="5%"><center><?php _e('Clicks', 'adrotate'); ?></center></th>
 			<th width="5%"><center><?php _e('Weight', 'adrotate'); ?></center></th>
@@ -203,7 +204,7 @@ if(!is_array($meta_array)) $meta_array = array();
 
 				$class = ('alternate' != $class) ? 'alternate' : ''; ?>
 			    <tr class='<?php echo $class; ?>'>
-					<th width="2%"><input type="checkbox" name="adselect[]" value="<?php echo $ad->id; ?>" <?php if(in_array($ad->id, $meta_array)) echo "checked"; ?> /></th>
+					<th class="check-column" width="2%"><input type="checkbox" name="adselect[]" value="<?php echo $ad->id; ?>" <?php if(in_array($ad->id, $meta_array)) echo "checked"; ?> /></th>
 					<td><?php echo $ad->id; ?> - <strong><?php echo $ad->title; ?></strong></td>
 					<td><center><?php echo $stats->impressions; ?></center></td>
 					<td><center><?php if($ad->tracker == 'Y') { echo $stats->clicks; } else { ?>--<?php } ?></center></td>

@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" class=""  dir="ltr" lang="en-US">
 <!--<![endif]-->
 <head>
-    <link rel='stylesheet' href='<?php echo Broadstreet_Mini_Utility::getBaseURL('assets/css/style.css?' . rand()) ?>' type='text/css' media='all' />
+    <link rel='stylesheet' href='<?php echo Broadstreet_Mini_Utility::getBaseURL('assets/css/style.css') ?>' type='text/css' media='all' />
     <link rel='stylesheet' href='<?php echo Broadstreet_Mini_Utility::getBaseURL('assets/css/tipsy.css') ?>' type='text/css' media='all' />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script type='text/javascript' src='<?php echo Broadstreet_Mini_Utility::getBaseURL('assets/js/jquery.tipsy.js') ?>'></script>

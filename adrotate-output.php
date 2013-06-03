@@ -14,8 +14,8 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	global $wpdb, $adrotate_config, $adrotate_crawlers, $adrotate_debug;
 
-	$now 				= date('U');
-	$today 				= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+	$now 				= current_time('timestamp');
+	$today 				= adrotate_today();
 	$useragent 			= $_SERVER['HTTP_USER_AGENT'];
 	$useragent_trim 	= trim($useragent, ' \t\r\n\0\x0B');
 
@@ -26,7 +26,7 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 	$output = '';
 	if($banner_id) {
 		if($individual == true) {
-			$banner = $wpdb->get_row($wpdb->prepare("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = %d AND `type` = 'active';", $banner_id));
+			$banner = $wpdb->get_row($wpdb->prepare("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = %d AND (`type` = 'active' OR `type` = 'expiring');", $banner_id));
 
 			if($adrotate_debug['general'] == true) {
 				echo "<p><strong>[DEBUG][adrotate_ad()] Selected Ad, specs</strong><pre>";
@@ -34,8 +34,12 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 				echo "</pre></p>"; 
 			}
 			
-			$selected = array($banner->id => 0);			
-			$selected = adrotate_filter_schedule($selected, $banner);
+			if($banner) {
+				$selected = array($banner->id => 0);			
+				$selected = adrotate_filter_schedule($selected, $banner);
+			} else {
+				$selected = false;
+			}
 		} else {
 			// Coming from a group or block, no checks (they're already ran elsewhere) just load the ad
 			$banner = $wpdb->get_row($wpdb->prepare("SELECT `id`, `bannercode`, `tracker`, `link`, `image` FROM `".$wpdb->prefix."adrotate` WHERE `id` = %d;", $banner_id));
@@ -43,19 +47,13 @@ function adrotate_ad($banner_id, $individual = true, $group = 0, $block = 0) {
 			$schedules = array('Already checked when choosing group/block.');
 		}
 		
-		if($adrotate_debug['general'] == true) {
-			echo "<p><strong>[DEBUG][adrotate_ad()] Ad to display (ID => (fake) weight)</strong><pre>";
-			print_r($selected); 
-			echo "</pre></p>"; 
-		}
-			
-		if($adrotate_debug['timers'] == true) {
-			$impression_timer = $now;
-		} else {
-			$impression_timer = $now - $adrotate_config['impression_timer'];
-		}
-		
 		if($selected) {
+			if($adrotate_debug['timers'] == true) {
+				$impression_timer = $now;
+			} else {
+				$impression_timer = $now - $adrotate_config['impression_timer'];
+			}
+		
 			$image = str_replace('%folder%', $adrotate_config['banner_folder'], $banner->image);		
 			$output .= adrotate_ad_output($banner->id, $group, $block, $banner->bannercode, $banner->tracker, $banner->link, $image);
 
@@ -402,11 +400,8 @@ function adrotate_custom_css() {
 		foreach($blocks as $block) {
 			$adwidth = $block->adwidth.'px';
 			if($block->adheight == 'auto') $adheight = 'auto';
-				else $adheight = $block->adheight.'px';
-			if($block->gridfloat == 'none') $gridfloat = '';
-				else $gridfloat = 'float:'.$block->gridfloat.';';
-	
-			$output .= ".b-".$block->id." { ".$gridfloat."overflow:auto;margin:0;padding:".$block->gridpadding."px;clear:none;width:auto;height:auto; }\n";
+				else $adheight = $block->adheight.'px';	
+			$output .= ".b-".$block->id." { overflow:auto;margin:0;padding:".$block->gridpadding."px;clear:none;width:auto;height:auto; }\n";
 			$output .= ".a-".$block->id." { margin:".$block->admargin."px;clear:none;float:left;width:".$adwidth.";height:".$adheight.";border:".$block->adborder."; }\n";
 		}
 		$output .= ".block_left { clear:left; }\n";
@@ -749,12 +744,13 @@ function adrotate_user_notice() {
  Name:      adrotate_pro_notice
  
  Purpose:   Credits shown on user statistics
- Receive:   -none-
+ Receive:   $d
  Return:    -none-
  Since:		3.8
 -------------------------------------------------------------*/
-function adrotate_pro_notice() {
+function adrotate_pro_notice($d = '') {
 
-	echo __('This feature is available in AdRotate Pro', 'adrotate').'. <a href="http://www.adrotateplugin.com/features/" target="_blank">'.__('Get AdRotate Pro', 'adrotate').'</a>!';
+	if($d == "t") echo __('Available in AdRotate Pro', 'adrotate').'. <a href="http://www.adrotateplugin.com/adrotate-pro/" target="_blank">'.__('Buy now', 'adrotate').'</a>!';
+	else echo __('This feature is available in AdRotate Pro', 'adrotate').'. <a href="http://www.adrotateplugin.com/adrotate-pro/" target="_blank">'.__('Go Pro today', 'adrotate').'</a>!';
 }
 ?>

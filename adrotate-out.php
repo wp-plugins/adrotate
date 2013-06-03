@@ -22,10 +22,8 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 	}
 
 	if(isset($_GET['preview'])) $preview = $_GET['preview'];
-		else $preview = 0;	
+		else $preview = '';	
 	list($ad, $group, $block, $bannerurl) = explode(",", $meta);
-
-	$today 		= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
 		
 	if($bannerurl) {
 		if($adrotate_config['enable_stats'] == 'Y') {
@@ -33,7 +31,7 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 			$useragent 	= trim($_SERVER['HTTP_USER_AGENT'], ' \t\r\n\0\x0B');
 			$prefix		= $wpdb->prefix;
 			$remote_ip 	= adrotate_get_remote_ip();
-			$now 		= time();
+			$now 		= current_time('timestamp');
 		
 			if($adrotate_debug['timers'] == true) {
 				$ip = 0;
@@ -50,7 +48,7 @@ if(isset($_GET['track']) OR $_GET['track'] != '') {
 			}
 	
 			if($ip < 1 AND !in_array(1, $nocrawler) AND empty($preview) AND !empty($useragent)) {
-				$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+				$today = adrotate_today();
 				$wpdb->query($wpdb->prepare("UPDATE `".$prefix."adrotate_stats` SET `clicks` = `clicks` + 1 WHERE `ad` = %d AND `group` = %d AND `block` = %d AND `thetime` = $today;", $ad, $group, $block));
 				if($remote_ip != "unknown" AND !empty($remote_ip)) {
 					$wpdb->insert($prefix.'adrotate_tracker', array('ipaddress' => $remote_ip, 'timer' => $now, 'bannerid' => $ad, 'stat' => 'c', 'useragent' => $useragent));

@@ -297,7 +297,7 @@ function adrotate_ctr($clicks = 0, $impressions = 0, $round = 2) {
 function adrotate_prepare_global_report() {
 	global $wpdb;
 	
-	$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+	$today = adrotate_today();
 
 	$stats['lastclicks']			= adrotate_array_unique($wpdb->get_results("SELECT `timer`, `bannerid`, `useragent` FROM `".$wpdb->prefix."adrotate_tracker` WHERE `stat` = 'c' AND `ipaddress` != 0 ORDER BY `timer` DESC LIMIT 50;", ARRAY_A));
 	$stats['banners'] 				= $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'active';");
@@ -312,5 +312,17 @@ function adrotate_prepare_global_report() {
 	if(!$stats['impressions']) 			$stats['impressions'] = 0;
 
 	return $stats;
+}
+
+/*-------------------------------------------------------------
+ Name:      adrotate_today
+
+ Purpose:   Get and return the localized UNIX time for "today"
+ Receive:   -None-
+ Return:    int
+ Since:		3.8.4.4
+-------------------------------------------------------------*/
+function adrotate_today() {
+	return gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y")) - (get_option('gmt_offset') * 3600);
 }
 ?>

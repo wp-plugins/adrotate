@@ -38,7 +38,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			<tbody>
 		<?php
 		foreach($disabledbanners as $disbanner) {
-			$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+			$today = adrotate_today();
 			$stats = adrotate_stats($disbanner['id']);
 			$grouplist = adrotate_ad_is_in_groups($disbanner['id']);
 	

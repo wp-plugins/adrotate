@@ -206,9 +206,8 @@ if(!is_array($adrotate_advert_status)) $statuscache = unserialize($adrotate_adve
 				<div class="postbox-adrotate">
 					<h3><span><?php _e('AdRotate Store', 'adrotate'); ?></span></h3>
 					<div class="inside">
-						<p><h4><?php _e('AdRotate Pro', 'adrotate'); ?></h4> <?php _e('Get more AdRotate! Go Professional.', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/adrotate-plugin/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
-						<p><h4><?php _e('Child Themes', 'adrotate'); ?></h4> <?php _e('Make your AdRotate better with better integration!', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/child-themes/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
-						<p><h4><?php _e('Installations', 'adrotate'); ?></h4> <?php _e('Not sure how to set up AdRotate? Get me to do it!', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/installation-and-upgrades/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
+						<p><h4><?php _e('AdRotate Pro', 'adrotate'); ?></h4> <?php _e('Get more features! Get AdRotate Pro.', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/adrotate-pro/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
+						<p><h4><?php _e('Installations', 'adrotate'); ?></h4> <?php _e('Not sure how to set up AdRotate? Get me to do it!', 'adrotate'); ?> <a href="http://www.adrotateplugin.com/installations/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
 						<p><h4><?php _e('Premium Support', 'adrotate'); ?></h4> <?php _e("Stuck with AdRotate? I'll help!", 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/premium-support/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
 						<p><h4><?php _e('Periodic Maintenance', 'adrotate'); ?></h4> <?php _e("No time to get things done? Let's make a schedule!", 'adrotate'); ?> <a href="http://www.adrotateplugin.com/shop/category/service-and-maintenance/"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
 						<p><a href="http://www.adrotateplugin.com/shop/"><?php _e('Visit store to see all services and products', 'adrotate'); ?> &raquo;</a></p>

@@ -101,6 +101,8 @@ function adrotate_database_install() {
 		  	`ibudget` double NOT NULL default '0',
 		  	`crate` double NOT NULL default '0',
 		  	`irate` double NOT NULL default '0',
+			`cities` text NOT NULL,
+			`countries` text NOT NULL,
   		PRIMARY KEY  (`id`)
 		) ".$charset_collate." ENGINE=InnoDB;");
 
@@ -399,9 +401,20 @@ function adrotate_database_upgrade() {
 	}
 
 	// Database: 	31
-	// AdRotate:	3.8.5
+	// AdRotate:	3.8.4
 	if($adrotate_db_version['current'] < 31) {
 		adrotate_add_column($tables['adrotate_groups'], 'token', 'varchar(10) NOT NULL default \'0\' AFTER `name`');
+	}
+
+	// Database: 	32
+	// AdRotate:	3.8.4.4
+	if($adrotate_db_version['current'] < 32) {
+		adrotate_add_column($tables['adrotate'], 'cities', 'text NOT NULL AFTER `irate`');
+		adrotate_add_column($tables['adrotate'], 'countries', 'text NOT NULL AFTER `cities`');
+		$geo_array = serialize(array());
+		$wpdb->query("UPDATE `".$tables['adrotate']."` SET `cities` = '$geo_array' WHERE `cities` = '';");
+		$wpdb->query("UPDATE `".$tables['adrotate']."` SET `countries` = '$geo_array' WHERE `countries` = '';");
+		adrotate_add_column($tables['adrotate_groups'], 'geo', 'tinyint(1) NOT NULL default \'0\' AFTER `page_loc`');
 	}
 
 	update_option("adrotate_db_version", array('current' => ADROTATE_DB_VERSION, 'previous' => $adrotate_db_version['current']));

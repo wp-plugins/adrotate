@@ -9,7 +9,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 <?php
 	$edit_id = $wpdb->get_var("SELECT `id` FROM `".$wpdb->prefix."adrotate` WHERE `type` = 'empty' ORDER BY `id` DESC LIMIT 1;");
 	if($edit_id == 0) {
-	    $wpdb->insert($wpdb->prefix."adrotate", array('title' => '', 'bannercode' => '', 'thetime' => $now, 'updated' => $now, 'author' => $current_user->user_login, 'imagetype' => '', 'image' => '', 'link' => '', 'tracker' => 'N', 'timeframe' => '', 'timeframelength' => 0, 'timeframeclicks' => 0, 'timeframeimpressions' => 0, 'type' => 'empty', 'weight' => 6, 'cbudget' => 0, 'ibudget' => 0, 'crate' => 0, 'irate' => 0, 'sortorder' => 0));
+	    $wpdb->insert($wpdb->prefix."adrotate", array('title' => '', 'bannercode' => '', 'thetime' => $now, 'updated' => $now, 'author' => $current_user->user_login, 'imagetype' => 'dropdown', 'image' => '', 'link' => '', 'tracker' => 'N', 'timeframe' => '', 'timeframelength' => 0, 'timeframeclicks' => 0, 'timeframeimpressions' => 0, 'type' => 'empty', 'weight' => 6, 'sortorder' => 0, 'cbudget' => 0, 'ibudget' => 0, 'crate' => 0, 'irate' => 0, 'cities' => serialize(array()), 'countries' => serialize(array())));
 	    $edit_id = $wpdb->insert_id;
 		$wpdb->insert($wpdb->prefix.'adrotate_schedule', array('ad' => $edit_id, 'starttime' => $now, 'stoptime' => $in84days, 'maxclicks' => 0, 'maximpressions' => 0));
 	}
@@ -217,7 +217,7 @@ jQuery(document).ready(function() {
 
 		<thead>
 		<tr>
-			<th colspan="4" bgcolor="#DDD"><?php _e('Advertiser & Budget', 'adrotate'); ?></th>
+			<th colspan="4" bgcolor="#DDD"><?php _e('Advertiser & Budget', 'adrotate'); ?> (<?php adrotate_pro_notice('t'); ?>)</th>
 		</tr>
 		</thead>
 
@@ -225,11 +225,29 @@ jQuery(document).ready(function() {
       	<tr>
 	        <th valign="top">&nbsp;</th>
 	        <td colspan="3">
-	        	<p><?php adrotate_pro_notice(); ?></p>
 	        	<p><em>Couple adverts to users. Assign going rates per click or impression and offer your advertisers insight in their stats!</em></p>	        	
 			</td>
       	</tr>
       	</tbody>
+
+		<thead>
+		<tr>
+			<th colspan="4"><?php _e('GeoLocation', 'adrotate'); ?> (<?php adrotate_pro_notice('t'); ?>)</th>
+		</tr>
+		</thead>
+			
+		<tbody>
+	    <tr>
+			<th valign="top"><?php _e('Cities:', 'adrotate'); ?></strong></th>
+			<td colspan="3"><textarea tabindex="8" name="adrotate_geo_cities" cols="65" rows="3" disabled>New York, Amsterdam, Shanghai</textarea></td>
+		</tr>
+	    <tr>
+			<th valign="top"><?php _e('Countries:', 'adrotate'); ?></strong></th>
+	        <td colspan="3">
+	        	<p><em>Decide where your adverts show with targeted adverts. Check up on your visitors, have AdRotate see where they're from and show adverts that apply to them!<br />AdRotate Pro uses geoPlugin, which includes GeoLite data created by MaxMind, available from <a href="http://www.maxmind.com" target="_blank">maxmind.com</a>.</em></p>	        	
+	        </td>
+		</tr>
+		</tbody>
 
 		<thead>
 		<tr>
@@ -409,7 +427,8 @@ jQuery(document).ready(function() {
 	<table class="widefat" style="margin-top: .5em">
 			<thead>
 			<tr>
-			<th colspan="3"><?php _e('Select the group(s) this ad belongs to (Optional)', 'adrotate'); ?></th>
+			<th scope="col" class="manage-column column-cb check-column"><input type="checkbox" /></th>
+			<th colspan="2"><?php _e('Select the group(s) this ad belongs to (Optional)', 'adrotate'); ?></th>
 		</tr>
 			</thead>
 
@@ -420,7 +439,7 @@ jQuery(document).ready(function() {
 			$ads_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = ".$group->id." AND `block` = 0;");
 			$class = ('alternate' != $class) ? 'alternate' : ''; ?>
 		    <tr id='group-<?php echo $group->id; ?>' class=' <?php echo $class; ?>'>
-				<th width="2%"><input type="checkbox" name="groupselect[]" value="<?php echo $group->id; ?>" <?php if(in_array($group->id, $meta_array)) echo "checked"; ?> /></th>
+				<th class="check-column" width="2%"><input type="checkbox" name="groupselect[]" value="<?php echo $group->id; ?>" <?php if(in_array($group->id, $meta_array)) echo "checked"; ?> /></th>
 				<td><?php echo $group->id; ?> - <strong><?php echo $group->name; ?></strong></td>
 				<td width="15%"><?php echo $ads_in_group; ?> <?php _e('Ads', 'adrotate'); ?></td>
 			</tr>

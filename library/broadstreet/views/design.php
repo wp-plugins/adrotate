@@ -214,10 +214,19 @@
             if(response.success)
             {
                 $('#loading-proof').hide();
-                $('#proof-link').attr('href', response.proof.url);
-                $('#proof').val(response.proof.url);
                 
-                $('.jcrop-holder').find('img').attr('src', response.proof.url);
+                if('https:' == document.location.protocol)
+                {
+                    $('#proof-link').attr('href', response.proof.secure_url);
+                    $('#proof').val(response.proof.secure_url);
+                    $('.jcrop-holder').find('img').attr('src', response.proof.secure_url);
+                }
+                else
+                {
+                    $('#proof-link').attr('href', response.proof.url);
+                    $('#proof').val(response.proof.url);
+                    $('.jcrop-holder').find('img').attr('src', response.proof.url);
+                }
                 
                 $('#proof-done').show();
             }

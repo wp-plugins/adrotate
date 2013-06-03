@@ -6,32 +6,23 @@
     </div>
 <?php endif; ?>
 
-<h2>Hey, it's your first time trying this. Do you have an account?</h2>
+<h2>Do you already have an account with Broadstreet&trade;?</h2>
 
 <div class="divider"></div>
 
 <div class="signup-form">
     
-    <form id="bs-register" method="post" enctype="multipart/form-data" action="<?php echo Broadstreet_Mini_Utility::getBaseURL("index.php?action=register&id={$data['ad_id']}") ?>">
-        <div class="front-center">
-            <a  title="We'll also send you a welcome note to the email address to the right" href="#" id="btn-register" class="btn call-to-action">Not yet. Make me one now for: </a>
-            <input type="text" name="email" value="<?php bloginfo('admin_email') ?>" />
-        </div>
-        <input type="hidden" name="type" value="register" />
-    </form>
-        
-    <h2>&minus; <em class="or-fancy">or, if you're already hooked up</em> &minus;</h2>
-    
     <div id="existing-account" style="display: none; text-align: center; margin: 10px auto -5px auto; width: 55%;" class="alert">
         Nice! You're already a user. Pick which network this website corresponds to, or just create a new one.
     </div>
+    
     
     <form class="center-form" id="bs-login" method="post" enctype="multipart/form-data" action="<?php echo Broadstreet_Mini_Utility::getBaseURL("index.php?action=register&id={$data['ad_id']}") ?>">
         <table class="customize">
             <tr id="email-row">
                 <td class="label">Account Email</td>
                 <td class="control">
-                    <input type="text" name="email" value="<?php bloginfo('admin_email') ?>" />
+                    <input type="text" name="email" value="<?php echo bs_get_email() ?>" />
                 </td>
             </tr>
             <tr id="password-row">
@@ -51,19 +42,42 @@
             <tr id="new-publisher-row" style="display:none;">
                 <td class="label">Not Listed?</td>
                 <td class="control">
-                    <input title="This should be at least 5 letters long" type="text" id="network_name" name="network_name" value="<?php htmlentities(bloginfo('name')) ?>" />
+                    <input title="This should be at least 5 letters long" type="text" id="network_name" name="network_name" value="<?php echo htmlentities(bs_get_website_name()) ?>" />
                 </td>
             </tr>
             <tr>
                 <td class="label"></td>
                 <td class="control">
-                    <a href="#" id="btn-login" class="btn smaller">Go!</a>
+                    <a href="#" id="btn-login" class="btn call-to-action">Login</a>
                     <img id="checking" style="display:none;" src="<?php echo Broadstreet_Mini_Utility::getBaseURL('assets/img/ajax-loader.gif') ?>" alt="Loading"/>
                 </td>
             </tr>
         </table>
         <input type="hidden" name="type" value="login" />
+        <input type="hidden" name="next" value="<?php echo @$_GET['next'] ?>" />
     </form>
+        
+    <h2>&minus; <em class="or-fancy">or, if you're a new user (welcome aboard!)</em> &minus;</h2>
+    
+    <form class="center-form" id="bs-register" method="post" enctype="multipart/form-data" action="<?php echo Broadstreet_Mini_Utility::getBaseURL("index.php?action=register&id={$data['ad_id']}") ?>">
+        <table class="customize">
+            <tr id="email-row">
+                <td class="label">What's your email?</td>
+                <td class="control">
+                    <input title="We'll send you a welcome email to get you rolling" id="email" type="text" name="email" placeholder="your@email.com" value="<?php echo (bs_get_email() ? bs_get_email() : '') ?>" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label"></td>
+                <td class="control">
+                    <a href="#" id="btn-register" class="btn call-to-action">Sign Up</a>
+                </td>
+            </tr>
+        </table>
+        <input type="hidden" name="type" value="register" />
+        <input type="hidden" name="next" value="<?php echo @$_GET['next'] ?>" />
+    </form>
+    
 </div>
 
 <div class="divider"></div>
@@ -128,6 +142,15 @@
         },
         'json');
         
+    });
+    
+    $('#email').click(function() {
+        var e = $('#email');
+        
+        if(e.val() == 'Your Email Here')
+        {
+            e.val('');
+        }
     });
 </script>
 <script>

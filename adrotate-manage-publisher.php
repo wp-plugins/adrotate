@@ -14,6 +14,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 function adrotate_insert_input() {
 	global $wpdb, $adrotate_config;
 
+	$locale =  get_option('gmt_offset') * 3600;
 	if(wp_verify_nonce($_POST['adrotate_nonce'], 'adrotate_save_ad')) {
 		// Mandatory
 		$id = $author = $title = $bannercode = $active = $sortorder = '';
@@ -73,7 +74,7 @@ function adrotate_insert_input() {
 			if(($smonth > 0 AND $sday > 0 AND $syear > 0) AND strlen($sminute) == 0) $sminute = '00';
 	
 			if($smonth > 0 AND $sday > 0 AND $syear > 0) {
-				$startdate = gmmktime($shour, $sminute, 0, $smonth, $sday, $syear);
+				$startdate = gmmktime($shour, $sminute, 0, $smonth, $sday, $syear) - $locale;
 			} else {
 				$startdate = 0;
 			}
@@ -88,7 +89,7 @@ function adrotate_insert_input() {
 			if(($emonth > 0 AND $eday > 0 AND $eyear > 0) AND strlen($eminute) == 0) $eminute = '00';
 	
 			if($emonth > 0 AND $eday > 0 AND $eyear > 0) {
-				$enddate = gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear);
+				$enddate = gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear) - $locale;
 			} else {
 				$enddate = 0;
 			}
@@ -130,14 +131,17 @@ function adrotate_insert_input() {
 			$wpdb->update($wpdb->prefix.'adrotate', array('title' => $title, 'bannercode' => $bannercode, 'updated' => $thetime, 'author' => $author, 'imagetype' => $imagetype, 'image' => $image, 'link' => $link, 'tracker' => $tracker, 'sortorder' => $sortorder), array('id' => $id));
 
 			if($active == "active") {
-				// Check all ads and update ad cache
-				adrotate_prepare_evaluate_ads();		
-	
 				// Determine status of ad 
 				$adstate = adrotate_evaluate_ad($id);
-				if($adstate == 'error' OR $adstate == 'expired') {
+				if($adstate == 'error') {
 					$action = 'field_error';
 					$active = 'error';
+				} else if($adstate == 'expired') {
+					$action = 'field_error';
+					$active = 'expired';
+				} else if($adstate == 'expiring') {
+					$action = 'field_error';
+					$active = 'expiring';
 				} else {
 					if($type == "empty") $action = 'new';
 						else $action = 'update';
@@ -263,7 +267,7 @@ function adrotate_insert_group() {
 			unset($value);
 	
 			// Update the group itself
-			$wpdb->update($wpdb->prefix.'adrotate_groups', array('name' => $name, 'token' => $token, 'fallback' => $fallback, 'sortorder' => $sortorder, 'cat' => $category, 'cat_loc' => $category_loc, 'page' => $page, 'page_loc' => $page_loc, 'wrapper_before' => $wrapper_before, 'wrapper_after' => $wrapper_after), array('id' => $id));
+			$wpdb->update($wpdb->prefix.'adrotate_groups', array('name' => $name, 'sortorder' => $sortorder, 'cat' => $category, 'cat_loc' => $category_loc, 'page' => $page, 'page_loc' => $page_loc, 'wrapper_before' => $wrapper_before, 'wrapper_after' => $wrapper_after), array('id' => $id));
 			adrotate_return($action, array($id));
 			exit;
 		} else {
@@ -295,7 +299,6 @@ function adrotate_insert_block() {
 		$rows = $columns = $gridfloat = $gridpadding = '';
 		if(isset($_POST['adrotate_gridrows'])) $rows = strip_tags(trim($_POST['adrotate_gridrows'], "\t\n "));
 		if(isset($_POST['adrotate_gridcolumns'])) $columns = strip_tags(trim($_POST['adrotate_gridcolumns'], "\t\n "));
-		if(isset($_POST['adrotate_gridfloat'])) $gridfloat = strip_tags(trim($_POST['adrotate_gridfloat'], "\t\n "));
 		if(isset($_POST['adrotate_gridpadding'])) $gridpadding = strip_tags(trim($_POST['adrotate_gridpadding'], "\t\n "));
 
 		$adwidth = $adheight = $admargin = $adpx = $adcolor = $adstyle = '';
@@ -359,7 +362,7 @@ function adrotate_insert_block() {
 			unset($value);
 	
 			// Update the block itself
-			$wpdb->update($wpdb->prefix.'adrotate_blocks', array('name' => $name, 'rows' => $rows, 'columns' => $columns, 'gridfloat' => $gridfloat, 'gridpadding' => $gridpadding, 'adwidth' => $adwidth, 'adheight' => $adheight, 'admargin' => $admargin, 'adborder' => $adborder, 'wrapper_before' => $wrapper_before, 'wrapper_after' => $wrapper_after, 'sortorder' => $sortorder), array('id' => $id));
+			$wpdb->update($wpdb->prefix.'adrotate_blocks', array('name' => $name, 'rows' => $rows, 'columns' => $columns, 'gridpadding' => $gridpadding, 'adwidth' => $adwidth, 'adheight' => $adheight, 'admargin' => $admargin, 'adborder' => $adborder, 'wrapper_before' => $wrapper_before, 'wrapper_after' => $wrapper_after, 'sortorder' => $sortorder), array('id' => $id));
 			adrotate_return($action, array($id));
 			exit;
 		} else {
@@ -459,6 +462,7 @@ function adrotate_request_action() {
 					}
 				}
 			}
+			adrotate_prepare_evaluate_ads(1);
 		}
 		
 		if($group_ids != '') {

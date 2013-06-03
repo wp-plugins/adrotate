@@ -6,7 +6,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 <h3><?php _e('Advertisement performance', 'adrotate'); ?></h3>
 
 <?php
-	$today 			= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+	$today 			= adrotate_today();
 	$banner 		= $wpdb->get_row("SELECT `title`, `tracker` FROM `".$wpdb->prefix."adrotate` WHERE `id` = '$ad_edit_id';");
 	$stats 			= adrotate_stats($ad_edit_id);
 	$stats_today 	= adrotate_stats($ad_edit_id, $today);
@@ -22,10 +22,6 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 	if($adrotate_debug['stats'] == true) {
 		echo "<p><strong>[DEBUG] Ad Stats (all time)</strong><pre>";
-		$memory = (memory_get_usage() / 1024 / 1024);
-		echo "Memory usage: " . round($memory, 2) ." MB <br />"; 
-		$peakmemory = (memory_get_peak_usage() / 1024 / 1024);
-		echo "Peak memory usage: " . round($peakmemory, 2) ." MB <br />"; 
 		print_r($stats); 
 		echo "</pre></p>"; 
 		echo "<p><strong>[DEBUG] Ad Stats (today)</strong><pre>";

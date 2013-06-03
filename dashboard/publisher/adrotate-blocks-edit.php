@@ -85,20 +85,6 @@ if(strlen($edit_block->adborder) > 0) {
 			</td>
 		</tr>
 	    <tr>
-			<th valign="top"><?php _e('Float', 'adrotate'); ?></strong></th>
-			<td>
-				<label for="adrotate_gridfloat"><select tabindex="6" name="adrotate_gridfloat">
-		        	<option value="none" <?php if($edit_block->gridfloat == 'none') { echo 'selected'; } ?>><?php _e('No Float', 'adrotate'); ?></option>
-		        	<option value="left" <?php if($edit_block->gridfloat == "left") { echo 'selected'; } ?>><?php _e('Left', 'adrotate'); ?></option>
-		        	<option value="right" <?php if($edit_block->gridfloat == "right") { echo 'selected'; } ?>><?php _e('Right', 'adrotate'); ?></option>
-		        	<option value="inherit" <?php if($edit_block->gridfloat == "inherit") { echo 'selected'; } ?>><?php _e('Inherit', 'adrotate'); ?></option>
-		        </select></label> 
-			</td>
-			<td colspan="2">
-				<p><em><?php _e('This will help in aligning your block. Set to none if unsure.', 'adrotate'); ?></em></p>
-			</td>
-		</tr>
-	    <tr>
 			<th valign="top"><?php _e('Block Padding', 'adrotate'); ?></strong></th>
 			<td>
 				<label for="adrotate_gridpadding"><input tabindex="5" name="adrotate_gridpadding" type="text" class="search-input" size="3" value="<?php echo $edit_block->gridpadding; ?>" autocomplete="off" /> <?php _e('pixel(s)', 'adrotate'); ?>.</label>
@@ -218,7 +204,8 @@ if(strlen($edit_block->adborder) > 0) {
    	<table class="widefat" style="margin-top: .5em">
 			<thead>
 			<tr>
-			<th colspan="3"><?php _e('Choose the groups to use in this block', 'adrotate'); ?></th>
+			<th scope="col" class="manage-column column-cb check-column"><input type="checkbox" /></th>
+			<th colspan="2"><?php _e('Choose the groups to use in this block', 'adrotate'); ?></th>
 		</tr>
 			</thead>
 
@@ -229,7 +216,7 @@ if(strlen($edit_block->adborder) > 0) {
 				$ads_in_group = $wpdb->get_var("SELECT COUNT(*) FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `group` = ".$group->id." AND `block` = 0;");
 				$class = ('alternate' != $class) ? 'alternate' : ''; ?>
 			    <tr class='<?php echo $class; ?>'>
-					<th width="2%"><input type="checkbox" name="groupselect[]" value="<?php echo $group->id; ?>" <?php if(in_array($group->id, $meta_array)) echo "checked"; ?> /></th>
+					<th class="check-column" width="2%"><input type="checkbox" name="groupselect[]" value="<?php echo $group->id; ?>" <?php if(in_array($group->id, $meta_array)) echo "checked"; ?> /></th>
 					<td><?php echo $group->id; ?> - <strong><?php echo $group->name; ?></strong></td>
 					<td width="10%"><?php echo $ads_in_group; ?> <?php _e('Ads', 'adrotate'); ?></td>
 				</tr>

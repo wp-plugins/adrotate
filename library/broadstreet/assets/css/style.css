@@ -436,3 +436,51 @@ strong {
 .settings-link img {
     width: 35px;
 }
+
+#adcode {
+    width: 80%;
+    height: 50px;
+}
+
+#ad-list {
+    width: 100%;
+    margin-top: 20px;
+    max-width: 100%;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+#ad-list thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+#ad-list th {
+    padding: 8px;
+    line-height: 20px;
+    text-align: left;
+    vertical-align: bottom;
+    border-top: 1px solid #dddddd;
+    font-weight: bold;
+}
+
+#ad-list tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+#ad-list td {
+    padding: 8px;
+    line-height: 20px;
+    text-align: left;
+    vertical-align: top;
+    border-top: 1px solid #dddddd;
+}
+
+#ad-list tbody > tr:nth-child(odd) > td, #ad-list tbody > tr:nth-child(odd) > th {
+background-color: #f9f9f9;
+}
+

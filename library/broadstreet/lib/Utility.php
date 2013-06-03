@@ -1,8 +1,9 @@
 <?php
 
 if(!class_exists('Broadstreet_Mini_Utility')):
-    
+
 require_once dirname(__FILE__) . '/../partner.php';
+require_once dirname(__FILE__) . '/helpers/'.BROADSTREET_PARTNER_TYPE.'.php';
 
 class Broadstreet_Mini_Utility
 {
@@ -13,21 +14,7 @@ class Broadstreet_Mini_Utility
      */
     public static function getBaseURL($append = false)
     {
-        $folder = self::getContainingFolder();
-        
-        return plugins_url("$folder/".BROADSTREET_VENDOR_PATH, $folder) . '/' . ($append ? ltrim($append, '/') : '');
-    }
-    
-    /**
-     * Get the folder containing the broadstreet plugin
-     * @return string
-     */
-    public static function getContainingFolder()
-    {   
-        if(!preg_match('#wp-content/plugins/([^/]+)#', __FILE__, $matches))
-            return BROADSTRET_PARTNER_PLUGIN;
-        else
-            return $matches[1];
+        return bs_get_base_url($append);
     }
     
     /**
@@ -36,18 +23,54 @@ class Broadstreet_Mini_Utility
      * @param string $value The value of the option to set
      */
     public static function setOption($name, $value)
-    { 
-        if (get_option($name) !== FALSE)
-        {
-            update_option($name, $value);
-        }
-        else
-        {
-            $deprecated = ' ';
-            $autoload   = 'no';
-            add_option($name, $value, $deprecated, $autoload);
-        }
+    {  
+        return bs_set_option($name, $value);
     }
+    
+    /**
+     * Keep track of which ads were created
+     * @param array $ad_data Needs 'network_id'
+     */
+    public static function trackAd($ad_data)
+    {
+        self::runHook('bs_get_track_ad_before', $ad_data);
+        
+        $network_id = self::getOption(Broadstreet_Mini::KEY_NETWORK_ID);
+        $ads        = self::getOption(Broadstreet_Mini::KEY_AD_LIST . '_' . $network_id);
+        
+        if(!is_array($ads)) $ads = array();
+        
+        if(!isset($ads[$ad_data['bs_network_id']]))
+            $ads[$ad_data['bs_network_id']] = array();
+        
+        $ads[$ad_data['bs_network_id']][$ad_data['bs_advertiser_id']] = $ad_data;
+
+        bs_set_option(Broadstreet_Mini::KEY_AD_LIST . '_' . $network_id, $ads);
+        
+        self::runHook('bs_get_track_ad_after', $ad_data);
+    }
+    
+    /**
+     * Keep track of which ads were created
+     * @param array $ad_data Needs 'network_id'
+     */
+    public static function getTrackedAds()
+    {
+        self::runHook('bs_get_tracked_ads_before');
+        
+        $network_id = self::getOption(Broadstreet_Mini::KEY_NETWORK_ID);
+        $ads        = self::getOption(Broadstreet_Mini::KEY_AD_LIST . '_' . $network_id);
+        
+        if(!is_array($ads)) $ads = array();
+
+        if(!isset($ads[$network_id])) return array();
+        
+        self::runHook('bs_get_tracked_ads_after', $ads);
+        
+        return $ads[$network_id];
+    }
+    
+    
 
     /**
      * Gets a Wordpress option
@@ -57,9 +80,7 @@ class Broadstreet_Mini_Utility
      */
     public static function getOption($name, $default = FALSE)
     {
-        $value = get_option($name);
-        if( $value !== FALSE ) return $value;
-        return $default;
+        return bs_get_option($name, $default);
     }
     
     /**
@@ -69,13 +90,13 @@ class Broadstreet_Mini_Utility
     {
         
         $report = "";
-        $report .= get_bloginfo('name'). "\n";
-        $report .= get_bloginfo('url'). "\n";
-        $report .= get_bloginfo('admin_email'). "\n";
-        $report .= 'WP Version: ' . get_bloginfo('version'). "\n";
+        $report .= bs_get_website_name(). "\n";
+        $report .= bs_get_website(). "\n";
+        $report .= bs_get_email(). "\n";
+        $report .= 'Platform Version: ' . bs_get_platform_version() . "\n";
         $report .= "$message\n";
 
-        @wp_mail('errors@broadstreetads.com', "Partner error: ".BROADSTREET_PARTNER_NAME, $report);
+        @bs_mail('errors@broadstreetads.com', "Partner error: ".BROADSTREET_PARTNER_NAME, $report);
     }
     
     /**
@@ -177,7 +198,7 @@ class Broadstreet_Mini_Utility
     public static function hasFreeAds()
     {
         $net_id = Broadstreet_Mini_Utility::getOption(Broadstreet_Mini::KEY_NETWORK_ID);
-        
+   
         # If we haven't seen them before they probably do
         if(!$net_id) return true;
         
@@ -186,6 +207,21 @@ class Broadstreet_Mini_Utility
         # Check if you've used up all the hacks
         # Note to l33t haxors. We check on the server side too.
         return ($net->comp_count < $net->comp_count_max);
+    }
+    
+    /**
+     * Run a function which may or may not be defined
+     * @param string $name
+     * @param array $args 
+     */
+    public static function runHook($name, $args = array())
+    {
+        if(function_exists($name))
+        {
+            return call_user_func($name, $args);
+        }
+        
+        return null;
     }
     
     /**
@@ -205,28 +241,7 @@ class Broadstreet_Mini_Utility
      */
     public static function editableJS($selector = false, $key = 'solo')
     {
-        if(!$selector) $selector = BROADSTREET_AD_TAG_SELECTOR;
-        $url =  self::getBaseURL('index.php?action=index');
-        
-        echo <<<JS
-<script language="javascript">
-    function editable_$key()
-    {
-        window.send_to_editor = function(html) {
-            if(html) jQuery('$selector').val(html);
-            tb_remove();
-        };
-        
-        var tag     = jQuery('$selector').val();
-        var matches = tag.match(/broadstreet:\s*([^\s]*)/i);
-        
-        var id = null;
-        if(matches && matches[1]) id = matches[1];
-        
-        tb_show('Broadstreet', '$url' + (id ? ('&id=' + id) : '') + '&width=650&height=580&TB_iframe=true');
-    }
-</script>
-JS;
+        bs_editable_js($selector, $key);
     }
     
     /**

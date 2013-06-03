@@ -38,7 +38,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			</thead>
 			<tbody>
 		<?php foreach($errorbanners as $errbanner) {
-			$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+			$today = adrotate_today();
 			$grouplist = adrotate_ad_is_in_groups($errbanner['id']);
 			
 			if($adrotate_debug['dashboard'] == true) {
@@ -51,7 +51,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 			$errorclass = '';
 			if($errbanner['type'] == 'error') $errorclass = ' row_error'; 
 			if($errbanner['type'] == 'expired') $errorclass = ' row_inactive';
-			if($errbanner['type'] == 'expiressoon') $errorclass = ' row_urgent';
+			if($errbanner['type'] == 'expiring') $errorclass = ' row_urgent';
 			?>
 		    <tr id='adrotateindex' class='<?php echo $errorclass; ?>'>
 				<th class="check-column"><input type="checkbox" name="errorbannercheck[]" value="<?php echo $errbanner['id']; ?>" /></th>

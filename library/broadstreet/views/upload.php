@@ -21,15 +21,26 @@
     you'll want to leave some space for where you advertiser's text will go,
     like in the before/after example above.</p>
     
-    <div class="upload-form">
+</div>
+
+<div class="right-col">
+        <div class="upload-form">
         <form id="bs-upload-ad" method="post" enctype="multipart/form-data" action="<?php echo Broadstreet_Mini_Utility::getBaseURL('index.php?action=upload') ?>">
-            <input type="file" name="file" title="Upload an image, like a jpg, gif, or png" />
+            <span style="display: none;" id="use-sample-text">
+                <strong>You're using a sample ad</strong>. <a id="upload-file" href="#">Click here to upload a file instead</a>.
+            </span>
+            <input type="file" id="form_file" name="file" title="Upload an image, like a jpg, gif, or png" />
+            <input type="hidden" id="form_use_sample" name="use_sample" value="" />
         </form>
     </div>
+    
+    <p>
+        <a rel="track" id="use-sample" href="#">Use A Sample Ad Instead</a>
+    </p>
 </div>
 
 <div class="right-col right">
-    <a id="submit" style="margin: 35px 25px 0 0;" class="btn call-to-action" href="#">Next Step &raquo;</a>
+    <a id="submit" style="margin: 25px 25px 0 0;" class="btn call-to-action" href="#">Next Step &raquo;</a>
 </div>
 
 <div class="clearfix"></div>
@@ -40,6 +51,23 @@
         _gaq.push(['_trackEvent', 'Clicks', 'Upload Ad']);
         $('#bs-upload-ad').submit();
     });
+    
+    $('#use-sample').click(function(e) {
+        e.preventDefault();
+        $('#form_use_sample').val('1');
+        $('#use-sample-text').show();
+        $('#use-sample').hide();
+        $('#form_file').hide();
+    });
+    
+    $('#upload-file').click(function(e) {
+        e.preventDefault();
+        $('#form_use_sample').val('');
+        $('#use-sample-text').hide();
+        $('#use-sample').show();
+        $('#form_file').show();
+    });
+    
 </script>
 <script>
     $(function(){

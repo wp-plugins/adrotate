@@ -57,7 +57,7 @@
     <h2>Important Links</h2>
     <p class="explanation">These items may be helpful when selling, designing, and getting reports.</p>
     <ul>
-        <li><a title="This will take you to the Broadstreet dashboard" rel="track" target="_blank" href="<?php echo Broadstreet_Mini_Utility::broadstreetLink("/networks/{$network->id}"); ?>">Broadstreet Dashboard and Reporting</a></li>
+        <li><a title="This will take you to the Broadstreet dashboard" rel="track" target="_blank" href="<?php echo Broadstreet_Mini_Utility::broadstreetLink("/networks/{$network_id}"); ?>">Broadstreet Dashboard and Reporting</a></li>
         <li><a title="This is a PDF for helping you sell editable ads" rel="track" target="_blank" href="http://broadstreetads.com/assets/docs/editable-ads-text-message.pdf">Sales Materials</a></li>
         <li><a title="This is a PDF for use by you or an ad designer" rel="track" target="_blank" href="http://broadstreetads.com/assets/docs/designer-specs.pdf">Designer Specifications</a></li>
     </ul>
