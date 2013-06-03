@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.5.1
-Stable tag: 3.8.4.4
+Stable tag: 3.8.4.5
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -83,58 +83,22 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.4.4 FREE =
-* [fix] Inconsistent timezone for data collection
-* [fix] User roles not being applied for some users
-* [fix] Incorrect path for banner folder when Wordpress is in subfolder
-* [fix] Undefined variables in some forms
-* [fix] Reset ad status when using bulk actions
-* [new] 'Select all' checkboxes for Ads, Groups and Blocks
-* [new] Caching support for the 'W3 Total Caching' and 'WP Super Cache' plugins
-* [update] Improved ad status checking when saving
-* [update] Lots of dashboard tweaks
-* [update] Broadstreet Ads interface
-* [update] Removed troublesome "Float" option from blocks
+= 3.8.4.5 FREE =
+* [fix] Missing dashboard admin bar
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.6 PRO =
-* [fix] Corrected display of stats for advertisers
-* [fix] Inconsistent timezone for data collection
-* [fix] Incorrect path for banner folder when Wordpress is in subfolder
-* [fix] User roles not being applied for some users
-* [fix] Advertiser adcode no longer overwritten when editing ads
-* [fix] Undefined variables in some forms
-* [fix] Reset ad status when using bulk actions
-* [new] Geolocations for groups
-* [new] Geolocations for advertisers
-* [new] Preferred advertising for certain pages
-* [new] Periodic update check for AdRotate Pro
-* [new] Advertisers now also see a preview of their advert in statistics
-* [new] 'Select all' checkboxes for Ads, Groups and Blocks
-* [new] Caching support for the 'W3 Total Caching' and 'WP Super Cache' plugins
-* [update] Improved ad status checking
-* [update] Lots of dashboard tweaks
-* [update] Broadstreet Ads interface
-* [update] Removed troublesome "Float" option from blocks
+= 3.8.6.1 PRO =
+* [fix] Missing dashboard admin bar
+* [fix] Missing stripslashes() for block wrapper
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.4.4 FREE =
-* [fix] Inconsistent timezone for data collection
-* [fix] User roles not being applied for some users
-* [fix] Incorrect path for banner folder when Wordpress is in subfolder
-* [fix] Undefined variables in some forms
-* [fix] Reset ad status when using bulk actions
-* [new] 'Select all' checkboxes for Ads, Groups and Blocks
-* [new] Caching support for the 'W3 Total Caching' and 'WP Super Cache' plugins
-* [update] Improved ad status checking when saving
-* [update] Lots of dashboard tweaks
-* [update] Broadstreet Ads interface
-* [update] Removed troublesome "Float" option from blocks
+= 3.8.4.5 =
+* [fix] Missing dashboard admin bar
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
