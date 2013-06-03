@@ -45,9 +45,8 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 	if ($activebanners) {
 		$class = '';
 		foreach($activebanners as $banner) {
-			$today = gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
 			$stats = adrotate_stats($banner['id']);
-			$stats_today = adrotate_stats($banner['id'], $today);
+			$stats_today = adrotate_stats($banner['id'], adrotate_today());
 			$grouplist = adrotate_ad_is_in_groups($banner['id']);
 
 			if($stats->impressions == 0) 		$stats->impressions 		= 0;

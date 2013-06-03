@@ -6,7 +6,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 <h3><?php _e('This blocks performance', 'adrotate'); ?></h3>
 
 <?php
-	$today 			= gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y"));
+	$today 			= adrotate_today();
 	$title		 	= $wpdb->get_var("SELECT `name` FROM `".$wpdb->prefix."adrotate_blocks` WHERE `id` = '$block_edit_id';");
 	$stats 			= $wpdb->get_row("SELECT SUM(`clicks`) as `clicks`, SUM(`impressions`) as `impressions` FROM `".$wpdb->prefix."adrotate_stats` WHERE `block` = '$block_edit_id';");
 	$stats_today 	= $wpdb->get_row("SELECT `clicks`, `impressions` FROM `".$wpdb->prefix."adrotate_stats` WHERE `block` = '$block_edit_id' AND `thetime` = '$today';");
