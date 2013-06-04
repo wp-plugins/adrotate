@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.4.4
+Version: 3.8.4.5
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,7 +15,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.4.4'.ADROTATE_BETA);
+define("ADROTATE_DISPLAY", '3.8.4.5'.ADROTATE_BETA);
 define("ADROTATE_VERSION", 364);
 define("ADROTATE_DB_VERSION", 32);
 /*-----------------------------------------------------------*/
@@ -32,7 +32,7 @@ if(is_admin()) include_once(WP_CONTENT_DIR.'/plugins/adrotate/library/broadstree
 /*-----------------------------------------------------------*/
 
 /*--- Check and Load config ---------------------------------*/
-load_plugin_textdomain('adrotate', false, basename( dirname( __FILE__ ) ) . '/language' );
+load_plugin_textdomain('adrotate', false, basename(dirname(__FILE__)) . '/language');
 adrotate_check_config();
 $adrotate_config 				= get_option('adrotate_config');
 $adrotate_crawlers 				= get_option('adrotate_crawlers');
@@ -94,10 +94,8 @@ if(isset($_POST['adrotate_evaluate_submit'])) 			add_action('init', 'adrotate_pr
  Return:    -none-
 -------------------------------------------------------------*/
 function adrotate_dashboard() {
-	global $wpdb, $current_user, $userdata;
+	global $wpdb;
 	
-	get_currentuserinfo();
-
 	add_object_page('AdRotate', 'AdRotate', 'adrotate_ad_manage', 'adrotate', 'adrotate_info');
 	add_submenu_page('adrotate', 'AdRotate > '.__('General Info', 'adrotate'), __('General Info', 'adrotate'), 'adrotate_ad_manage', 'adrotate', 'adrotate_info');
 	add_submenu_page('adrotate', 'AdRotate > '.__('Manage Ads', 'adrotate'), __('Manage Ads', 'adrotate'), 'adrotate_ad_manage', 'adrotate-ads', 'adrotate_manage');
