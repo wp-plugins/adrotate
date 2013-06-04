@@ -133,6 +133,7 @@ function adrotate_database_install() {
 			`cat_loc` tinyint(1) NOT NULL default '0',
 			`page` longtext NOT NULL,
 			`page_loc` tinyint(1) NOT NULL default '0',
+			`geo` tinyint(1) NOT NULL default '0',
 			`wrapper_before` longtext NOT NULL,
 			`wrapper_after` longtext NOT NULL,
 			PRIMARY KEY  (`id`)
@@ -710,14 +711,14 @@ function adrotate_clean_trackerdata() {
 function adrotate_add_column($table_name, $column_name, $attributes) {
 	global $wpdb;
 	
-	foreach ($wpdb->get_col("SHOW COLUMNS FROM $table_name;") as $column ) {
-		if ($column == $column_name) return true;
+	foreach($wpdb->get_col("SHOW COLUMNS FROM $table_name;") as $column) {
+		if($column == $column_name) return true;
 	}
 	
 	$wpdb->query("ALTER TABLE $table_name ADD $column_name " . $attributes.";");
 	
-	foreach ($wpdb->get_col("SHOW COLUMNS FROM $table_name;") as $column ) {
-		if ($column == $column_name) return true;
+	foreach($wpdb->get_col("SHOW COLUMNS FROM $table_name;") as $column) {
+		if($column == $column_name) return true;
 	}
 	
 	return false;
@@ -734,8 +735,8 @@ function adrotate_add_column($table_name, $column_name, $attributes) {
 function adrotate_del_column($table_name, $column_name) {
 	global $wpdb;
 	
-	foreach ($wpdb->get_col("SHOW COLUMNS FROM $table_name;") as $column ) {
-		if ($column == $column_name) {
+	foreach($wpdb->get_col("SHOW COLUMNS FROM $table_name;") as $column) {
+		if($column == $column_name) {
 			$wpdb->query("ALTER TABLE $table_name DROP $column;");
 			return true;
 		}
