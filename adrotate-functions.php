@@ -75,9 +75,9 @@ function adrotate_filter_schedule($selected, $banner) {
 	foreach($schedules as $schedule) {
 		
 		if($adrotate_debug['general'] == true) {
-			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule (id: ".$schedule->id.") Timeframe</strong><pre>";
-			echo "<br />Start: ".$schedule->starttime." (".gmdate("F j, Y, g:i a", $schedule->starttime).")";
-			echo "<br />End: ".$schedule->stoptime." (".gmdate("F j, Y, g:i a", $schedule->stoptime).")";
+			echo "<p><strong>[DEBUG][adrotate_filter_schedule()] Schedule (id: ".$schedule->id.")</strong><pre>";
+			echo "<br />Start: ".$schedule->starttime." (".date("F j, Y, g:i a", $schedule->starttime).")";
+			echo "<br />End: ".$schedule->stoptime." (".date("F j, Y, g:i a", $schedule->stoptime).")";
 			echo "</pre></p>";
 		}
 

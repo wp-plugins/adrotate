@@ -13,10 +13,6 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 -------------------------------------------------------------*/
 class adrotate_widgets extends WP_Widget {
 
-	/* Changelog:
-	// Feb 28 2011 - Updated class for Wordpress 3.1
-	*/
-	
 	/*-------------------------------------------------------------
 	 Purpose:   Construct the widget
 	-------------------------------------------------------------*/

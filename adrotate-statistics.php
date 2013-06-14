@@ -323,6 +323,6 @@ function adrotate_prepare_global_report() {
  Since:		3.8.4.4
 -------------------------------------------------------------*/
 function adrotate_today() {
-	return gmmktime(0, 0, 0, gmdate("n"), gmdate("j"), gmdate("Y")) - (get_option('gmt_offset') * 3600);
+	return mktime(0, 0, 0, date("n"), date("j"), date("Y"));
 }
 ?>

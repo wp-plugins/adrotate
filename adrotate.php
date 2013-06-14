@@ -4,7 +4,7 @@ Plugin Name: AdRotate
 Plugin URI: http://www.adrotateplugin.com
 Description: The very best and most convenient way to publish your ads.
 Author: Arnan de Gans of AJdG Solutions
-Version: 3.8.4.5
+Version: 3.8.4.6
 Author URI: http://www.ajdg.net
 License: GPLv3
 */
@@ -15,7 +15,7 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 
 /*--- AdRotate values ---------------------------------------*/
 define("ADROTATE_BETA", '');
-define("ADROTATE_DISPLAY", '3.8.4.5'.ADROTATE_BETA);
+define("ADROTATE_DISPLAY", '3.8.4.6'.ADROTATE_BETA);
 define("ADROTATE_VERSION", 364);
 define("ADROTATE_DB_VERSION", 32);
 /*-----------------------------------------------------------*/
@@ -149,17 +149,16 @@ function adrotate_manage() {
 	$in2days 		= $now + 172800;
 	$in7days 		= $now + 604800;
 	$in84days 		= $now + 7257600;
-	$locale			= get_option('gmt_offset') * 3600;
 
 	if(isset($_GET['month']) AND isset($_GET['year'])) {
 		$month = $_GET['month'];
 		$year = $_GET['year'];
 	} else {
-		$month = gmdate("m");
-		$year = gmdate("Y");
+		$month = date("m");
+		$year = date("Y");
 	}
-	$monthstart = gmmktime(0, 0, 0, $month, 1, $year) - $locale;
-	$monthend = gmmktime(0, 0, 0, $month+1, 0, $year) - $locale;	
+	$monthstart = mktime(0, 0, 0, $month, 1, $year);
+	$monthend = mktime(0, 0, 0, $month+1, 0, $year);	
 	?>
 	<div class="wrap">
 		<h2><?php _e('Ad Management', 'adrotate'); ?></h2>

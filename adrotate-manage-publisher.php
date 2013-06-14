@@ -14,7 +14,6 @@ Copyright 2010-2013 Arnan de Gans - AJdG Solutions (email : info@ajdg.net)
 function adrotate_insert_input() {
 	global $wpdb, $adrotate_config;
 
-	$locale =  get_option('gmt_offset') * 3600;
 	if(wp_verify_nonce($_POST['adrotate_nonce'], 'adrotate_save_ad')) {
 		// Mandatory
 		$id = $author = $title = $bannercode = $active = $sortorder = '';
@@ -54,7 +53,7 @@ function adrotate_insert_input() {
 		if(isset($_POST['adrotate_tracker'])) $tracker = strip_tags(trim($_POST['adrotate_tracker'], "\t\n "));
 		
 		// Misc variabled
-		$groups = $type = '';
+		$groups = $type = $group_array = '';
 		if(isset($_POST['groupselect'])) $groups = $_POST['groupselect'];
 		if(isset($_POST['adrotate_type'])) $type = strip_tags(trim($_POST['adrotate_type'], "\t\n "));
 	
@@ -74,7 +73,7 @@ function adrotate_insert_input() {
 			if(($smonth > 0 AND $sday > 0 AND $syear > 0) AND strlen($sminute) == 0) $sminute = '00';
 	
 			if($smonth > 0 AND $sday > 0 AND $syear > 0) {
-				$startdate = gmmktime($shour, $sminute, 0, $smonth, $sday, $syear) - $locale;
+				$startdate = mktime($shour, $sminute, 0, $smonth, $sday, $syear);
 			} else {
 				$startdate = 0;
 			}
@@ -89,7 +88,7 @@ function adrotate_insert_input() {
 			if(($emonth > 0 AND $eday > 0 AND $eyear > 0) AND strlen($eminute) == 0) $eminute = '00';
 	
 			if($emonth > 0 AND $eday > 0 AND $eyear > 0) {
-				$enddate = gmmktime($ehour, $eminute, 0, $emonth, $eday, $eyear) - $locale;
+				$enddate = mktime($ehour, $eminute, 0, $emonth, $eday, $eyear);
 			} else {
 				$enddate = 0;
 			}

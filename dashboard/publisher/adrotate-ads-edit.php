@@ -24,8 +24,8 @@ $groups			= $wpdb->get_results("SELECT * FROM `".$wpdb->prefix."adrotate_groups`
 $schedules		= $wpdb->get_row("SELECT * FROM `".$wpdb->prefix."adrotate_schedule` WHERE `ad` = '$edit_banner->id';"); 
 $linkmeta		= $wpdb->get_results("SELECT `group` FROM `".$wpdb->prefix."adrotate_linkmeta` WHERE `ad` = '$edit_banner->id' AND `block` = 0 AND `user` = 0;");
 
-list($sday, $smonth, $syear, $shour, $sminute) = split(" ", gmdate("d m Y H i", $schedules->starttime));
-list($eday, $emonth, $eyear, $ehour, $eminute) = split(" ", gmdate("d m Y H i", $schedules->stoptime));
+list($sday, $smonth, $syear, $shour, $sminute) = split(" ", date("d m Y H i", $schedules->starttime));
+list($eday, $emonth, $eyear, $ehour, $eminute) = split(" ", date("d m Y H i", $schedules->stoptime));
 
 $meta_array = '';
 foreach($linkmeta as $meta) {
@@ -84,19 +84,19 @@ if($ad_edit_id) {
 		if($edit_banner->type == 'disabled') 
 			echo '<div class="updated"><p>'. __('This ad has been disabled and does not rotate on your site!', 'adrotate').'</p></div>';
 	}
-
-	// Determine image field
-	if($edit_banner->imagetype == "field") {
-		$image_field = $edit_banner->image;
-		$image_dropdown = '';
-	} else if($edit_banner->imagetype == "dropdown") {
-		$image_field = '';
-		$image_dropdown = $edit_banner->image;
-	} else {
-		$image_field = '';
-		$image_dropdown = '';
-	}		
 }
+
+// Determine image field
+if($edit_banner->imagetype == "field") {
+	$image_field = $edit_banner->image;
+	$image_dropdown = '';
+} else if($edit_banner->imagetype == "dropdown") {
+	$image_field = '';
+	$image_dropdown = $edit_banner->image;
+} else {
+	$image_field = '';
+	$image_dropdown = '';
+}		
 ?>
 
 <script language="JavaScript">
@@ -313,11 +313,11 @@ jQuery(document).ready(function() {
 	        <td colspan="3"><em><?php _e('Time uses a 24 hour clock. When you\'re used to the AM/PM system keep this in mind: If the start or end time is after lunch, add 12 hours. 2PM is 14:00 hours. 6AM is 6:00 hours.', 'adrotate'); ?><br /><?php _e('The maximum clicks and impressions are measured over the set schedule only. Every schedule can have it\'s own limit!', 'adrotate'); ?></em></td>
 		</tr>
       	<tr>
-	        <th><?php _e('Start time (day/month/year hh:mm):', 'adrotate'); ?></th>
+	        <th><?php _e('Start date (day/month/year):', 'adrotate'); ?></th>
 	        <td>
 	        	<label for="adrotate_sday">
-	        	<input tabindex="11" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
-				<select tabindex="12" name="adrotate_smonth">
+	        	<input tabindex="21" name="adrotate_sday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $sday;?>" /> /
+				<select tabindex="22" name="adrotate_smonth">
 					<option value="01" <?php if($smonth == "01") { echo 'selected'; } ?>><?php _e('January', 'adrotate'); ?></option>
 					<option value="02" <?php if($smonth == "02") { echo 'selected'; } ?>><?php _e('February', 'adrotate'); ?></option>
 					<option value="03" <?php if($smonth == "03") { echo 'selected'; } ?>><?php _e('March', 'adrotate'); ?></option>
@@ -331,16 +331,14 @@ jQuery(document).ready(function() {
 					<option value="11" <?php if($smonth == "11") { echo 'selected'; } ?>><?php _e('November', 'adrotate'); ?></option>
 					<option value="12" <?php if($smonth == "12") { echo 'selected'; } ?>><?php _e('December', 'adrotate'); ?></option>
 				</select> /
-				<input tabindex="13" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />&nbsp;&nbsp;&nbsp; 
-				<input tabindex="14" name="adrotate_shour" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $shour;?>" /> :
-				<input tabindex="15" name="adrotate_sminute" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $sminute;?>" />
+				<input tabindex="23" name="adrotate_syear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $syear;?>" />&nbsp;&nbsp;&nbsp; 
 				</label>
 	        </td>
-	        <th><?php _e('End time (day/month/year hh:mm):', 'adrotate'); ?></th>
+	        <th><?php _e('End date (day/month/year):', 'adrotate'); ?></th>
 	        <td>
 	        	<label for="adrotate_eday">
-	        	<input tabindex="16" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>"  /> /
-				<select tabindex="17" name="adrotate_emonth">
+	        	<input tabindex="24" name="adrotate_eday" class="search-input" type="text" size="4" maxlength="2" value="<?php echo $eday;?>"  /> /
+				<select tabindex="25" name="adrotate_emonth">
 					<option value="01" <?php if($emonth == "01") { echo 'selected'; } ?>><?php _e('January', 'adrotate'); ?></option>
 					<option value="02" <?php if($emonth == "02") { echo 'selected'; } ?>><?php _e('February', 'adrotate'); ?></option>
 					<option value="03" <?php if($emonth == "03") { echo 'selected'; } ?>><?php _e('March', 'adrotate'); ?></option>
@@ -354,9 +352,23 @@ jQuery(document).ready(function() {
 					<option value="11" <?php if($emonth == "11") { echo 'selected'; } ?>><?php _e('November', 'adrotate'); ?></option>
 					<option value="12" <?php if($emonth == "12") { echo 'selected'; } ?>><?php _e('December', 'adrotate'); ?></option>
 				</select> /
-				<input tabindex="18" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />&nbsp;&nbsp;&nbsp; 
-				<input tabindex="19" name="adrotate_ehour" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $ehour;?>" /> :
-				<input tabindex="20" name="adrotate_eminute" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $eminute;?>" />
+				<input tabindex="26" name="adrotate_eyear" class="search-input" type="text" size="4" maxlength="4" value="<?php echo $eyear;?>" />&nbsp;&nbsp;&nbsp; 
+				</label>
+			</td>
+      	</tr>	
+      	<tr>
+	        <th><?php _e('Start time (hh:mm):', 'adrotate'); ?></th>
+	        <td>
+	        	<label for="adrotate_sday">
+				<input tabindex="27" name="adrotate_shour" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $shour;?>" /> :
+				<input tabindex="28" name="adrotate_sminute" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $sminute;?>" />
+				</label>
+	        </td>
+	        <th><?php _e('End time (hh:mm):', 'adrotate'); ?></th>
+	        <td>
+	        	<label for="adrotate_eday">
+				<input tabindex="29" name="adrotate_ehour" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $ehour;?>" /> :
+				<input tabindex="30" name="adrotate_eminute" class="search-input" type="text" size="2" maxlength="4" value="<?php echo $eminute;?>" />
 				</label>
 			</td>
       	</tr>	
