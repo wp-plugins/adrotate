@@ -1,0 +1,438 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, 
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+body {
+
+}
+
+ol, ul {
+	/* list-style: none; */
+}
+
+blockquote, q {
+	quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* Broadstreet CSS */
+
+body {
+    font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+}
+
+#header {
+    padding: 20px 15px;
+    background-color: #eee;
+    border-bottom: 1px solid #ccc;
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(47%,rgba(246,246,246,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+}
+
+#header h1 {
+    font-size: 24px;
+    font-family: HelveticaNeue-Light, 'Helvetica Neue Light', 'Helvetica Neue', sans-serif;
+}
+
+#header h1 > * {
+    vertical-align: bottom;
+}
+
+h2 {
+    font-size: 18px;
+    font-family: HelveticaNeue-Light, 'Helvetica Neue Light', 'Helvetica Neue', sans-serif;
+    text-align: center;
+}
+
+.pick-adv .label {
+    padding-right: 10px;
+}
+
+#main {
+    padding: 15px 15px;
+}
+
+.left-col {
+    width: 300px;
+    float: left;
+    padding-left: 30px;
+    box-sizing: border-box;
+}
+
+.left-col.bigger {
+    width: 400px;
+}
+
+.right-col {
+    width: 300px;
+    margin-left: 10px;
+    float: right;
+    box-sizing: border-box;
+    padding-right: 30px;
+}
+
+.right-col.left-just {
+    text-align: left;
+}
+
+.right-col.smaller {
+    width: 200px;
+}
+
+.right {
+    text-align: right;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.hero {
+    text-align: center;
+    padding: 0px 0px;
+}
+
+.divider {
+    margin: 10px auto;
+    border-bottom: 1px solid #ccc;
+    width: 90%;
+}
+
+p {
+    line-height: 1.5em;
+}
+
+.exp-heading {
+    margin-bottom: 10px;
+}
+
+.callout {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+a.btn {
+    font-family: HelveticaNeue-Light, 'Helvetica Neue Light', 'Helvetica Neue', sans-serif;
+    text-decoration: none;
+    line-height: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+    display: inline-block;
+    background-color: #E6E6E6;
+    background-repeat: no-repeat;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), color-stop(25%, white), to(#E6E6E6));
+    background-image: -webkit-linear-gradient(white, white 25%, #E6E6E6);
+    background-image: -moz-linear-gradient(top, white, white 25%, #E6E6E6);
+    background-image: -ms-linear-gradient(white, white 25%, #E6E6E6);
+    background-image: -o-linear-gradient(white, white 25%, #E6E6E6);
+    background-image: linear-gradient(white, white 25%, #E6E6E6);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+    padding: 5px 14px 6px;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+    color: #333;
+    font-size: 13px;
+    line-height: normal;
+    border: 1px solid #CCC;
+    border-bottom-color: #BBB;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+    -webkit-transition: 0.1s linear all;
+    -moz-transition: 0.1s linear all;
+    -ms-transition: 0.1s linear all;
+    -o-transition: 0.1s linear all;
+    transition: 0.1s linear all;
+    font-size: 15px;
+    line-height: normal;
+    padding: 9px 14px 9px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+
+
+a.btn.smaller {
+    padding: 4px 12px;
+}
+
+a.call-to-action {
+    color: white;
+    border-radius: 6px;
+    background-color: #57A957;
+    background-repeat: repeat-x;
+    background-image: -khtml-gradient(linear, left top, left bottom, from(#62C462), to(#57A957));
+    background-image: -moz-linear-gradient(top, #62C462, #57A957);
+    background-image: -ms-linear-gradient(top, #62C462, #57A957);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #62C462), color-stop(100%, #57A957));
+    background-image: -webkit-linear-gradient(top, #62C462, #57A957);
+    background-image: -o-linear-gradient(top, #62C462, #57A957);
+    background-image: linear-gradient(top, #62C462, #57A957);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#62c462', endColorstr='#57a957', GradientType=0);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    border-color: #57A957 #57A957 #3D773D;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+
+}
+
+.upload-form {
+    padding-top: 10px;
+}
+
+.alert {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #FCF8E3;
+    border: 1px solid #FBEED5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    color: #C09853;
+}
+
+.alert-danger, .alert-error {
+    color: #B94A48;
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+}
+.alert-success {
+    color: #468847;
+    background-color: #DFF0D8;
+    border-color: #D6E9C6;
+}
+
+.designer {
+    background-image: url('../img/designer-steel.jpeg');
+    padding: 10px;
+    border: 1px solid #555;
+    text-align: center;
+    position: relative;
+    overflow-x: scroll;
+}
+
+.designer .encourage {
+    position: absolute;
+    background-color: #5fbd5f;
+    padding: 10px;
+    color: white;
+    font-size: 16px;
+    z-index: 10;
+    right: 0;
+    top: 0;
+    width: 60px;
+    font-family: HelveticaNeue-Light, 'Helvetica Neue Light', 'Helvetica Neue', sans-serif;
+    display: none;
+}
+
+.explanation {
+    text-align: center !important;
+    font-weight: bold !important;
+    padding: 5px 0;
+}
+
+input, textarea, keygen, select, button, isindex {
+    margin: 0em;
+    font: -webkit-small-control;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: -webkit-auto;
+}
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+background-color: white;
+border: 1px solid #CCC;
+-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+-webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+-moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+-o-transition: border linear 0.2s, box-shadow linear 0.2s;
+transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+
+stylesheetselect {
+    -webkit-appearance: menulist;
+    box-sizing: border-box;
+    -webkit-box-align: center;
+    border: 1px solid;
+    border-image: initial;
+    white-space: pre;
+    -webkit-rtl-ordering: logical;
+    color: black;
+    background-color: white;
+    cursor: default;
+}
+
+label, select, button, input[type="button"], input[type="reset"], input[type="submit"], input[type="radio"], input[type="checkbox"] {
+    cursor: pointer;
+}
+
+input, button, select, textarea {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    display: inline-block;
+    height: 20px;
+    padding: 4px 6px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555;
+    vertical-align: middle;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+select, input[type="file"] {
+    height: 30px;
+    line-height: 30px;
+}
+
+
+select {
+    width: 220px;
+    background-color: white;
+    border: 1px solid #CCC;
+}
+
+.customize tr td {
+    padding-bottom: 5px;
+}
+
+.label {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    width: 120px;
+    font-weight: bold;
+    color: #555;
+}
+
+#bs-design-ad {
+    margin-top: 10px;
+}
+
+.source-form input {
+    width: 200px;
+}
+
+.source-form .control {
+    padding: 5px 0;
+}
+
+.gray {
+    background-color: #eee;;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.front-center {
+    text-align: center;
+    padding: 30px;
+}
+
+.center-form {
+    width: 268px;
+    margin: 30px auto 40px auto;
+}
+
+.or-fancy {
+    font-weight: 200;
+    font-size: .9em;
+}
+
+.front-center > * {
+    vertical-align: top;
+}
+
+.front-center input {
+    height: 28px;
+}
+
+#loading-proof {
+    display: none;
+}
+
+#proof-done {
+    display: none;
+}
+
+.settings-link {
+    position: absolute;
+    top: 20px;
+    right: 15px;;
+    cursor: pointer;
+    display: inline-block;
+    background-color: #E6E6E6;
+    background-repeat: no-repeat;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), color-stop(25%, white), to(#E6E6E6));
+    background-image: -webkit-linear-gradient(white, white 25%, #E6E6E6);
+    background-image: -moz-linear-gradient(top, white, white 25%, #E6E6E6);
+    background-image: -ms-linear-gradient(white, white 25%, #E6E6E6);
+    background-image: -o-linear-gradient(white, white 25%, #E6E6E6);
+    background-image: linear-gradient(white, white 25%, #E6E6E6);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+    height: 35px;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+    color: #333;
+    font-size: 13px;
+    line-height: normal;
+    border: 1px solid #CCC;
+    margin: 0;
+}
+
+.settings-link img {
+    width: 35px;
+}
