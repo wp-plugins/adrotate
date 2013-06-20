@@ -84,16 +84,24 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.4.6 FREE =
-* [fix] Inconsistent time calculation for start & end time
+= 3.8.4.7 FREE =
 * [fix] Inconsistent value for ad images
-* [fix] Incorrect time collection for some users
+	* [fix] Incorrect time collection for some users
+	* [fix] Timeframe clicks resetting to 0 if impressions set to 0
+	* [fix] Undefined index for for the adminbar for some users
+	* [fix] Incorrect link in email notifications
+	* [fix] Redirecting to wrong pages when exporting statistics
+	* [fix] Inconsistent time calculation for schedules
+	* [change] Removed timeframe month period
+	* [change] Expiring ads stay in the "active" list longer
+	* [change] Various tweaks for the dashboard
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.6.1 PRO =
-* [fix] Missing dashboard admin bar
-* [fix] Missing stripslashes() for block wrapper
+= 3.8.6.2 PRO =
+	* [fix] Incorrect time collection for some users
+	* [change] Expiring ads stay in the "active" list longer
+	* [change] Various tweaks for the dashboard
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
