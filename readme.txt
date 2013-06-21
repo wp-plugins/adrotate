@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.5.1
-Stable tag: 3.8.4.7
+Stable tag: 3.8.4.8
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -84,10 +84,8 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.4.7 FREE =
-* [fix] Incorrect time collection for some users
-* [change] Expiring ads stay in the "active" list longer
-* [change] Various tweaks for the dashboard
+= 3.8.4.8 FREE =
+* [fix] Incorrect time display on "Manage Ads" page
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
@@ -108,10 +106,8 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 == Upgrade Notice ==
 
-= 3.8.4.7 =
-* [fix] Incorrect time collection for some users
-* [change] Expiring ads stay in the "active" list longer
-* [change] Various tweaks for the dashboard
+= 3.8.4.8 =
+* [fix] Incorrect time display on "Manage Ads" page
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
