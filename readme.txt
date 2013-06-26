@@ -3,8 +3,8 @@ Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
-Tested up to: 3.5.1
-Stable tag: 3.8.4.8
+Tested up to: 3.5.2
+Stable tag: 3.8.5
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -84,30 +84,31 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.4.8 FREE =
-* [fix] Incorrect time display on "Manage Ads" page
+= 3.8.5 FREE =
+* [fix] Some ads that are about to expire not showing in any list of ads
+* [change] You can now only alphanumeric characters for the User-agent
+* [new] Usage of %id% in the group wrapper to get the group ID
+* [new] Weight now shown on 'Manage Ads' dashboard
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.6.2 PRO =
-* [fix] Inconsistent value for ad images
-* [fix] Incorrect time collection for some users
-* [fix] Timeframe clicks resetting to 0 if impressions set to 0
-* [fix] Undefined index for for the adminbar for some users
-* [fix] Incorrect link in email notifications
-* [fix] Redirecting to wrong pages when exporting statistics
-* [fix] Inconsistent time calculation for schedules
-* [change] Removed timeframe month period
-* [change] Expiring ads stay in the "active" list longer
-* [change] Various tweaks for the dashboard
+= 3.8.7 PRO =
+* [change] You can now only alphanumeric characters for the User-agent
+* [new] Advertiser ad statuses now reflect the actual status of the ad
+* [new] Usage of %id% in the group wrapper to get the group ID
+* [new] Weight now shown on 'Manage Ads' dashboard
+* [new] Stats now visible per period/schedule
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.4.8 =
-* [fix] Incorrect time display on "Manage Ads" page
+= 3.8.5 =
+* [fix] Some ads that are about to expire not showing in any list of ads
+* [change] You can now only alphanumeric characters for the User-agent
+* [new] Usage of %id% in the group wrapper to get the group ID
+* [new] Weight now shown on 'Manage Ads' dashboard
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
