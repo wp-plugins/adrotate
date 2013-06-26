@@ -1,0 +1,2831 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AdRotate\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-25 13:49+0100\n"
+"PO-Revision-Date: 2013-06-25 13:49+0100\n"
+"Last-Translator: Arnan de Gans <adegans@meandmymac.net>\n"
+"Language-Team: Arnan de Gans from AJdG Solutions <info@adrotateplugin.com>\n"
+"Language: ja_JP\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e;_\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: adrotate-functions.php:389 dashboard/publisher/adrotate-blocks-edit.php:18
+msgid "Edit Block"
+msgstr "ブロックの修正"
+
+#: adrotate-functions.php:392
+msgid "This group is not in a block!"
+msgstr "このグループはブロックに入っていません。"
+
+#: adrotate-functions.php:742
+msgid "No files found"
+msgstr "ファイルが見つかりません。"
+
+#: adrotate-functions.php:745
+msgid "Folder not found or not accessible"
+msgstr "フォルダーが存在しないかアクセス出来ません。"
+
+#: adrotate-output.php:558
+msgid "Oh no! Something went wrong!"
+msgstr ""
+
+#: adrotate-output.php:559
+msgid ""
+"WordPress was unable to verify the authenticity of the url you have clicked. "
+"Verify if the url used is valid or log in via your browser."
+msgstr ""
+
+#: adrotate-output.php:560
+msgid ""
+"If you have received the url you want to visit via email, you are being "
+"tricked!"
+msgstr ""
+
+#: adrotate-output.php:561
+msgid "Contact support if the issue persists:"
+msgstr ""
+
+#: adrotate-output.php:579 adrotate-output.php:581
+msgid "Error, Ad"
+msgstr "エラー、広告"
+
+#: adrotate-output.php:579
+msgid ""
+"is not available at this time due to schedule restrictions or does not exist!"
+msgstr "は掲載期間制限か存在しないために利用できません。"
+
+#: adrotate-output.php:581
+#, fuzzy
+msgid "is not available at this time due to schedule restrictions!"
+msgstr "は掲載期間制限か存在しないために利用できません。"
+
+#: adrotate-output.php:588 adrotate-output.php:590
+msgid ""
+"Either there are no banners, they are disabled or none qualified for this "
+"location!"
+msgstr "バナーがないか、利用不可か適応されていません。"
+
+#: adrotate-output.php:596
+#, fuzzy
+msgid "Error, no Ad ID set! Check your syntax!"
+msgstr "エラー、IDセットがありません。構文をチェックしてください。"
+
+#: adrotate-output.php:601
+#, fuzzy
+msgid "Error, ad could not be found! Make sure it exists."
+msgstr ""
+"エラー、広告が見つかりません。正しいIDが設定されいているか、もしくはちゃんと"
+"存在しているか確認してください。"
+
+#: adrotate-output.php:607
+msgid "Error, no group set! Check your syntax!"
+msgstr "エラー、グループセットがありません。確認して下さい。"
+
+#: adrotate-output.php:613
+msgid "Error, Block"
+msgstr "エラー、ブロック"
+
+#: adrotate-output.php:613
+msgid "does not exist! Check your syntax!"
+msgstr "が存在していません。確認して下さい。"
+
+#: adrotate-output.php:618
+msgid "Error, no Block ID set! Check your syntax!"
+msgstr "エラー、ブロックIDセットがありません。確認して下さい。"
+
+#: adrotate-output.php:624
+msgid ""
+"There was an error locating the database tables for AdRotate. Please "
+"deactivate and re-activate AdRotate from the plugin page!!"
+msgstr ""
+"AdRotateのデータベーステーブルにエラーが発生しています。プラグインを一度削除"
+"して、再登録して下さい。"
+
+#: adrotate-output.php:624
+msgid "If this does not solve the issue please seek support at"
+msgstr ""
+"もし、この問題が解決しない場合は以下のサポートサイトで解決法を探してみてくだ"
+"さい。"
+
+#: adrotate-output.php:630
+msgid "An unknown error occured."
+msgstr "理解できないエラーが起こっています。"
+
+#: adrotate-output.php:653
+msgid "active ad(s) expired."
+msgstr "個の広告が期限切れです。"
+
+#: adrotate-output.php:653
+msgid "Take action now"
+msgstr "継続する場合は対応して下さい。"
+
+#: adrotate-output.php:655
+msgid "active ad(s) are about to expire."
+msgstr "個の広告がまもなく期限切れです。"
+
+#: adrotate-output.php:655
+msgid "Check it out"
+msgstr "チェックして下さい。"
+
+#: adrotate-output.php:657
+msgid "active ad(s) with configuration errors."
+msgstr "個の広告が設定エラーになっています。"
+
+#: adrotate-output.php:657
+msgid "Solve this"
+msgstr "これを解決して下さい。"
+
+#: adrotate-output.php:659
+msgid "ad(s) expired."
+msgstr "個の広告が期限切れです。"
+
+#: adrotate-output.php:659
+msgid "ad(s) are about to expire."
+msgstr "個の広告がまもなく期限切れです。"
+
+#: adrotate-output.php:659
+msgid "ad(s) with configuration errors."
+msgstr "個の広告が設定エラーになっています。"
+
+#: adrotate-output.php:659
+msgid "Fix this as soon as possible"
+msgstr "これは出来る限り早く修正して下さい。"
+
+#: adrotate-output.php:692
+msgid "Your support makes a difference"
+msgstr ""
+
+#: adrotate-output.php:693
+#, fuzzy
+msgid "Useful links"
+msgstr "役に立つ情報"
+
+#: adrotate-output.php:694
+msgid "Brought to you by"
+msgstr "サービス紹介"
+
+#: adrotate-output.php:701
+msgid ""
+"Your awesome gift will ensure the continued development of AdRotate! Thanks "
+"for your consideration!"
+msgstr ""
+
+#: adrotate-output.php:706
+msgid "Like the plugin?"
+msgstr ""
+
+#: adrotate-output.php:706
+msgid "Rate and review"
+msgstr ""
+
+#: adrotate-output.php:707
+msgid "Find my website at"
+msgstr "開発者のWEBサイトは以下です。"
+
+#: adrotate-output.php:707
+#, fuzzy
+msgid "More on AdRotate on"
+msgstr "AdRotateからの通知"
+
+#: adrotate-output.php:708
+#, fuzzy
+msgid "Grab the latest news and updates on the"
+msgstr "最新情報やアップデート情報はこちらから"
+
+#: adrotate-output.php:708
+msgid "AdRotate Blog"
+msgstr "AdRotate Blog"
+
+#: adrotate-output.php:708
+msgid "Be sure to subscribe!"
+msgstr ""
+
+#: adrotate-output.php:709
+msgid "Check out the"
+msgstr "以下のURLをチェック下さい。"
+
+#: adrotate-output.php:709
+msgid "manuals"
+msgstr "マニュアル（英語サイト）"
+
+#: adrotate-output.php:709
+#, fuzzy
+msgid "and have the most popular features explained."
+msgstr "ほとんどの機能が説明されています。"
+
+#: adrotate-output.php:714
+#, fuzzy
+msgid ""
+"Your one stop for Webdevelopment, consultancy and anything WordPress! When "
+"you need a custom plugin, theme customizations or have your site moved/"
+"migrated entirely. Find out more about what I can do for you on my website!"
+msgstr ""
+"WEBサイトの開発からコンサルタント、wordpressまで。もし、カスタムプラグインや"
+"手間のカスタマイズが必要など詳細にご対応致します。詳細はWEBサイトにお越しくだ"
+"さい。英語ですが。"
+
+#: adrotate-output.php:714
+msgid "Visit the"
+msgstr ""
+
+#: adrotate-output.php:714
+msgid "AJdG Solutions"
+msgstr ""
+
+#: adrotate-output.php:714
+msgid "website"
+msgstr ""
+
+#: adrotate-output.php:736
+msgid "AdRotate Notice"
+msgstr "AdRotate での注意点"
+
+#: adrotate-output.php:742
+msgid "The overall stats do not take ads from other advertisers into account."
+msgstr "統計において他の広告主から広告を"
+
+#: adrotate-output.php:743 dashboard/publisher/adrotate-ads-report.php:81
+#: dashboard/publisher/adrotate-blocks-report.php:72
+#: dashboard/publisher/adrotate-groups-report.php:83
+msgid ""
+"All statistics are indicative. They do not nessesarily reflect results "
+"counted by other parties."
+msgstr ""
+"すべての統計結果を表示しております。他の方法による数値結果を必ずしも反映する"
+"ものではありません。"
+
+#: adrotate-output.php:744
+msgid "Your ads are published with"
+msgstr "広告は、WordPress用のAdRotateで公開されています。"
+
+#: adrotate-output.php:744
+msgid "for WordPress. Created by"
+msgstr "ワードプレス用　Created by"
+
+#: adrotate-output.php:761
+#, fuzzy
+msgid "Available in AdRotate Pro"
+msgstr "AdRotate Blog"
+
+#: adrotate-output.php:761
+msgid "Buy now"
+msgstr ""
+
+#: adrotate-output.php:762
+msgid "This feature is available in AdRotate Pro"
+msgstr ""
+
+#: adrotate-output.php:762
+msgid "Go Pro today"
+msgstr ""
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:321
+#: dashboard/publisher/adrotate-ads-edit.php:342
+msgid "January"
+msgstr "1月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:322
+#: dashboard/publisher/adrotate-ads-edit.php:343
+msgid "February"
+msgstr "2月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:323
+#: dashboard/publisher/adrotate-ads-edit.php:344
+msgid "March"
+msgstr "3月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:324
+#: dashboard/publisher/adrotate-ads-edit.php:345
+msgid "April"
+msgstr "4月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:325
+#: dashboard/publisher/adrotate-ads-edit.php:346
+msgid "May"
+msgstr "5月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:326
+#: dashboard/publisher/adrotate-ads-edit.php:347
+msgid "June"
+msgstr "6月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:327
+#: dashboard/publisher/adrotate-ads-edit.php:348
+msgid "July"
+msgstr "7月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:328
+#: dashboard/publisher/adrotate-ads-edit.php:349
+msgid "August"
+msgstr "8月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:329
+#: dashboard/publisher/adrotate-ads-edit.php:350
+msgid "September"
+msgstr "9月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:330
+#: dashboard/publisher/adrotate-ads-edit.php:351
+msgid "October"
+msgstr "10月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:331
+#: dashboard/publisher/adrotate-ads-edit.php:352
+msgid "November"
+msgstr "11月"
+
+#: adrotate-statistics.php:191 dashboard/publisher/adrotate-ads-edit.php:332
+#: dashboard/publisher/adrotate-ads-edit.php:353
+msgid "December"
+msgstr "12月"
+
+#: adrotate-statistics.php:198
+#, fuzzy
+msgid "Previous"
+msgstr "プレビュー"
+
+#: adrotate-statistics.php:200
+msgid "This month"
+msgstr ""
+
+#: adrotate-statistics.php:201
+msgid "Next"
+msgstr ""
+
+#: adrotate-statistics.php:264 dashboard/adrotate-info.php:171
+msgid "No data to show!"
+msgstr "表示できるデータがありません。"
+
+#: adrotate-widget.php:93
+msgid "Title (optional):"
+msgstr "タイトル（オプション）："
+
+#: adrotate-widget.php:96
+msgid "HTML will be stripped out."
+msgstr "HTMLタグは取り除かれます。"
+
+#: adrotate-widget.php:99
+msgid "Type:"
+msgstr "タイプ："
+
+#: adrotate-widget.php:101
+msgid "Single Ad - Use Ad ID"
+msgstr "広告 - 広告IDを使ってください。"
+
+#: adrotate-widget.php:102
+msgid "Group of Ads - Use group ID"
+msgstr "広告グループ - グループIDを使ってください。"
+
+#: adrotate-widget.php:103
+msgid "Block of Ads - Use Block ID"
+msgstr "広告ブロック - ブロックIDを使ってください。"
+
+#: adrotate-widget.php:106
+msgid "Choose what you want to use this widget for"
+msgstr "このウィジェットに使いたい物を選んで下さい。"
+
+#: adrotate-widget.php:109 dashboard/publisher/adrotate-blocks-edit.php:56
+#: dashboard/publisher/adrotate-groups-edit.php:50
+msgid "ID:"
+msgstr ""
+
+#: adrotate-widget.php:112
+msgid "Fill in the ID of the type you want to display!"
+msgstr "表示したいタイプのIDを入力してください！"
+
+#: adrotate.php:98
+#, fuzzy
+msgid "General Info"
+msgstr "一般設定"
+
+#: adrotate.php:99
+msgid "Manage Ads"
+msgstr "広告管理"
+
+#: adrotate.php:100 dashboard/publisher/adrotate-groups-main.php:6
+msgid "Manage Groups"
+msgstr "グループの管理"
+
+#: adrotate.php:101 dashboard/publisher/adrotate-blocks-main.php:6
+msgid "Manage Blocks"
+msgstr "ブロックの管理"
+
+#: adrotate.php:102
+#, fuzzy
+msgid "Moderate"
+msgstr "承認待ち"
+
+#: adrotate.php:102
+#, fuzzy
+msgid "Moderate Adverts"
+msgstr "新しい広告の承認"
+
+#: adrotate.php:103
+msgid "Global Reports"
+msgstr "全般レポート"
+
+#: adrotate.php:104
+msgid "Settings"
+msgstr "設定"
+
+#: adrotate.php:121
+#, fuzzy
+msgid "AdRotate Info"
+msgstr "AdRotate Blog"
+
+#: adrotate.php:163
+msgid "Ad Management"
+msgstr "広告管理"
+
+#: adrotate.php:166
+msgid "Ad created"
+msgstr "広告作成"
+
+#: adrotate.php:168
+msgid "Ad updated"
+msgstr "広告更新"
+
+#: adrotate.php:170
+msgid "Ad(s) deleted"
+msgstr "広告削除"
+
+#: adrotate.php:172
+msgid "Ad(s) statistics reset"
+msgstr "広告の統計情報初期化"
+
+#: adrotate.php:174
+msgid "Ad(s) renewed"
+msgstr "広告の更新"
+
+#: adrotate.php:176
+msgid "Ad(s) deactivated"
+msgstr "広告の利用停止"
+
+#: adrotate.php:178
+msgid "Ad(s) activated"
+msgstr "広告の利用可能化"
+
+#: adrotate.php:180
+msgid ""
+"The ad was saved but has an issue which might prevent it from working "
+"properly. Review the yellow marked ad."
+msgstr ""
+"広告は保存されますが、動作してから問題が発生するかもしれません。黄色でマーク"
+"された広告を確認して下さい。"
+
+#: adrotate.php:182
+msgid "Action prohibited"
+msgstr "今の操作は禁止されました。"
+
+#: adrotate.php:184 adrotate.php:332 adrotate.php:413
+msgid "No data found in selected time period"
+msgstr "選ばれた期間が見つかりません。"
+
+#: adrotate.php:241 adrotate.php:338 adrotate.php:419
+msgid "Manage"
+msgstr "管理"
+
+#: adrotate.php:242 adrotate.php:339 adrotate.php:420
+msgid "Add New"
+msgstr "新規追加"
+
+#: adrotate.php:244 adrotate.php:341 adrotate.php:422
+msgid "Report"
+msgstr "レポート"
+
+#: adrotate.php:321
+msgid "Group Management"
+msgstr "グループの管理"
+
+#: adrotate.php:324
+msgid "Group created"
+msgstr "グループの作成"
+
+#: adrotate.php:326
+msgid "Group updated"
+msgstr "グループの更新"
+
+#: adrotate.php:328
+msgid "Group deleted"
+msgstr "グループの削除"
+
+#: adrotate.php:330
+msgid "Group including it's Ads deleted"
+msgstr "削除された広告がグループに含まれています。"
+
+#: adrotate.php:404
+msgid "Block Management"
+msgstr "ブロック管理"
+
+#: adrotate.php:407
+msgid "Block created"
+msgstr "ブロック作成"
+
+#: adrotate.php:409
+msgid "Block updated"
+msgstr "ブロック更新"
+
+#: adrotate.php:411
+msgid "Block deleted"
+msgstr "ブロック削除"
+
+#: adrotate.php:468
+#, fuzzy
+msgid "Moderation queue"
+msgstr "承認待ち"
+
+#: adrotate.php:473 dashboard/publisher/adrotate-ads-main-disabled.php:14
+#: dashboard/publisher/adrotate-ads-main-error.php:13
+#: dashboard/publisher/adrotate-ads-main.php:14
+#: dashboard/publisher/adrotate-blocks-main.php:14
+#: dashboard/publisher/adrotate-groups-main.php:14
+msgid "Bulk Actions"
+msgstr "一括操作"
+
+#: adrotate.php:474
+msgid "Approve"
+msgstr ""
+
+#: adrotate.php:475
+#, fuzzy
+msgid "Update"
+msgstr "広告更新"
+
+#: adrotate.php:476 dashboard/publisher/adrotate-ads-main-disabled.php:16
+#: dashboard/publisher/adrotate-ads-main-error.php:15
+#: dashboard/publisher/adrotate-ads-main.php:16
+msgid "Delete"
+msgstr "削除"
+
+#: adrotate.php:477
+#, fuzzy
+msgid "Reject"
+msgstr "件名"
+
+#: adrotate.php:489 dashboard/publisher/adrotate-ads-main-disabled.php:29
+#: dashboard/publisher/adrotate-ads-main-error.php:33
+#: dashboard/publisher/adrotate-ads-main.php:32
+#: dashboard/publisher/adrotate-blocks-main.php:26
+#: dashboard/publisher/adrotate-groups-main.php:26
+msgid "ID"
+msgstr ""
+
+#: adrotate.php:490 dashboard/publisher/adrotate-ads-main-disabled.php:30
+#: dashboard/publisher/adrotate-ads-main-error.php:34
+#: dashboard/publisher/adrotate-ads-main.php:33
+msgid "Show from"
+msgstr "掲載開始"
+
+#: adrotate.php:491 dashboard/publisher/adrotate-ads-main-disabled.php:31
+#: dashboard/publisher/adrotate-ads-main-error.php:35
+#: dashboard/publisher/adrotate-ads-main.php:34
+msgid "Show until"
+msgstr "掲載終了"
+
+#: adrotate.php:492 dashboard/publisher/adrotate-ads-main-disabled.php:32
+#: dashboard/publisher/adrotate-ads-main-error.php:36
+#: dashboard/publisher/adrotate-ads-main.php:35
+msgid "Title"
+msgstr "タイトル"
+
+#: adrotate.php:493
+msgid "Advertiser"
+msgstr "広告主"
+
+#: adrotate.php:494 dashboard/publisher/adrotate-groups-edit.php:189
+msgid "Weight"
+msgstr "表示頻度"
+
+#: adrotate.php:495
+#, fuzzy
+msgid "Options"
+msgstr "オプション："
+
+#: adrotate.php:503
+msgid ""
+"Couple adverts to advertisers and allow them to create and upload their own "
+"advertisements for you to moderate and approve or reject!"
+msgstr ""
+
+#: adrotate.php:526 adrotate.php:790
+msgid "Statistics"
+msgstr "統計"
+
+#: adrotate.php:529
+msgid "A summarized overview of all adverts currently active!"
+msgstr ""
+
+#: adrotate.php:565
+msgid "AdRotate Settings"
+msgstr "AdRotate 設定"
+
+#: adrotate.php:568
+msgid "Settings saved"
+msgstr "設定を保存します。"
+
+#: adrotate.php:570
+msgid "Database optimized"
+msgstr "データベースの最適化"
+
+#: adrotate.php:572
+msgid "Database repaired"
+msgstr "データベースの修復"
+
+#: adrotate.php:574
+msgid "Ads evaluated and statuses have been corrected where required"
+msgstr ""
+
+#: adrotate.php:576
+msgid "Empty database records removed"
+msgstr "空のデータベースは削除されました。"
+
+#: adrotate.php:578
+msgid "Database can only be optimized or cleaned once every hour"
+msgstr "データベースは、１時間ごとに最適化または洗浄することができます。"
+
+#: adrotate.php:588
+msgid "Access Rights"
+msgstr "アクセス権限"
+
+#: adrotate.php:592
+msgid "Advertiser page"
+msgstr "広告主のページ"
+
+#: adrotate.php:596
+msgid "Role to allow users/advertisers to see their advertisement page."
+msgstr "広告主やユーザーのレポートページを見れる権限です。"
+
+#: adrotate.php:600
+msgid "Global report page"
+msgstr "全般レポートページ"
+
+#: adrotate.php:604
+msgid "Role to review the global report."
+msgstr "全般レポートを見れる権限"
+
+#: adrotate.php:608
+msgid "Manage/Add/Edit adverts"
+msgstr "広告の追加・編集管理"
+
+#: adrotate.php:612
+msgid "Role to see and add/edit ads."
+msgstr "広告を追加・編集する権限"
+
+#: adrotate.php:616
+msgid "Delete/Reset adverts"
+msgstr "広告の削除やリセット"
+
+#: adrotate.php:620
+msgid "Role to delete ads and reset stats."
+msgstr "広告の削除やリセットする権限"
+
+#: adrotate.php:624
+msgid "Manage/Add/Edit groups"
+msgstr "グループの追加・編集管理"
+
+#: adrotate.php:628
+msgid "Role to see and add/edit groups."
+msgstr "グループを削除・編集する権限"
+
+#: adrotate.php:632
+msgid "Delete groups"
+msgstr "グループの削除"
+
+#: adrotate.php:636
+msgid "Role to delete groups."
+msgstr "グループを削除できる権限"
+
+#: adrotate.php:640
+msgid "Manage/Add/Edit blocks"
+msgstr "ブロックの追加・編集管理"
+
+#: adrotate.php:644
+msgid "Role to see and add/edit blocks."
+msgstr "ブロックを削除・編集する権限"
+
+#: adrotate.php:648
+msgid "Delete blocks"
+msgstr "ブロックの削除"
+
+#: adrotate.php:652
+msgid "Role to delete blocks."
+msgstr "ブロックを削除できる権限"
+
+#: adrotate.php:656
+msgid "Moderate new adverts"
+msgstr "新しい広告の承認"
+
+#: adrotate.php:660
+msgid "Role to approve ads submitted by advertisers."
+msgstr "広告主から提出された広告を承認する権限"
+
+#: adrotate.php:664
+msgid "Approve/Reject adverts in Moderation Queue"
+msgstr "承認待ち広告の承認/拒否"
+
+#: adrotate.php:668
+msgid "Role to approve or reject ads submitted by advertisers."
+msgstr "広告主から提出された広告を承認または拒否する権限"
+
+#: adrotate.php:688
+#, fuzzy
+msgid "Advertisers"
+msgstr "広告主"
+
+#: adrotate.php:695
+#, fuzzy
+msgid "Enable Advertisers"
+msgstr "AdRotate広告主"
+
+#: adrotate.php:697
+msgid "Allow adverts to be coupled to users (Advertisers)."
+msgstr ""
+
+#: adrotate.php:701
+#, fuzzy
+msgid "Edit/update adverts"
+msgstr "新しい広告の承認"
+
+#: adrotate.php:703
+#, fuzzy
+msgid "Allow advertisers to add new or edit their adverts."
+msgstr "広告主やユーザーのレポートページを見れる権限です。"
+
+#: adrotate.php:707
+#, fuzzy
+msgid "Advertiser role"
+msgstr "広告主のページ"
+
+#: adrotate.php:709
+msgid "Create Role"
+msgstr "権限を作る"
+
+#: adrotate.php:710
+msgid ""
+"This role has no capabilities unless you assign them using the above "
+"options. Obviously you should use this with care."
+msgstr ""
+"上記のオプションを使用してそれらを割り当てない限り、これらの権限は付与されま"
+"せん。注意して、設定する必要があります。"
+
+#: adrotate.php:711
+msgid ""
+"This type of user is NOT required to use AdRotate or any of it's features. "
+"It merely helps you to seperate advertisers from regular subscribers without "
+"giving them too much access to your dashboard."
+msgstr ""
+"通常のユーザーはAdRotateやその統計を必要としません。その為、購読ユーザーなど"
+"にはAdRotateのダッシュボード等を見せる必要がありませんので、活用して下さい。"
+
+#: adrotate.php:728
+#, fuzzy
+msgid "Banner Folder"
+msgstr "画像バナー"
+
+#: adrotate.php:735
+msgid "Where are your banner ads?"
+msgstr ""
+
+#: adrotate.php:738
+msgid ""
+"Set a location where your banner images will be stored. (Default: /wp-"
+"content/banners/)."
+msgstr ""
+
+#: adrotate.php:739
+msgid ""
+"To try and trick ad blockers you could set the folder to something crazy "
+"like:"
+msgstr ""
+
+#: adrotate.php:740
+msgid ""
+"This folder will not be automatically created if it doesn't exist. AdRotate "
+"will show errors when the folder is missing."
+msgstr ""
+
+#: adrotate.php:745
+msgid "Email Notifications"
+msgstr "メール問い合わせ先"
+
+#: adrotate.php:752
+msgid "Notifications"
+msgstr "通知先"
+
+#: adrotate.php:755
+msgid ""
+"A comma separated list of email addresses. Maximum of 5 addresses. Keep this "
+"list to a minimum!"
+msgstr ""
+"コンマを付けることにより最大5個のメールアドレスを登録できます。登録は最小限に"
+"抑えて下さい。"
+
+#: adrotate.php:756
+msgid ""
+"Messages are sent once every 24 hours when needed. If this field is empty "
+"the function will be disabled."
+msgstr ""
+"必要なときにメッセージが24時間ごとに送信されます。このフィールドが空である場"
+"合、メール通知は無効になります。"
+
+#: adrotate.php:760 adrotate.php:762 adrotate.php:782 adrotate.php:784
+msgid "Test"
+msgstr "テスト"
+
+#: adrotate.php:763
+msgid ""
+"This sends a test notification. Before you test, for example, with a new "
+"email address. Save the options first!"
+msgstr ""
+"これは、テスト通知を送信します。新しいメールアドレスの設定時など、まずはオプ"
+"ションを保存してから、テストして下さい。"
+
+#: adrotate.php:768 adrotate.php:775
+msgid "Advertiser Messages"
+msgstr "広告主からのメッセージ"
+
+#: adrotate.php:778
+msgid "Maximum of 2 addresses. Comma seperated. This field cannot be empty!"
+msgstr ""
+"最大2個のメールアドレスがコンマ区切りで登録できます。ここは空欄では利用できま"
+"せん。"
+
+#: adrotate.php:785
+msgid ""
+"This sends a test message. Before you test, for example, with a new email "
+"address. Save the options first!"
+msgstr ""
+"これは、テストメッセージを送信します。新しいメールアドレスの設定時など、まず"
+"はオプションを保存してから、テストして下さい。"
+
+#: adrotate.php:794
+msgid "Track visitors"
+msgstr ""
+
+#: adrotate.php:796
+msgid "Track clicks and impressions."
+msgstr ""
+
+#: adrotate.php:797
+msgid ""
+"Disabling this also disables click and impression limits on schedules and "
+"disables timeframes."
+msgstr ""
+
+#: adrotate.php:798
+msgid "Track impressions from logged in users (Recommended)."
+msgstr ""
+
+#: adrotate.php:799 adrotate.php:801
+msgid "Has no effect when click and impression tracking is disabled."
+msgstr ""
+
+#: adrotate.php:800
+msgid "Track clicks from logged in users."
+msgstr ""
+
+#: adrotate.php:817
+msgid "User-Agent Filter"
+msgstr "ユーザーエージェントフィルター"
+
+#: adrotate.php:820
+msgid ""
+"A comma separated list of keywords. Filter out bots/crawlers/user-agents. To "
+"prevent impressions and clicks counted on them."
+msgstr ""
+"コンマは、キーワードのリストを区切ります。カウント表示回数やクリックを防止す"
+"るために、ボット/クローラ/ユーザエージェントを除外します。"
+
+#: adrotate.php:821
+msgid ""
+"Keep in mind that this might give false positives. The word 'google' also "
+"matches 'googlebot', so be careful!"
+msgstr ""
+"これは誤った判定を与えるかもしれないことを念頭に置いてください。単語 "
+"'Google'も'Googlebot'にもマッチしますので、注意してください！"
+
+#: adrotate.php:822
+msgid ""
+"Use only words with alphanumeric characters. All other characters are "
+"stripped out."
+msgstr ""
+
+#: adrotate.php:823
+msgid ""
+"Additionally to the list specified here, empty User-Agents are blocked as "
+"well."
+msgstr ""
+"さらに、ここで指定したリストには、空のユーザーエージェントも同様にブロックさ"
+"れます。"
+
+#: adrotate.php:823
+msgid "Learn more about"
+msgstr "ユーザーえー助演について知りたい方はこちらから。"
+
+#: adrotate.php:823
+msgid "user-agents"
+msgstr "ユーザーエージェント[英語]"
+
+#: adrotate.php:827
+msgid "Impressions timer"
+msgstr "表示時間"
+
+#: adrotate.php:829
+msgid "Seconds."
+msgstr "秒"
+
+#: adrotate.php:830
+msgid "Default: 10. Set to 0 to disable this timer."
+msgstr "基本は10となっています。この機能を無効にする場合は0にして下さい。"
+
+#: adrotate.php:830
+msgid "This number may not be empty, negative or exceed 3600 (1 hour)."
+msgstr "この数字は、0やマイナスや3600以上ではいけません。"
+
+#: adrotate.php:835
+msgid "GeoTargeting"
+msgstr ""
+
+#: adrotate.php:843 dashboard/publisher/adrotate-ads-edit.php:235
+msgid "GeoLocation"
+msgstr ""
+
+#: adrotate.php:845
+msgid "Enable GeoLocation for adverts."
+msgstr ""
+
+#: adrotate.php:846
+msgid "Allow advertisers to specify where their ads will show."
+msgstr ""
+
+#: adrotate.php:847
+msgid "Using GeoLocation requires a free account from"
+msgstr ""
+
+#: adrotate.php:852
+msgid "Miscellaneous"
+msgstr "その他"
+
+#: adrotate.php:855
+msgid "Widget alignment"
+msgstr "ウィジェットの配置"
+
+#: adrotate.php:856
+msgid ""
+"Check this box if your widgets do not align in your themes sidebar. (Does "
+"not always help!)"
+msgstr ""
+"あなたのウィジェットがテーマのサイドバーに整列しない場合は、このチェックボッ"
+"クスをオンにします。"
+
+#: adrotate.php:859
+msgid "W3 Total Caching"
+msgstr ""
+
+#: adrotate.php:860
+msgid "Check this box if you use W3 Total Caching on your site."
+msgstr ""
+
+#: adrotate.php:863
+msgid "WP Super Cache"
+msgstr ""
+
+#: adrotate.php:864
+msgid "Check this box if you use WP Super Cache on your site."
+msgstr ""
+
+#: adrotate.php:867
+msgid ""
+"It may take a while for the ad to start rotating. The caching plugin needs "
+"to refresh the cache. This can take up to a week if not done manually."
+msgstr ""
+
+#: adrotate.php:867
+msgid "Check the manual of your caching plugin to see how this works."
+msgstr ""
+
+#: adrotate.php:871
+msgid "Maintenance"
+msgstr "メンテナンス"
+
+#: adrotate.php:897
+msgid ""
+"NOTE: The below functions are intented to be used to OPTIMIZE your database. "
+"They only apply to your ads/groups/blocks and stats. Not to other settings "
+"or other parts of WordPress! Always always make a backup! These functions "
+"are to be used when you feel or notice your database is slow, unresponsive "
+"and sluggish."
+msgstr ""
+
+#: adrotate.php:900 adrotate.php:902
+msgid "Optimize Database"
+msgstr "データベースの最適化"
+
+#: adrotate.php:902
+msgid "You are about to optimize the AdRotate database."
+msgstr "AdRotateのデータベースの最適化を行います。"
+
+#: adrotate.php:902 adrotate.php:910
+msgid "Did you make a backup of your database?"
+msgstr "データベースのバックアップを取りましたか？"
+
+#: adrotate.php:902
+msgid ""
+"This may take a moment and may cause your website to respond slow "
+"temporarily!"
+msgstr ""
+"これは少々時間がかかる場合があり、一時的にウェブサイトが遅い応答を引き起こす"
+"可能性があります。"
+
+#: adrotate.php:902 adrotate.php:910 adrotate.php:917
+#: dashboard/publisher/adrotate-blocks-main.php:17
+#: dashboard/publisher/adrotate-groups-main.php:18
+msgid "OK to continue, CANCEL to stop."
+msgstr "よろしければ、OKを、止める場合はCANCELを押して下さい。"
+
+#: adrotate.php:903
+msgid "Cleans up overhead data in the AdRotate tables."
+msgstr "AdRotateテーブルのオーバーヘッドデータをクリーンアップします。"
+
+#: adrotate.php:904
+#, fuzzy
+msgid ""
+"Overhead data is accumulated garbage resulting from many changes you've "
+"made. This can vary from nothing to hundreds of KiB of data."
+msgstr ""
+"色々な変更等に伴ったデータベースの操作によって不要なデータが蓄積されているか"
+"もしれません。これによって数百キロバイトのデータを削除できるかもしれません。"
+
+#: adrotate.php:908 adrotate.php:910
+msgid "Clean-up Database"
+msgstr "データベースのクリーンアップ"
+
+#: adrotate.php:910
+msgid "You are about to remove empty records from the AdRotate database."
+msgstr "AdRotateデータベースから空のレコードを削除しようとしています。"
+
+#: adrotate.php:911
+#, fuzzy
+msgid ""
+"AdRotate creates empty records when you start making ads, groups or blocks. "
+"In rare occasions these records are faulty. If you made an ad, group or "
+"block that does not save when you make it use this button to delete those "
+"empty records."
+msgstr ""
+"あなたは広告、グループまたはブロックを作り始めたときAdRotateは空のレコードを"
+"作成します。まれに、これらの記録に障害が発生しています。あなたはこのボタンを"
+"使用するとこれらの空のレコードを削除します。障害のある統計レコードも同様にク"
+"リーンアップされます。"
+
+#: adrotate.php:911
+msgid ""
+"Additionally the statistics are cleaned up. Old temporary data will be "
+"removed."
+msgstr ""
+
+#: adrotate.php:915
+msgid "Re-evaluate Ads"
+msgstr "広告の再評価"
+
+#: adrotate.php:917
+msgid "Re-evaluate all ads"
+msgstr "すべての広告の再評価"
+
+#: adrotate.php:917
+msgid "You are about to check all ads for errors."
+msgstr "すべての広告のエラーをチェックしようとしています。"
+
+#: adrotate.php:917
+msgid ""
+"This might take a while and make slow down your site during this action!"
+msgstr "この作業をしている間サイトがしばらく遅くなるかもしれません。"
+
+#: adrotate.php:918
+#, fuzzy
+msgid ""
+"This will apply all evaluation rules to all ads to see if any error slipped "
+"in. Normally you should not need this feature."
+msgstr ""
+"この機能は何かしらのエラーが評価がおかしい時に利用します。通常、この機能は必"
+"要ありません。"
+
+#: adrotate.php:922
+#, fuzzy
+msgid ""
+"DISCLAIMER: If for any reason your data is lost, damaged or otherwise "
+"becomes unusable in any way or by any means in whichever way I will not take "
+"responsibility. You should always have a backup of your database. These "
+"functions do NOT destroy data. If data is lost, damaged or unusable, your "
+"database likely was beyond repair already. Claiming it worked before "
+"clicking these buttons is not a valid point in any case."
+msgstr ""
+"免責事項：何らかの理由でデータが失われたり破損したとしても、責任は負えませ"
+"ん。その為、常にデータベースのバックアップをお願いいたします。これらの関数"
+"は、基本的にデータを破壊することはありません。もし、データが多すぎたり、すで"
+"に壊れていたり、使えなかった場合は、もちろんですが修復は出来ません。ご注意下"
+"さい。"
+
+#: adrotate.php:926
+msgid "Troubleshooting"
+msgstr "トラブルシューティング（トラブル対応）"
+
+#: adrotate.php:929
+#, fuzzy
+msgid "Current version:"
+msgstr "現在の問題点:"
+
+#: adrotate.php:930
+#, fuzzy
+msgid "Previous version:"
+msgstr "プレビュー"
+
+#: adrotate.php:933
+#, fuzzy
+msgid "Current database version:"
+msgstr "現在の問題点:"
+
+#: adrotate.php:934
+msgid "Previous database version:"
+msgstr ""
+
+#: adrotate.php:937
+#, fuzzy
+msgid "Ad Notifications next run:"
+msgstr "通知先"
+
+#: adrotate.php:938 adrotate.php:942
+#, fuzzy
+msgid "Not scheduled!"
+msgstr "掲載期間"
+
+#: adrotate.php:941
+msgid "Clean Trackerdata next run:"
+msgstr ""
+
+#: adrotate.php:945
+msgid ""
+"NOTE: The below options are not meant for normal use and are only there for "
+"developers to review saved settings or how ads are selected. These can be "
+"used as a measure of troubleshooting upon request but for normal use they "
+"SHOULD BE LEFT UNCHECKED!!"
+msgstr ""
+"注意：以下の機能は開発者向けに準備されている機能となりますので、通常ではご利"
+"用しないで下さい。基本的にチェックを入れない！"
+
+#: adrotate.php:949
+msgid "Developer Debug"
+msgstr "開発者向けデバッグ"
+
+#: adrotate.php:951
+#, fuzzy
+msgid "Troubleshoot ads and how (if) they are selected, has front-end output."
+msgstr ""
+"広告のデバッグデータ（コード）を表示します。その為、見た目はテーマを崩しま"
+"す。"
+
+#: adrotate.php:952
+#, fuzzy
+msgid "Show all settings, dashboard routines and related values."
+msgstr "管理画面上のデータ表示をデバッグ状態にします。"
+
+#: adrotate.php:953
+#, fuzzy
+msgid "Show array of all userroles and capabilities."
+msgstr "デバッグモードで配列の中身を見せます。"
+
+#: adrotate.php:954
+#, fuzzy
+msgid "Review saved advertisers! Visible to advertisers."
+msgstr "ユーザーの保存状況を再調査します。広告主に見られるようになります。"
+
+#: adrotate.php:955
+#, fuzzy
+msgid ""
+"Review global stats, per ad/group/block stats. Visible only to publishers."
+msgstr "全体統計を、広告・グループ・ブロック毎に再調査します。"
+
+#: adrotate.php:956
+msgid "Disable timers for clicks and impressions."
+msgstr ""
+
+#: adrotate.php:957
+msgid "Temporarily disable encryption on the redirect url."
+msgstr ""
+
+#: adrotate.php:963
+msgid "Update Options"
+msgstr "設定の更新"
+
+#: dashboard/adrotate-info.php:114
+#, fuzzy
+msgid "Currently"
+msgstr "現在のスケジュール"
+
+#: dashboard/adrotate-info.php:119
+#, fuzzy
+msgid "Your setup"
+msgstr "あなたの広告"
+
+#: dashboard/adrotate-info.php:120
+msgid "Adverts that need you"
+msgstr ""
+
+#: dashboard/adrotate-info.php:126
+#, fuzzy
+msgid "Adverts"
+msgstr "広告主"
+
+#: dashboard/adrotate-info.php:127
+#, fuzzy
+msgid "(Almost) Expired"
+msgstr "個の広告が期限切れです。"
+
+#: dashboard/adrotate-info.php:130
+#: dashboard/publisher/adrotate-blocks-main.php:28
+msgid "Groups"
+msgstr "グループ"
+
+#: dashboard/adrotate-info.php:131
+msgid "Have errors"
+msgstr ""
+
+#: dashboard/adrotate-info.php:134
+#, fuzzy
+msgid "Blocks"
+msgstr "新しいブロック"
+
+#: dashboard/adrotate-info.php:135
+msgid "Queued"
+msgstr ""
+
+#: dashboard/adrotate-info.php:141
+msgid "The last few days"
+msgstr ""
+
+#: dashboard/adrotate-info.php:180
+msgid "You are using"
+msgstr ""
+
+#: dashboard/adrotate-info.php:187
+msgid "AdRotate News and Developer Blog"
+msgstr ""
+
+#: dashboard/adrotate-info.php:207
+#, fuzzy
+msgid "AdRotate Store"
+msgstr "AdRotate での注意点"
+
+#: dashboard/adrotate-info.php:209
+#, fuzzy
+msgid "AdRotate Pro"
+msgstr "AdRotate Blog"
+
+#: dashboard/adrotate-info.php:209
+#, fuzzy
+msgid "Get more features! Get AdRotate Pro."
+msgstr "AdRotate Blog"
+
+#: dashboard/adrotate-info.php:209 dashboard/adrotate-info.php:210
+#: dashboard/adrotate-info.php:211 dashboard/adrotate-info.php:212
+msgid "More info"
+msgstr ""
+
+#: dashboard/adrotate-info.php:210
+msgid "Installations"
+msgstr ""
+
+#: dashboard/adrotate-info.php:210
+msgid "Not sure how to set up AdRotate? Get me to do it!"
+msgstr ""
+
+#: dashboard/adrotate-info.php:211
+msgid "Premium Support"
+msgstr ""
+
+#: dashboard/adrotate-info.php:211
+msgid "Stuck with AdRotate? I'll help!"
+msgstr ""
+
+#: dashboard/adrotate-info.php:212
+#, fuzzy
+msgid "Periodic Maintenance"
+msgstr "メンテナンス"
+
+#: dashboard/adrotate-info.php:212
+msgid "No time to get things done? Let's make a schedule!"
+msgstr ""
+
+#: dashboard/adrotate-info.php:213
+msgid "Visit store to see all services and products"
+msgstr ""
+
+#: dashboard/adrotate-info.php:218
+#, fuzzy
+msgid "AdRotate Promotions"
+msgstr "AdRotate 設定"
+
+#: dashboard/adrotate-info.php:232
+#, fuzzy
+msgid "Support AdRotate"
+msgstr "Adrotateへ募金を"
+
+#: dashboard/adrotate-info.php:234
+msgid "Your gift will ensure the continued development of AdRotate!"
+msgstr ""
+
+#: dashboard/adrotate-info.php:240
+#, fuzzy
+msgid "AdRotate is brought to you by"
+msgstr "サービス紹介"
+
+#: dashboard/adrotate-info.php:243
+msgid ""
+"Your one stop for Webdevelopment, consultancy and anything WordPress! If you "
+"need a custom plugin. Theme customizations or have your site moved/migrated "
+"entirely. Visit my website for details!"
+msgstr ""
+"WEBサイトの開発からコンサルタント、wordpressまで。もし、カスタムプラグインや"
+"手間のカスタマイズが必要など詳細にご対応致します。詳細はWEBサイトにお越しくだ"
+"さい。英語ですが。"
+
+#: dashboard/adrotate-info.php:243
+#, fuzzy
+msgid "Find out more"
+msgstr "早速サイトをご訪問下さい。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:8
+msgid "New Ad"
+msgstr "広告新規作成"
+
+#: dashboard/publisher/adrotate-ads-edit.php:18
+msgid "Edit Ad"
+msgstr "広告編集"
+
+#: dashboard/publisher/adrotate-ads-edit.php:41
+msgid "The AdCode cannot be empty!"
+msgstr "AdCodeを空にすることはできません！"
+
+#: dashboard/publisher/adrotate-ads-edit.php:44
+msgid ""
+"You've enabled clicktracking but didn't provide an url in the url field!"
+msgstr ""
+"クリック数チェックを有効にしていますが、URLフィールドにURLを提供していませ"
+"ん！"
+
+#: dashboard/publisher/adrotate-ads-edit.php:47
+msgid "You didn't enable clicktracking but you did use the url field!"
+msgstr ""
+"クリック数チェックを要項にしていませんが、URLフィールドを利用しています！"
+
+#: dashboard/publisher/adrotate-ads-edit.php:50
+msgid "You didn't use %link% in your AdCode but did enable clicktracking!"
+msgstr "AdCodeに%link%が入っていませんが、クリック数チェックが有効です。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:53
+msgid "You've %link% in your AdCode but didn't enable clicktracking!"
+msgstr "AdCodeに%link%がありますが、クリック数チェックが無効です!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:56
+msgid "You didn't use %image% in your AdCode but did select an image!"
+msgstr "AdCodeに%image%がありませんが、画像が登録されています。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:59
+msgid "You did use %image% in your AdCode but did not select an image!"
+msgstr "AdCodeに%image%がありますが、画像が選択されていません。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:62
+msgid ""
+"There is a problem saving the image specification. Please reset your image "
+"and re-save the ad!"
+msgstr ""
+"保存したい画像の仕様に問題があります。画像をリセットし、広告を再度保存してく"
+"ださい！"
+
+#: dashboard/publisher/adrotate-ads-edit.php:65
+msgid ""
+"This advert has run out of budget. Add more budget to the advert or reset "
+"the rate to zero!"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:68
+msgid "This ad has no schedules!"
+msgstr "この広告は掲載期間が設定されていません。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:73
+msgid ""
+"AdRotate cannot find an error but the ad is marked erroneous, try re-saving "
+"the ad!"
+msgstr ""
+"AdRotateがエラーを見つけることはできませんが、広告に間違いを表示します。広告"
+"を再度保存してください！"
+
+#: dashboard/publisher/adrotate-ads-edit.php:76
+msgid "This ad is expired and currently not shown on your website!"
+msgstr "この広告は期限切れで現在サイトに表示されていません。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:79
+msgid "The ad will expire in less than 2 days!"
+msgstr "この広告は期限が2日間ありません。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:82
+msgid "This ad will expire in less than 7 days!"
+msgstr "この広告は期限が7日間ありません。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:85
+msgid "This ad has been disabled and does not rotate on your site!"
+msgstr "この広告は無効にされていると、サイト上で表示されません！"
+
+#: dashboard/publisher/adrotate-ads-edit.php:136
+msgid "The basics (Required)"
+msgstr "基本設定（必須）"
+
+#: dashboard/publisher/adrotate-ads-edit.php:142
+msgid "Title:"
+msgstr "広告タイトル："
+
+#: dashboard/publisher/adrotate-ads-edit.php:148
+msgid "AdCode:"
+msgstr "広告コード[AdCode]（タグ含む）："
+
+#: dashboard/publisher/adrotate-ads-edit.php:153
+msgid "Advertise using Broadstreet Ads"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:153
+#, fuzzy
+msgid "Learn more"
+msgstr "ユーザーえー助演について知りたい方はこちらから。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:156
+#: dashboard/publisher/adrotate-groups-edit.php:146
+msgid "Options:"
+msgstr "オプション："
+
+#: dashboard/publisher/adrotate-ads-edit.php:158
+#: dashboard/publisher/adrotate-groups-edit.php:147
+msgid "HTML/JavaScript allowed, use with care!"
+msgstr "HTML/JavaScriptの利用は可能ですが、利用にはご注意下さい。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:160
+msgid "Basic Examples:"
+msgstr "設定例："
+
+#: dashboard/publisher/adrotate-ads-edit.php:167
+msgid "Activate:"
+msgstr "掲載状況:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:171
+msgid "Yes, this ad will be used"
+msgstr "この広告を掲載されるように設定する"
+
+#: dashboard/publisher/adrotate-ads-edit.php:172
+#, fuzzy
+msgid "No, do not show this ad anywhere"
+msgstr "この広告をどこにも表示されないようにする。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:178
+#: dashboard/publisher/adrotate-blocks-edit.php:64
+#: dashboard/publisher/adrotate-groups-edit.php:127
+msgid "Sortorder:"
+msgstr "並び（ソート）順："
+
+#: dashboard/publisher/adrotate-ads-edit.php:180
+#: dashboard/publisher/adrotate-blocks-edit.php:66
+#: dashboard/publisher/adrotate-groups-edit.php:129
+msgid "For administrative purposes set a sortorder."
+msgstr "管理目的で順序を設定できます。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:180
+msgid "Leave empty or 0 to skip this. Will default to ad id."
+msgstr "空欄か0にすると解除されます。その場合はad idが適用されます。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:188
+msgid "Preview"
+msgstr "プレビュー"
+
+#: dashboard/publisher/adrotate-ads-edit.php:196
+msgid ""
+"Note: While this preview is an accurate one, it might look different then it "
+"does on the website."
+msgstr ""
+"注意：このプレビューは現設定では正確なものではありますが、ウェブ上では異なる"
+"場合があります。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:197
+msgid ""
+"This is because of CSS differences. Your themes CSS file is not active here!"
+msgstr ""
+"主な原因としてはCSSの設定がここでは反映されないからです。表示にCSSを利用され"
+"ている場合は実ページでご確認下さい。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:205
+#: dashboard/publisher/adrotate-blocks-edit.php:183
+#: dashboard/publisher/adrotate-groups-edit.php:161
+msgid "Usage"
+msgstr "利用タグ"
+
+#: dashboard/publisher/adrotate-ads-edit.php:211
+#: dashboard/publisher/adrotate-blocks-edit.php:189
+#: dashboard/publisher/adrotate-groups-edit.php:167
+msgid "In a post or page:"
+msgstr "投稿及びページ内掲載する場合："
+
+#: dashboard/publisher/adrotate-ads-edit.php:213
+#: dashboard/publisher/adrotate-blocks-edit.php:191
+#: dashboard/publisher/adrotate-groups-edit.php:169
+msgid "Directly in a theme:"
+msgstr "テーマ内に直接設定する場合："
+
+#: dashboard/publisher/adrotate-ads-edit.php:220
+#, fuzzy
+msgid "Advertiser & Budget"
+msgstr "広告主のページ"
+
+#: dashboard/publisher/adrotate-ads-edit.php:241
+msgid "Cities:"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:245
+msgid "Countries:"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:254
+msgid "Advanced (Everything below is optional)"
+msgstr "高度設定（全て条件によりオプション機能となります。）"
+
+#: dashboard/publisher/adrotate-ads-edit.php:261
+msgid "Clicktracking:"
+msgstr "テキストリンク（クリック数調査付）："
+
+#: dashboard/publisher/adrotate-ads-edit.php:263
+msgid "Enable?"
+msgstr "利用しますか？"
+
+#: dashboard/publisher/adrotate-ads-edit.php:264
+msgid "Use %link% in the adcode instead of the actual url."
+msgstr ""
+"実際のリンクURLではない%link% を設定する場合はこちらで設定して下さい。（ク"
+"リック数調査をする場合はこれを利用）"
+
+#: dashboard/publisher/adrotate-ads-edit.php:265
+#, fuzzy
+msgid "For a random seed you can use %random%."
+msgstr ""
+"ランダムリンクを設定する場合は%random%を利用することが出来ます。生成されるタ"
+"イムスタンプを利用できます。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:266
+msgid ""
+"If you use remote clicktracking (ads in emails for example) add "
+"\"&remote=1\" to the very end of the tracking url."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:272
+msgid "Banner image:"
+msgstr "バナー画像"
+
+#: dashboard/publisher/adrotate-ads-edit.php:275
+msgid "Media:"
+msgstr "画像リンク先URL："
+
+#: dashboard/publisher/adrotate-ads-edit.php:275
+msgid "Select Image"
+msgstr ""
+"画像の選択（WordPress上メディアを利用する場合。新規バナー登録もこちらから）"
+
+#: dashboard/publisher/adrotate-ads-edit.php:276
+msgid "- OR -"
+msgstr "- もしくは -"
+
+#: dashboard/publisher/adrotate-ads-edit.php:277
+msgid "Banner folder:"
+msgstr "画像バナー"
+
+#: dashboard/publisher/adrotate-ads-edit.php:278
+msgid "No image selected"
+msgstr "画像は設定されていません。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:281
+msgid "Use %image% in the code. Accepted files are:"
+msgstr ""
+"%image%を利用する場合は設定して下さい。利用可能はファイル形式は次のとおりで"
+"す。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:281
+msgid ""
+"Use either the text field or the dropdown. If the textfield has content that "
+"field has priority."
+msgstr ""
+"上記の画像リンクかドロップダウンかを利用します。画像リンクが入力されている場"
+"合はそちらが優先されます。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:286
+msgid "Weight:"
+msgstr "表示頻度："
+
+#: dashboard/publisher/adrotate-ads-edit.php:297
+#: dashboard/publisher/adrotate-ads-edit.php:431
+#: dashboard/publisher/adrotate-ads-edit.php:463
+#, fuzzy
+msgid "Save Advert"
+msgstr "広告保存"
+
+#: dashboard/publisher/adrotate-ads-edit.php:298
+#: dashboard/publisher/adrotate-ads-edit.php:432
+#: dashboard/publisher/adrotate-ads-edit.php:464
+#: dashboard/publisher/adrotate-blocks-edit.php:199
+#: dashboard/publisher/adrotate-blocks-edit.php:235
+#: dashboard/publisher/adrotate-groups-edit.php:177
+#: dashboard/publisher/adrotate-groups-edit.php:227
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: dashboard/publisher/adrotate-ads-edit.php:301
+msgid "Schedules"
+msgstr "掲載期間"
+
+#: dashboard/publisher/adrotate-ads-edit.php:306
+#, fuzzy
+msgid "Add new schedules"
+msgstr "新しい掲載期間を追加（必須）"
+
+#: dashboard/publisher/adrotate-ads-edit.php:313
+#, fuzzy
+msgid ""
+"Time uses a 24 hour clock. When you're used to the AM/PM system keep this in "
+"mind: If the start or end time is after lunch, add 12 hours. 2PM is 14:00 "
+"hours. 6AM is 6:00 hours."
+msgstr ""
+"時刻は24時間クロックを使用します。午後／午前ではなく、午後2時だったら14:00と"
+"いうように対応してください。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:313
+msgid ""
+"The maximum clicks and impressions are measured over the set schedule only. "
+"Every schedule can have it's own limit!"
+msgstr ""
+"最大のクリック数と表示回数が設定されたスケジュールのみで測定されています。そ"
+"れぞれのスケジュールで上限を設定できます！"
+
+#: dashboard/publisher/adrotate-ads-edit.php:316
+#, fuzzy
+msgid "Start date (day/month/year):"
+msgstr "掲載開始日時（日/月/年 時:分):"
+
+#: dashboard/publisher/adrotate-ads-edit.php:337
+#, fuzzy
+msgid "End date (day/month/year):"
+msgstr "掲載終了日時（日/月/年 時:分): "
+
+#: dashboard/publisher/adrotate-ads-edit.php:360
+#, fuzzy
+msgid "Start time (hh:mm):"
+msgstr "掲載開始日時（日/月/年 時:分):"
+
+#: dashboard/publisher/adrotate-ads-edit.php:367
+#, fuzzy
+msgid "End time (hh:mm):"
+msgstr "掲載終了日時（日/月/年 時:分): "
+
+#: dashboard/publisher/adrotate-ads-edit.php:377
+msgid "Maximum Clicks:"
+msgstr "クリック数上限設定："
+
+#: dashboard/publisher/adrotate-ads-edit.php:378
+#: dashboard/publisher/adrotate-ads-edit.php:380
+msgid "Leave empty or 0 to skip this."
+msgstr "※この機能を利用しない場合は、空白か0を設定して下さい。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:379
+msgid "Maximum Impressions:"
+msgstr "表示数上限設定："
+
+#: dashboard/publisher/adrotate-ads-edit.php:386
+msgid "Current Schedules"
+msgstr "現在のスケジュール"
+
+#: dashboard/publisher/adrotate-ads-edit.php:391
+msgid "From"
+msgstr "開始"
+
+#: dashboard/publisher/adrotate-ads-edit.php:392
+msgid "Until"
+msgstr "終了"
+
+#: dashboard/publisher/adrotate-ads-edit.php:393
+#: dashboard/publisher/adrotate-ads-main-disabled.php:34
+#: dashboard/publisher/adrotate-ads-main.php:38
+#: dashboard/publisher/adrotate-ads-report.php:43
+#: dashboard/publisher/adrotate-blocks-main.php:31
+#: dashboard/publisher/adrotate-blocks-report.php:43
+#: dashboard/publisher/adrotate-groups-edit.php:188
+#: dashboard/publisher/adrotate-groups-main.php:31
+#: dashboard/publisher/adrotate-groups-report.php:47
+msgid "Clicks"
+msgstr "クリック"
+
+#: dashboard/publisher/adrotate-ads-edit.php:394
+#: dashboard/publisher/adrotate-ads-main-disabled.php:33
+#: dashboard/publisher/adrotate-ads-main.php:36
+#: dashboard/publisher/adrotate-ads-report.php:42
+#: dashboard/publisher/adrotate-blocks-main.php:29
+#: dashboard/publisher/adrotate-blocks-report.php:42
+#: dashboard/publisher/adrotate-groups-edit.php:187
+#: dashboard/publisher/adrotate-groups-main.php:29
+#: dashboard/publisher/adrotate-groups-report.php:46
+msgid "Impressions"
+msgstr "表示数"
+
+#: dashboard/publisher/adrotate-ads-edit.php:410
+#: dashboard/publisher/adrotate-ads-edit.php:415
+msgid "Timeframe"
+msgstr "時間枠"
+
+#: dashboard/publisher/adrotate-ads-edit.php:437
+#: dashboard/publisher/adrotate-blocks-edit.php:202
+msgid "Select Groups"
+msgstr "グループを選択"
+
+#: dashboard/publisher/adrotate-ads-edit.php:443
+msgid "Select the group(s) this ad belongs to (Optional)"
+msgstr "以下よりこの広告のグループを選択してください。"
+
+#: dashboard/publisher/adrotate-ads-edit.php:456
+#: dashboard/publisher/adrotate-blocks-edit.php:221
+#: dashboard/publisher/adrotate-groups-main.php:28
+msgid "Ads"
+msgstr "広告"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:9
+msgid "Disabled Ads"
+msgstr "掲載不可広告"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:15
+msgid "Activate"
+msgstr "利用可能"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:17
+#: dashboard/publisher/adrotate-ads-main-error.php:16
+#: dashboard/publisher/adrotate-ads-main.php:17
+msgid "Reset stats"
+msgstr "統計リセット"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:35
+#: dashboard/publisher/adrotate-ads-main.php:40
+#: dashboard/publisher/adrotate-ads-report.php:46
+#: dashboard/publisher/adrotate-blocks-report.php:46
+#: dashboard/publisher/adrotate-groups-report.php:50
+msgid "CTR"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:72
+#: dashboard/publisher/adrotate-ads-main-error.php:60
+#: dashboard/publisher/adrotate-ads-main.php:89
+#: dashboard/publisher/adrotate-blocks-main.php:57
+#: dashboard/publisher/adrotate-groups-main.php:57
+msgid "Edit"
+msgstr "編集"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:72
+#: dashboard/publisher/adrotate-ads-main-error.php:60
+#: dashboard/publisher/adrotate-ads-main.php:89
+#: dashboard/publisher/adrotate-blocks-main.php:57
+#: dashboard/publisher/adrotate-groups-main.php:57
+#, fuzzy
+msgid "Stats"
+msgstr "統計"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:6
+msgid "Ads that need immediate attention"
+msgstr "すぐに注意を必要とする広告"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:14
+#: dashboard/publisher/adrotate-ads-main.php:15
+msgid "Deactivate"
+msgstr "停止"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:17
+#: dashboard/publisher/adrotate-ads-main.php:18
+msgid "-- Renew --"
+msgstr "-- 更新 --"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:18
+#: dashboard/publisher/adrotate-ads-main.php:19
+msgid "For 1 year"
+msgstr "1年間"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:19
+#: dashboard/publisher/adrotate-ads-main.php:20
+msgid "For 180 days"
+msgstr "6ヶ月（180日）"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:20
+#: dashboard/publisher/adrotate-ads-main.php:21
+msgid "For 30 days"
+msgstr "1ヶ月（30日）"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:21
+#: dashboard/publisher/adrotate-ads-main.php:22
+msgid "For 7 days"
+msgstr "1週間（7日）"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:69
+#, fuzzy
+msgid "Configuration errors."
+msgstr "個の広告が設定エラーになっています。"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:70
+msgid "Expires soon."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-main-error.php:71
+#, fuzzy
+msgid "Has expired."
+msgstr "個の広告が期限切れです。"
+
+#: dashboard/publisher/adrotate-ads-main.php:6
+msgid "Active Ads"
+msgstr "利用可能な広告"
+
+#: dashboard/publisher/adrotate-ads-main.php:37
+#: dashboard/publisher/adrotate-ads-main.php:39
+#: dashboard/publisher/adrotate-blocks-main.php:30
+#: dashboard/publisher/adrotate-blocks-main.php:32
+#: dashboard/publisher/adrotate-groups-main.php:30
+#: dashboard/publisher/adrotate-groups-main.php:32
+msgid "Today"
+msgstr "本日"
+
+#: dashboard/publisher/adrotate-ads-main.php:106
+msgid "No ads created yet!"
+msgstr "まだ広告が１つも作られていません。"
+
+#: dashboard/publisher/adrotate-ads-report.php:6
+#, fuzzy
+msgid "Advertisement performance"
+msgstr "広告主のページ"
+
+#: dashboard/publisher/adrotate-ads-report.php:36
+#: dashboard/publisher/adrotate-blocks-report.php:36
+#: dashboard/publisher/adrotate-groups-report.php:40
+msgid "Statistics for"
+msgstr "統計　"
+
+#: dashboard/publisher/adrotate-ads-report.php:44
+#: dashboard/publisher/adrotate-blocks-report.php:44
+#: dashboard/publisher/adrotate-groups-report.php:48
+msgid "Impressions today"
+msgstr "今日の表示数"
+
+#: dashboard/publisher/adrotate-ads-report.php:45
+#: dashboard/publisher/adrotate-blocks-report.php:45
+#: dashboard/publisher/adrotate-groups-report.php:49
+msgid "Clicks today"
+msgstr "今日のクリック数"
+
+#: dashboard/publisher/adrotate-ads-report.php:52
+#: dashboard/publisher/adrotate-groups-report.php:55
+msgid "Monthly overview of clicks and impressions"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-report.php:67
+#: dashboard/publisher/adrotate-blocks-report.php:58
+#: dashboard/publisher/adrotate-groups-report.php:69
+msgid "Export options for"
+msgstr "エクスポートオプション"
+
+#: dashboard/publisher/adrotate-ads-report.php:81
+#: dashboard/publisher/adrotate-blocks-report.php:72
+#: dashboard/publisher/adrotate-groups-report.php:83
+msgid "Note:"
+msgstr "注意："
+
+#: dashboard/publisher/adrotate-beta.php:10
+msgid "No address specified"
+msgstr "指定したアドレスが存在しません。"
+
+#: dashboard/publisher/adrotate-beta.php:27
+msgid "Feedback/bugs"
+msgstr "フィードバック/バグ報告"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:7
+msgid "New Block"
+msgstr "新しいブロック"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:50
+msgid "The basics"
+msgstr "基本設定"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:60
+msgid "Name / Reference:"
+msgstr "名前："
+
+#: dashboard/publisher/adrotate-blocks-edit.php:66
+msgid "Leave empty or 0 to skip this. Will default to block id."
+msgstr "空欄か0指定で未対応となります。block idに準じます。"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:73
+#, fuzzy
+msgid ""
+"Block shape  and border (Required) - Define the shape and size of the block"
+msgstr "ブロックの形と枠（必須）- ブロックの形とサイズを決めます。"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:79
+msgid "Rows and Columns"
+msgstr "行と列"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:81
+msgid "rows"
+msgstr "行"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:81
+msgid "columns"
+msgstr "列"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:84
+msgid ""
+"Make a grid for your ads. Filling in 2 and 2 makes a 2x2 grid. (Default: 2/2)"
+msgstr ""
+"広告に表組みを指定します。2と2を入力すると2行2列になります。（初期設定は2行2"
+"列です。）"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:88
+msgid "Block Padding"
+msgstr "ブロックの隙間"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:90
+msgid "pixel(s)"
+msgstr "ピクセル"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:93
+msgid "An invisible border inside the block in pixels. (Default: 1)"
+msgstr ""
+"ブロックに見えない枠（ピクセル単位）を作れます。（初期設定では1ピクセルで"
+"す。）"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:100
+msgid ""
+"Advert shape and border (Required) - Define the shape and size of the adverts"
+msgstr "広告の形と枠（必須）ー広告の形とサイズを決めます。"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:106
+msgid "Width and Height"
+msgstr "幅と高さ"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:108
+msgid "pixel(s) wide"
+msgstr "ピクセル（幅）"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:108
+msgid "pixel(s) high."
+msgstr "ピクセル（高さ）"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:111
+msgid ""
+"Define the maximum size of the ads in pixels. Height can be 'auto' (Default: "
+"125/125)"
+msgstr ""
+"ピクセル単位で広告の最大サイズを定義します。高さは 'auto'を指定できます。"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:115
+#, fuzzy
+msgid "Advert Margin"
+msgstr "広告の間隔（MarginとPadding）"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:117
+msgid "pixel(s) margin"
+msgstr "ピクセル（margin）"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:120
+#, fuzzy
+msgid "An invisible border outside the advert in pixels. (Default: 1)"
+msgstr "広告の内側と外側の空白をピクセルで設定します。（初期設定は1/0です。）"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:124
+msgid "Advert Border"
+msgstr "広告の枠線"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:126
+msgid "Style"
+msgstr "枠線スタイル"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:128
+msgid "None"
+msgstr "無し"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:129
+msgid "Solid"
+msgstr ""
+
+#: dashboard/publisher/adrotate-blocks-edit.php:130
+msgid "Dotted"
+msgstr ""
+
+#: dashboard/publisher/adrotate-blocks-edit.php:131
+msgid "Dashed"
+msgstr ""
+
+#: dashboard/publisher/adrotate-blocks-edit.php:132
+msgid "Double"
+msgstr ""
+
+#: dashboard/publisher/adrotate-blocks-edit.php:133
+msgid "Groove"
+msgstr ""
+
+#: dashboard/publisher/adrotate-blocks-edit.php:134
+msgid "Ridge"
+msgstr ""
+
+#: dashboard/publisher/adrotate-blocks-edit.php:135
+msgid "Inset"
+msgstr ""
+
+#: dashboard/publisher/adrotate-blocks-edit.php:136
+msgid "Outset"
+msgstr ""
+
+#: dashboard/publisher/adrotate-blocks-edit.php:138
+msgid "Width"
+msgstr "太さ"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:138
+msgid "pixel(s). Color"
+msgstr "ピクセル　色"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:151
+#, fuzzy
+msgid ""
+"Set the border width to 0 to disable. Color must be a valid hex value. "
+"(Default: none/0/#fff)"
+msgstr ""
+"枠なしの場合は太さを0にしていて下さい。色はhex値で設定します。（初期設定は0/"
+"#fff/無し）"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:158
+#: dashboard/publisher/adrotate-groups-edit.php:136
+msgid "Wrapper code (Optional) - Wraps around each ad"
+msgstr "Wrapper code (Optional) - 各広告を囲みます。"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:164
+#: dashboard/publisher/adrotate-groups-edit.php:142
+msgid "Before ad"
+msgstr "広告の前に入れるタグ"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:167
+#: dashboard/publisher/adrotate-blocks-edit.php:175
+#: dashboard/publisher/adrotate-groups-edit.php:145
+#: dashboard/publisher/adrotate-groups-edit.php:154
+msgid "Example:"
+msgstr "例："
+
+#: dashboard/publisher/adrotate-blocks-edit.php:172
+#: dashboard/publisher/adrotate-groups-edit.php:151
+msgid "After ad"
+msgstr "広告の後に入れるタグ"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:198
+#: dashboard/publisher/adrotate-blocks-edit.php:234
+#: dashboard/publisher/adrotate-groups-edit.php:176
+#: dashboard/publisher/adrotate-groups-edit.php:226
+msgid "Save"
+msgstr "保存"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:208
+msgid "Choose the groups to use in this block"
+msgstr "このブロックで使うグループを選んでください。"
+
+#: dashboard/publisher/adrotate-blocks-edit.php:227
+#: dashboard/publisher/adrotate-groups-main.php:71
+msgid "No groups created!"
+msgstr "グループがまだ作られていません。"
+
+#: dashboard/publisher/adrotate-blocks-main.php:15
+msgid "Delete Block(s)"
+msgstr "ブロック削除"
+
+#: dashboard/publisher/adrotate-blocks-main.php:17
+msgid "You are about to delete a block"
+msgstr "ブロックを削除しますが、よろしいですか？"
+
+#: dashboard/publisher/adrotate-blocks-main.php:17
+#: dashboard/publisher/adrotate-groups-main.php:18
+msgid "This action can not be undone!"
+msgstr "この処理は復旧できません。注意して下さい。"
+
+#: dashboard/publisher/adrotate-blocks-main.php:17
+#: dashboard/publisher/adrotate-groups-main.php:18
+msgid "Go"
+msgstr "実行"
+
+#: dashboard/publisher/adrotate-blocks-main.php:27
+#: dashboard/publisher/adrotate-groups-main.php:27
+msgid "Name"
+msgstr "名前"
+
+#: dashboard/publisher/adrotate-blocks-main.php:33
+#: dashboard/publisher/adrotate-groups-main.php:33
+msgid "Code"
+msgstr "コード"
+
+#: dashboard/publisher/adrotate-blocks-main.php:70
+msgid "No blocks created yet!"
+msgstr "まだブロックが作られていません。"
+
+#: dashboard/publisher/adrotate-blocks-report.php:6
+msgid "This blocks performance"
+msgstr "このブロックのパフォーマンス"
+
+#: dashboard/publisher/adrotate-groups-edit.php:7
+msgid "New group"
+msgstr "新規グループ作成"
+
+#: dashboard/publisher/adrotate-groups-edit.php:18
+msgid "Edit Group"
+msgstr "グループ編集"
+
+#: dashboard/publisher/adrotate-groups-edit.php:44
+msgid "The basics (required)"
+msgstr "基本設定（必須）"
+
+#: dashboard/publisher/adrotate-groups-edit.php:54
+msgid "Name:"
+msgstr "グループ名："
+
+#: dashboard/publisher/adrotate-groups-edit.php:61
+msgid "This group is in the block(s):"
+msgstr "このグループはブロックです。"
+
+#: dashboard/publisher/adrotate-groups-edit.php:69
+msgid "Advanced (optional)"
+msgstr "タイトル（オプション）:"
+
+#: dashboard/publisher/adrotate-groups-edit.php:75
+msgid "Fallback group?"
+msgstr "代替グループ？"
+
+#: dashboard/publisher/adrotate-groups-edit.php:82
+msgid "Include ads in categories?"
+msgstr "カテゴリーに広告を含めますか？"
+
+#: dashboard/publisher/adrotate-groups-edit.php:86
+#: dashboard/publisher/adrotate-groups-edit.php:108
+msgid "Do not use this feature"
+msgstr "この機能は使いません。"
+
+#: dashboard/publisher/adrotate-groups-edit.php:87
+msgid "Before the post content"
+msgstr "投稿内容の前"
+
+#: dashboard/publisher/adrotate-groups-edit.php:88
+msgid "After the post content"
+msgstr "投稿内容の後ろ"
+
+#: dashboard/publisher/adrotate-groups-edit.php:89
+#: dashboard/publisher/adrotate-groups-edit.php:111
+msgid "Before and after the content"
+msgstr "コンテンツの前と後ろ"
+
+#: dashboard/publisher/adrotate-groups-edit.php:94
+msgid "Which categories?"
+msgstr "どのカテゴリーですか？"
+
+#: dashboard/publisher/adrotate-groups-edit.php:99
+#, fuzzy
+msgid "Click the categories posts you want the adverts to show in."
+msgstr ""
+"広告を見せたいカテゴリーをクリックして下さい。CTRLを押しながらクリックすると"
+"複数選択できます。（Apple OSの場合はCMD）"
+
+#: dashboard/publisher/adrotate-groups-edit.php:104
+msgid "Include ads in pages?"
+msgstr "固有ページに広告を含めますか？"
+
+#: dashboard/publisher/adrotate-groups-edit.php:109
+msgid "Before the page content"
+msgstr "ページ内容の前"
+
+#: dashboard/publisher/adrotate-groups-edit.php:110
+msgid "After the page content"
+msgstr "ページ内容の後"
+
+#: dashboard/publisher/adrotate-groups-edit.php:117
+msgid "Which pages?"
+msgstr "どのページですか？"
+
+#: dashboard/publisher/adrotate-groups-edit.php:122
+#, fuzzy
+msgid "Click the pages you want the adverts to show in."
+msgstr ""
+"広告を見せたいページをクリックして下さい。CTRLを押しながらクリックすると複数"
+"選択できます。（Apple OSの場合はCMD）"
+
+#: dashboard/publisher/adrotate-groups-edit.php:129
+msgid "Leave empty or 0 to skip this. Will default to group id."
+msgstr ""
+"この項目をスキップするには空か0を入れて下さい。グループIDがデフォルトになりま"
+"す。"
+
+#: dashboard/publisher/adrotate-groups-edit.php:180
+msgid "Select Ads"
+msgstr "広告選択"
+
+#: dashboard/publisher/adrotate-groups-edit.php:186
+msgid "Choose the ads to use in this group"
+msgstr "このグループに利用する広告をお選び下さい。"
+
+#: dashboard/publisher/adrotate-groups-edit.php:190
+msgid "Visible until"
+msgstr "掲載期限"
+
+#: dashboard/publisher/adrotate-groups-edit.php:219
+msgid "No ads created!"
+msgstr "広告が作成されていません！"
+
+#: dashboard/publisher/adrotate-groups-main.php:15
+msgid "Delete Group"
+msgstr "グループ削除"
+
+#: dashboard/publisher/adrotate-groups-main.php:16
+msgid "Delete Group including ads"
+msgstr "広告が含まれるグループを削除します。"
+
+#: dashboard/publisher/adrotate-groups-main.php:18
+msgid "You are about to delete a group"
+msgstr "グループを削除しようとしています。"
+
+#: dashboard/publisher/adrotate-groups-main.php:34
+msgid "Fallback"
+msgstr "代替"
+
+#: dashboard/publisher/adrotate-groups-report.php:6
+msgid "This groups performance"
+msgstr "このグループのパフォーマンス"
+
+#: library/broadstreet/index.php:25
+msgid "You do not have permission to do this."
+msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "Disable timers for clicks and impressions allowing you to test the "
+#~ "impression and click counters or stats without having to wait!"
+#~ msgstr ""
+#~ "タイマーを無効にします。クリックや表示機能の状況をチェックする際に使って下"
+#~ "さい。"
+
+#~ msgid ""
+#~ "Disable encryption on the redirect url. This will NOT compromise any "
+#~ "security!"
+#~ msgstr ""
+#~ "リダイレクトURLの暗号化を無効にします。これによってセキュリティが損なわれ"
+#~ "ることはありません！"
+
+#~ msgid "Float"
+#~ msgstr "配置（Float）"
+
+#, fuzzy
+#~ msgid "No Float"
+#~ msgstr "配置（Float）"
+
+#~ msgid "Left"
+#~ msgstr "右"
+
+#~ msgid "Right"
+#~ msgstr "左"
+
+#~ msgid "This will help in aligning your block. Set to none if unsure."
+#~ msgstr "ブロックの配置を設定します。必要ない場合は「無し」を選んで下さい。"
+
+#~ msgid "Daily"
+#~ msgstr "1日毎"
+
+#~ msgid "Every 3 hours"
+#~ msgstr "3時間毎"
+
+#, fuzzy
+#~ msgid "Every 15 minutes"
+#~ msgstr "3時間毎"
+
+#~ msgid "Clicktracker / Impressiontracker"
+#~ msgstr "クリックトラッカー／インプレッショントラッカー"
+
+#~ msgid "[AdRotate Alert] Your ads need your help!"
+#~ msgstr "[広告通知]あなたの広告には対応が必要です。"
+
+#~ msgid "Hello"
+#~ msgstr "こんにちわ"
+
+#~ msgid "This notification is send to you from your website"
+#~ msgstr "この通知は、あなたのウェブサイトからあなたに送られています。"
+
+#~ msgid ""
+#~ "You will receive a notification approximately every 24 hours until the "
+#~ "issues are resolved."
+#~ msgstr "問題が解決されるまでには約24時間ごとに通知を受け取ります。"
+
+#~ msgid ""
+#~ "ad(s) have configuration errors. This needs your immediate attention!"
+#~ msgstr "個の広告が設定エラーです。掲載再会の場合は早急な対応をして下さい。"
+
+#~ msgid "ad(s) expired. This needs your immediate attention!"
+#~ msgstr "個の広告が期限切です。掲載再会の場合は早急な対応をして下さい。"
+
+#~ msgid "ad(s) will expire in less than 2 days."
+#~ msgstr "個の広告の期限が2日間ありません。"
+
+#~ msgid "A total of"
+#~ msgstr "合計"
+
+#~ msgid "ad(s) are in need of your care!"
+#~ msgstr "広告において、あなたの対応が必要です。"
+
+#~ msgid "Access your dashboard here:"
+#~ msgstr "ここからダッシュボードへアクセス："
+
+#~ msgid "Have a nice day!"
+#~ msgstr "良い日を！"
+
+#~ msgid "[AdRotate] An advertiser has put in a request for renewal!"
+#~ msgstr "[AdRotate]　広告主が更新の依頼が来ています！"
+
+#~ msgid "[AdRotate] An advertiser wants his ad removed."
+#~ msgstr "[AdRotate]　広告主が削除希望を出しております。"
+
+#~ msgid "[AdRotate] An advertiser wrote a comment on his ad!"
+#~ msgstr "[AdRotate]　広告主がコメントを書いています。"
+
+#~ msgid "[AdRotate] An advertiser has a problem!"
+#~ msgstr "[AdRotate]　広告主に問題があります。"
+
+#~ msgid "requests ad"
+#~ msgstr "広告のリクエスト"
+
+#~ msgid "renewed!"
+#~ msgstr "更新されました。"
+
+#~ msgid "removed."
+#~ msgstr "削除されました。"
+
+#~ msgid "has something to say about ad"
+#~ msgstr "が広告に関して何かあります。"
+
+#~ msgid "has a problem with AdRotate."
+#~ msgstr "にAdRotateの問題があります。"
+
+#~ msgid "Attached message:"
+#~ msgstr "添付メッセージ："
+
+#~ msgid "You can reply to this message to contact"
+#~ msgstr "連絡する場合には、このメッセージに返信することができます"
+
+#~ msgid "Review the ad here:"
+#~ msgstr "広告のレビュー："
+
+#~ msgid "[AdRotate] This is a test notification!"
+#~ msgstr "[AdRotate]　これはテスト通知です。"
+
+#~ msgid "[AdRotate] This is a test email."
+#~ msgstr "[AdRotate]　これはテストメールです。"
+
+#~ msgid "The administrator of"
+#~ msgstr "管理者の"
+
+#~ msgid "has set your email address to receive"
+#~ msgstr "は受信メールアドレスを設定しました。"
+
+#~ msgid ""
+#~ "notifications from AdRotate. These are to alert you of the state of "
+#~ "advertisements posted on this website."
+#~ msgstr "AdRotateからの通知。ウェブサイトに掲載されている広告への警告です。"
+
+#~ msgid ""
+#~ "messages from Advertisers using AdRotate. Your email is not shown to them "
+#~ "until you reply to their messages."
+#~ msgstr ""
+#~ "AdRotateを使っている広告のメッセージ。あなたがメッセージの返答をするまで、"
+#~ "これらのメッセージは表示されません。"
+
+#~ msgid ""
+#~ "If you believe this message to be in error, reply to this email with your "
+#~ "complaint!"
+#~ msgstr ""
+#~ "もしこのメッセージがエラーだと思われたら、メールにてお問合せ下さい。"
+
+#~ msgid "[AdRotate] CSV Report!"
+#~ msgstr "[AdRotate] CSV レポート!"
+
+#~ msgid ""
+#~ "Attached in this email you will find the exported CSV file you generated "
+#~ "on "
+#~ msgstr "生成されたエクスポートCSVファイルがメールに添付されます"
+
+#~ msgid "I'm using"
+#~ msgstr "現在利用中です。"
+
+#~ msgid "Error, no or no valid AD ID set! Check your syntax!"
+#~ msgstr ""
+#~ "エラー、有効なad IDが設定されていないかありません。構文をチェックしてくだ"
+#~ "さい。"
+
+#~ msgid "News and Promotions"
+#~ msgstr "ニュースと販促"
+
+#~ msgid "Need help setting things up? Take a look at the"
+#~ msgstr "支援（有料）が必要ならこちらから"
+
+#~ msgid "services page"
+#~ msgstr "サービスページ"
+
+#~ msgid "Get free support on the"
+#~ msgstr "無料サポートはこちらから"
+
+#~ msgid "forum"
+#~ msgstr "フォーラム"
+
+#~ msgid "Make a small donation to show that you"
+#~ msgstr "利用して満足頂けたら"
+
+#~ msgid "Thanks!"
+#~ msgstr "して下さい。ありがとうございます。"
+
+#~ msgid "The plugin homepage is at"
+#~ msgstr "このプラグインのホームページは以下です。"
+
+#~ msgid "Email(s) with reports successfully sent"
+#~ msgstr "メール報告の送信に成功しました。"
+
+#~ msgid "Your message has been sent"
+#~ msgstr "あなたのメッセージは送られました。"
+
+#~ msgid "AdRotate client role added"
+#~ msgstr "AdRotateクライアントの役割を足す"
+
+#~ msgid "AdRotate client role removed"
+#~ msgstr "AdRotateクライアントの役割を削除する"
+
+#~ msgid "Test notification(s) sent"
+#~ msgstr "テスト通知を送信しました。"
+
+#~ msgid "Test mail(s) sent"
+#~ msgstr "テストメールを送信しました。"
+
+#~ msgid "Remove Role"
+#~ msgstr "権限の削除"
+
+#~ msgid "You are about to remove the AdRotate Clients role."
+#~ msgstr "AdRotateクライアントの役割を削除ししようとしています。"
+
+#~ msgid ""
+#~ "This may lead to users not being able to access their ads statistics!"
+#~ msgstr ""
+#~ "これにより、ユーザーは広告統計にアクセスすることができなくなります。"
+
+#~ msgid "Credits"
+#~ msgstr "クレジット"
+
+#~ msgid ""
+#~ "Show a simple token that you're using AdRotate in the themes Meta part."
+#~ msgstr ""
+#~ "あなたがテーマのメタ部分にAdRotateを使用しているという単純な証拠を示してい"
+#~ "ます。"
+
+#~ msgid ""
+#~ "DISCLAIMER: If for any reason your data is lost, damaged or otherwise "
+#~ "becomes unusable in any way or by any means in whichever way I will not "
+#~ "take responsibility. You should always have a backup of your database. "
+#~ "Use with caution and make a backup first!"
+#~ msgstr ""
+#~ "免責事項：何らかの理由でデータが失われたり破損したとしても、責任は負えませ"
+#~ "ん。その為、常にデータベースのバックアップをお願いいたします。警告に注意し"
+#~ "て、バックアップをまず取るようにしてください。"
+
+#~ msgid "Manual Upgrade"
+#~ msgstr "手動更新"
+
+#~ msgid "Upgrade Database and Migrate Data"
+#~ msgstr "データベースと移行データのアップグレード"
+
+#~ msgid ""
+#~ "You are about to upgrade your database and migrate data within the "
+#~ "database."
+#~ msgstr ""
+#~ "あなたのデータベースをアップグレードし、データベース内にデータを移行しよう"
+#~ "としています。"
+
+#~ msgid "MAKE SURE YOU HAVE A BACKUP!!!"
+#~ msgstr "バックアップを必ず行ってください。"
+
+#~ msgid ""
+#~ "It appears your database is up-to-date. If you believe this to be untrue, "
+#~ "contact support and report your Plugin version, AdRotate build and "
+#~ "database version."
+#~ msgstr ""
+#~ "データベースの現状が表示されています。もしこれが間違っていると思われる場合"
+#~ "は、サポートに連絡して、プラグインのバージョン、AdRotateビルドとデータベー"
+#~ "スのバージョンを報告してください。"
+
+#~ msgid ""
+#~ "Display version numbers and show a list of errors that happened (if any) "
+#~ "during the database upgrade."
+#~ msgstr ""
+#~ "バージョン番号を表示し、データベースのアップグレード中に、もしエラーが起"
+#~ "こったら、そのリストを示します。"
+
+#~ msgid "Contact publisher"
+#~ msgstr "出稿媒体"
+
+#~ msgid "Renew"
+#~ msgstr "更新"
+
+#~ msgid "Remove"
+#~ msgstr "削除"
+
+#~ msgid "Other"
+#~ msgstr "その他"
+
+#~ msgid "Export options"
+#~ msgstr "エクスポートオプション"
+
+#~ msgid "Export"
+#~ msgstr "エクスポート"
+
+#~ msgid "Download this overview as a CSV file."
+#~ msgstr "CSVファイルとしてこの概要をダウンロードする"
+
+#~ msgid "No ads to show!"
+#~ msgstr "広告が見当たりません。"
+
+#~ msgid "Contact your publisher"
+#~ msgstr "出稿媒体へ連絡"
+
+#~ msgid "Summary"
+#~ msgstr "概要"
+
+#~ msgid "Overall statistics"
+#~ msgstr "全体統計"
+
+#~ msgid "The last 8 clicks in the past 24 hours"
+#~ msgstr "過去24時間内の最後の8クリック"
+
+#~ msgid "ads, sharing a total of"
+#~ msgstr "広告で、全体で"
+
+#~ msgid "impressions."
+#~ msgstr "表示です。"
+
+#~ msgid "No recent clicks"
+#~ msgstr "過去24時間でクリックはありません。"
+
+#~ msgid "The best"
+#~ msgstr "最も良い"
+
+#~ msgid "clicks."
+#~ msgstr "クリック。"
+
+#~ msgid "No ad stands out at this time."
+#~ msgstr "この時点で広告は目立ちません。"
+
+#~ msgid "The worst"
+#~ msgstr "最も悪い"
+
+#~ msgid "All ads seem equally bad."
+#~ msgstr "すべての広告も同様に悪いように思われます。"
+
+#~ msgid "Average on all ads"
+#~ msgstr "広告平均クリック数"
+
+#~ msgid "Click-Through-Rate"
+#~ msgstr "クリック率"
+
+#~ msgid "based on"
+#~ msgstr "元となる数値は"
+
+#~ msgid "impressions and"
+#~ msgstr "表示と"
+
+#~ msgid "Impressions of all your ads over the past 21 days"
+#~ msgstr "過去21日間のすべての広告の表示数"
+
+#~ msgid "Clicks of all your ads over the past 21 days"
+#~ msgstr "過去21日間のすべての広告のクリック数"
+
+#~ msgid "Notice"
+#~ msgstr "注意"
+
+#~ msgid "No ads for user. If you feel this to be in error please"
+#~ msgstr ""
+#~ "広告主としてユーザーの登録がありません。もし、登録しているはずであれば、次"
+#~ "にご連絡下さい。"
+
+#~ msgid "contact the site administrator"
+#~ msgstr "サイト管理者に連絡"
+
+#~ msgid "Renewal of"
+#~ msgstr "更新"
+
+#~ msgid "- I'd want my ad renewed for 1 year. Quote me!"
+#~ msgstr "- 広告を1年更新したいです"
+
+#~ msgid "- Renew my ad, but i want the weight set higher."
+#~ msgstr "- 広告を更新したいですが、表示頻度を上げたいです。"
+
+#~ msgid "Removal of"
+#~ msgstr "削除"
+
+#~ msgid "- This ad doesn't perform, please remove it."
+#~ msgstr "- この広告は効果ないので削除してください。"
+
+#~ msgid "- The budget is spent, please remove the ad when it expires."
+#~ msgstr "- 広告予算がなくなったら削除してください。"
+
+#~ msgid "- The ad is not in the right place. I'd like...."
+#~ msgstr "- この広告の表示場所が違います。私が希望するのは..."
+
+#~ msgid "- This ad works great for me!!"
+#~ msgstr "- 広告効果は素晴らしい！"
+
+#~ msgid "Complaint or problem"
+#~ msgstr "苦情または問題"
+
+#~ msgid "- My ads do not show, what's going on?"
+#~ msgstr "- 私の広告が表示されていません。どうしたのでしょうか？"
+
+#~ msgid "- Why can't i see any clicks?"
+#~ msgstr ""
+#~ "- いくつかのクリック数が表示されていないようですが、どうしてでしょうか？"
+
+#~ msgid "Contact your Publisher"
+#~ msgstr "広告管理者へ連絡"
+
+#~ msgid ""
+#~ "Put in a request for renewal, removal or report an issue with this ad."
+#~ msgstr "この広告の更新、削除またはレポートの問題を入れてください。"
+
+#~ msgid "Short message/Reason"
+#~ msgstr "ショートメッセージ【原因】"
+
+#~ msgid "Examples:"
+#~ msgstr "例："
+
+#~ msgid "Send"
+#~ msgstr "送信"
+
+#~ msgid "-- Weight --"
+#~ msgstr "-- 表示頻度 --"
+
+#~ msgid "Barely visible"
+#~ msgstr "稀な表示（20％程度）"
+
+#~ msgid "Less than average"
+#~ msgstr "標準より少し少ない表示（40％程度）"
+
+#~ msgid "Normal coverage"
+#~ msgstr "平均的表示（50％程度）"
+
+#~ msgid "More than average"
+#~ msgstr "平均よりも多めの表示（70％程度）"
+
+#~ msgid "Best visibility"
+#~ msgstr "優先表示（100～90％程度）"
+
+#~ msgid "Sort by"
+#~ msgstr "並び替え条件"
+
+#~ msgid "Sort Order (ascending, default)"
+#~ msgstr "（昇順、基本）"
+
+#~ msgid "Sort Order (descending)"
+#~ msgstr "（降順）"
+
+#~ msgid "Creation date (ascending)"
+#~ msgstr "作成日順（昇順）"
+
+#~ msgid "Creation date (descending)"
+#~ msgstr "作成日順（降順）"
+
+#~ msgid "Updated (ascending)"
+#~ msgstr "更新日順（昇順）"
+
+#~ msgid "Updated (descending)"
+#~ msgstr "更新日順（降順）"
+
+#~ msgid "ID reversed"
+#~ msgstr "ID（逆順）"
+
+#~ msgid "Title (A-Z)"
+#~ msgstr "タイトル（昇順）"
+
+#~ msgid "Title (Z-A)"
+#~ msgstr "タイトル（降順）"
+
+#~ msgid "You've set an advertiser but didn't enable clicktracking!"
+#~ msgstr "広告は設定されましたが、クリック数チェックが有効になっていません！"
+
+#~ msgid "Image:"
+#~ msgstr "画像リンク："
+
+#~ msgid "Combination:"
+#~ msgstr "両方："
+
+#~ msgid "Advanced Example:"
+#~ msgstr "設定例（高度）："
+
+#~ msgid "Advertiser:"
+#~ msgstr "広告主："
+
+#~ msgid "Not specified"
+#~ msgstr "指定されていません。"
+
+#~ msgid ""
+#~ "Must be a registered user on your site with appropriate access roles."
+#~ msgstr "適切なアクセス権限のある登録ユーザーしか設定できません。"
+
+#~ msgid ""
+#~ "To delete schedules tick the checkboxes for each schedule you want to "
+#~ "remove and save the advert!"
+#~ msgstr "削除したい期間は全てチェックを入れて広告を保存して下さい。"
+
+#~ msgid "Timeframe (Optional)"
+#~ msgstr "時間枠（オプション）"
+
+#~ msgid ""
+#~ "Set a click or impression limit per hour, day, week or month. This option "
+#~ "overrules any other click or impression limit as long as the ad is within "
+#~ "a valid schedule."
+#~ msgstr ""
+#~ "任意の日、週、または月のクリック数か表示数の上限を設定します。このオプショ"
+#~ "ンは、広告が有効なスケジュールの範囲内である限り、他のクリックまたは表示回"
+#~ "数の制限が優先されます。"
+
+#~ msgid "Timeframe:"
+#~ msgstr "時間枠"
+
+#~ msgid "Maximum clicks:"
+#~ msgstr "クリック数上限設定"
+
+#~ msgid "Maximum impressions:"
+#~ msgstr "表示数上限設定"
+
+#~ msgid "This ads performance"
+#~ msgstr "この広告のパフォーマンス"
+
+#~ msgid "Impressions over the past 21 days"
+#~ msgstr "過去21日間の表示数"
+
+#~ msgid "Clicks over the past 21 days"
+#~ msgstr "過去21日間のクリック数"
+
+#~ msgid "Select period"
+#~ msgstr "期間選択"
+
+#~ msgid "Whole year"
+#~ msgstr "1年中"
+
+#~ msgid "Email options"
+#~ msgstr "E-mailオプション"
+
+#~ msgid ""
+#~ "Maximum of 3 email addresses, comma seperated. Leave empty to download "
+#~ "the CSV file instead."
+#~ msgstr ""
+#~ "最大3つのメールアドレスをコンマ区切りで設定できます。空欄ですとCSVファイル"
+#~ "がダウンロードできます。"
+
+#~ msgid "Download or email your selected timeframe as a CSV file."
+#~ msgstr ""
+#~ "CSVファイルとして選択した時間枠をダウンロードがメールにて受信できます。"
+
+#~ msgid "Block Border"
+#~ msgstr "ブロックの枠"
+
+#~ msgid "pixel(s) padding."
+#~ msgstr "ピクセル（padding）"
+
+#~ msgid "No"
+#~ msgstr "いいえ"
+
+#~ msgid "You need atleast two groups to use this feature!"
+#~ msgstr "この広告は少なくとも2つ以上のグループが必要となります。"
+
+#~ msgid "ads have tracking enabled."
+#~ msgstr "広告でトラッキング（調査）されています。"
+
+#~ msgid "Average clicks on all ads"
+#~ msgstr "すべての広告平均クリック数"
+
+#~ msgid "Total impressions of all ads over the past 21 days"
+#~ msgstr "過去21日間のすべての広告の合計表示回数"
+
+#~ msgid "Total clicks of all ads over the past 21 days"
+#~ msgstr "過去21日間のすべての広告の合計クリック数"
+
+#~ msgid "The last 50 clicks in the past 24 hours"
+#~ msgstr "過去２４時間内の最後の50クリック"
