@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.5.2
-Stable tag: 3.8.5
+Stable tag: 3.8.6
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -84,31 +84,35 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.5 FREE =
-* [fix] Some ads that are about to expire not showing in any list of ads
-* [change] You can now only alphanumeric characters for the User-agent
-* [new] Usage of %id% in the group wrapper to get the group ID
-* [new] Weight now shown on 'Manage Ads' dashboard
+= 3.8.6 FREE =
+* [change] WP Super Cache no longer supported
+* [change] Groups can now act as blocks
+* [fix] Improved day detection corrected to timezones
+* [fix] Improved filter for timeframes corrected to timezones
+* [fix] Improved use of objects for displaying stats
+* [new] Dynamic Ads
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.7 PRO =
-* [change] You can now only alphanumeric characters for the User-agent
-* [new] Advertiser ad statuses now reflect the actual status of the ad
-* [new] Usage of %id% in the group wrapper to get the group ID
-* [new] Weight now shown on 'Manage Ads' dashboard
-* [new] Stats now visible per period/schedule
+= 3.8.8 PRO =
+* [change] WP Super Cache no longer supported
+* [change] Groups can now act as blocks
+* [fix] Improved use of objects for displaying stats
+* [fix] Correct file path for images uploaded by Advertisers
+* [new] Dynamic Ads
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.5 =
-* [fix] Some ads that are about to expire not showing in any list of ads
-* [change] You can now only alphanumeric characters for the User-agent
-* [new] Usage of %id% in the group wrapper to get the group ID
-* [new] Weight now shown on 'Manage Ads' dashboard
+= 3.8.6 =
+* [change] WP Super Cache no longer supported
+* [change] Groups can now act as blocks
+* [fix] Improved day detection corrected to timezones
+* [fix] Improved filter for timeframes corrected to timezones
+* [fix] Improved use of objects for displaying stats
+* [new] Dynamic Ads
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
