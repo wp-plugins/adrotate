@@ -315,7 +315,7 @@ function adrotate_block($block_id, $weight = 0) {
 					
 					$j = 1;
 					for($i=0;$i<$block_count;$i++) {
-						$banner_id = adrotate_pick_weight($selected);
+						$banner_id = array_rand($selected);
 
 						$output .= '<div id="aa-'.$banner_id.'" class="block_inner al-'.$block->id;
 						if($block->columns == 1) {
