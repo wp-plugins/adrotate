@@ -84,34 +84,27 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.6.1 FREE =
-* [change] jQuery library modules now optional to avoid possible conflicts with other plugins
-* [change] Increased max-width and max-height for new blocks in some themes
-* [fix] Incomplete CSS for old blocks
-* [fix] Stray closing ‘style’ tag in header
-* [fix] Missing function adrotate_today() when clicking ads
-* [fix] Error reporting for groups
+= 3.8.6.2 FREE =
+* [change] Improved jQuery loading
+* [change] jQuery libraries default to off
+* [change] Improved CSS generation for new blocks
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.8.1 PRO =
-* [change] jQuery library modules now optional to avoid possible conflicts with other plugins
-* [change] Increased max-width and max-height for new blocks in some themes
-* [fix] Incomplete CSS for old blocks
-* [fix] Stray closing ‘style’ tag in header
+= 3.8.8.2 PRO =
+* [change] Improved jQuery loading
+* [change] jQuery libraries default to off
+* [change] Improved CSS generation for new blocks
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.6.1 =
-* [change] jQuery library modules now optional to avoid possible conflicts with other plugins
-* [change] Increased max-width and max-height for new blocks in some themes
-* [fix] Incomplete CSS for old blocks
-* [fix] Stray closing ‘style’ tag in header
-* [fix] Missing function adrotate_today() when clicking ads
-* [fix] Error reporting for groups
+= 3.8.6.2 =
+* [change] Improved jQuery loading
+* [change] jQuery libraries default to off
+* [change] Improved CSS generation for new blocks
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
