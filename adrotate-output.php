@@ -482,7 +482,7 @@ function adrotate_custom_head() {
 
 	$groups = $wpdb->get_results("SELECT `id`, `modus`, `gridrows`, `gridcolumns`, `adwidth`, `adheight`, `admargin`, `adspeed` FROM `".$wpdb->prefix."adrotate_groups` WHERE `name` != '' AND `modus` > 0 ORDER BY `id` ASC;");
 	if($groups) {
-		$array_js = $array_css array();
+		$array_js = $array_css = array();
 		foreach($groups as $group) {
 			if($group->adwidth == 'auto') {
 				$adwidth = $gridwidth = 'auto';
