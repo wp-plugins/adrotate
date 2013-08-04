@@ -3,8 +3,8 @@ Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
-Tested up to: 3.5.2
-Stable tag: 3.8.6.3
+Tested up to: 3.6
+Stable tag: 3.8.6.4
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -84,13 +84,13 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.6.3 FREE =
+= 3.8.6.4 FREE =
 * WordPress 3.5 now the minimum requirement!
-* [change] Enhanced Javascript generation
-* [change] More efficient CSS generation
-* [change] Now works with the new WP Media Manager
-* [fix] Blocks show bullets for some users
-* [fix] Height of blocks not always calculated for some users
+* [change] No longer uses split() when adding adverts
+* [fix] HTML Markup when adding adverts
+* [fix] Background color for almost expired ads
+* [fix] Widgets having undefined values for some users
+* [fix] Select banner not working button when adding adverts
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
@@ -107,13 +107,13 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 == Upgrade Notice ==
 
-= 3.8.6.3 =
+= 3.8.6.4 =
 * WordPress 3.5 now the minimum requirement!
-* [change] Enhanced Javascript generation
-* [change] More efficient CSS generation
-* [change] Now works with the new WP Media Manager
-* [fix] Blocks show bullets for some users
-* [fix] Height of blocks not always calculated for some users
+* [change] No longer uses split() when adding adverts
+* [fix] HTML Markup when adding adverts
+* [fix] Background color for almost expired ads
+* [fix] Widgets having undefined values for some users
+* [fix] Select banner not working button when adding adverts
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
