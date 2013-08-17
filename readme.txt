@@ -1,10 +1,10 @@
 === AdRotate ===
 Contributors: adegans
 Donate link: http://meandmymac.net/donate/
-Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, referrer, email, menu, statistics, stats
+Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.6
-Stable tag: 3.8.6.4
+Stable tag: 3.8.7
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -65,9 +65,6 @@ Find out how AdRotate works, more options and various ways to implement your ads
 
 == Frequently Asked Questions ==
 
-= Scrollbars in blocks =
-**Answer:** This happens if your ads are overflowing the allotted space. This means that you need to re-do the sizing of your ads. Perhaps remove or lessen the margin on them. Make the sidebar wider (or which ever area). Or use smaller ads all-together.
-
 = Why do I get this error when I want to activate AdRotate? =
 "Parse error: syntax error, unexpected '&amp;', expecting T_VARIABLE or '$' in /path/to/www/example.com/wp-content/plugins/adrotate/adrotate-manage.php on line 136"
  
@@ -76,44 +73,48 @@ Find out how AdRotate works, more options and various ways to implement your ads
 = I'm getting errors about duplicate entries in the stats or the tracker table! =
 **Answer:** This means your database is full and needs to be "upgraded". More on the how and why in [this article](href="http://www.adrotateplugin.com/support/knowledgebase/duplicate-entry-errors/)!
 
-= Why do my ads not rotate when I reload the page? =
-**Answer:** In most cases you have a cache plugin active. WP-Super Cache or something similar. AdRotate uses a static ad which means the ad will also be cached. AdRotate has basic compatibility with some caching plugins. Check out the AdRotate Settings.
-
 There is a [knowledge base](http://www.adrotateplugin.com/support/knowledgebase/).
 If that's not enough you can post on the [forum](http://www.adrotateplugin.com/support/forums/) and ask your question there!
 
 == Changelog ==
 
-= 3.8.6.4 FREE =
+= 3.8.7 FREE =
 * WordPress 3.5 now the minimum requirement!
-* [change] No longer uses split() when adding adverts
-* [fix] HTML Markup when adding adverts
-* [fix] Background color for almost expired ads
-* [fix] Widgets having undefined values for some users
-* [fix] Select banner not working button when adding adverts
+* [change] Re-arranged the ad creation form
+* [change] All new code for groups in dynamic and block mode
+* [change] No longer requires jQuery Tools
+* [fix] Javascript for Dynamic groups now properly calls jQuery
+* [fix] $_GET requests now properly sanitized (Reported by [Ken](http://sadgeeksinsnow.blogspot.com/))
+* [i18n] Serbian language file included from Andrijana Nikolic
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.8.3 PRO =
+= 3.8.9 PRO =
 * WordPress 3.5 now the minimum requirement!
-* [change] Enhanced Javascript generation
-* [change] More efficient CSS generation
-* [change] Now works with the new WP Media Manager
-* [fix] Blocks show bullets for some users
-* [fix] Height of blocks not always calculated for some users
+* [new] Basic scheduling manager for adverts
+* [new] Support for Freegeoip Geo Location data
+* [change] No longer uses split() when adding adverts
+* [change] Re-arranged the ad creation form
+* [change] All new code for groups in dynamic and block mode
+* [change] No longer de-activates license when AdRotate is de-activated
+* [change] No longer requires jQuery Tools
+* [fix] Javascript for Dynamic groups now properly calls jQuery
+* [fix] HTML Markup when adding adverts
+* [fix] $_GET requests now properly sanitized (Reported by [Ken](http://sadgeeksinsnow.blogspot.com/))
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.6.4 =
+= 3.8.7 =
 * WordPress 3.5 now the minimum requirement!
-* [change] No longer uses split() when adding adverts
-* [fix] HTML Markup when adding adverts
-* [fix] Background color for almost expired ads
-* [fix] Widgets having undefined values for some users
-* [fix] Select banner not working button when adding adverts
+* [change] Re-arranged the ad creation form
+* [change] All new code for groups in dynamic and block mode
+* [change] No longer requires jQuery Tools
+* [fix] Javascript for Dynamic groups now properly calls jQuery
+* [fix] $_GET requests now properly sanitized (Reported by [Ken](http://sadgeeksinsnow.blogspot.com/))
+* [i18n] Serbian language file included from Andrijana Nikolic
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
