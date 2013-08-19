@@ -31,23 +31,26 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 **Some Features**
 
-* Super easy management of ads, groups and blocks of ads
-* GeoLocation for adverts
-* Works with Google Ads and most other referrer/ad programs
+* Super easy management of ads and groups of ads
+* Automated Javascript cycles of ads with Dynamic Groups
+* Have your advertisers add/edit/manage their own ads
+* Geo location for adverts
+* Works with Google Ads and most other referrer/ad servers
 * Integrates with [Broadstreet Ads](http://www.broadstreetads.com/)
-* Get email notifications when your ads need you (AdRotate Pro)
+* Get email notifications when your ads need you
 * Perfectly suited for any size of advertisement, including 125x125, 468x60, 729x90, 160x600 and much more
-* Simple to use stats so you can follow which ad is working the best
-* Couple ads to users so that user can follow his personalized stats (AdRotate Pro)
-* Advertisers can easily contact you from their dashboard (AdRotate Pro)
+* Simple to use stats so you can follow which ad is working the best, worst
+* Daily and monthly stats
+* Couple ads to users so that user can follow his personalized stats
+* Advertisers can easily contact you from their dashboard
 * Track how many times a banner is clicked and show it's Cick-Through-Ratio
 * Put random, or selected, banners in pages or posts
 * Preview banners on edit
-* Advanced time schedules and restrictions (AdRotate Pro)
-* CSV Exports of statistics (AdRotate Pro)
+* Advanced time schedules and restrictions
+* CSV Exports of statistics
 * Multiple groups per banner location
 * Unlimited widgets
-* Adblocks (blocks of small banners)
+* Adblocks (blocks of banners)
 * Auto disable ads after X views / clicks / period of time
 * Warns you on the dashboard when ads are about to expire
 * Use shortcodes, widgets or PHP to put ads on your site
@@ -67,13 +70,12 @@ Find out how AdRotate works, more options and various ways to implement your ads
 
 = Why do I get this error when I want to activate AdRotate? =
 "Parse error: syntax error, unexpected '&amp;', expecting T_VARIABLE or '$' in /path/to/www/example.com/wp-content/plugins/adrotate/adrotate-manage.php on line 136"
- 
 **Answer:** Upgrade your server to use PHP5. Contact your webhost for more information.
 
 = I'm getting errors about duplicate entries in the stats or the tracker table! =
 **Answer:** This means your database is full and needs to be "upgraded". More on the how and why in [this article](href="http://www.adrotateplugin.com/support/knowledgebase/duplicate-entry-errors/)!
 
-There is a [knowledge base](http://www.adrotateplugin.com/support/knowledgebase/).
+There is a [knowledge base](http://www.adrotateplugin.com/support/knowledgebase/) with every feature explained.
 If that's not enough you can post on the [forum](http://www.adrotateplugin.com/support/forums/) and ask your question there!
 
 == Changelog ==
