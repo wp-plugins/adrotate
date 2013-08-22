@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.6
-Stable tag: 3.8.7
+Stable tag: 3.8.8
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -80,43 +80,25 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.7 FREE =
+= 3.8.8 FREE =
 * WordPress 3.5 now the minimum requirement!
-* [change] Re-arranged the ad creation form
-* [change] All new code for groups in dynamic and block mode
-* [change] No longer requires jQuery Tools
-* [fix] Javascript for Dynamic groups now properly calls jQuery
-* [fix] $_GET requests now properly sanitized (Reported by [Ken](http://sadgeeksinsnow.blogspot.com/))
-* [i18n] Serbian language file included from Andrijana Nikolic
+* [fix] Invalid integer for “geo” when saving groups in some cases
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.9 PRO =
+= 3.8.10 PRO =
 * WordPress 3.5 now the minimum requirement!
-* [new] Basic scheduling manager for adverts
-* [new] Support for Freegeoip Geo Location data
-* [change] No longer uses split() when adding adverts
-* [change] Re-arranged the ad creation form
-* [change] All new code for groups in dynamic and block mode
-* [change] No longer de-activates license when AdRotate is de-activated
-* [change] No longer requires jQuery Tools
-* [fix] Javascript for Dynamic groups now properly calls jQuery
-* [fix] HTML Markup when adding adverts
-* [fix] $_GET requests now properly sanitized (Reported by [Ken](http://sadgeeksinsnow.blogspot.com/))
+* [change] Geolocation now uses wp_http_get() for its requests
+* [fix] Geolocation wasting requests on Admin Dashboard
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.7 =
+= 3.8.8 =
 * WordPress 3.5 now the minimum requirement!
-* [change] Re-arranged the ad creation form
-* [change] All new code for groups in dynamic and block mode
-* [change] No longer requires jQuery Tools
-* [fix] Javascript for Dynamic groups now properly calls jQuery
-* [fix] $_GET requests now properly sanitized (Reported by [Ken](http://sadgeeksinsnow.blogspot.com/))
-* [i18n] Serbian language file included from Andrijana Nikolic
+* [fix] Invalid integer for “geo” when saving groups in some cases
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
