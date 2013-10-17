@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.6
-Stable tag: 3.8.8
+Stable tag: 3.8.9
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -36,7 +36,6 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 * Have your advertisers add/edit/manage their own ads
 * Geo location for adverts
 * Works with Google Ads and most other referrer/ad servers
-* Integrates with [Broadstreet Ads](http://www.broadstreetads.com/)
 * Get email notifications when your ads need you
 * Perfectly suited for any size of advertisement, including 125x125, 468x60, 729x90, 160x600 and much more
 * Simple to use stats so you can follow which ad is working the best, worst
@@ -55,7 +54,7 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 * Warns you on the dashboard when ads are about to expire
 * Use shortcodes, widgets or PHP to put ads on your site
 
-NOTE: Certain features are exclusive to AdRotate PRO. Learn more about what AdRotate will do for you in the [features list](http://www.adrotateplugin.com/features/).
+NOTE: Certain features are exclusive to AdRotate PRO. Learn more about what AdRotate Pro will do for you in the [features list](http://www.adrotateplugin.com/features/).
 
 == Installation ==
 
@@ -80,27 +79,49 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.8 FREE =
+= 3.8.9 FREE =
 * WordPress 3.5 now the minimum requirement!
-* [fix] Invalid integer for ÒgeoÓ when saving groups in some cases
+* [change] 'Reports/' folder now created if it doesn't exist
+* [change] wp-cron jobs no longer run all at once
+* [change] Removed Broadstreet Ads button
+* [fix] Ad cycle progressing too soon when mouse hovers ads
+* [fix] Advert status count no longer serialized twice
+* [fix] Impression timer can be set to 0
+* [new] Clickable examples and tags to use in AdCode
+* [new] WP Super Cache support
+* [new] Advert status visible in AdRotate settings > Maintenance
 
-NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
+NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.10 PRO =
+= 3.8.12 PRO =
 * WordPress 3.5 now the minimum requirement!
-* [change] Geolocation now uses wp_http_get() for its requests
-* [fix] Geolocation wasting requests on Admin Dashboard
+* [change] Make no requests to FreegeoIP if Geo Location is not used
+* [new] WP Super Cache support
+* [new] Optionally hide license key from users
+* [new] Advert status visible in AdRotate settings > Maintenance
+* [fix] Geo Targeting switch in Groups now works
+* [fix] Geo Targeting status hidden on Group management when appropriate
+* [fix] Advert status count no longer serialized twice
+* [fix] Impression timer can be set to 0
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.8 =
+= 3.8.9 =
 * WordPress 3.5 now the minimum requirement!
-* [fix] Invalid integer for ÒgeoÓ when saving groups in some cases
+* [change] 'Reports/' folder now created if it doesn't exist
+* [change] wp-cron jobs no longer run all at once
+* [change] Removed Broadstreet Ads button
+* [fix] Ad cycle progressing too soon when mouse hovers ads
+* [fix] Advert status count no longer serialized twice
+* [fix] Impression timer can be set to 0
+* [new] Clickable examples and tags to use in AdCode
+* [new] WP Super Cache support
+* [new] Advert status visible in AdRotate settings > Maintenance
 
-NOTE: Certain features are exclusive to AdRotate PRO. If you rely on these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
+NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
 == Screenshots ==
 
