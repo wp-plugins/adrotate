@@ -141,6 +141,9 @@ function adrotate_database_install() {
 			`gridrows` int(3) NOT NULL DEFAULT '2',
 			`gridcolumns` int(3) NOT NULL DEFAULT '2',
 			`admargin` int(2) NOT NULL DEFAULT '1',
+			`admargin_bottom` int(2) NOT NULL DEFAULT '1',
+			`admargin_left` int(2) NOT NULL DEFAULT '1',
+			`admargin_right` int(2) NOT NULL DEFAULT '1',
 			`adwidth` varchar(6) NOT NULL DEFAULT '125',
 			`adheight` varchar(6) NOT NULL DEFAULT '125',
 			`adspeed` int(5) NOT NULL DEFAULT '6000',
@@ -440,9 +443,9 @@ function adrotate_database_upgrade() {
 	}
 
 
-	// Database: 	35
+	// Database: 	36
 	// AdRotate:	3.8.10
-	if($adrotate_db_version['current'] < 35) {
+	if($adrotate_db_version['current'] < 36) {
 		adrotate_add_column($tables['adrotate_groups'], 'admargin_bottom', 'int(3) NOT NULL default \'1\' AFTER `admargin`');
 		adrotate_add_column($tables['adrotate_groups'], 'admargin_left', 'int(3) NOT NULL default \'1\' AFTER `admargin_bottom`');
 		adrotate_add_column($tables['adrotate_groups'], 'admargin_right', 'int(3) NOT NULL default \'1\' AFTER `admargin_left`');
