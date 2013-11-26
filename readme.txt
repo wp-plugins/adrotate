@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
 Tested up to: 3.7.1
-Stable tag: 3.8.10
+Stable tag: 3.8.11
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -79,28 +79,15 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.9 FREE =
+= 3.8.11 FREE =
 * WordPress 3.5 now the minimum requirement!
-* [fix] Dynamic Groups now actually honor margins
-* [fix] Dynamic Groups should no longer show all ads on pageload
-* [change] Better size calculation for Dynamic and Block Groups
-* [change] Reduced MySQL load for some ads
-* [change] Clearer distinction between front-end/back-end when loading code
+* [fix] Block size calculated properly
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.13 PRO =
+= 3.8.15 PRO =
 * WordPress 3.5 now the minimum requirement!
-* [fix] Illegal string offset for weight value for some users
-* [fix] get_plugin_data undefined for some users
-* [fix] Output error for Geo Location
-* [fix] Dynamic Groups now actually honor margins
-* [fix] Dynamic Groups should no longer show all ads on pageload
-* [fix] Faulty query calling non-existing field 'schedules' on advertiser pages
-* [change] Better size calculation for Dynamic and Block Groups
-* [change] Clearer distinction between front-end/back-end when loading code
-* [change] Update notification only shows for admins
-* [new] More fine-grained control over margins in dynamic groups and blocks
+* [fix] Block size calculated properly
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
@@ -109,15 +96,7 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 = 3.8.9 =
 * WordPress 3.5 now the minimum requirement!
-* [change] 'Reports/' folder now created if it doesn't exist
-* [change] wp-cron jobs no longer run all at once
-* [change] Removed Broadstreet Ads button
-* [fix] Ad cycle progressing too soon when mouse hovers ads
-* [fix] Advert status count no longer serialized twice
-* [fix] Impression timer can be set to 0
-* [new] Clickable examples and tags to use in AdCode
-* [new] WP Super Cache support
-* [new] Advert status visible in AdRotate settings > Maintenance
+* [fix] Block size calculated properly
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
