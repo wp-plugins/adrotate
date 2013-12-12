@@ -3,7 +3,7 @@ Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.5, PHP5.2
-Tested up to: 3.7.1
+Tested up to: 3.8
 Stable tag: 3.8.11
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
