@@ -2,9 +2,9 @@
 Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
-Requires at least: 3.5, PHP5.2
+Requires at least: 3.7, PHP5.2
 Tested up to: 3.8
-Stable tag: 3.8.11
+Stable tag: 3.9
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -79,15 +79,31 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.8.11 FREE =
-* WordPress 3.5 now the minimum requirement!
-* [fix] Block size calculated properly
+= 3.9 FREE =
+* WordPress 3.7 now the minimum requirement!
+* [new] Remove padding from Widgets to clear more space for ads
+* [new] Manually delete stats older than 356 days
+* [change] All dashboards redone for WordPress 3.8
+* [change] Updated user-agent filter list
+* [change] Updated user-agent filter criteria
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.8.15 PRO =
-* WordPress 3.5 now the minimum requirement!
-* [fix] Block size calculated properly
+= 3.9 PRO =
+* WordPress 3.7 now the minimum requirement!
+* [new] Disable dashboard notifications about advert statuses
+* [new] Groups now show how many active ads it has
+* [new] Active ads indicator for group manager
+* [new] All new schedule management for ads
+* [new] Schedules can have names and multiple ads
+* [new] Manually delete stats older than 356 days
+* [change] All dashboards redone for WordPress 3.8
+* [change] Moved more prominent countries to the top of the Geo Targeting list
+* [change] Updated user-agent filter list
+* [change] Updated user-agent filter criteria
+* [fix] No longer puts out requests to FreegeoIP when Geo Targeting is disabled
+* [fix] Approving 1 advertiser advert would approve them all
+* [fix] Correct country code for Spain and Turkmenistan
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
@@ -95,8 +111,12 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 == Upgrade Notice ==
 
 = 3.8.9 =
-* WordPress 3.5 now the minimum requirement!
-* [fix] Block size calculated properly
+* WordPress 3.7 now the minimum requirement!
+* [new] Remove padding from Widgets to clear more space for ads
+* [new] Manually delete stats older than 356 days
+* [change] All dashboards redone for WordPress 3.8
+* [change] Updated user-agent filter list
+* [change] Updated user-agent filter criteria
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
