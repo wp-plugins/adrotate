@@ -78,7 +78,6 @@ if(strlen(ADROTATE_BETA) > 0) add_action('admin_notices','adrotate_beta_notifica
 /*--- Internal redirects ------------------------------------*/
 if(isset($_POST['adrotate_ad_submit'])) 				add_action('init', 'adrotate_insert_input');
 if(isset($_POST['adrotate_group_submit'])) 				add_action('init', 'adrotate_insert_group');
-if(isset($_POST['adrotate_block_submit'])) 				add_action('init', 'adrotate_insert_block');
 if(isset($_POST['adrotate_action_submit'])) 			add_action('init', 'adrotate_request_action');
 if(isset($_POST['adrotate_disabled_action_submit']))	add_action('init', 'adrotate_request_action');
 if(isset($_POST['adrotate_error_action_submit']))		add_action('init', 'adrotate_request_action');
