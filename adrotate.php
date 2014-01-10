@@ -64,6 +64,7 @@ if(!is_admin()) {
 /*--- Back End ----------------------------------------------*/
 if(is_admin()) {
 	add_action('admin_init', 'adrotate_colorpicker');
+	add_action('admin_init', 'adrotate_check_upgrade');
 	add_action('admin_menu', 'adrotate_dashboard');
 	add_action("admin_enqueue_scripts", 'adrotate_dashboard_scripts');
 	add_action("admin_print_styles", 'adrotate_dashboard_styles');
