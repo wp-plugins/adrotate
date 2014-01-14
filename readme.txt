@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.7, PHP5.2
 Tested up to: 3.8
-Stable tag: 3.9
+Stable tag: 3.9.1
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -79,31 +79,33 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.9 FREE =
+= 3.9.1 FREE =
 * WordPress 3.7 now the minimum requirement!
-* [new] Remove padding from Widgets to clear more space for ads
-* [new] Manually delete stats older than 356 days
-* [change] All dashboards redone for WordPress 3.8
-* [change] Updated user-agent filter list
-* [change] Updated user-agent filter criteria
+* [fix] "Clean up database" button works again
+* [fix] Missing error for missing group ID's
+* [fix] Text alignment in hover box in graphs
+* [fix] Valid check if group exists
+* [fix] Ad renewal with bulk actions
+* [new] Click tracking with real urls
+* [new] Editable widget description
+* [change] No longer able to edit old blocks.
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.9 PRO =
+= 3.9.2 PRO =
 * WordPress 3.7 now the minimum requirement!
-* [new] Disable dashboard notifications about advert statuses
-* [new] Groups now show how many active ads it has
-* [new] Active ads indicator for group manager
-* [new] All new schedule management for ads
-* [new] Schedules can have names and multiple ads
-* [new] Manually delete stats older than 356 days
-* [change] All dashboards redone for WordPress 3.8
-* [change] Moved more prominent countries to the top of the Geo Targeting list
-* [change] Updated user-agent filter list
-* [change] Updated user-agent filter criteria
-* [fix] No longer puts out requests to FreegeoIP when Geo Targeting is disabled
-* [fix] Approving 1 advertiser advert would approve them all
-* [fix] Correct country code for Spain and Turkmenistan
+* [fix] A few "undefined variable" warnings when saving settings
+* [fix] "Clean up database" button works again
+* [fix] Missing error for missing group ID's
+* [fix] Text alignment in hover box in graphs
+* [fix] Valid check if group exists
+* [new] Click tracking with real urls
+* [new] Editable widget description
+* [new] Basic geodata visible in Global Stats for clicks
+* [new] Easily remove expired schedules
+* [change] No longer able to edit old blocks.
+* [change] Function call for geo data no longer globalized, faster and more reliable
+* [change] Improved error reporting for Geo Location data
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
@@ -112,11 +114,14 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 = 3.8.9 =
 * WordPress 3.7 now the minimum requirement!
-* [new] Remove padding from Widgets to clear more space for ads
-* [new] Manually delete stats older than 356 days
-* [change] All dashboards redone for WordPress 3.8
-* [change] Updated user-agent filter list
-* [change] Updated user-agent filter criteria
+* [fix] "Clean up database" button works again
+* [fix] Missing error for missing group ID's
+* [fix] Text alignment in hover box in graphs
+* [fix] Valid check if group exists
+* [fix] Ad renewal with bulk actions
+* [new] Click tracking with real urls
+* [new] Editable widget description
+* [change] No longer able to edit old blocks.
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
