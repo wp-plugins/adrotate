@@ -79,33 +79,15 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.9.1 FREE =
+= 3.9.2 FREE =
 * WordPress 3.7 now the minimum requirement!
-* [fix] "Clean up database" button works again
-* [fix] Missing error for missing group ID's
-* [fix] Text alignment in hover box in graphs
-* [fix] Valid check if group exists
-* [fix] Ad renewal with bulk actions
-* [new] Click tracking with real urls
-* [new] Editable widget description
-* [change] No longer able to edit old blocks.
+* [fix] Ambiguous filter for clicktracking
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.9.2 PRO =
+= 3.9.3 PRO =
 * WordPress 3.7 now the minimum requirement!
-* [fix] A few "undefined variable" warnings when saving settings
-* [fix] "Clean up database" button works again
-* [fix] Missing error for missing group ID's
-* [fix] Text alignment in hover box in graphs
-* [fix] Valid check if group exists
-* [new] Click tracking with real urls
-* [new] Editable widget description
-* [new] Basic geodata visible in Global Stats for clicks
-* [new] Easily remove expired schedules
-* [change] No longer able to edit old blocks.
-* [change] Function call for geo data no longer globalized, faster and more reliable
-* [change] Improved error reporting for Geo Location data
+* [fix] Ambiguous filter for clicktracking
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
