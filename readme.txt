@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.7, PHP5.2
 Tested up to: 3.8
-Stable tag: 3.9.1
+Stable tag: 3.9.3
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -79,31 +79,27 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.9.2 FREE =
+= 3.9.3 FREE =
 * WordPress 3.7 now the minimum requirement!
-* [fix] Ambiguous filter for clicktracking
+* [fix] Clicktracking event not always firing
+* [new] Clicktracking url for remote pages/mailings
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.9.3 PRO =
+= 3.9.4 PRO =
 * WordPress 3.7 now the minimum requirement!
-* [fix] Ambiguous filter for clicktracking
+* [fix] Clicktracking event not always firing
+* [new] Clicktracking url for remote pages/mailings
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.8.9 =
+= 3.9.3 =
 * WordPress 3.7 now the minimum requirement!
-* [fix] "Clean up database" button works again
-* [fix] Missing error for missing group ID's
-* [fix] Text alignment in hover box in graphs
-* [fix] Valid check if group exists
-* [fix] Ad renewal with bulk actions
-* [new] Click tracking with real urls
-* [new] Editable widget description
-* [change] No longer able to edit old blocks.
+* [fix] Clicktracking event not always firing
+* [new] Clicktracking url for remote pages/mailings
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
