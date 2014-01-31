@@ -3,8 +3,8 @@ Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.7, PHP 5.2, jQuery 1.7
-Tested up to: 3.8
-Stable tag: 3.9.4
+Tested up to: 3.8.1
+Stable tag: 3.9.5
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -79,41 +79,27 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.9.4 FREE =
+= 3.9.5 FREE =
 * WordPress 3.7 now the minimum requirement!
 * Requires jQuery 1.7+!
-* [new] Debug toggle to see if click tracking is triggered
-* [fix] click tracker class not properly applied for complex ads
-* [fix] Text alignment in hover box in graphs
-* [fix] Inconsistent clicktracking for some users
-* [fix] Ads treated as popups and being blocked by browsers
+* [fix] Improved security on clicktracking code
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.9.5 PRO =
+= 3.9.6 PRO =
 * WordPress 3.7 now the minimum requirement!
 * Requires jQuery 1.7+!
-* [new] Automated updates using the WordPress routines
-* [new] Debug toggle to see if click tracking is triggered
-* [fix] click tracker class not properly applied for complex ads
-* [fix] Inconsistent clicktracking for some users
-* [fix] Ads treated as popups and being blocked by browsers
-* [change] Cleaner schedule listing when creating ads
-* [change] Create schedules (yep!) from advert creation page
+* [fix] Improved security on clicktracking code
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 == Upgrade Notice ==
 
-= 3.9.4 =
+= 3.9.5 =
 * WordPress 3.7 now the minimum requirement!
 * Requires jQuery 1.7+!
-* [new] Debug toggle to see if click tracking is triggered
-* [fix] click tracker class not properly applied for complex ads
-* [fix] Text alignment in hover box in graphs
-* [fix] Inconsistent clicktracking for some users
-* [fix] Ads treated as popups and being blocked by browsers
+* [fix] Improved security on clicktracking code
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
