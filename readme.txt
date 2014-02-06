@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.7, PHP 5.2, jQuery 1.7
 Tested up to: 3.8.1
-Stable tag: 3.9.5
+Stable tag: 3.9.6
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -79,10 +79,12 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.9.5 FREE =
+= 3.9.6 FREE =
 * WordPress 3.7 now the minimum requirement!
-* Requires jQuery 1.7+!
-* [fix] Improved security on clicktracking code
+* [change] Improved clicktracker code
+* [fix] Settings page Maintenance section not showing up correctly
+* [fix] Clicktracked links no longer open in a tab
+* [i18n] Swedish translation available
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
@@ -96,10 +98,12 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 == Upgrade Notice ==
 
-= 3.9.5 =
+= 3.9.6 =
 * WordPress 3.7 now the minimum requirement!
-* Requires jQuery 1.7+!
-* [fix] Improved security on clicktracking code
+* [change] Improved clicktracker code
+* [fix] Settings page Maintenance section not showing up correctly
+* [fix] Clicktracked links no longer open in a tab
+* [i18n] Swedish translation available
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
