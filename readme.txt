@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.7
 Tested up to: 3.9
-Stable tag: 3.9.10
+Stable tag: 3.9.11
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -77,6 +77,11 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
+= 3.9.11 FREE =
+* AdRotate 3.7.x no longer supported for upgrades
+* Blocks of ads no longer supported - Use Groups in block mode instead
+* [fix] Incorrect CSS output for some users
+
 = 3.9.10 FREE =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
@@ -90,6 +95,11 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 * [fix] Undefined variable $site in some cases for outputting adverts
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
+
+= 3.9.11 PRO =
+* AdRotate 3.7.x no longer supported for upgrades
+* Blocks of ads no longer supported - Use Groups in block mode instead
+* [fix] Incorrect CSS output for some users
 
 = 3.9.10 PRO =
 * AdRotate 3.7.x no longer supported for upgrades
@@ -111,17 +121,10 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 == Upgrade Notice ==
 
-= 3.9.10 =
+= 3.9.11 FREE =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
-* [change] Better resetting of settings if there are wrong values
-* [change] Blocks have been merged to groups
-* [change] New statuses when evaluating ads
-* [fix] Start/End dates not saving in some situations
-* [fix] Demo adverts created wrongly for new installs
-* [fix] Impression timer can now be set to 0
-* [fix] Activation notice where $current_user is not set 
-* [fix] Undefined variable $site in some cases for outputting adverts
+* [fix] Incorrect CSS output for some users
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
