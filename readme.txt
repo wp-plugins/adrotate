@@ -3,8 +3,8 @@ Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.7
-Tested up to: 3.9
-Stable tag: 3.9.12
+Tested up to: 3.9.1
+Stable tag: 3.9.13
  
 The very best way of putting ads on your website. As many as you want... Make making money easy!
 
@@ -77,6 +77,11 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
+= 3.9.13 FREE =
+* AdRotate 3.7.x no longer supported for upgrades
+* Blocks of ads no longer supported - Use Groups in block mode instead
+* [fix] Responsive group output broken - reverted to previous method
+
 = 3.9.12 FREE =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
@@ -92,6 +97,11 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 * [i18n] New and changed localisation strings
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
+
+= 3.9.13 PRO =
+* AdRotate 3.7.x no longer supported for upgrades
+* Blocks of ads no longer supported - Use Groups in block mode instead
+* [fix] Responsive group output broken - reverted to previous method
 
 = 3.9.12 PRO =
 * AdRotate 3.7.x no longer supported for upgrades
@@ -110,19 +120,10 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 == Upgrade Notice ==
 
-= 3.9.12 FREE =
+= 3.9.13 FREE =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
-* [new] Clicks cooldown/timer now configurable
-* [new] 'Select all' for Geo Location Countries
-* [new] jQuery clicktracking optional, re-added old redirect method
-* [new] Show ads after N paragraphs with post injection
-* [change] Groups (all-modes) more responsive
-* [fix] Undefined variable $output_css for some users
-* [fix] Advertiser geo settings now work
-* [fix] Various variables not defined when editing ads
-* [fix] preg_match_all() expects 3 variables error in advertiser dashboard
-* [i18n] New and changed localisation strings
+* [fix] Responsive group output broken - reverted to previous method
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
