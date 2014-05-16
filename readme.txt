@@ -6,28 +6,28 @@ Requires at least: 3.7
 Tested up to: 3.9.1
 Stable tag: 3.9.13
  
-The very best way of putting ads on your website. As many as you want... Make making money easy!
+Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
 == Description ==
 
-Get the most intuitive ad manager and start making money with your website.
+Get the most extensive ad manager and start making money with your website.
 Add and manage the ads from the dashboard and show a random banner, or multiple, on your site. 
 Easy management from the dashboard allows you to quickly oversee, add and edit banner code or renew/delete and add new ads.
 Preview banners when editing them.
+
 AdRotate supports unlimited groups for banners allowing you to tie certain banners to different areas of the website.
 On top of that with GeoLocation you can tie adverts to certain areas of the world.
-Receive a periodic email when banners are (about to) expire(d) informing you to take action.
 
-AdRotate is also available as a premium plugin. Offering more features and faster support! 
-Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
+AdRotate makes managing your adverts easy with it's easy to use dashboard. AdRotate looks and feels similar to the dashboard you already know, so you're already familiar with AdRotate before you've even started. The well thought out menu structures and features make advert management very easy and straightforward.
+
+AdRotate is also available as a premium plugin for a low price. Offering extra and more extensive features and faster support! 
+Check out the benefits of AdRotate Pro! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 **Important links**
 
 * [Details](http://www.adrotateplugin.com) - Lots of Additional plugin information
 * [Manuals & Support](http://www.adrotateplugin.com/support/) - Setup instructions and support
 * [AdRotate Store](http://www.adrotateplugin.com/shop/) - Buy AdRotate Pro or hire me to install or troubleshoot AdRotate
-
-Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
 **Some Features**
 
@@ -127,9 +127,6 @@ Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrota
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
-
-== Upgrade Notice ==
-
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
