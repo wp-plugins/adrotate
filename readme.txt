@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.7
 Tested up to: 3.9.1
-Stable tag: 3.9.14
+Stable tag: 3.9.15
  
 Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
@@ -57,6 +57,7 @@ Check out the benefits of AdRotate Pro! [Get AdRotate Pro today](http://www.adro
 * Use shortcodes, widgets or PHP to put ads on your site
 
 NOTE: Certain features are exclusive to AdRotate PRO. Learn more about what AdRotate Pro will do for you in the [features list](http://www.adrotateplugin.com/features/).
+NOTE: Unsolicited offers, parnterships, job offers, promotional emails or product offers to "enhance" my business or products through this site or any means are not appreciated and will most likely be ignored.
 
 == Installation ==
 
@@ -77,69 +78,35 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.9.14 FREE =
+= 3.9.15 FREE =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
-* [change] Increased cleanup rate for *_adrotate_tracker table
-* [change] Cleaned up the AdRotate Pro notifications a bit
-* [change] Improved activation routine for new installs and updates
-* [change] Improved status reporting when editing ads with clicktracking
-* [new] Menus now have an icon
-* [fix] Start/end date saved incorrect for new ads
-* [fix] Correct roles shown in AdRotate Settings for new installs
-* [fix] Incorrect CSS when adverts size is auto in dynamic or block mode
-* [fix] Almost expired adverts not always visible when editing groups
-* [fix] Correct bot filter keywords for new installs
-* [fix] No longer "updates" AdRotate when activating a new installation
-* [fix] Clicks timer can now be 0
-* [fix] Clicktracking inaccurate if click timer is less than 12 hours
-* [fix] Ambiguous check for saving post injection setting
-* [fix] Incorrect paragraph detection with post injection in some cases
+* [change] More reliable cleanup for *_adrotate_tracker table
+* [fix] Not all clicks counted reliably for some users
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.9.14 PRO =
+= 3.9.15 PRO =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
-* [change] Removed unreliable 'last 50 clicks' from Global report
-* [change] Increased cleanup rate for *_adrotate_tracker table
-* [change] Redesigned group editing page for a better workflow
-* [change] Improved activation routine for new installs and updates
-* [change] Improved status reporting when editing ads with clicktracking
-* [new] Menus now have an icon
-* [new] Select adverts when creating/editing schedules
-* [fix] Almost expired adverts not always visible when editing groups
-* [fix] Incorrect CSS when adverts size is auto in dynamic or block mode
-* [fix] Correct bot filter keywords for new installs
-* [fix] No longer "updates" AdRotate when activating a new installation
-* [fix] Clicks timer can now be 0
-* [fix] Clicktracking inaccurate if click timer is less than 12 hours
-* [fix] Ambiguous check for saving post injection setting
-* [fix] Incorrect paragraph detection with post injection in some cases
+* [change] More reliable cleanup for *_adrotate_tracker table
+* [fix] Undefined $network var warning when activating your license in some cases
+* [fix] Not all clicks counted reliably for some users
+* [fix] Link showing as button in welcome popup
+* [fix] Better response check for license activations
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
+NOTE: Unsolicited offers, parnterships, job offers, promotional emails or product offers to "enhance" my business or products through this site or any means are not appreciated and will most likely be ignored.
+
 == Upgrade Notice ==
 
-= 3.9.14 FREE =
+= 3.9.15 FREE =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
-* [change] Increased cleanup rate for *_adrotate_tracker table
-* [change] Cleaned up the AdRotate Pro notifications a bit
-* [change] Improved activation routine for new installs and updates
-* [change] Improved status reporting when editing ads with clicktracking
-* [new] Menus now have an icon
-* [fix] Start/end date saved incorrect for new ads
-* [fix] Correct roles shown in AdRotate Settings for new installs
-* [fix] Incorrect CSS when adverts size is auto in dynamic or block mode
-* [fix] Almost expired adverts not always visible when editing groups
-* [fix] Correct bot filter keywords for new installs
-* [fix] No longer "updates" AdRotate when activating a new installation
-* [fix] Clicks timer can now be 0
-* [fix] Clicktracking inaccurate if click timer is less than 12 hours
-* [fix] Ambiguous check for saving post injection setting
-* [fix] Incorrect paragraph detection with post injection in some cases
+* [change] More reliable cleanup for *_adrotate_tracker table
+* [fix] Not all clicks counted reliably for some users
 
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
