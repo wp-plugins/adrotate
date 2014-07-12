@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.8
 Tested up to: 3.9.1
-Stable tag: 3.10
+Stable tag: 3.10.1
  
 Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
@@ -78,50 +78,21 @@ If that's not enough you can post on the [forum](http://www.adrotateplugin.com/s
 
 == Changelog ==
 
-= 3.10 FREE =
+= 3.10.1 FREE =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
-* [new] Support for responsive ads (multiple images)
-* [new] Responsive blocks
-* [new] Unified code for group output
-* [new] 'Select all' for page injection
-* [new] 'Select all' for category injection
-* [new] Group margins now also apply to 'default mode'
-* [new] More paragraph options for Post Injection
-* [new] %title% tag in ads for adverts that require a keyword
-* [tweak] Groups 'default mode' now also uses a div wrap
-* [tweak] Post Injection now also uses group wrapper
-* [tweak] Sortorder for groups now also used in ad management
-* [tweak] Increased efficiency for dynamic advert library
-* [tweak] Optimised group editing page
-* [fix] Notice on missing user agent in rare cases
-* [i18n] New/updated strings, corrected various spelling errors
-
+* [fix] Inconsistent ad selection for post injection
+* [fix] Margin larger than 3px not working in blocks
+* [fix] Better validation for new ads
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](http://www.adrotateplugin.com/features/).
 
-= 3.10 PRO =
+= 3.10.1 PRO =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
-* [new] Support for responsive ads (multiple images)
-* [new] Responsive blocks
-* [new] Unified code for group output
-* [new] 'Select all' for page injection
-* [new] 'Select all' for category injection
-* [new] Group margins now also apply to 'default mode'
-* [new] More paragraph options for Post Injection
-* [new] %title% tag in ads for adverts that require a keyword
-* [new] Media manager to aid in handling responsive advert images
-* [tweak] Moved ticket support to 'AdRotate Info' page
-* [tweak] Global stats renamed to 'Full report'
-* [tweak] 'Full report' accessible through 'Manage Ads' and 'AdRotate Info'
-* [tweak] Groups 'default mode' now also uses a div wrap
-* [tweak] Post Injection now also uses group wrapper
-* [tweak] Sortorder for groups now also used in ad management
-* [tweak] Increased efficiency for dynamic advert library
-* [tweak] Optimised group editing page
-* [fix] Notice on missing user agent in rare cases
-* [fix] PHP error when saving schedules without adverts
-* [i18n] New/updated strings, corrected various spelling errors
+* [fix] Inconsistent ad selection for post injection
+* [fix] Margin larger than 3px not working in blocks
+* [fix] Media uploader now actually works
+* [fix] Better validation for new ads
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
@@ -129,25 +100,12 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.10 =
+= 3.10.1 =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
-* [new] Support for responsive ads (multiple images)
-* [new] Responsive blocks
-* [new] Unified code for group output
-* [new] 'Select all' for page injection
-* [new] 'Select all' for category injection
-* [new] Group margins now also apply to 'default mode'
-* [new] More paragraph options for Post Injection
-* [new] %title% tag in ads for adverts that require a keyword
-* [tweak] Groups 'default mode' now also uses a div wrap
-* [tweak] Post Injection now also uses group wrapper
-* [tweak] Sortorder for groups now also used in ad management
-* [tweak] Increased efficiency for dynamic advert library
-* [tweak] Optimised group editing page
-* [fix] Notice on missing user agent in rare cases
-* [i18n] New/updated strings, corrected various spelling errors
-
+* [fix] Inconsistent ad selection for post injection
+* [fix] Margin larger than 3px not working in blocks
+* [fix] Better validation for new ads
 The full changelog can be found on the [AdRotate website](http://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](http://www.adrotateplugin.com/adrotate-pro/)!
 
