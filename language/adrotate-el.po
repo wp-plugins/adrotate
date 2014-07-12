@@ -1,0 +1,3104 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AdRotate\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-10 21:35+0100\n"
+"PO-Revision-Date: 2014-07-10 21:35+0100\n"
+"Last-Translator: Arnan de Gans <adegans@meandmymac.net>\n"
+"Language-Team: Ioannis Valiantzas & Alex Katsaros from NetGlobe "
+"<info@netglobe.eu>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e;_\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.6.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: adrotate-functions.php:663
+msgid "No files found"
+msgstr "Δεν βρέθηκαν αρχεία"
+
+#: adrotate-functions.php:666
+msgid "Folder not found or not accessible"
+msgstr "Δεν βρέθηκε ή δεν είναι προσπελάσιμος ο φάκελος"
+
+#: adrotate-output.php:636
+msgid "Oh no! Something went wrong!"
+msgstr "Παρουσιάστηκε κάποιο σφάλμα."
+
+#: adrotate-output.php:637
+msgid ""
+"WordPress was unable to verify the authenticity of the url you have clicked. "
+"Verify if the url used is valid or log in via your browser."
+msgstr ""
+"Το WordPress δεν μπόρεσε να επιβεβαιώσει την αυθεντικότητα της διεύθυνσης "
+"που πατήσατε. Επιβεβαιώστε ότι η διεύθυνση είναι έγκυρη ή εισέλθετε μέσω του "
+"browser σας."
+
+#: adrotate-output.php:638
+msgid ""
+"If you have received the url you want to visit via email, you are being "
+"tricked!"
+msgstr ""
+"Αν έχετε λάβει τη διεύθυνση που θέλετε να επισκεφτείτε μέσω email, σας "
+"ξεγέλασαν!"
+
+#: adrotate-output.php:639
+msgid "Contact support if the issue persists:"
+msgstr "Επικοινωνήστε με την υποστήριξη αν το πρόβλημα παραμένει:"
+
+#: adrotate-output.php:657
+msgid ""
+"Error, Ad is not available at this time due to schedule/geolocation "
+"restrictions or does not exist!"
+msgstr ""
+"Σφάλμα, η διαφήμιση δεν είναι διαθέσιμη αυτή τη στιγμή λόγω γεωγραφικών ή "
+"χρονικών περιορισμών ή επειδή απλώς δεν υπάρχει!"
+
+#: adrotate-output.php:659
+msgid ""
+"Error, Ad is not available at this time due to schedule/geolocation "
+"restrictions!"
+msgstr ""
+"Σφάλμα, η διαφήμιση δεν είναι διαθέσιμη αυτή τη στιγμή λόγω γεωγραφικών ή "
+"χρονικών περιορισμών."
+
+#: adrotate-output.php:666 adrotate-output.php:668
+msgid ""
+"Either there are no banners, they are disabled or none qualified for this "
+"location!"
+msgstr ""
+"Ή δεν υπάρχουν διαφημιστικά γραφικά ή είναι απενεργοποιημένα ή κανένα δεν "
+"πληρεί τις προϋποθέσεις της τοποθεσίας!"
+
+#: adrotate-output.php:674
+msgid "Error, no Ad ID set! Check your syntax!"
+msgstr ""
+"Σφάλμα, δεν έχει οριστεί αναγνωριστικό διαφήμισης! Ελέγξτε την σύνταξη!"
+
+#: adrotate-output.php:680
+msgid "Error, no group ID set! Check your syntax!"
+msgstr "Σφάλμα, δεν έχει οριστεί αναγνωριστικό ομάδας! Ελέγξτε την σύνταξη!"
+
+#: adrotate-output.php:685
+msgid "Error, group does not exist! Check your syntax!"
+msgstr "Σφάλμα, η ομάδα δεν υπάρχει! Ελέγξτε την σύνταξη!"
+
+#: adrotate-output.php:691
+msgid ""
+"There was an error locating the database tables for AdRotate. Please "
+"deactivate and re-activate AdRotate from the plugin page!!"
+msgstr ""
+"Παρουσιάστηκε ένα σφάλμα στον εντοπισμό των πινάκων της βάσης του AdRotate. "
+"Παρακαλώ απενεργοποιήστε και επανενεργοποιήστε το AdRotate από τη σελίδα "
+"προσθέτων!!"
+
+#: adrotate-output.php:691
+msgid "If this does not solve the issue please seek support at"
+msgstr "Αν αυτό δεν λύνει το πρόβλημα παρακαλώ ζητήστε υποστήριξη στο"
+
+#: adrotate-output.php:697
+msgid "An unknown error occured."
+msgstr "Παρουσιάστηκε ένα άγνωστο σφάλμα."
+
+#: adrotate-output.php:723
+msgid "active ad(s) expired."
+msgstr "ενεργή(ές) διαφήμιση(εις) έληξε."
+
+#: adrotate-output.php:723
+msgid "Take action now"
+msgstr "Λάβετε μέτρα τώρα"
+
+#: adrotate-output.php:725
+msgid "active ad(s) are about to expire."
+msgstr "ενεργή(ές) διαφήμιση(εις) είναι έτοιμες να λήξουν."
+
+#: adrotate-output.php:725
+msgid "Check it out"
+msgstr "Ελέγξτε το"
+
+#: adrotate-output.php:727
+msgid "active ad(s) with configuration errors."
+msgstr "ενεργή(ές) διαφήμιση(εις) με σφάλματα ρύθμισης."
+
+#: adrotate-output.php:727
+msgid "Solve this"
+msgstr "Λύστε το"
+
+#: adrotate-output.php:729
+msgid "ad(s) expired."
+msgstr "διαφήμιση(εις) έληξε(αν)"
+
+#: adrotate-output.php:729
+msgid "ad(s) are about to expire."
+msgstr "διαφήμιση(εις) θα λήξει(ουν)"
+
+#: adrotate-output.php:729
+msgid "ad(s) with configuration errors."
+msgstr "διαφήμιση(εις) με σφάλματα ρύθμισης."
+
+#: adrotate-output.php:729
+msgid "Fix this as soon as possible"
+msgstr "Διορθώστε το το συντομότερο δυνατόν"
+
+#: adrotate-output.php:781
+msgid "Useful links"
+msgstr "Χρήσιμοι σύνδεσμοι"
+
+#: adrotate-output.php:782
+msgid "Brought to you by"
+msgstr "Σας προσφέρεται από"
+
+#: adrotate-output.php:789
+msgid "Like the plugin?"
+msgstr "Σας αρέσει αυτό το πρόσθετο;"
+
+#: adrotate-output.php:789
+msgid "Rate and review"
+msgstr "Αξιολογήστε και σχολιάστε"
+
+#: adrotate-output.php:790
+#, fuzzy
+msgid "Buy AdRotate Professional here"
+msgstr "Το ιστολόγιο του AdRotate"
+
+#: adrotate-output.php:791
+msgid "Check out the"
+msgstr "Δείτε τα"
+
+#: adrotate-output.php:791
+msgid "manuals"
+msgstr "εγχειρίδια"
+
+#: adrotate-output.php:791
+msgid "and have the most popular features explained."
+msgstr "και θα έχετε τα πιο δημοφιλή χαρακτηριστικά επεξηγημένα."
+
+#: adrotate-output.php:792
+msgid "Grab the latest news and updates on the"
+msgstr "Κατεβάστε τα τελευταία νέα και αναβαθμίσεις στο"
+
+#: adrotate-output.php:792
+msgid "AdRotate Blog"
+msgstr "Το ιστολόγιο του AdRotate"
+
+#: adrotate-output.php:796
+msgid ""
+"Your one stop for Webdevelopment, consultancy and anything WordPress! Find "
+"out more about what I can do for you!"
+msgstr ""
+"Η μοναδική σας στάση για ανάπτυξη, συμβουλές και οτιδήποτε για WordPress! "
+"Μάθετε περισσότερα για αυτά που μπορώ να κάνω για σας!"
+
+#: adrotate-output.php:796
+msgid "Visit the"
+msgstr "Επισκεφθείτε το"
+
+#: adrotate-output.php:796 dashboard/adrotate-info.php:166
+msgid "website"
+msgstr "ιστοσελίδα"
+
+#: adrotate-output.php:827
+msgid "Available in AdRotate Pro"
+msgstr "Διαθέσιμο στο AdRotate Pro"
+
+#: adrotate-output.php:827
+#, fuzzy
+msgid "More information..."
+msgstr "Περισσότερες πληροφορίες"
+
+#: adrotate-output.php:828
+msgid "This feature is available in AdRotate Pro"
+msgstr "Αυτό το χαρακτηριστικό είναι διαθέσιμο στο AdRotate Pro"
+
+#: adrotate-output.php:828
+#, fuzzy
+msgid "Learn more"
+msgstr "Μάθετε περισσότερα σχετικά"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:323
+#: dashboard/publisher/adrotate-ads-edit.php:344
+msgid "January"
+msgstr "Ιανουάριος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:324
+#: dashboard/publisher/adrotate-ads-edit.php:345
+msgid "February"
+msgstr "Φεβρουάριος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:325
+#: dashboard/publisher/adrotate-ads-edit.php:346
+msgid "March"
+msgstr "Μάρτιος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:326
+#: dashboard/publisher/adrotate-ads-edit.php:347
+msgid "April"
+msgstr "Απρίλιος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:327
+#: dashboard/publisher/adrotate-ads-edit.php:348
+msgid "May"
+msgstr "Μάιος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:328
+#: dashboard/publisher/adrotate-ads-edit.php:349
+msgid "June"
+msgstr "Ιούνιος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:329
+#: dashboard/publisher/adrotate-ads-edit.php:350
+msgid "July"
+msgstr "Ιούλιος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:330
+#: dashboard/publisher/adrotate-ads-edit.php:351
+msgid "August"
+msgstr "Αύγουστος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:331
+#: dashboard/publisher/adrotate-ads-edit.php:352
+msgid "September"
+msgstr "Σεπτέμβριος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:332
+#: dashboard/publisher/adrotate-ads-edit.php:353
+msgid "October"
+msgstr "Οκτώβριος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:333
+#: dashboard/publisher/adrotate-ads-edit.php:354
+msgid "November"
+msgstr "Νοέμβριος"
+
+#: adrotate-statistics.php:211 dashboard/publisher/adrotate-ads-edit.php:334
+#: dashboard/publisher/adrotate-ads-edit.php:355
+msgid "December"
+msgstr "Δεκέμβριος"
+
+#: adrotate-statistics.php:217
+msgid "Previous"
+msgstr "Προηγούμενο"
+
+#: adrotate-statistics.php:219
+msgid "This month"
+msgstr "Αυτό το μήνα"
+
+#: adrotate-statistics.php:220
+msgid "Next"
+msgstr "Επόμενο"
+
+#: adrotate-statistics.php:279 dashboard/adrotate-info.php:117
+msgid "No data to show!"
+msgstr "Δεν υπάρχουν δεδομένα."
+
+#: adrotate-widget.php:101
+msgid "Title (optional):"
+msgstr "Τίτλος (προαιρετικό):"
+
+#: adrotate-widget.php:104
+msgid "HTML will be stripped out."
+msgstr "Το HTML θα αφαιρεθεί."
+
+#: adrotate-widget.php:107
+msgid "Description (optional):"
+msgstr "Περιγραφή (προαιρετικό):"
+
+#: adrotate-widget.php:110
+msgid "What is this widget used for? (Not parsed, HTML will be stripped out.)"
+msgstr ""
+"Για ποιο σκοπό χρησιμοποιείται αυτή η μονάδα; (Δεν θα αναλυθεί, το HTML θα "
+"αφαιρεθεί.)"
+
+#: adrotate-widget.php:113
+msgid "Type:"
+msgstr "Τύπος:"
+
+#: adrotate-widget.php:115
+msgid "Single Ad - Use Ad ID"
+msgstr "Μονή Διαφήμιση - Δώστε Κωδ. Διαφ."
+
+#: adrotate-widget.php:116
+msgid "Group of Ads - Use group ID"
+msgstr "Oμάδα Διαφημίσεων - Δώστε Κωδ. Ομάδ."
+
+#: adrotate-widget.php:117
+#, fuzzy
+msgid "Block of Ads (Obsolete)"
+msgstr "Λειτουργία Πεδίου - Εμφάνισε ένα μπλοκ διαφημίσεων"
+
+#: adrotate-widget.php:120
+msgid "Choose what you want to use this widget for"
+msgstr "Επιλέξτε γιατί θέλετε να χρησιμοποιήσετε αυτή τη μονάδα"
+
+#: adrotate-widget.php:123 dashboard/publisher/adrotate-groups-edit.php:46
+msgid "ID:"
+msgstr "Κωδ:"
+
+#: adrotate-widget.php:126
+msgid "Fill in the ID of the type you want to display!"
+msgstr "Συμπληρώστε τον Κωδικό του τύπου που θέλετε να δείξετε!"
+
+#: adrotate.php:96
+msgid "General Info"
+msgstr "Γενικές Πληροφορίες"
+
+#: adrotate.php:97 dashboard/adrotate-info.php:155
+msgid "AdRotate Pro"
+msgstr "AdRotate Pro"
+
+#: adrotate.php:99
+msgid "Manage Ads"
+msgstr "Διαχείριση Διαφημίσεων"
+
+#: adrotate.php:101 dashboard/publisher/adrotate-groups-main.php:6
+msgid "Manage Groups"
+msgstr "Διαχείριση Ομάδων"
+
+#: adrotate.php:102 adrotate.php:417
+#, fuzzy
+msgid "AdRotate Server"
+msgstr "AdRotate Pro"
+
+#: adrotate.php:103 adrotate.php:430
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: adrotate.php:117
+msgid "AdRotate Info"
+msgstr "Πληροφορίες του AdRotate"
+
+#: adrotate.php:138
+#, fuzzy
+msgid "AdRotate Professional"
+msgstr "AdRotate Pro"
+
+#: adrotate.php:180
+msgid "Ad Management"
+msgstr "Διαχείριση Διαφημίσεων"
+
+#: adrotate.php:183
+msgid "Ad created"
+msgstr "Η διαφήμιση δημιουργήθηκε"
+
+#: adrotate.php:185
+msgid "Ad updated"
+msgstr "Η διαφήμιση ανανεώθηκε"
+
+#: adrotate.php:187
+msgid "Ad(s) deleted"
+msgstr "Η(Οι) διαφήμιση(εις) διαγράφηκε(αν)"
+
+#: adrotate.php:189
+msgid "Ad(s) statistics reset"
+msgstr "Οι στατιστικές διαφήμισης επανήλθαν"
+
+#: adrotate.php:191
+msgid "Ad(s) renewed"
+msgstr "Η(Οι) διαφήμιση(εις) ανανεώθηκε(αν)"
+
+#: adrotate.php:193
+msgid "Ad(s) deactivated"
+msgstr "Η(Οι) διαφήμιση(εις) απενεργοποιήθηκε(αν)"
+
+#: adrotate.php:195
+msgid "Ad(s) activated"
+msgstr "Η(Οι) διαφήμιση(εις) ενεργοποιήθηκε(αν)"
+
+#: adrotate.php:197
+msgid ""
+"The ad was saved but has an issue which might prevent it from working "
+"properly. Review the yellow marked ad."
+msgstr ""
+"Η διαφήμιση αποθηκεύτηκε αλλά υπάρχει ένα θέμα που πιθανώς δεν θα επιτρέψει "
+"τη λειτουγία της. Εξετάστε την υπογραμμισμένη με κίτρινο διαφήμιση."
+
+#: adrotate.php:199
+msgid "Action prohibited"
+msgstr "Η ενέργεια απαγορεύεται"
+
+#: adrotate.php:201 adrotate.php:351
+msgid "No data found in selected time period"
+msgstr "Δεν βρέθηκαν δεδομένα για την επιλεγμένη περίοδο"
+
+#: adrotate.php:259 adrotate.php:357
+msgid "Manage"
+msgstr "Διαχείριση"
+
+#: adrotate.php:260 adrotate.php:358
+msgid "Add New"
+msgstr "Προσθήκη Νέας"
+
+#: adrotate.php:340
+msgid "Group Management"
+msgstr "Διαχείριση Ομάδας"
+
+#: adrotate.php:343
+msgid "Group created"
+msgstr "Η Ομάδα δημιουργήθηκε"
+
+#: adrotate.php:345
+msgid "Group updated"
+msgstr "Η Ομάδα ανανεώθηκε"
+
+#: adrotate.php:347
+msgid "Group deleted"
+msgstr "Η Ομάδα διαγράφηκε"
+
+#: adrotate.php:349
+msgid "Group including it's Ads deleted"
+msgstr "Η Ομάδα διαγράφηκε μαζί με τις διαφημίσεις της"
+
+#: adrotate.php:360
+msgid "Report"
+msgstr "Αναφορά"
+
+#: adrotate.php:425
+msgid ""
+"AdRotate server is currently in development and these menus are not "
+"functional yet."
+msgstr ""
+
+#: adrotate.php:429
+#, fuzzy
+msgid "Overview"
+msgstr "Μηνιαία επισκόπηση των κλικ και των εμφανίσεων"
+
+#: adrotate.php:524
+msgid "AdRotate Settings"
+msgstr "Ρυθμίσεις AdRotate"
+
+#: adrotate.php:527
+msgid "Settings saved"
+msgstr "Οι ρυθμίσεις αποθηκεύτηκαν"
+
+#: adrotate.php:529
+msgid "Database optimized"
+msgstr "Η βάση δεδομένων βελτιστοποιήθηκε"
+
+#: adrotate.php:531
+msgid "Database repaired"
+msgstr "Η βάση δεδομένων επιδιορθώθηκε"
+
+#: adrotate.php:533
+msgid "Ads evaluated and statuses have been corrected where required"
+msgstr ""
+"Οι διαφημίσεις αξιολογήθηκαν και οι καταστάσεις επιδιορθώθηκαν όπου "
+"χρειάστηκε"
+
+#: adrotate.php:535
+msgid "Empty database records removed"
+msgstr "Τα κενά πεδία της βάσης δεδομένων απομακρύνθηκαν"
+
+#: adrotate.php:537
+msgid "Database can only be optimized or cleaned once every hour"
+msgstr ""
+"Η βάση δεδομένων μπορεί να βελτιστοποιηθεί ή να καθαριστεί μόνο μία φορά ανά "
+"ώρα"
+
+#: adrotate.php:545
+msgid "Access Rights"
+msgstr "Δικαιώματα Πρόσβασης"
+
+#: adrotate.php:546
+msgid "Who has access to what?"
+msgstr ""
+
+#: adrotate.php:549
+msgid "Manage/Add/Edit adverts"
+msgstr "Διαχείριση/Προσθήκη/Επεξεργασία διαφημίσεων"
+
+#: adrotate.php:553
+msgid "Role to see and add/edit ads."
+msgstr "Ρόλος για την προβολή και την προσθήκη/επεξεργασία διαφημίσεων."
+
+#: adrotate.php:557
+msgid "Delete/Reset adverts"
+msgstr "Διαγραφή/Επαναφορά διαφημίσεων"
+
+#: adrotate.php:561
+msgid "Role to delete ads and reset stats."
+msgstr "Ρόλος για τη διαγραφή διαφημίσεων και την επαναφορά στατιστικών."
+
+#: adrotate.php:565
+msgid "Manage/Add/Edit groups"
+msgstr "Διαχείριση/Προσθήκη/Επεξεργασία ομάδων"
+
+#: adrotate.php:569
+msgid "Role to see and add/edit groups."
+msgstr "Ρόλος για την προβολή και προσθήκη/επεξεργασία ομάδων."
+
+#: adrotate.php:573
+msgid "Delete groups"
+msgstr "Διαγραφή ομάδων"
+
+#: adrotate.php:577
+msgid "Role to delete groups."
+msgstr "Ρόλος για τη διαγραφή ομάδων."
+
+#: adrotate.php:598 adrotate.php:648 adrotate.php:700 adrotate.php:754
+#: adrotate.php:775 adrotate.php:841 adrotate.php:888 adrotate.php:928
+msgid "Update Options"
+msgstr "Επιλογές Ανανέωσης"
+
+#: adrotate.php:601 adrotate.php:691 adrotate.php:767
+msgid "Advertisers"
+msgstr "Διαφημιζόμενοι"
+
+#: adrotate.php:602
+msgid "Enable advertisers so they can review and manage their own ads."
+msgstr ""
+
+#: adrotate.php:605
+msgid "Enable Advertisers"
+msgstr "Ενεργοποίηση Διαφημιζόμενων"
+
+#: adrotate.php:607
+msgid "Allow adverts to be coupled to users (Advertisers)."
+msgstr "Επιτρέψτε σε διαφημίσεις να συνδυαστούν με χρήστες (Διαφημιζόμενους)."
+
+#: adrotate.php:611
+msgid "Edit/update adverts"
+msgstr "Επεξεργασία/ανανέωση διαφημίσεων"
+
+#: adrotate.php:613
+msgid "Allow advertisers to add new or edit their adverts."
+msgstr ""
+"Επιτρέψτε σε διαφημιζόμενους να προσθέσουν ή να επεξεργαστούν διαφημίσεις."
+
+#: adrotate.php:617
+msgid "Advertiser role"
+msgstr "Ρόλος Διαφημιζόμενου"
+
+#: adrotate.php:619
+msgid "Create Role"
+msgstr "Δημιουργία Ρόλου"
+
+#: adrotate.php:620
+msgid ""
+"This role has no capabilities unless you assign them using the above "
+"options. Obviously you should use this with care."
+msgstr ""
+"Αυτός ο ρόλος δεν έχει δυνατότητες αν δεν του αναθέσετε κάποιες "
+"χρησιμοποιώντας της παραπάνω επιλογές. Προφανώς πρέπει να χρησιμοποιήσετε το "
+"χαρακτηριστικό με προσοχή."
+
+#: adrotate.php:621
+msgid ""
+"This type of user is NOT required to use AdRotate or any of it's features. "
+"It merely helps you to seperate advertisers from regular subscribers without "
+"giving them too much access to your dashboard."
+msgstr ""
+"Αυτός ο τύπος χρήστη ΔΕΝ είναι απαραίτητος για να χρησιμοποιήσετε το "
+"AdRotate ή οποιοδήποτε από τα χαρακτηριστικά του. Σας βοηθά μόνο να "
+"ξεχωρίσετε τους διαφημιζόμενους από τους απλούς συνδρομητές, χωρίς να τους "
+"δίνει κάποια ιδιαίτερη πρόσβαση στον πίνακα ελέγχου σας."
+
+#: adrotate.php:634
+msgid "Banner Folder"
+msgstr "Φάκελος Διαφημιστικών Πλαισίων (Μπάνερ)"
+
+#: adrotate.php:635
+#, fuzzy
+msgid "Set a location where your banner images will be stored."
+msgstr ""
+"Ορίστε μια τοποθεσία στην οποία θα αποθηκεύονται τα εικαστικά των μπάνερ σας "
+"(Προεπιλογή: /wp-content/banners/)."
+
+#: adrotate.php:638
+#, fuzzy
+msgid "Location"
+msgstr "Γεωγραφική Τοποθεσία"
+
+#: adrotate.php:640
+#, fuzzy
+msgid "(Default: wp-content/banners/)."
+msgstr ""
+"Ορίστε μια τοποθεσία στην οποία θα αποθηκεύονται τα εικαστικά των μπάνερ σας "
+"(Προεπιλογή: /wp-content/banners/)."
+
+#: adrotate.php:641
+msgid ""
+"To try and trick ad blockers you could set the folder to something crazy "
+"like:"
+msgstr ""
+"Για να ξεγελάσετε το μπλοκάρισμα των διαφημίσεων, ορίστε σαν όνομα φακέλου "
+"κάτι περίεργο όπως:"
+
+#: adrotate.php:642
+msgid ""
+"This folder will not be automatically created if it doesn't exist. AdRotate "
+"will show errors when the folder is missing."
+msgstr ""
+"Αυτός ο φάκελος δεν θα δημιουργηθεί αυτόματα αν δεν υπάρχει. Το AdRotate θα "
+"εμφανίσει λάθη όταν λείπει ο φάκελος."
+
+#: adrotate.php:651
+msgid "Notifications"
+msgstr "Ειδοποιήσεις"
+
+#: adrotate.php:652
+msgid "Set up who gets notifications if ads need your attention."
+msgstr ""
+
+#: adrotate.php:655
+msgid "Delivery method"
+msgstr ""
+
+#: adrotate.php:657
+msgid "Push notifications to your smartphone."
+msgstr ""
+
+#: adrotate.php:658
+#, fuzzy
+msgid "Email message."
+msgstr "Ειδοποιήσεις Email"
+
+#: adrotate.php:659
+msgid ""
+"Push notifications are delivered through Pushover, a notification service "
+"for Android and iOS"
+msgstr ""
+
+#: adrotate.php:659
+msgid ""
+"The Pushover App is a one time purchase for either Android and/or iOS. More "
+"information can be found on the pushover website;"
+msgstr ""
+
+#: adrotate.php:664
+#, fuzzy
+msgid "Push Notifications"
+msgstr "Ειδοποιήσεις"
+
+#: adrotate.php:665
+msgid ""
+"Receive information about what is happening with your AdRotate setup on your "
+"smartphone via Pushover."
+msgstr ""
+
+#: adrotate.php:668 adrotate.php:683
+msgid "Publishers"
+msgstr ""
+
+#: adrotate.php:670
+msgid "Daily digest of any advert status other than normal."
+msgstr ""
+
+#: adrotate.php:671
+msgid "Any advertiser saving an advert in your moderation queue."
+msgstr ""
+
+#: adrotate.php:672
+#, fuzzy
+msgid "A moderator approved an advert from the moderation queue."
+msgstr "Έγκριση/Απόρριψη διαφημίσεων στην ουρά Ελέγχου"
+
+#: adrotate.php:673
+#, fuzzy
+msgid "A moderator rejected an advert from the moderation queue."
+msgstr "Έγκριση/Απόρριψη διαφημίσεων στην ουρά Ελέγχου"
+
+#: adrotate.php:673
+msgid ""
+"If you have a lot of activity with many advertisers adding/changing adverts "
+"you may get a lot of messages!"
+msgstr ""
+
+#: adrotate.php:679
+msgid "Email Notifications"
+msgstr "Ειδοποιήσεις Email"
+
+#: adrotate.php:680
+msgid "Set up who gets notification emails."
+msgstr ""
+
+#: adrotate.php:686
+msgid ""
+"A comma separated list of email addresses. Maximum of 5 addresses. Keep this "
+"list to a minimum!"
+msgstr ""
+"Ένας κατάλογος email διαχωρισμένων με κόματα. Μέγιστο όριο 5 διευθύνσεων. "
+"Διατηρήστε τον στο ελάχιστο!"
+
+#: adrotate.php:687
+#, fuzzy
+msgid ""
+"Messages are sent once every 24 hours when needed. If this field is empty no "
+"email notifications will be send."
+msgstr ""
+"Μηνύματα στέλνονται κάθε 24 ώρες όταν είναι ανάγκη. Αν αυτό το πεδίο είναι "
+"κενό η λειτουργία θα απενεργοποιηθεί."
+
+#: adrotate.php:694
+#, fuzzy
+msgid ""
+"Who gets email from advertisers. Maximum of 2 addresses. Comma seperated. "
+"This field may not be empty!"
+msgstr ""
+"Μέγιστο 2 διευθύνσεων. Διαχωρισμός με κόματα. Αυτό το πεδίο δεν μπορεί να "
+"είναι κενό!"
+
+#: adrotate.php:703
+msgid "Statistics"
+msgstr "Στατιστικά"
+
+#: adrotate.php:706
+#, fuzzy
+msgid "Enable stats"
+msgstr "Στατιστικά"
+
+#: adrotate.php:708
+msgid "Track clicks and impressions."
+msgstr "Παρακολουθήστε τα κλικ (CPC) και τις εμφανίσεις (CPM)"
+
+#: adrotate.php:708
+msgid ""
+"Disabling this also disables click and impression limits on schedules and "
+"disables timeframes."
+msgstr ""
+"Η απενεργοποίηση του χαρακτηριστικού απενεργοποιεί επίσης τα όρια των κλικ "
+"και εμφανίσεων στα προγράμματα και απενεργοποιεί τα χρονοδιαγράμματα."
+
+#: adrotate.php:712
+#, fuzzy
+msgid "Logged in impressions"
+msgstr "Εμφανίσεις"
+
+#: adrotate.php:714
+msgid "Track impressions from logged in users (Recommended)."
+msgstr "Παρακολουθήστε τις εμφανίσεις από συνδεδεμένους χρήστες (Προτείνεται)."
+
+#: adrotate.php:714 adrotate.php:720
+msgid "Has no effect when click and impression tracking is disabled."
+msgstr ""
+"Δεν έχει επιπτώσεις αν είναι απενεργοποιημένη η παρακολούθηση των κλικ και "
+"εμφανίσεων."
+
+#: adrotate.php:718
+msgid "Logged in clicks"
+msgstr ""
+
+#: adrotate.php:720
+msgid "Track clicks from logged in users."
+msgstr "Παρακολουθήστε κλικ από συνδεδεμένους χρήστες."
+
+#: adrotate.php:724
+msgid "Impressions timer"
+msgstr "Χρονομετρητής εμφανίσεων"
+
+#: adrotate.php:726 adrotate.php:733
+msgid "Seconds."
+msgstr "Δευτερόλεπτα."
+
+#: adrotate.php:727
+#, fuzzy
+msgid "Default: 10. Set to 0 to disable this timer."
+msgstr ""
+"Προεπιλογή: 10. Βάλτε το στο 0 για να απενεργοποιήσετε τον χρονομετρητή."
+
+#: adrotate.php:727
+msgid "This number may not be empty, negative or exceed 3600 (1 hour)."
+msgstr ""
+"Αυτός ο αριθμός δεν μπορεί να είναι κενός, αρνητικός ή να ξεπερνά το 3600 (1 "
+"ώρα)."
+
+#: adrotate.php:731
+#, fuzzy
+msgid "Clicks timer"
+msgstr "Χρονομετρητής εμφανίσεων"
+
+#: adrotate.php:734
+#, fuzzy
+msgid "Default: 86400. Set to 0 to disable this timer."
+msgstr ""
+"Προεπιλογή: 10. Βάλτε το στο 0 για να απενεργοποιήσετε τον χρονομετρητή."
+
+#: adrotate.php:734
+#, fuzzy
+msgid "This number may not be empty, negative or exceed 86400 (24 hours)."
+msgstr ""
+"Αυτός ο αριθμός δεν μπορεί να είναι κενός, αρνητικός ή να ξεπερνά το 3600 (1 "
+"ώρα)."
+
+#: adrotate.php:739
+#, fuzzy
+msgid "Bot filter"
+msgstr "Φίλτρο προγράμματος περιήγησης"
+
+#: adrotate.php:742
+msgid "User-Agent Filter"
+msgstr "Φίλτρο προγράμματος περιήγησης"
+
+#: adrotate.php:745
+msgid ""
+"A comma separated list of keywords. Filter out bots/crawlers/user-agents. To "
+"prevent impressions and clicks counted on them."
+msgstr ""
+"Ένας κατάλογος λέξεων κλειδιών διαχωρισμένων με κόματα. Φιλτράρει αυτόματες "
+"μηχανές περιήγησης για να αποτρέπει την καταγραφή εμφανίσεων και κλικ από "
+"αυτές."
+
+#: adrotate.php:746
+msgid ""
+"Keep in mind that this might give false positives. The word 'google' also "
+"matches 'googlebot', but not vice-versa. So be careful!"
+msgstr ""
+"Να θυμάστε ότι αυτό μπορεί να δώσει λανθασμένα αποτελέσματα. Η λέξη 'google' "
+"περιέχεται στην λέξη  'googlebot', αλλά όχι το αντίθετο. Προσοχή!"
+
+#: adrotate.php:746
+msgid "Keep your list up-to-date"
+msgstr "Διατηρήστε τον κατάλογο ενημερωμένο"
+
+#: adrotate.php:747
+msgid ""
+"Use only words with alphanumeric characters, [ - _ ] are allowed too. All "
+"other characters are stripped out."
+msgstr ""
+"Χρησιμοποιήστε λέξεις μόνο με αλφαριθμητικούς χαρακτήρες. Τα [ - _ ] είναι "
+"επίσης επιτρεπτά. Όλοι οι άλλοι χαρακτήρες αφαιρούνται."
+
+#: adrotate.php:748
+msgid ""
+"Additionally to the list specified here, empty User-Agents are blocked as "
+"well."
+msgstr ""
+"Επιπλέον του καταλόγου που παρατίθεται εδώ, ανώνυμα λογισμικά περιήγησης "
+"απορίπτονται επίσης."
+
+#: adrotate.php:748 dashboard/adrotate-info.php:166
+msgid "Learn more about"
+msgstr "Μάθετε περισσότερα σχετικά"
+
+#: adrotate.php:748
+msgid "user-agents"
+msgstr "πρόγραμμα περιήγησης"
+
+#: adrotate.php:757 dashboard/publisher/adrotate-groups-edit.php:179
+msgid "Geo Targeting"
+msgstr "Γεωγραφική Στόχευση"
+
+#: adrotate.php:761
+msgid "Geographic Tracking"
+msgstr "Γεωγραφική Παρακολούθηση"
+
+#: adrotate.php:762
+msgid "Enable Freegeoip for adverts."
+msgstr "Ενεργοποίηση Freegeoip για διαφημιζόμενους."
+
+#: adrotate.php:763
+msgid "Consider making a donation to"
+msgstr "Σκεφτείτε να κάνετε μια δωρεά στο"
+
+#: adrotate.php:763
+msgid "to keep their services free and awesome!"
+msgstr "για να παραμείνουν αυτές οι υπηρεσίες δωρεάν και υψηλής ποιότητας!"
+
+#: adrotate.php:769
+msgid "Allow advertisers to specify where their ads will show."
+msgstr ""
+"Επιτρέψτε στους διαφημιζόμενους να καθορίσουν που θα εμφανίζονται οι "
+"διαφημίσεις τους!"
+
+#: adrotate.php:778
+msgid "Miscellaneous"
+msgstr "Διάφορα"
+
+#: adrotate.php:781
+msgid "Widget alignment"
+msgstr "Ευθυγράμμιση μονάδας"
+
+#: adrotate.php:782
+msgid ""
+"Check this box if your widgets do not align in your themes sidebar. (Does "
+"not always help!)"
+msgstr ""
+"Επιλέξτε αυτό το κουτί αν οι μονάδες σας δεν ευθυγραμμίζονται με την "
+"πλευρική μπάρα του θέματός σας. (Δεν βοηθά πάντα!)"
+
+#: adrotate.php:785
+msgid "Widget padding"
+msgstr "Κενά περιθώρια μονάδων"
+
+#: adrotate.php:786
+msgid ""
+"Enable this to remove the padding (blank space) around ads in widgets. (Does "
+"not always work!)"
+msgstr ""
+"Ενεργοποιήστε την επιλογή για να αφαιρέσετε τα κενά περιθώρια γύρω από "
+"διαφημίσεις σε μονάδες. (Δεν δουλεύει πάντα!)"
+
+#: adrotate.php:789
+msgid "Admin Bar"
+msgstr ""
+
+#: adrotate.php:790
+msgid "Enable the AdRotate Quickmenu in the Admin Bar"
+msgstr ""
+
+#: adrotate.php:793
+#, fuzzy
+msgid "Dashboard Notifications"
+msgstr "Ειδοποιήσεις"
+
+#: adrotate.php:794
+msgid "Disable Dashboard Notifications about advert statuses."
+msgstr ""
+
+#: adrotate.php:797
+#, fuzzy
+msgid "Hide Schedules"
+msgstr "Τρέχοντα Προγράμματα"
+
+#: adrotate.php:798
+msgid ""
+"When editing adverts; Hide schedules that are not in use by that advert."
+msgstr ""
+
+#: adrotate.php:801
+msgid "W3 Total Caching"
+msgstr "W3 Total Caching"
+
+#: adrotate.php:802
+msgid "Check this box if you use W3 Total Caching on your site."
+msgstr ""
+"Επιλέξτε αυτό το κουτί αν χρησιμοποιείτε το W3 Total Caching στην ιστοσελίδα "
+"σας."
+
+#: adrotate.php:805
+msgid "WP Super Cache"
+msgstr "WP Super Cache"
+
+#: adrotate.php:806
+msgid "Check this box if you use WP Super Cache on your site."
+msgstr ""
+"Επιλέξτε αυτό το κουτί αν χρησιμοποιείτε το WP Super Cache στην ιστοσελίδα "
+"σας."
+
+#: adrotate.php:807
+msgid ""
+"It is reported by users that if you have version 1.4 or newer this option "
+"may not work."
+msgstr ""
+
+#: adrotate.php:811
+msgid ""
+"It may take a while for the ad to start rotating. The caching plugin needs "
+"to refresh the cache. This can take up to a week if not done manually."
+msgstr ""
+"Μπορεί να χρειαστεί λίγος χρόνος για να αρχίσει να γυρίζει η διαφήμιση. Το "
+"πρόσθετο caching πρέπει να ανανεώσει την προσωρινή μνήμη. Αυτό μπορεί να "
+"πάρει μέχρι και μια εβδομάδα αν δεν γίνει χειροκίνητα."
+
+#: adrotate.php:811
+msgid ""
+"Caching support only works for [shortcodes] and the AdRotate Widget. If you "
+"use a PHP Snippet you need to wrap your PHP in the exclusion code yourself."
+msgstr ""
+"Η υποστήριξη προσωρινής μνήμης λειτουργεί μόνο για τα [shortcodes] και τις "
+"μονάδες AdRotate. Αν χρησιμοποιείτε κάποιο PHP Snippet πρέπει να περιλάβετε "
+"μόνοι σας τον κώδικά σας στον κώδικα εξαίρεσης. "
+
+#: adrotate.php:811
+msgid "Check the manual of your caching plugin to see how this works."
+msgstr ""
+"Ελέγξτε το εγχειρίδιο χρήσης του πρόσθετου προσωρινής μνήμης σας για να "
+"δείτε πως λειτουργεί."
+
+#: adrotate.php:815
+msgid "Javascript Libraries"
+msgstr ""
+
+#: adrotate.php:818
+#, fuzzy
+msgid "Load jQuery"
+msgstr "Να περιληφθεί η jQuery"
+
+#: adrotate.php:819
+#, fuzzy
+msgid ""
+"jQuery is required for all Javascript features below. Enable this if your "
+"theme does not load jQuery already."
+msgstr ""
+"Η jQuery είναι απαραίτητη για τις Δυναμικές Ομάδες. Ενεργοποιήστε την "
+"επιλογή αν το θέμα σας δεν τη φορτώνει μόνο του."
+
+#: adrotate.php:822
+#, fuzzy
+msgid "Load Dynamic Groups"
+msgstr "Δυναμική"
+
+#: adrotate.php:823
+msgid "Required for Dynamic Groups to rotate ads."
+msgstr ""
+
+#: adrotate.php:826
+#, fuzzy
+msgid "Load jQuery Clicktracking"
+msgstr "κλικ στην επιλογή Παρακολούθηση:"
+
+#: adrotate.php:827
+msgid ""
+"Required for jQuery Clicktracking. When disabled AdRotate falls back on "
+"Redirect Tracking."
+msgstr ""
+
+#: adrotate.php:830
+msgid "Load Ad Blocker Detection"
+msgstr ""
+
+#: adrotate.php:831
+msgid "Try to detect Ad Blockers and show your visitors a nag message."
+msgstr ""
+
+#: adrotate.php:835
+msgid "Load in footer?"
+msgstr ""
+
+#: adrotate.php:836
+msgid ""
+"Enable if you want to load the above libraries in the footer. Your theme "
+"needs to call wp_footer() for this to work."
+msgstr ""
+
+#: adrotate.php:844
+msgid "Maintenance"
+msgstr "Συντήρηση"
+
+#: adrotate.php:845
+#, fuzzy
+msgid ""
+"NOTE: The below functions are intented to be used to OPTIMIZE your database. "
+"They only apply to your ads/groups and stats. Not to other settings or other "
+"parts of WordPress! Always always make a backup! These functions are to be "
+"used when you feel or notice your database is slow, unresponsive and "
+"sluggish."
+msgstr ""
+"ΣΗΜΕΙΩΣΗ: Οι παρακάτων λειτουργίες προορίζονται για την ΒΕΛΤΙΣΤΟΠΟΙΗΣΗ της "
+"βάσης δεδομένων. Βρίσκουν εφαρμογή μόνο σε διαφημίσεις/ομάδες/μπλοκ και "
+"στατιστικές. Όχι σε άλλες ρυθμίσεςι ή άλλα μέρη του WordPress! Πάντα να "
+"κάνετε πρώτα ένα αντίγραφο ασφαλείας! Οι λειτουργίες αυτές πρέπει να "
+"χρησιμοποιούνται όταν νιώθετε ότι η βάση σας είναι αργή και δεν "
+"ανταποκρίνεται καλά."
+
+#: adrotate.php:860 adrotate.php:862
+msgid "Optimize Database"
+msgstr "Βελτιστοποίηση Βάσης Δεδομένων"
+
+#: adrotate.php:862
+msgid "You are about to optimize the AdRotate database."
+msgstr "Πρόκειται να βελτιστοποιήσετε τη βάση δεδομένων του AdRotate."
+
+#: adrotate.php:862
+msgid "Did you make a backup of your database?"
+msgstr "Πήρατε αντίγραφο ασφαλείας της βάσης δεδομένων;"
+
+#: adrotate.php:862
+msgid ""
+"This may take a moment and may cause your website to respond slow "
+"temporarily!"
+msgstr ""
+"Αυτή η ενέργεια μπορεί να διαρκέσει λίγα λεπτά και να κάνει την ιστοσελίδα "
+"σας να είναι προσωρινά αργή!"
+
+#: adrotate.php:862 adrotate.php:870 adrotate.php:878
+#: dashboard/publisher/adrotate-groups-main.php:18
+msgid "OK to continue, CANCEL to stop."
+msgstr "ΟΚ για να συνεχίσετε, ΑΚΥΡΩΣΗ για να σταματήσετε."
+
+#: adrotate.php:863
+msgid "Cleans up overhead data in the AdRotate tables."
+msgstr "Καθαρίζει άχρηστα δεδομένα στους πίνακες του AdRotate."
+
+#: adrotate.php:864
+msgid ""
+"Overhead data is accumulated garbage resulting from many changes you've "
+"made. This can vary from nothing to hundreds of KiB of data."
+msgstr ""
+"Άχρηστα δεδομένα είναι συνήθως συσσωρευμένα σκουπίδια που δημιουργούνται από "
+"τις πολλές αλλαγές που έχετε κάνει στη βάση. Μπορεί να είναι από τίποτε "
+"μέχρι εκατοντάδες kilobytes δεδομένων."
+
+#: adrotate.php:868 adrotate.php:870
+msgid "Clean-up Database"
+msgstr "Εκκαθάριση Βάσης Δεδομένων"
+
+#: adrotate.php:870
+msgid ""
+"You are about to clean up your database. This may delete expired schedules "
+"and older statistics."
+msgstr ""
+"Πρόκειται να καθαρίσετε τη βάση δεδομένων. Αυτή η ενέργεια θα διαγράψει "
+"ληγμένα προγράμαμτα και παλαιότερες στατιστικές."
+
+#: adrotate.php:870
+msgid "Are you sure you want to continue?"
+msgstr "Είστε βέβαιοι ότι θέλετε να συνεχίσετε;"
+
+#: adrotate.php:870 adrotate.php:878
+msgid "This might take a while and may slow down your site during this action!"
+msgstr ""
+
+#: adrotate.php:871
+msgid "Delete stats older than 356 days (Optional)."
+msgstr "Διαγράψτε στατιστικά παλαιότερα των 356 ημερών (Προαιρετικό)."
+
+#: adrotate.php:872
+#, fuzzy
+msgid ""
+"AdRotate creates empty records when you start making ads or groups. In rare "
+"occasions these records are faulty."
+msgstr ""
+"Το AdRotate δημιουργεί κενές εγγραφές όταν αρχίζετε να δημιουργείτε "
+"διαφημίσεις, ομάδες ή μποκ. Σε σπάνιες περιπτώσεις αυτές οι εγγραφές είναι "
+"λανθασμένες."
+
+#: adrotate.php:872
+msgid ""
+"If you made an ad or group that does not save when you make it use this "
+"button to delete those empty records."
+msgstr ""
+"Αν κάνατε μια διαφήμιση ή μια ομάδα που δεν αποθηκεύεται, χρησιμοποιείστε "
+"αυτό το κουμπί για να σβήσετε αυτές τις κενές εγγραφές. "
+
+#: adrotate.php:872
+msgid ""
+"Additionally you can clean up old statistics. This will improve the speed of "
+"your site."
+msgstr ""
+"Επιπλέον μπορείτε να διαγράψετε παλιά στατιστικά. Αυτό θα βελτιώσει την "
+"ταχύτητα της ιστοσελίδας σας."
+
+#: adrotate.php:876
+#, fuzzy
+msgid "Re-evaluate Ads"
+msgstr "Διαφημίσεις"
+
+#: adrotate.php:878
+msgid "Re-evaluate all ads"
+msgstr ""
+
+#: adrotate.php:878
+#, fuzzy
+msgid "You are about to check all ads for errors."
+msgstr "Είστε έτοιμος να διαγράψετε μια ομάδα"
+
+#: adrotate.php:879
+msgid ""
+"This will apply all evaluation rules to all ads to see if any error slipped "
+"in. Normally you should not need this feature."
+msgstr ""
+
+#: adrotate.php:883
+msgid ""
+"DISCLAIMER: If for any reason your data is lost, damaged or otherwise "
+"becomes unusable in any way or by any means in whichever way I will not take "
+"responsibility. You should always have a backup of your database. These "
+"functions do NOT destroy data. If data is lost, damaged or unusable, your "
+"database likely was beyond repair already. Claiming it worked before "
+"clicking these buttons is not a valid point in any case."
+msgstr ""
+"ΑΠΟΠΟΙΗΣΗ: Αν για οποιονδήποτε λόγο τα δεδομένα σας χαθούν, αλλοιωθούν ή δεν "
+"μπορούν να χρησιμοποιηθούν, δεν φέρω καμμία ευθύνη. Θα πρέπει πάντα να έχετε "
+"ένα αντίγραφο ασφαλείας της βάσης δεδομένων σας. Αυτές οι λειτουργίες ΔΕΝ "
+"καταστρέφουν δεδομένα. Αν χαθούν δεδομένα, ή καταστραφούν ή δεν μπορούν να "
+"χρησιμοποιηθούν, πιθανώς η βάση σας να είναι ήδη πέρα από κάθε επισκευή. Ο "
+"ισχυρισμός ότι λειτουργούσε πριν πατήσετε το κουμπί δεν είναι έγκυρος σε "
+"καμμία περίπτωση. "
+
+#: adrotate.php:891
+msgid "Troubleshooting"
+msgstr "Αντιμετώπιση προβλημάτων"
+
+#: adrotate.php:894
+msgid "Current version:"
+msgstr "Τρέχουσα έκδοση:"
+
+#: adrotate.php:895
+msgid "Previous version:"
+msgstr "Προηγούμενη έκδοση:"
+
+#: adrotate.php:898
+msgid "Current database version:"
+msgstr "Τρέχουσα έκδοση βάσης:"
+
+#: adrotate.php:899
+msgid "Previous database version:"
+msgstr "Προηγούμενη έκδοση βάσης:"
+
+#: adrotate.php:902
+msgid "Clean Trackerdata next run:"
+msgstr "Επόμενη εκκαθάριση δεδομένων εντοπιστή:"
+
+#: adrotate.php:903
+msgid "Not scheduled!"
+msgstr "Δεν έχει προγραμματιστεί!"
+
+#: adrotate.php:906
+msgid "Current status of adverts"
+msgstr "Τρέχουσα κατάσταση διαφημίσεων"
+
+#: adrotate.php:907
+msgid "Normal"
+msgstr "Φυσιολογική"
+
+#: adrotate.php:907
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: adrotate.php:907
+msgid "Expired"
+msgstr "Έληξε"
+
+#: adrotate.php:907
+msgid "Expires Soon"
+msgstr "Λήγει Σύντομα"
+
+#: adrotate.php:907
+msgid "Unknown Status"
+msgstr "Άγνωστη Κατάσταση"
+
+#: adrotate.php:910
+msgid ""
+"NOTE: The below options are not meant for normal use and are only there for "
+"developers to review saved settings or how ads are selected. These can be "
+"used as a measure of troubleshooting upon request but for normal use they "
+"SHOULD BE LEFT UNCHECKED!!"
+msgstr ""
+"ΣΗΜΕΙΩΣΗ: Οι παρακάτω επιλογές δεν προορίζονται για κανονική χρήση και είναι "
+"διαθέσιμες μόνο για προγραμματιστές, για να αξιολογούν τις αποθηκευμένες "
+"ρυθμίσεις και πως επιλέγονται οι διαφημίσεις. Αυτές μπορούν να "
+"χρησιμοποιηθούν σαν μέτρο σύγκρισης για αντιμετώπιση προβλημάτων μετά από "
+"σχετικό αίτημα, αλλά υπό κανονικές συνθήκες ΠΡΕΠΕΙ ΝΑ ΜΕΙΝΟΥΝ ΜΗ "
+"ΕΠΙΛΕΓΜΕΝΕΣ!! "
+
+#: adrotate.php:914
+msgid "Developer Debug"
+msgstr "Αποσφαλμάτωση Προγραμματιστή"
+
+#: adrotate.php:916
+msgid "Troubleshoot ads and how (if) they are selected, has front-end output."
+msgstr ""
+"Αντιμετώπιση προβλημάτων διαφημίσεων και πως (αν) έχουν επιλεγεί και τι "
+"έξοδο στην ιστοσελίδα δίνουν."
+
+#: adrotate.php:917
+msgid "Show all settings, dashboard routines and related values."
+msgstr ""
+"Προβολή όλων των ρυθμίσεων, των ρουτινών του πίνακα ελέγχου και των σχετικών "
+"τιμών."
+
+#: adrotate.php:918
+msgid "Show array of all userroles and capabilities."
+msgstr "Προβολή όλων των ρόλων χρηστών και των δυνατοτήτων τους."
+
+#: adrotate.php:919
+msgid "Review saved advertisers! Visible to advertisers."
+msgstr ""
+"Ανασκόπηση των αποθηκευμένων διαφημιζομένων! Ορατό στους διαφημιζόμενους."
+
+#: adrotate.php:920
+#, fuzzy
+msgid "Review global stats, per ad/group stats. Visible only to publishers."
+msgstr ""
+"Ανασκόπηση συνολικών στατιστικών, ανά διαφήμιση/ομάδα/μπλοκ στατιστικών. "
+"Ορατό μόνο σε εκδότες."
+
+#: adrotate.php:921
+#, fuzzy
+msgid ""
+"Disable timers for clicks and impressions and enable a alert window for "
+"clicktracking."
+msgstr "Απενεργοποίηση χρονομετρητών για κλικ και εμφανίσεις."
+
+#: adrotate.php:922
+msgid "Temporarily disable encryption on the redirect url."
+msgstr ""
+"Προσωρινή απενεργοποίηση της κρυπτογράφησης στη διεύθυνση ανακατεύθυνσης."
+
+#: dashboard/adrotate-info.php:59
+msgid "Currently"
+msgstr "Τρέχουσα Κατάσταση"
+
+#: dashboard/adrotate-info.php:65
+msgid "Your setup"
+msgstr "Η εγκατάστασή σας"
+
+#: dashboard/adrotate-info.php:66
+msgid "Adverts that need you"
+msgstr "Διαφημίσεις που χρειάζονται την προσοχή σας"
+
+#: dashboard/adrotate-info.php:72
+msgid "Adverts"
+msgstr "Διαφημίσεις"
+
+#: dashboard/adrotate-info.php:73
+msgid "(Almost) Expired"
+msgstr "(Σχεδόν) Έληξαν"
+
+#: dashboard/adrotate-info.php:76
+msgid "Groups"
+msgstr "Ομάδες"
+
+#: dashboard/adrotate-info.php:77
+msgid "Have errors"
+msgstr "Έχουν σφάλματα"
+
+#: dashboard/adrotate-info.php:81
+msgid "Queued"
+msgstr "Στην ουρά"
+
+#: dashboard/adrotate-info.php:87
+msgid "The last few days"
+msgstr "Οι τελευταίες ημέρες"
+
+#: dashboard/adrotate-info.php:126
+msgid "You are using"
+msgstr "Χρησιμοποιείτε το"
+
+#: dashboard/adrotate-info.php:132
+msgid "AdRotate News and Developer Blog"
+msgstr "Νέα και Προγραμματιστικό Ιστολόγιο του AdRotate"
+
+#: dashboard/adrotate-info.php:152
+msgid "AdRotate Store"
+msgstr "Κατάστημα του AdRotate"
+
+#: dashboard/adrotate-info.php:155
+msgid "Get more features! Get AdRotate Pro."
+msgstr "Για περισσότερες δυνατότητες αποκτήστε το AdRotate Pro."
+
+#: dashboard/adrotate-info.php:155 dashboard/adrotate-info.php:156
+#: dashboard/adrotate-info.php:157
+msgid "More info"
+msgstr "Περισσότερες πληροφορίες"
+
+#: dashboard/adrotate-info.php:156
+#, fuzzy
+msgid "Get help with installations"
+msgstr "Κολήσατε με το AdRotate; Θα βοηθήσω!"
+
+#: dashboard/adrotate-info.php:156
+msgid "Not sure how to set up AdRotate? Get me to do it!"
+msgstr ""
+"Δεν είστε βέβαιοι πως να στήσετε το AdRotate; Πρσλάβετέ με να το κάνω για "
+"σας!"
+
+#: dashboard/adrotate-info.php:157
+msgid "Premium Support"
+msgstr "Προηγμένη Υποστήριξη"
+
+#: dashboard/adrotate-info.php:157
+msgid "Stuck with AdRotate? I'll help!"
+msgstr "Κολήσατε με το AdRotate; Θα βοηθήσω!"
+
+#: dashboard/adrotate-info.php:158
+msgid "Visit store to see all services and products"
+msgstr ""
+"Επισκεφθείτε το κατάστημα για να δείτε όλες τις υπηρεσίες και τα προϊόντα"
+
+#: dashboard/adrotate-info.php:162
+#, fuzzy
+msgid "Get more features with AdRotate Pro"
+msgstr "Για περισσότερες δυνατότητες αποκτήστε το AdRotate Pro."
+
+#: dashboard/adrotate-info.php:165
+msgid ""
+"Benefit from extra features to reinforce your income with advertising "
+"campaigns. Make the most of your website with the powerful tools AdRotate "
+"Pro offers on top of the trusted features included in the free version."
+msgstr ""
+
+#: dashboard/adrotate-info.php:166
+#, fuzzy
+msgid "or go to the"
+msgstr "Go"
+
+#: dashboard/adrotate-info.php:170
+msgid "Support AdRotate"
+msgstr "Υποστηρίξτε το AdRotate"
+
+#: dashboard/adrotate-info.php:173
+msgid "Your gift will ensure the continued development of AdRotate!"
+msgstr "Το δώρο σας θα εξασφαλίσει την συνέχεια της ανάπτυξης του AdRotate!"
+
+#: dashboard/adrotate-info.php:178 dashboard/adrotate-pro.php:77
+msgid "AdRotate is brought to you by"
+msgstr "Το AdRotate έρχεται από την "
+
+#: dashboard/adrotate-info.php:182 dashboard/adrotate-pro.php:81
+msgid ""
+"Your one stop for Webdevelopment, consultancy and anything WordPress! If you "
+"need a custom plugin. Theme customizations or have your site moved/migrated "
+"entirely. Visit my website for details!"
+msgstr ""
+"Η λύση μιας στάσης για ανάπτυξη, συμβουλές και οτιδήποτε για WordPress! Αν "
+"χρειαστείτε ένα ιδιαίτερο πρόσθετο, ή επεξεργασία ενός θέματος ή θέλετε να "
+"μετακινήσετε την ιστοσελίδα σας, επισκεφθείτε τον ιστοτόπο μας για "
+"πληροφορίες!"
+
+#: dashboard/adrotate-info.php:182 dashboard/adrotate-pro.php:81
+msgid "Find out more"
+msgstr "Μάθετε περισσότερα"
+
+#: dashboard/adrotate-info.php:184
+msgid "Follow"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:54
+#, fuzzy
+msgid "Satisfy your advertisers"
+msgstr "Διαφημιζόμενοι"
+
+#: dashboard/adrotate-pro.php:57
+msgid ""
+"Set up advertisers and let them log in to their statistics or even create "
+"their own adverts. Created adverts go into a moderation queue for your staff "
+"to review. Advertisers have access to their own little dashboard where they "
+"can see their adverts performance."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:62
+msgid "Localize your ad campaigns with Geo Targeting"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:65
+msgid ""
+"Go nationwide or global with localized adverts for your various audiences. "
+"Set up adverts for countries and cities and sell impressions per general "
+"area. Geo data Provided by FreegeoIP (MaxMind) and GeoSelect."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:70
+msgid "Get Premium Support almost all year round"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:73
+msgid ""
+"When you activate your AdRotate Pro license you are entitled to ticket "
+"support. AdRotate premium support which takes priority over the Forums and "
+"even email. Get a solution (usually) within a day."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:94
+msgid "Schedule all campaigns with ease"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:97
+msgid ""
+"Schedule your adverts and set up advertising campaigns based on date without "
+"hassle. Seasonal adverts, weekly adverts. You name it. AdRotate schedules it."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:102
+msgid "Stay up-to-date with the notification system"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:105
+msgid ""
+"Stay in touch with Email and/or push notifications. Get notified when "
+"adverts expire, have errors or when advertisers create new adverts. Never "
+"miss an expiration date again."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:110
+#, fuzzy
+msgid "Buy AdRotate Professional"
+msgstr "AdRotate Pro"
+
+#: dashboard/adrotate-pro.php:113
+msgid "Singe License"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:113
+msgid "For one WordPress installation."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:113 dashboard/adrotate-pro.php:114
+#: dashboard/adrotate-pro.php:115 dashboard/adrotate-pro.php:116
+#: dashboard/adrotate-pro.php:117
+#, fuzzy
+msgid "Buy"
+msgstr "Αγοράστε τώρα"
+
+#: dashboard/adrotate-pro.php:114
+msgid "Duo License"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:114
+msgid "For two WordPress installations."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:115
+msgid "Multi License"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:115
+msgid " For up to five WordPress installations."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:116
+msgid "Network License"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:116
+msgid "Set up your own advertising network on a WordPress Multisite."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:117
+#, fuzzy
+msgid "Developer License"
+msgstr "Αποσφαλμάτωση Προγραμματιστή"
+
+#: dashboard/adrotate-pro.php:117
+msgid "Activate AdRotate on unlimited WordPress installations and/or networks."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:118
+msgid "Compare licenses"
+msgstr ""
+
+#: dashboard/adrotate-pro.php:118
+msgid "Not sure which license is for you? Compare them..."
+msgstr ""
+
+#: dashboard/adrotate-pro.php:118
+msgid "All Licenses"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:41
+msgid "The AdCode cannot be empty!"
+msgstr "Ο AdCode δεν μπορεί να είναι κενός!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:44
+msgid "You didn't use %image% in your AdCode but did select an image!"
+msgstr "Δεν χρησιμοποιήσατε το %image% στον AdCode, αλλά επιλέξατε μια εικόνα!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:47
+msgid "You did use %image% in your AdCode but did not select an image!"
+msgstr "Χρησιμοποιήσατε το %image% στον AdCode, αλλά δεν επιλέξατε μια εικόνα!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:50
+msgid ""
+"There is a problem saving the image specification. Please reset your image "
+"and re-save the ad!"
+msgstr ""
+"Υπάρχει ένα πρόβλημα στην αποθήκευση των πληροφοριών εικόνας. Παρακαλώ "
+"επαναφέρετε την εικόνα και σώστε πάλι τη διαφήμιση!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:53
+msgid ""
+"jQuery clicktracking is enabled but no valid link was found in the adcode!"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:56
+msgid ""
+"Redirect clicktracking is enabled but the %link% tag was not found in the "
+"adcode!"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:62
+msgid ""
+"AdRotate cannot find an error but the ad is marked erroneous, try re-saving "
+"the ad!"
+msgstr ""
+"Το AdRotate δεν μπορεί να βρει κάποιο σφάλμα, αλλά η διαφήμιση είναι "
+"σημειωμένη σαν λανθασμένη. Προσπαθήστε να αποθηκεύσετε πάλι τη διαφήμιση!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:65
+msgid "This ad is expired and currently not shown on your website!"
+msgstr ""
+"Αυτή η διαφήμιση έχει λήξει και για την ώρα δεν εμφανίζεται στην ιστοσελίδα "
+"σας!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:68
+msgid "The ad will expire in less than 2 days!"
+msgstr "Η διαφήμιση θα λήξει σε λιγότερο από 2 ημέρες!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:71
+msgid "This ad will expire in less than 7 days!"
+msgstr "Η διαφήμιση θα λήξει σε λιγότερο από 7 ημέρες!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:74
+msgid "This ad has been disabled and does not rotate on your site!"
+msgstr ""
+"Η διαφήμιση έχει απενεργοποιηθεί και δεν προβάλεται στην ιστοσελίδα σας!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:99
+msgid "New Advert"
+msgstr "Νέα Διαφήμιση"
+
+#: dashboard/publisher/adrotate-ads-edit.php:101
+msgid "Edit Advert"
+msgstr "Επεξεργασία Διαφήμισης"
+
+#: dashboard/publisher/adrotate-ads-edit.php:104
+#: dashboard/publisher/adrotate-groups-edit.php:42
+msgid "These are required."
+msgstr "Αυτά είναι απαραίτητα."
+
+#: dashboard/publisher/adrotate-ads-edit.php:108
+msgid "Title:"
+msgstr "Τίτλος:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:114
+msgid "AdCode:"
+msgstr "AdCode:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:119
+#: dashboard/publisher/adrotate-groups-edit.php:315
+msgid "Options:"
+msgstr "Επιλογές:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:122
+msgid "Basic Examples:"
+msgstr "Βασικά παραδείγματα:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:127
+msgid ""
+"Place the cursor where you want to add a tag and click to add it to your "
+"AdCode."
+msgstr ""
+"Τοποθετήστε τον κέρσορα στο σημείο όπου θέλετε να προσθέσετε μια ετικέτα και "
+"κάντε κλικ για να το προσθέσετε στο AdCode σας."
+
+#: dashboard/publisher/adrotate-ads-edit.php:131
+msgid "Activate:"
+msgstr "Ενεργοποίηση:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:135
+msgid "Yes, this ad will be used"
+msgstr "Ναι, θα χρησιμοποιηθεί αυτή η διαφήμιση"
+
+#: dashboard/publisher/adrotate-ads-edit.php:136
+msgid "No, do not show this ad anywhere"
+msgstr "Όχι, να μην εμφανίσεις αυτή τη διαφήμιση πουθενά   "
+
+#: dashboard/publisher/adrotate-ads-edit.php:145
+#: dashboard/publisher/adrotate-ads-edit.php:257
+#: dashboard/publisher/adrotate-ads-edit.php:309
+#: dashboard/publisher/adrotate-ads-edit.php:434
+#: dashboard/publisher/adrotate-ads-edit.php:467
+msgid "Save Advert"
+msgstr "Αποθήκευση Διαφήμισης"
+
+#: dashboard/publisher/adrotate-ads-edit.php:146
+#: dashboard/publisher/adrotate-ads-edit.php:258
+#: dashboard/publisher/adrotate-ads-edit.php:310
+#: dashboard/publisher/adrotate-ads-edit.php:435
+#: dashboard/publisher/adrotate-ads-edit.php:468
+#: dashboard/publisher/adrotate-groups-edit.php:163
+#: dashboard/publisher/adrotate-groups-edit.php:303
+#: dashboard/publisher/adrotate-groups-edit.php:379
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: dashboard/publisher/adrotate-ads-edit.php:150
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+#: dashboard/publisher/adrotate-ads-edit.php:156
+msgid ""
+"Note: While this preview is an accurate one, it might look different then it "
+"does on the website."
+msgstr ""
+"Σημείωση: Όσο αυτή η προεπισκόπηση εκτελείται, μπορεί να φαίνεται "
+"διαφορετική από ό, τι στην ιστοσελίδα."
+
+#: dashboard/publisher/adrotate-ads-edit.php:157
+msgid ""
+"This is because of CSS differences. Your themes CSS file is not active here!"
+msgstr ""
+"Αυτό είναι λόγω των διαφορών CSS. Το αρχείο θεμάτων CSS δεν είναι ενεργό εδώ!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:164
+#: dashboard/publisher/adrotate-ads-edit.php:291
+#: dashboard/publisher/adrotate-groups-edit.php:148
+#: dashboard/publisher/adrotate-groups-edit.php:288
+msgid "Usage"
+msgstr "Χρήση"
+
+#: dashboard/publisher/adrotate-ads-edit.php:165
+#: dashboard/publisher/adrotate-ads-edit.php:292
+#: dashboard/publisher/adrotate-groups-edit.php:149
+#: dashboard/publisher/adrotate-groups-edit.php:289
+msgid ""
+"Copy the shortcode in a post or page. The PHP code goes in a theme file "
+"where you want the advert to show up."
+msgstr ""
+"Αντιγράψτε το shortcode σε ένα ποστ ή σελίδα. Ο κώδικας PHP μπαίνει μέσα σε "
+"ένα αρχείο θέματος όπου θέλετε να εμφανιστεί η διαφήμιση."
+
+#: dashboard/publisher/adrotate-ads-edit.php:169
+#: dashboard/publisher/adrotate-ads-edit.php:296
+#: dashboard/publisher/adrotate-groups-edit.php:153
+#: dashboard/publisher/adrotate-groups-edit.php:293
+msgid "In a post or page:"
+msgstr "Σε ένα ποστ  ή σελίδα:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:171
+#: dashboard/publisher/adrotate-ads-edit.php:298
+#: dashboard/publisher/adrotate-groups-edit.php:155
+#: dashboard/publisher/adrotate-groups-edit.php:295
+msgid "Directly in a theme:"
+msgstr "Άμεσα σε ένα θέμα:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:175
+#: dashboard/publisher/adrotate-ads-edit.php:302
+#, fuzzy
+msgid "Email or Remote page:"
+msgstr "Σελίδα Διαφημιζόμενου"
+
+#: dashboard/publisher/adrotate-ads-edit.php:181
+#: dashboard/publisher/adrotate-groups-edit.php:166
+msgid "Advanced"
+msgstr "Προχωρημένος"
+
+#: dashboard/publisher/adrotate-ads-edit.php:182
+msgid "Everything below is optional."
+msgstr "Τα πάντα από κάτω είναι προαιρετικά."
+
+#: dashboard/publisher/adrotate-ads-edit.php:187
+msgid "Clicktracking:"
+msgstr "κλικ στην επιλογή Παρακολούθηση:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:189
+msgid "Enable click tracking for this advert."
+msgstr "Ενεργοποίηση παρακολούθησης κλικ για αυτή την διαφήμιση."
+
+#: dashboard/publisher/adrotate-ads-edit.php:190
+msgid ""
+"Note: Clicktracking does generally not work for Javascript adverts such as "
+"those provided by Google AdSense."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:192
+#, fuzzy
+msgid "Place the target URL in your adcode and enable clicktracking."
+msgstr ""
+"Το πεδίο διεύθυνσης URL δεν είναι πλέον απαραίτητο. Τοποθετώντας το URL στο "
+"adcode σας και τη δυνατότητα παρακολούθησης κλικ είναι αρκετό."
+
+#: dashboard/publisher/adrotate-ads-edit.php:194
+msgid ""
+"Place the target URL in the field below, use %link% in the adcode instead of "
+"the target URL and enable clicktracking."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:200
+msgid "Target URL:"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:203
+msgid "Enter the target URL for your advert here."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:208
+msgid "Responsive:"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:210
+#, fuzzy
+msgid "Enable responsive support for this advert."
+msgstr "Ενεργοποίηση παρακολούθησης κλικ για αυτή την διαφήμιση."
+
+#: dashboard/publisher/adrotate-ads-edit.php:211
+msgid ""
+"Upload your images to the banner folder and make sure the filename is in the "
+"following format; \"imagename.full.ext\". A full set of sized images is "
+"strongly recommended."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:212
+msgid ""
+"For smaller size images use \".320\", \".480\", \".768\" or \".1024\" in the "
+"filename instead of \".full\" for the various viewports."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:213
+#: dashboard/publisher/adrotate-groups-edit.php:314
+#: dashboard/publisher/adrotate-groups-edit.php:323
+msgid "Example:"
+msgstr "Παράδειγμα:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:213
+msgid ""
+"image.full.jpg, image.320.jpg and image.768.jpg will serve the same advert "
+"for different viewports. Requires jQuery."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:217
+msgid "Banner image:"
+msgstr "Εικόνα Banner:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:220
+msgid "Media:"
+msgstr "Media:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:220
+msgid "Select Banner"
+msgstr "Επιλέξτε Banner"
+
+#: dashboard/publisher/adrotate-ads-edit.php:222
+msgid "- OR -"
+msgstr "- Ή -"
+
+#: dashboard/publisher/adrotate-ads-edit.php:224
+msgid "Banner folder:"
+msgstr "Φάκελος Banner:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:225
+msgid "No image selected"
+msgstr "Καμία επιλεγμένη εικόνα"
+
+#: dashboard/publisher/adrotate-ads-edit.php:229
+msgid "Use %image% in the code. Accepted files are:"
+msgstr "Χρησιμοποιήστε %image% στον κώδικα. Αποδεκτά αρχεία είναι:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:229
+msgid ""
+"Use either the text field or the dropdown. If the textfield has content that "
+"field has priority."
+msgstr ""
+"Χρησιμοποιήστε είτε το πεδίο κειμένου είτε το μενού επιλογών. Αν το πεδίο "
+"κειμένου έχει περιεχόμενο αυτό το πεδίο έχει προτεραιότητα."
+
+#: dashboard/publisher/adrotate-ads-edit.php:233
+msgid "Weight:"
+msgstr "Βάρος:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:236
+msgid "Barely visible"
+msgstr "μόλις ορατό"
+
+#: dashboard/publisher/adrotate-ads-edit.php:237
+msgid "Less than average"
+msgstr "Λιγότερο από το μέσο όρο"
+
+#: dashboard/publisher/adrotate-ads-edit.php:238
+msgid "Normal coverage"
+msgstr "Κανονική κάλυψη"
+
+#: dashboard/publisher/adrotate-ads-edit.php:239
+msgid "More than average"
+msgstr "Περισσότερο από μέσο"
+
+#: dashboard/publisher/adrotate-ads-edit.php:240
+msgid "Best visibility"
+msgstr "Καλύτερη ορατότητα"
+
+#: dashboard/publisher/adrotate-ads-edit.php:248
+#: dashboard/publisher/adrotate-groups-edit.php:193
+msgid "Sortorder:"
+msgstr "Σειρά ταξινόμησης:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:250
+#: dashboard/publisher/adrotate-groups-edit.php:195
+msgid "For administrative purposes set a sortorder."
+msgstr "Για διοικητικούς σκοπούς ορίστε  μια σειρά ταξινόμησης."
+
+#: dashboard/publisher/adrotate-ads-edit.php:250
+msgid "Leave empty or 0 to skip this. Will default to ad id."
+msgstr ""
+"Αφήστε το κενό ή 0 για να το παρακάμψετε αυτό. Θα προκαθορίσει το id της "
+"διαφήμισης."
+
+#: dashboard/publisher/adrotate-ads-edit.php:261
+msgid "Geo Location"
+msgstr "Γεωγραφική Τοποθεσία"
+
+#: dashboard/publisher/adrotate-ads-edit.php:262
+msgid ""
+"This works if you assign the advert to a group and enable that group to use "
+"Geo Targeting."
+msgstr ""
+"Αυτό λειτουργεί, εάν αντιστοιχίσετε την αγγελία σε μια ομάδα και επιτρέψετε "
+"αυτή την ομάδα να χρησιμοποιήσει Γεωγραφική Στόχευση."
+
+#: dashboard/publisher/adrotate-ads-edit.php:267
+msgid "Cities:"
+msgstr "Πόλεις:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:271
+msgid "Countries"
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:284
+#, fuzzy
+msgid "Usage:"
+msgstr "Χρήση"
+
+#: dashboard/publisher/adrotate-ads-edit.php:285
+#, fuzzy
+msgid "Select the countries you want the adverts to show in."
+msgstr ""
+"Κάντε κλικ στις κατηγορίες δημοσιεύσεων όπου θέλετε οι διαφημίσεις να "
+"εμφανίζονται"
+
+#: dashboard/publisher/adrotate-ads-edit.php:285
+msgid "Cities take priority and will be filtered first."
+msgstr ""
+
+#: dashboard/publisher/adrotate-ads-edit.php:313
+msgid "Schedule"
+msgstr "Πρόγραμμα"
+
+#: dashboard/publisher/adrotate-ads-edit.php:314
+msgid "From when to when is the advert visible?"
+msgstr "Από πότε έως πότε είναι ορατή η διαφήμιση;"
+
+#: dashboard/publisher/adrotate-ads-edit.php:318
+msgid "Start date (day/month/year):"
+msgstr "Ημερομηνία  Έναρξης (ημέρα / μήνας / έτος):"
+
+#: dashboard/publisher/adrotate-ads-edit.php:339
+msgid "End date (day/month/year):"
+msgstr "Ημερομηνία λήξης (ημέρα / μήνας / έτος):"
+
+#: dashboard/publisher/adrotate-ads-edit.php:362
+msgid "Start time (hh:mm):"
+msgstr "Ώρα έναρξης (ωω: λλ):"
+
+#: dashboard/publisher/adrotate-ads-edit.php:369
+msgid "End time (hh:mm):"
+msgstr "Ώρα λήξης (ωω: λλ):"
+
+#: dashboard/publisher/adrotate-ads-edit.php:379
+msgid "Maximum Clicks:"
+msgstr "Μέγιστα Κλικ:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:380
+#: dashboard/publisher/adrotate-ads-edit.php:382
+msgid "Leave empty or 0 to skip this."
+msgstr "Αφήστε το κενό ή 0 για να το παρακάμψετε αυτό."
+
+#: dashboard/publisher/adrotate-ads-edit.php:381
+msgid "Maximum Impressions:"
+msgstr "Μέγιστες Εμφανίσεις:"
+
+#: dashboard/publisher/adrotate-ads-edit.php:387
+msgid ""
+"Time uses a 24 hour clock. When you're used to the AM/PM system keep this in "
+"mind: If the start or end time is after lunch, add 12 hours. 2PM is 14:00 "
+"hours. 6AM is 6:00 hours."
+msgstr ""
+"Η ώρα χρησιμοποιεί ένα ρολόι 24 ωρών. Αν έχεις συνηθίσει στο AM / PM σύστημα "
+"θυμήσου αυτό: Εάν η ώρα έναρξης ή λήξης είναι μετά το μεσημεριανό γεύμα, "
+"πρόσθεσε 12 ώρες. 2ΡΜ είναι 14:00 ώρες το μεσημέρι. 6ΑΜ είναι 6:00 ώρες το "
+"πρωί."
+
+#: dashboard/publisher/adrotate-ads-edit.php:387
+msgid ""
+"The maximum clicks and impressions are measured over the set schedule only. "
+"Every schedule can have it's own limit!"
+msgstr ""
+"Τα μέγιστα κλικ και οι εμφανίσεις μετρώνται κατά τη ρύθμιση του "
+"προγράμματος. Κάθε πρόγραμμα μπορεί να έχει το δικό του όριο!"
+
+#: dashboard/publisher/adrotate-ads-edit.php:392
+msgid "Current Schedules"
+msgstr "Τρέχοντα Προγράμματα"
+
+#: dashboard/publisher/adrotate-ads-edit.php:398
+#: dashboard/publisher/adrotate-ads-main-disabled.php:29
+#: dashboard/publisher/adrotate-ads-main-error.php:33
+#: dashboard/publisher/adrotate-ads-main.php:32
+#: dashboard/publisher/adrotate-groups-main.php:26
+#: dashboard/server/adrotate-active.php:12
+#: dashboard/server/adrotate-error.php:12
+msgid "ID"
+msgstr "Κωδ."
+
+#: dashboard/publisher/adrotate-ads-edit.php:399
+msgid "From / Until"
+msgstr "Από / Έως"
+
+#: dashboard/publisher/adrotate-ads-edit.php:401
+msgid "Max Clicks"
+msgstr "Max Clicks"
+
+#: dashboard/publisher/adrotate-ads-edit.php:402
+#: dashboard/publisher/adrotate-ads-edit.php:404
+msgid "This ad used"
+msgstr "Αυτή η διαφήμιση χρησιμοποιείται"
+
+#: dashboard/publisher/adrotate-ads-edit.php:403
+msgid "Max Impressions"
+msgstr "Max Impressions"
+
+#: dashboard/publisher/adrotate-ads-edit.php:440
+msgid "Select Groups"
+msgstr "Επιλέξτε Ομάδες"
+
+#: dashboard/publisher/adrotate-ads-edit.php:441
+msgid "Optionally select the group(s) this ad belongs to."
+msgstr "Προαιρετικά, επιλέξτε την ομάδα (-ες) όπου ανήκει αυτή η διαφήμιση."
+
+#: dashboard/publisher/adrotate-ads-edit.php:446
+msgid "ID - Name"
+msgstr "ID - Όνομα"
+
+#: dashboard/publisher/adrotate-ads-edit.php:447
+msgid "Ads in group"
+msgstr "Διαφημίσεις στην ομάδα"
+
+#: dashboard/publisher/adrotate-ads-edit.php:460
+#: dashboard/publisher/adrotate-groups-main.php:28
+msgid "Ads"
+msgstr "Διαφημίσεις"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:9
+msgid "Disabled Ads"
+msgstr "Απενεργοποιημένες διαφημίσεις"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:14
+#: dashboard/publisher/adrotate-ads-main-error.php:13
+#: dashboard/publisher/adrotate-ads-main.php:14
+#: dashboard/publisher/adrotate-groups-main.php:14
+msgid "Bulk Actions"
+msgstr "Μαζικές Ενέργειες"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:15
+msgid "Activate"
+msgstr "Ενεργοποίηση"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:16
+#: dashboard/publisher/adrotate-ads-main-error.php:15
+#: dashboard/publisher/adrotate-ads-main.php:16
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:17
+#: dashboard/publisher/adrotate-ads-main-error.php:16
+#: dashboard/publisher/adrotate-ads-main.php:17
+msgid "Reset stats"
+msgstr "Επαναφορά Στατιστικών"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:30
+#: dashboard/publisher/adrotate-ads-main-error.php:34
+#: dashboard/publisher/adrotate-ads-main.php:33
+#: dashboard/server/adrotate-error.php:14
+msgid "Show from"
+msgstr "Προβολή από"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:31
+#: dashboard/publisher/adrotate-ads-main-error.php:35
+#: dashboard/publisher/adrotate-ads-main.php:34
+#: dashboard/server/adrotate-error.php:15
+msgid "Show until"
+msgstr "Προβολή μέχρι"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:32
+#: dashboard/publisher/adrotate-ads-main-error.php:36
+#: dashboard/publisher/adrotate-ads-main.php:35
+#: dashboard/server/adrotate-active.php:15
+#: dashboard/server/adrotate-error.php:16
+msgid "Title"
+msgstr "Τίτλος"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:33
+#: dashboard/publisher/adrotate-ads-report.php:28
+#: dashboard/publisher/adrotate-groups-edit.php:335
+#: dashboard/publisher/adrotate-groups-main.php:29
+#: dashboard/publisher/adrotate-groups-report.php:34
+msgid "Impressions"
+msgstr "Εμφανίσεις"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:34
+#: dashboard/publisher/adrotate-ads-main.php:39
+#: dashboard/publisher/adrotate-ads-report.php:29
+#: dashboard/publisher/adrotate-groups-edit.php:336
+#: dashboard/publisher/adrotate-groups-main.php:31
+#: dashboard/publisher/adrotate-groups-report.php:35
+#: dashboard/server/adrotate-active.php:19
+#: dashboard/server/adrotate-error.php:20
+msgid "Clicks"
+msgstr "Clicks"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:35
+#: dashboard/publisher/adrotate-ads-main.php:41
+#: dashboard/publisher/adrotate-ads-report.php:32
+#: dashboard/publisher/adrotate-groups-report.php:38
+#: dashboard/server/adrotate-active.php:21
+#: dashboard/server/adrotate-error.php:22
+msgid "CTR"
+msgstr "CTR"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:70
+#: dashboard/publisher/adrotate-ads-main-error.php:60
+#: dashboard/publisher/adrotate-ads-main.php:80
+#: dashboard/publisher/adrotate-groups-main.php:63
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: dashboard/publisher/adrotate-ads-main-disabled.php:70
+#: dashboard/publisher/adrotate-ads-main-error.php:60
+#: dashboard/publisher/adrotate-ads-main.php:80
+#: dashboard/publisher/adrotate-groups-main.php:63
+msgid "Stats"
+msgstr "Στατιστικά"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:6
+msgid "Ads that need immediate attention"
+msgstr "Διαφημίσεις που χρειάζονται άμεση προσοχή"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:14
+#: dashboard/publisher/adrotate-ads-main.php:15
+msgid "Deactivate"
+msgstr "Απενεργοποίηση"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:17
+#: dashboard/publisher/adrotate-ads-main.php:18
+msgid "-- Renew --"
+msgstr "- Ανανέωση -"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:18
+#: dashboard/publisher/adrotate-ads-main.php:19
+msgid "For 1 year"
+msgstr "Για 1 έτος"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:19
+#: dashboard/publisher/adrotate-ads-main.php:20
+msgid "For 180 days"
+msgstr "Για 180 ημέρες"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:20
+#: dashboard/publisher/adrotate-ads-main.php:21
+msgid "For 30 days"
+msgstr "Για 30 ημέρες"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:21
+#: dashboard/publisher/adrotate-ads-main.php:22
+msgid "For 7 days"
+msgstr "Για 7 ημέρες"
+
+#: dashboard/publisher/adrotate-ads-main-error.php:69
+msgid "Configuration errors."
+msgstr "Σφάλματα Διαμόρφωσης."
+
+#: dashboard/publisher/adrotate-ads-main-error.php:70
+msgid "Expires soon."
+msgstr "Λήγει σύντομα."
+
+#: dashboard/publisher/adrotate-ads-main-error.php:71
+msgid "Has expired."
+msgstr "Έχει λήξει."
+
+#: dashboard/publisher/adrotate-ads-main.php:6
+msgid "Active Ads"
+msgstr "Ενεργές Διαφημίσεις"
+
+#: dashboard/publisher/adrotate-ads-main.php:36
+#: dashboard/publisher/adrotate-groups-edit.php:337
+#: dashboard/server/adrotate-active.php:16
+#: dashboard/server/adrotate-error.php:17
+msgid "Weight"
+msgstr "Βαρύτητα"
+
+#: dashboard/publisher/adrotate-ads-main.php:37
+#: dashboard/server/adrotate-active.php:17
+#: dashboard/server/adrotate-error.php:18
+msgid "Shown"
+msgstr "Εμφανίζονται"
+
+#: dashboard/publisher/adrotate-ads-main.php:38
+#: dashboard/publisher/adrotate-ads-main.php:40
+#: dashboard/publisher/adrotate-groups-main.php:30
+#: dashboard/publisher/adrotate-groups-main.php:32
+#: dashboard/server/adrotate-active.php:18
+#: dashboard/server/adrotate-active.php:20
+#: dashboard/server/adrotate-error.php:19
+#: dashboard/server/adrotate-error.php:21
+msgid "Today"
+msgstr "Σήμερα"
+
+#: dashboard/publisher/adrotate-ads-main.php:98
+msgid "No ads created yet!"
+msgstr "Δεν έχουν δημιουργηθεί διαφημίσεις ακόμα!"
+
+#: dashboard/publisher/adrotate-ads-report.php:23
+msgid "Statistics for advert"
+msgstr "Στατιστικά στοιχεία για τη διαφήμιση"
+
+#: dashboard/publisher/adrotate-ads-report.php:30
+#: dashboard/publisher/adrotate-groups-report.php:36
+msgid "Impressions today"
+msgstr "Εμφανίσεις σήμερα"
+
+#: dashboard/publisher/adrotate-ads-report.php:31
+#: dashboard/publisher/adrotate-groups-report.php:37
+msgid "Clicks today"
+msgstr "Clicks σήμερα"
+
+#: dashboard/publisher/adrotate-ads-report.php:38
+#: dashboard/publisher/adrotate-groups-report.php:44
+msgid "Monthly overview of clicks and impressions"
+msgstr "Μηνιαία επισκόπηση των κλικ και των εμφανίσεων"
+
+#: dashboard/publisher/adrotate-ads-report.php:53
+#: dashboard/publisher/adrotate-groups-report.php:59
+msgid "Export options"
+msgstr "Επιλογές εξαγωγής"
+
+#: dashboard/publisher/adrotate-ads-report.php:65
+#: dashboard/publisher/adrotate-groups-report.php:71
+msgid "Note:"
+msgstr "Σημείωση:"
+
+#: dashboard/publisher/adrotate-ads-report.php:65
+#: dashboard/publisher/adrotate-groups-report.php:71
+msgid ""
+"All statistics are indicative. They do not nessesarily reflect results "
+"counted by other parties."
+msgstr ""
+"Όλα τα στατιστικά στοιχεία είναι ενδεικτικά. Δεν αντιπροσωπεύουν απαραίτητα "
+"αποτελέσματα  που υπολογίζονται από άλλα μέρη."
+
+#: dashboard/publisher/adrotate-groups-edit.php:37
+msgid "New Group"
+msgstr "Νέα Ομάδα"
+
+#: dashboard/publisher/adrotate-groups-edit.php:39
+msgid "Edit Group"
+msgstr "Επεξεργασία Ομάδας"
+
+#: dashboard/publisher/adrotate-groups-edit.php:50
+msgid "Name:"
+msgstr "Όνομα:"
+
+#: dashboard/publisher/adrotate-groups-edit.php:56
+#: dashboard/publisher/adrotate-groups-main.php:63
+msgid "Mode"
+msgstr "Λειτουργία"
+
+#: dashboard/publisher/adrotate-groups-edit.php:59
+msgid "Default - Show one ad at a time"
+msgstr "Προεπιλογή - Εμφάνισε μία διαφήμιση την φορά"
+
+#: dashboard/publisher/adrotate-groups-edit.php:60
+msgid "Dynamic Mode - Show a different ad every few seconds"
+msgstr ""
+"Δυναμική Λειτουργία - Εμφάνισε διαφορετική διαφήμιση κάθε λίγα δευτερόλεπτα"
+
+#: dashboard/publisher/adrotate-groups-edit.php:61
+msgid "Block Mode - Show a block of ads"
+msgstr "Λειτουργία Πεδίου - Εμφάνισε ένα μπλοκ διαφημίσεων"
+
+#: dashboard/publisher/adrotate-groups-edit.php:65
+msgid ""
+"'Dynamic' and 'Block' mode require 'jQuery' and 'jQuery Showoff' to be "
+"loaded. You can enable this in AdRotate Settings."
+msgstr ""
+"Η «Δυναμική» και η \"Πεδίου\"  λειτουργία απαιτούν \"jQuery\" και \"jQuery "
+"showoff\" να φορτωθούν. Μπορείτε να τα ενεργοποιήσετε στις Ρυθμίσεις "
+"AdRotate."
+
+#: dashboard/publisher/adrotate-groups-edit.php:71
+msgid "Dynamic and Block Mode"
+msgstr "Δυναμική και Πεδίου Λειτουργία"
+
+#: dashboard/publisher/adrotate-groups-edit.php:72
+msgid "Only required if your group is in Dynamic or Block mode."
+msgstr "Απαιτείται μόνο εάν η ομάδα σας είναι σε Δυναμική ή λειτουργία Πεδίου."
+
+#: dashboard/publisher/adrotate-groups-edit.php:76
+msgid "Block shape and border"
+msgstr "Σχήμα και περίγραμμα Πεδίου"
+
+#: dashboard/publisher/adrotate-groups-edit.php:91
+msgid "rows"
+msgstr "γραμμές"
+
+#: dashboard/publisher/adrotate-groups-edit.php:104
+msgid "columns"
+msgstr "στήλες"
+
+#: dashboard/publisher/adrotate-groups-edit.php:107
+#: dashboard/publisher/adrotate-groups-edit.php:116
+msgid "Block Mode"
+msgstr "Λειτουργία Πεδίου"
+
+#: dashboard/publisher/adrotate-groups-edit.php:107
+#, fuzzy
+msgid ""
+"Make a grid for your ads. Selecting 3 and 2 makes a grid with 2 columns "
+"showing a maximum of 6 ads. Default: 2x2."
+msgstr ""
+"Κάντε ένα πλέγμα για τις διαφημίσεις σας. Συμπλήρωση 3 και 2 κάνει ένα "
+"πλέγμα με 2 στήλες που εμφανίζουν το πολύ 6 διαφημίσεις. Προεπιλογή: 2x2."
+
+#: dashboard/publisher/adrotate-groups-edit.php:111
+msgid "Advert Width and Height"
+msgstr "Πλάτος και Ύψος Διαφήμισης"
+
+#: dashboard/publisher/adrotate-groups-edit.php:113
+msgid "pixel(s) wide"
+msgstr "πλάτος εικονοστοιχείου (ων) "
+
+#: dashboard/publisher/adrotate-groups-edit.php:113
+msgid "pixel(s) high."
+msgstr "ύψος εικονοστοιχείου(ων)."
+
+#: dashboard/publisher/adrotate-groups-edit.php:116
+msgid ""
+"Define the maximum size of the ads in pixels minus margin. Size can be "
+"'auto' (Not recommended). Default: 125/125."
+msgstr ""
+"Καθορίστε το μέγιστο μέγεθος των διαφημίσεων σε pixels πλυν περιθωρίου. Το "
+"μέγεθος μπορεί να είναι «αυτόματο» (Δεν συνίσταται). Προεπιλογή: 125/125."
+
+#: dashboard/publisher/adrotate-groups-edit.php:120
+msgid "Automated refresh"
+msgstr "Αυτόματη ανανέωση"
+
+#: dashboard/publisher/adrotate-groups-edit.php:139
+msgid "seconds."
+msgstr "δευτερόλεπτα."
+
+#: dashboard/publisher/adrotate-groups-edit.php:142
+msgid "Dynamic Mode"
+msgstr "Δυναμική Λειτουργία"
+
+#: dashboard/publisher/adrotate-groups-edit.php:142
+msgid ""
+"Load a new advert in this interval without reloading the page. Default: 6."
+msgstr ""
+"Τοποθετήστε μια νέα διαφήμιση σε αυτό το διάστημα, χωρίς επαναφόρτωση της "
+"σελίδας. Προεπιλογή: 6."
+
+#: dashboard/publisher/adrotate-groups-edit.php:162
+#: dashboard/publisher/adrotate-groups-edit.php:302
+#: dashboard/publisher/adrotate-groups-edit.php:378
+#, fuzzy
+msgid "Save Group"
+msgstr "Αποθήκευση"
+
+#: dashboard/publisher/adrotate-groups-edit.php:170
+msgid "Advert Margin"
+msgstr "Περιθώριο διαφήμισης"
+
+#: dashboard/publisher/adrotate-groups-edit.php:172
+msgid "pixel(s)"
+msgstr "εικονοστοιχείο(α)"
+
+#: dashboard/publisher/adrotate-groups-edit.php:175
+msgid "A transparant border outside the advert in pixels. Default: 1."
+msgstr ""
+"Ένα διαφαωές περίγραμμα έξω από την διαφήμιση σε pixels. Προεπιλογή: 1."
+
+#: dashboard/publisher/adrotate-groups-edit.php:180
+#, fuzzy
+msgid "Enable GeoTargeting for this group."
+msgstr "Ενεργοποίηση παρακολούθησης κλικ για αυτή την διαφήμιση."
+
+#: dashboard/publisher/adrotate-groups-edit.php:181
+msgid "Do not forget to tell the adverts for which areas they should show."
+msgstr ""
+"Μην ξεχάσετε να πείτε στις διαφημίσεις σε ποιους τομείς θα πρέπει να "
+"φαίνονται."
+
+#: dashboard/publisher/adrotate-groups-edit.php:184
+msgid "Fallback group"
+msgstr "Ομάδα υποβάθμισης"
+
+#: dashboard/publisher/adrotate-groups-edit.php:187
+msgid "No"
+msgstr "Όχι"
+
+#: dashboard/publisher/adrotate-groups-edit.php:190
+msgid ""
+"Select another group to fall back on when all ads are expired, not in the "
+"visitors geographic area or are otherwise unavailable."
+msgstr ""
+"Επιλέξτε μια άλλη ομάδα για να πέσει πίσω όταν έχουν λήξει όλες οι "
+"διαφημίσεις, όχι στη γεωγραφική περιοχή των επισκεπτώς ή να είναι μη "
+"διαθέσιμη."
+
+#: dashboard/publisher/adrotate-groups-edit.php:195
+msgid "Leave empty or 0 to skip this. Will default to group id."
+msgstr ""
+"Αφήστε το κενό ή 0 για να το παρακάμψετε αυτό. Θα προκαθορίσει το id της "
+"ομάδας."
+
+#: dashboard/publisher/adrotate-groups-edit.php:200
+msgid "Post Injection"
+msgstr "Εμβολιασμός Δημοσίευσης"
+
+#: dashboard/publisher/adrotate-groups-edit.php:201
+msgid "Insert ads to the begin or end of a post/page."
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:204
+msgid "Include ads in categories?"
+msgstr "Να συμπεριληφθούν οι διαφημίσεις σε κατηγορίες;"
+
+#: dashboard/publisher/adrotate-groups-edit.php:208
+#: dashboard/publisher/adrotate-groups-edit.php:249
+#, fuzzy
+msgid "Disabled"
+msgstr "Απενεργοποιημένες διαφημίσεις"
+
+#: dashboard/publisher/adrotate-groups-edit.php:209
+#: dashboard/publisher/adrotate-groups-edit.php:250
+#, fuzzy
+msgid "Before content"
+msgstr "Πριν από το περιεχόμενο των δημοσιεύσεων"
+
+#: dashboard/publisher/adrotate-groups-edit.php:210
+#: dashboard/publisher/adrotate-groups-edit.php:251
+#, fuzzy
+msgid "After content"
+msgstr "Πριν και μετά το περιεχόμενο"
+
+#: dashboard/publisher/adrotate-groups-edit.php:211
+#: dashboard/publisher/adrotate-groups-edit.php:252
+#, fuzzy
+msgid "Before and after content"
+msgstr "Πριν και μετά το περιεχόμενο"
+
+#: dashboard/publisher/adrotate-groups-edit.php:212
+#: dashboard/publisher/adrotate-groups-edit.php:253
+#, fuzzy
+msgid "After..."
+msgstr "Μετά τη διαφήμιση"
+
+#: dashboard/publisher/adrotate-groups-edit.php:218
+#: dashboard/publisher/adrotate-groups-edit.php:259
+msgid "the first paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:219
+#: dashboard/publisher/adrotate-groups-edit.php:260
+msgid "the 2nd paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:220
+#: dashboard/publisher/adrotate-groups-edit.php:261
+msgid "the 3rd paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:221
+#: dashboard/publisher/adrotate-groups-edit.php:262
+msgid "the 4th paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:223
+#: dashboard/publisher/adrotate-groups-edit.php:264
+msgid "every 2nd paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:224
+#: dashboard/publisher/adrotate-groups-edit.php:265
+msgid "every 3rd paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:225
+#: dashboard/publisher/adrotate-groups-edit.php:266
+msgid "every 4th paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:226
+#: dashboard/publisher/adrotate-groups-edit.php:267
+msgid "every 5th paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:227
+#: dashboard/publisher/adrotate-groups-edit.php:268
+msgid "every 6th paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:228
+#: dashboard/publisher/adrotate-groups-edit.php:269
+msgid "every 7th paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:229
+#: dashboard/publisher/adrotate-groups-edit.php:270
+msgid "every 8th paragraph"
+msgstr ""
+
+#: dashboard/publisher/adrotate-groups-edit.php:235
+msgid "Which categories?"
+msgstr "Ποιες κατηγορίες;"
+
+#: dashboard/publisher/adrotate-groups-edit.php:240
+msgid "Click the categories posts you want the adverts to show in."
+msgstr ""
+"Κάντε κλικ στις κατηγορίες δημοσιεύσεων όπου θέλετε οι διαφημίσεις να "
+"εμφανίζονται"
+
+#: dashboard/publisher/adrotate-groups-edit.php:245
+msgid "Include ads in pages?"
+msgstr "Περιλογή διαφημίσεων στις σελίδες;"
+
+#: dashboard/publisher/adrotate-groups-edit.php:276
+msgid "Which pages?"
+msgstr "Ποιες σελίδες;"
+
+#: dashboard/publisher/adrotate-groups-edit.php:281
+msgid "Click the pages you want the adverts to show in."
+msgstr "Κάντε κλικ στις σελίδες που θέλετε οι διαφημίσεις να εμφανίζονται"
+
+#: dashboard/publisher/adrotate-groups-edit.php:306
+msgid "Wrapper code"
+msgstr "Κώδικας περιτύλιγμα"
+
+#: dashboard/publisher/adrotate-groups-edit.php:307
+msgid "Wraps around each ad."
+msgstr "Αναδιπλώνεται γύρω από κάθε διαφήμιση."
+
+#: dashboard/publisher/adrotate-groups-edit.php:311
+msgid "Before ad"
+msgstr "Πριν τη διαφήμιση"
+
+#: dashboard/publisher/adrotate-groups-edit.php:316
+msgid "HTML/JavaScript allowed, use with care!"
+msgstr "HTML / JavaScript επιτρέπεται, χρησιμοποιήστε με προσοχή!"
+
+#: dashboard/publisher/adrotate-groups-edit.php:320
+msgid "After ad"
+msgstr "Μετά τη διαφήμιση"
+
+#: dashboard/publisher/adrotate-groups-edit.php:329
+msgid "Select Ads"
+msgstr "Επιλέξτε Διαφημίσεις"
+
+#: dashboard/publisher/adrotate-groups-edit.php:334
+msgid "Choose the ads to use in this group"
+msgstr "Επιλέξτε τις διαφημίσεις για χρήση σε αυτή την ομάδα"
+
+#: dashboard/publisher/adrotate-groups-edit.php:338
+msgid "Visible until"
+msgstr "Ορατό μέχρι"
+
+#: dashboard/publisher/adrotate-groups-edit.php:371
+msgid "No ads created!"
+msgstr "Δεν δημιουργήθηκαν διαφημίσεις!"
+
+#: dashboard/publisher/adrotate-groups-main.php:15
+msgid "Delete Group"
+msgstr "Διαγραφή ομάδας"
+
+#: dashboard/publisher/adrotate-groups-main.php:16
+msgid "Delete Group including ads"
+msgstr "Διαγραφή Ομάδας, συμπεριλαμβανομένων των διαφημίσεων"
+
+#: dashboard/publisher/adrotate-groups-main.php:18
+msgid "You are about to delete a group"
+msgstr "Είστε έτοιμος να διαγράψετε μια ομάδα"
+
+#: dashboard/publisher/adrotate-groups-main.php:18
+msgid "This action can not be undone!"
+msgstr "Αυτή η ενέργεια δεν μπορεί να αναιρεθεί!"
+
+#: dashboard/publisher/adrotate-groups-main.php:18
+msgid "Go"
+msgstr "Go"
+
+#: dashboard/publisher/adrotate-groups-main.php:27
+msgid "Name"
+msgstr "Όνομα"
+
+#: dashboard/publisher/adrotate-groups-main.php:33
+msgid "Code"
+msgstr "Κώδικας"
+
+#: dashboard/publisher/adrotate-groups-main.php:34
+msgid "Fallback"
+msgstr "Προστασία"
+
+#: dashboard/publisher/adrotate-groups-main.php:53
+msgid "Default"
+msgstr "Προεπιλογή"
+
+#: dashboard/publisher/adrotate-groups-main.php:54
+msgid "Dynamic"
+msgstr "Δυναμική"
+
+#: dashboard/publisher/adrotate-groups-main.php:54
+#, fuzzy
+msgid "second rotation"
+msgstr "Γεωγραφική Τοποθεσία"
+
+#: dashboard/publisher/adrotate-groups-main.php:55
+msgid "Block"
+msgstr "Απαγόρευση"
+
+#: dashboard/publisher/adrotate-groups-main.php:55
+#, fuzzy
+msgid "grid"
+msgstr ""
+"Κάντε ένα πλέγμα για τις διαφημίσεις σας. Συμπλήρωση 3 και 2 κάνει ένα "
+"πλέγμα με 2 στήλες που εμφανίζουν το πολύ 6 διαφημίσεις. Προεπιλογή: 2x2."
+
+#: dashboard/publisher/adrotate-groups-main.php:56
+msgid "Geolocation"
+msgstr "Γεωγραφική τοποθεσία"
+
+#: dashboard/publisher/adrotate-groups-main.php:77
+msgid "No groups created!"
+msgstr "Δεν έχουν δημιουργηθεί ομάδες!"
+
+#: dashboard/publisher/adrotate-groups-report.php:29
+msgid "Statistics for group"
+msgstr "Στατιστικά για την ομάδα"
+
+#: dashboard/server/adrotate-active.php:6
+msgid "Adverts received from server"
+msgstr ""
+
+#: dashboard/server/adrotate-active.php:7
+msgid ""
+"These adverts are circulating in the pool of active adverts, served from "
+"AdRotate server."
+msgstr ""
+
+#: dashboard/server/adrotate-active.php:13
+#, fuzzy
+msgid "Added / Updated"
+msgstr "Η διαφήμιση ανανεώθηκε"
+
+#: dashboard/server/adrotate-active.php:14
+#, fuzzy
+msgid "Start / End"
+msgstr ""
+"Η ώρα χρησιμοποιεί ένα ρολόι 24 ωρών. Αν έχεις συνηθίσει στο AM / PM σύστημα "
+"θυμήσου αυτό: Εάν η ώρα έναρξης ή λήξης είναι μετά το μεσημεριανό γεύμα, "
+"πρόσθεσε 12 ώρες. 2ΡΜ είναι 14:00 ώρες το μεσημέρι. 6ΑΜ είναι 6:00 ώρες το "
+"πρωί."
+
+#: dashboard/server/adrotate-active.php:68
+#: dashboard/server/adrotate-error.php:70
+#, fuzzy
+msgid "No ads received yet!"
+msgstr "Δεν έχουν δημιουργηθεί διαφημίσεις ακόμα!"
+
+#: dashboard/server/adrotate-error.php:6
+msgid "Erroneous ads from server"
+msgstr ""
+
+#: dashboard/server/adrotate-error.php:7
+msgid "Adverts served from AdRotate server but having some issues."
+msgstr ""
+
+#: dashboard/server/adrotate-error.php:13
+#, fuzzy
+msgid "Updated"
+msgstr "Η διαφήμιση ανανεώθηκε"
+
+#: dashboard/server/adrotate-settings.php:11
+#, fuzzy
+msgid "AdRotate Server Settings"
+msgstr "Ρυθμίσεις AdRotate"
+
+#: dashboard/server/adrotate-settings.php:17
+msgid ""
+"Link this website to an AdRotate server so your adverts and stats are "
+"synchronised regularly."
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:20
+#, fuzzy
+msgid "Status"
+msgstr "Άγνωστη Κατάσταση"
+
+#: dashboard/server/adrotate-settings.php:23
+msgid "Linked - Adverts can be synced."
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:23
+#, fuzzy
+msgid "Not linked - No adverts will be synced."
+msgstr "Διαφημίσεις"
+
+#: dashboard/server/adrotate-settings.php:36
+msgid "Server Key"
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:37
+msgid ""
+"You can get your server key from your AdRotate Server installation or the "
+"AdRollr website."
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:37
+msgid ""
+"You should not share your key with anyone you do not trust. Treat this key "
+"as a password!"
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:40
+msgid "Make this site a puppet"
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:42
+msgid "Have AdRotate use AdRotate Server adverts exclusively."
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:42
+msgid ""
+"Enabling this function will DISABLE ALL LOCAL MANAGEMENT and will make this "
+"installation of AdRotate a puppet for your AdRotate Server."
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:46
+msgid "Hide Server Details"
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:48
+msgid ""
+"If you have installed AdRotate Pro for a client or in a Multisite network "
+"and want to hide the server details from your users or client."
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:56
+msgid "Link to server"
+msgstr ""
+
+#: dashboard/server/adrotate-settings.php:58
+#, fuzzy
+msgid "Unlink from server"
+msgstr "Από / Έως"
+
+#~ msgid "AJdG Solutions"
+#~ msgstr "AJdG Solutions"
+
+#~ msgid "Where are your banner ads?"
+#~ msgstr "Που βρίσκονται τα μπάνερ σας;"
+
+#~ msgid "Test"
+#~ msgstr "Δοκιμή"
+
+#, fuzzy
+#~ msgid ""
+#~ "This sends a test notification. Before you test, save the options first!"
+#~ msgstr ""
+#~ "Η επιλογή στέλνει μια δοκιμαστική ειδοποίηση. Πριν δοκιμάσετε, για "
+#~ "παράδειγμα, με μια νέα διεύθυνση email. Αποθηκεύστε πρώτα τις επιλογές!"
+
+#, fuzzy
+#~ msgid "User Key"
+#~ msgstr "πρόγραμμα περιήγησης"
+
+#, fuzzy
+#~ msgid ""
+#~ "The jQuery.jshowoff.adrotate library is required for Dynamic Groups. This "
+#~ "library depends on jQuery."
+#~ msgstr ""
+#~ "Η βιβλιοθήκη jQuery ShowOff (0.1.2+) είναι απαραίτητη για τις Δυναμικές "
+#~ "Ομάδες. Απενεργοποιήστε τη αν άλλα πρόσθετα ή θέματα την έχουν φορτώσει "
+#~ "ήδη."
+
+#, fuzzy
+#~ msgid "This feature is available in AdRotate Pro."
+#~ msgstr "Αυτό το χαρακτηριστικό είναι διαθέσιμο στο AdRotate Pro"
+
+#~ msgid "Find my website at"
+#~ msgstr "Βρείτε την ιστοσελίδα μου στο"
+
+#~ msgid "Manage Blocks"
+#~ msgstr "Διαχείριση Μπλοκ"
+
+#~ msgid "Delete Block(s)"
+#~ msgstr "Διαγραφή Πεδίου(α)"
+
+#~ msgid "You are about to delete a block"
+#~ msgstr "Είστε έτοιμοι να διαγράψετε ένα πεδίο"
+
+#~ msgid "View"
+#~ msgstr "Οπτική"
+
+#~ msgid "No blocks created yet!"
+#~ msgstr "Κανένα πεδίο δεν έχει δημιουργηθεί ακόμα!"
+
+#~ msgid "Your support makes a difference"
+#~ msgstr "Η υποστήριξη κάνει τη διαφορά"
+
+#~ msgid ""
+#~ "Your awesome gift will ensure the continued development of AdRotate! "
+#~ "Thanks for your consideration!"
+#~ msgstr ""
+#~ "Το σπουδαίο δώρο σας θα εξασφαλίσει την συνεχιζόμενη ανάπτυξη του "
+#~ "AdRotate! Ευχαριστούμε για την προσοχή σας!"
+
+#~ msgid "Go Pro today"
+#~ msgstr "Εγκαταστήστε το Pro σήμερα"
+
+#~ msgid "Moderate"
+#~ msgstr "Ελέγξτε"
+
+#~ msgid "Moderate Adverts"
+#~ msgstr "Ελέγξτε τις Διαφημίσεις"
+
+#~ msgid "Global Reports"
+#~ msgstr "Συνολικές Αναφορές"
+
+#~ msgid "Moderation queue"
+#~ msgstr "Ουρά Ελέγχου"
+
+#~ msgid "Approve"
+#~ msgstr "Έγκριση"
+
+#~ msgid "Reject"
+#~ msgstr "Απόρριψη"
+
+#~ msgid "Advertiser"
+#~ msgstr "Διαφημιζόμενος"
+
+#~ msgid "Options"
+#~ msgstr "Επιλογές"
+
+#~ msgid ""
+#~ "Couple adverts to advertisers and allow them to create and upload their "
+#~ "own advertisements for you to moderate and approve or reject!"
+#~ msgstr ""
+#~ "Συνδυάστε διαφημίσεις με διαφημιζομένους και επιτρέψτε τους να "
+#~ "δημιουργήσουν τις δικές τους καταχωρήσεις, τις οποίες μπορείτε να "
+#~ "ελέγξετε και να εγκρίνετε ή να απορρίψετε!"
+
+#~ msgid "A summarized overview of all adverts currently active!"
+#~ msgstr "Μια περιληπτική αναφορά των ενεργών διαφημίσεων!"
+
+#, fuzzy
+#~ msgid "AdRotate Promotions & Highlighted blog posts"
+#~ msgstr "Προωθητικές ενέργειες AdRotate"
+
+#~ msgid "Advertiser & Budget"
+#~ msgstr "Διαφημιστής & Προϋπολογισμός"
+
+#~ msgid ""
+#~ "Link your ad to an Advertiser and optionally set a budget for clicks and "
+#~ "impressions."
+#~ msgstr ""
+#~ "Συνδέστε τη διαφήμισή σας σε ένα διαφημιστή και προαιρετικά ορίστε έναν "
+#~ "προϋπολογισμό για τα κλικ και τις εμφανίσεις."
+
+#~ msgid "Enable."
+#~ msgstr "Ενεργοποιώ."
+
+#~ msgid "Do not use this feature"
+#~ msgstr "Μην χρησιμοποιείτε αυτό το χαρακτηριστικό"
+
+#~ msgid "Before the post content"
+#~ msgstr "Πριν από το περιεχόμενο των δημοσιεύσεων"
+
+#~ msgid "After the page content"
+#~ msgstr "Μετά από το περιεχόμενο της σελίδας"
+
+#~ msgid "Save"
+#~ msgstr "Αποθήκευση"
+
+#~ msgid "Block of Ads - Use Block ID"
+#~ msgstr "Μπλοκ Διαφημίσεων - Δώστε Κωδ. Μπλοκ"
+
+#~ msgid "Block Management"
+#~ msgstr "Διαχείριση Μπλοκ"
+
+#~ msgid "Block created"
+#~ msgstr "Δημιουργία Μπλοκ"
+
+#~ msgid "Block updated"
+#~ msgstr "Ανανέωση Μπλοκ"
+
+#~ msgid "Advertiser page"
+#~ msgstr "Σελίδα Διαφημιζόμενου"
+
+#~ msgid "Role to allow users/advertisers to see their advertisement page."
+#~ msgstr ""
+#~ "Ρόλος που επιτρέπει σε χρήστες/διαφημιζόμενους να βλέπουν τη δική τους "
+#~ "σελίδα διαφήμισης."
+
+#~ msgid "Role to review the global report."
+#~ msgstr "Ρόλος για την αξιολόγηση των συνολικών αναφορών."
+
+#~ msgid "Manage/Add/Edit blocks"
+#~ msgstr "Διαχείριση/Προσθήκη/Επεξεργασία μπλοκ"
+
+#~ msgid "Role to see and add/edit blocks."
+#~ msgstr "Ρόλος για την προβολή και προσθήκη/επεξεργασία μπλοκ"
+
+#~ msgid "Delete blocks"
+#~ msgstr "Διαγραφή Μπλοκ"
+
+#~ msgid "Role to delete blocks."
+#~ msgstr "Ρόλος για τη διαγραφή Μποκ."
+
+#~ msgid "Moderate new adverts"
+#~ msgstr "Έλεγχος νέων διαφημίσεων"
+
+#~ msgid "Role to approve ads submitted by advertisers."
+#~ msgstr ""
+#~ "Ρόλος για την έγκριση διαφημίσεων που υποβλήθηκαν από διαφημιζόμενους."
+
+#~ msgid "Role to approve or reject ads submitted by advertisers."
+#~ msgstr ""
+#~ "Ρόλος για την έγκριση ή την απόρριψη διαφημίσεων που υποβλήθηκαν από "
+#~ "διαφημιζόμενους."
+
+#~ msgid "Advertiser Messages"
+#~ msgstr "Μηνύματα Διαφημιζόμενων"
+
+#~ msgid ""
+#~ "This sends a test message. Before you test, for example, with a new email "
+#~ "address. Save the options first!"
+#~ msgstr ""
+#~ "Η επιλογή στέλνει ένα δοκιμαστικό μήνυμα. Πριν δοκιμάσετε, για "
+#~ "παράδειγμα, μια νέα διεύθυνση email. Αποθηκεύστε πρώτα τις επιλογές!"
+
+#~ msgid "Track visitors"
+#~ msgstr "Παρακολουθήστε τις κινήσεις των επισκεπτών"
+
+#~ msgid "GeoTargeting"
+#~ msgstr "Γεω-Στόχευση"
+
+#~ msgid "Include jQuery ShowOff"
+#~ msgstr "Να περιληφθεί η jQuery ShowOff"
+
+#~ msgid "You are about to remove empty records from the AdRotate database."
+#~ msgstr "Πρόκειται να αφαιρέσετε κενές εγγραφές από τη βάση του AdRotate."
+
+#~ msgid ""
+#~ "AdRotate creates empty records when you start making ads, groups or "
+#~ "blocks. In rare occasions these records are faulty. If you made an ad, "
+#~ "group or block that does not save when you make it use this button to "
+#~ "delete those empty records."
+#~ msgstr ""
+#~ "Το  AdRotate δημιουργεί κενές εγγραφές όταν αρχίζετε να δημιουργείτε "
+#~ "διαφημίσεις, ομάδες ή μπλοκ. Σε σπάνιες περιπτώσεις αυτές οι εγγραφές "
+#~ "είναι λανθασμένες. Αν δημιουργήσετε μια διαφήμιση, μια ομάδα ή ένα μπλοκ "
+#~ "που δεν είναι δυνατόν να αποθηκευτεί κατά τη δημιουργία του, "
+#~ "χρησιμοποιήστε αυτό το κουμπί για να διαγράψετε αυτές τις κενές εγγραφές."
+
+#~ msgid ""
+#~ "Additionally the statistics are cleaned up. Old temporary data will be "
+#~ "removed."
+#~ msgstr ""
+#~ "Επιπλέον, γίνεται εκκαθάριση των στατιστικών. Παλιά προσωρινά δεδομένα θα "
+#~ "αφαιρεθούν."
+
+#~ msgid "Blocks"
+#~ msgstr "Μπλοκ"
+
+#~ msgid "Periodic Maintenance"
+#~ msgstr "Περιοδική Συντήρηση"
+
+#~ msgid "No time to get things done? Let's make a schedule!"
+#~ msgstr ""
+#~ "Δεν υπάρχει χρόνος να ολοκληρώσετε τις εργασίες; Ας κάνουμε έναν "
+#~ "προγραμματισμό!"
+
+#~ msgid ""
+#~ "This advert has run out of budget. Add more budget to the advert or reset "
+#~ "the rate to zero!"
+#~ msgstr ""
+#~ "Αυτή η διαφήμιση δεν έχει διαθέσιμο προϋπολογισμό. Προσθέστε περισσότερο "
+#~ "προϋπολογισμό στη διαφήμιση ή επαναφέρετε την τιμή στο μηδέν!"
+
+#~ msgid "Click an example to add it to your AdCode."
+#~ msgstr "Κάντε κλικ σε ένα παράδειγμα για να το προσθέσετε στο AdCode σας."
+
+#~ msgid "No address specified"
+#~ msgstr "Μη καθορισμένη διεύθυνση"
+
+#~ msgid "Feedback/bugs"
+#~ msgstr "Σχόλια / bugs"
+
+#~ msgid "Edit Block"
+#~ msgstr "Επεξεργασία Πεδίου"
+
+#~ msgid "The basics"
+#~ msgstr "Τα βασικά"
+
+#~ msgid "Name / Reference:"
+#~ msgstr "Όνομα / Αναφορά:"
+
+#~ msgid ""
+#~ "Block shape  and border (Required) - Define the shape and size of the "
+#~ "block"
+#~ msgstr ""
+#~ " Σχήμα και Σύνορα (Απαραίτητα) του πεδίου- Ορίστε το σχήμα και το μέγεθος "
+#~ "του πεδίου"
+
+#~ msgid "Rows and Columns"
+#~ msgstr "Γραμμές και Στήλες"
+
+#~ msgid ""
+#~ "Make a grid for your ads. Filling in 2 and 2 makes a 2x2 grid. (Default: "
+#~ "2/2)"
+#~ msgstr ""
+#~ "Κάντε ένα πλέγμα για τις διαφημίσεις σας. Συμπλήρωση 2 και 2 κάνει ένα "
+#~ "πλέγμα 2x2. (Προεπιλογή: 2/2)"
+
+#~ msgid "Block Padding"
+#~ msgstr "Επένδυση μπλοκ"
+
+#~ msgid "An invisible border inside the block in pixels. (Default: 1)"
+#~ msgstr ""
+#~ "Ένα αόρατο περίγραμμα στο εσωτερικό του πεδίου σε εικονοστοιχεία. "
+#~ "(Προεπιλογή: 1)"
+
+#~ msgid ""
+#~ "Advert shape and border (Required) - Define the shape and size of the "
+#~ "adverts"
+#~ msgstr ""
+#~ "Σχήμα  και περίγραμμα διαφήμισης(Απαραίτητο) - Ορίστε το σχήμα και το "
+#~ "μέγεθος των διαφημίσεων"
+
+#~ msgid "Width and Height"
+#~ msgstr "Πλάτος και Ύψος"
+
+#~ msgid ""
+#~ "Define the maximum size of the ads in pixels. Height can be "
+#~ "'auto' (Default: 125/125)"
+#~ msgstr ""
+#~ "Καθορίστε το μέγιστο μέγεθος των διαφημίσεων σε εικονοστοιχεία.Το  ύψος "
+#~ "μπορεί να είναι «αυτόματο» (Προεπιλογή: 125/125)"
+
+#~ msgid "pixel(s) margin"
+#~ msgstr "περιθώριο εικονοστοιχείου(ων)"
+
+#~ msgid "An invisible border outside the advert in pixels. (Default: 1)"
+#~ msgstr ""
+#~ "Ένα αόρατο περίγραμμα έξω από την διαφήμιση σε εικονοστοιχεία. "
+#~ "(Προεπιλογή: 1)"
+
+#~ msgid "Advert Border"
+#~ msgstr "Περίγραμμα Διαφήμισης"
+
+#~ msgid "Style"
+#~ msgstr "Στυλ"
+
+#~ msgid "Width"
+#~ msgstr "Πλάτος"
+
+#~ msgid "pixel(s). Color"
+#~ msgstr "Χρώμα εικονοστοιχείου(ων)"
+
+#~ msgid ""
+#~ "Set the border width to 0 to disable. Color must be a valid hex value. "
+#~ "(Default: none/0/#fff)"
+#~ msgstr ""
+#~ "Ρυθμίστε το πλάτος του περιγράμματος σε 0 για να απενεργοποιήσετε.Το  "
+#~ "χρώμα πρέπει να είναι μια έγκυρη δεκαεξαδική τιμή. (Προεπιλογή: none / "
+#~ "0 / # fff)"
+
+#~ msgid "Wrapper code (Optional) - Wraps around each ad"
+#~ msgstr ""
+#~ "Κώδικας περιτύλιγμα (Προαιρετικό) - Περιβάλλεται γύρω από κάθε διαφήμιση"
+
+#~ msgid "Choose the groups to use in this block"
+#~ msgstr "Επιλέξτε τις ομάδες να χρησιμοποιούν σε αυτό το πεδίο"
+
+#~ msgid "This blocks performance"
+#~ msgstr "Η επίδοση του μπλοκ"
+
+#~ msgid "Statistics for"
+#~ msgstr "Στατιστικά στοιχεία για"
+
+#~ msgid "Export options for"
+#~ msgstr "Επιλογές εξαγωγής για"
