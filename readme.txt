@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats
 Requires at least: 3.8
 Tested up to: 3.9.1
-Stable tag: 3.10.3
+Stable tag: 3.10.4
  
 Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
@@ -78,27 +78,31 @@ If that's not enough you can post on the [forum](https://www.adrotateplugin.com/
 
 == Changelog ==
 
-= 3.10.3 FREE =
-* AdRotate 3.7.x no longer supported for upgrades
+= 3.10.4 FREE =
 * Blocks of ads no longer supported - Use Groups in block mode instead
 * Output changes - You may have to alter your settings a bit
-* [fix] Group wrapper applied properly on post injection
-* [fix] Repeat same ad if there are not enough for each paragraph
-* [fix] Size requirement for groups corrected
-* [fix] Tabindex on various dashboards corrected
+* [fix] Blocks order random again
+* [fix] 'responsive' column now properly loaded for ads
+* [fix] Re-arranged responsive output to it doesn't break block order
+* [fix] Post-injection shows groups again instead of individual ads
+* [fix] Cleaned up double wrapper for groups for some setups
+* [fix] Paragraph setting for post injection not always working
+* [fix] Dynamic groups not always rotating
+* [tweak] Replaced array_diff_key() with unset() in groups
+* [tweak] Cleaned up dashboard elements
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://www.adrotateplugin.com/features/).
 
-= 3.10.3 PRO =
-* AdRotate 3.7.x no longer supported for upgrades
+= 3.10.4 PRO =
 * Blocks of ads no longer supported - Use Groups in block mode instead
 * Output changes - You may have to alter your settings a bit
-* [fix] Group wrapper applied properly on post injection
-* [fix] Repeat same ad if there are not enough for each paragraph
-* [fix] Size requirement for groups corrected
-* [fix] Tabindex on various dashboards corrected
-* [tweak] Set impression spread on schedules created when editing adverts
-* [i18n] Minor changes to translations
+* [fix] Blocks order random again
+* [fix] Re-arranged responsive output to it doesn't break block order
+* [fix] Post-injection shows groups again instead of individual ads
+* [fix] Cleaned up double wrapper for groups for some setups
+* [fix] Paragraph setting for post injection not always working
+* [fix] Dynamic groups not always rotating
+* [tweak] Replaced array_diff_key() with unset() in groups
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/)!
@@ -107,19 +111,19 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.10.2 =
+= 3.10.4 =
 * AdRotate 3.7.x no longer supported for upgrades
 * Blocks of ads no longer supported - Use Groups in block mode instead
 * Output changes - You may have to alter your settings a bit
-* [fix] Typo in group CSS class .g
-* [fix] Stripped unused variabled from post injection array making it smaller
-* [fix] Advert listing in group editor showing wrong colors
-* [fix] Post injection not working if you only selected categories
-* [fix] Responsive setting not always saving for new adverts
-* [tweak] Links to adrotateplugin.com updated to use HTTPS
-* [tweak] Post injection now also uses group wrapper div
-* [tweak] Improved CSS output for groups
-* [tweak] Better reset for width and margin for mobile devices
+* [fix] Blocks order random again
+* [fix] 'responsive' column now properly loaded for ads
+* [fix] Re-arranged responsive output to it doesn't break block order
+* [fix] Post-injection shows groups again instead of individual ads
+* [fix] Cleaned up double wrapper for groups for some setups
+* [fix] Paragraph setting for post injection not always working
+* [fix] Dynamic groups not always rotating
+* [tweak] Replaced array_diff_key() with unset() in groups
+* [tweak] Cleaned up dashboard elements
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/)!
@@ -128,4 +132,4 @@ NOTE: Certain features are exclusive to AdRotate PRO. If you need these features
 
 == Screenshots ==
 
-Visit [adrotateplugin.com](https://www.adrotateplugin.com/)
+Visit [adrotateplugin.com/screenshots/](https://www.adrotateplugin.com/screenshots/)
