@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: AdRotate\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-01 00:18+0100\n"
-"PO-Revision-Date: 2014-08-01 00:18+0100\n"
-"Last-Translator: Arnan de Gans <info@ajdg.net>\n"
+"PO-Revision-Date: 2014-08-05 15:59+0200\n"
+"Last-Translator: Nedko Ivanov <nedko.m.ivanov@gmail.com>\n"
 "Language-Team: Nedko Ivanov <cocacoli4ko@gmail.com>\n"
 "Language: bg_BG\n"
 "MIME-Version: 1.0\n"
@@ -307,9 +307,8 @@ msgid "Group of Ads - Use group ID"
 msgstr "Група реклами - Използване на ID на групата"
 
 #: adrotate-widget.php:123
-#, fuzzy
 msgid "Block of Ads (Obsolete)"
-msgstr "Блоков режим - показва се блок от реклами"
+msgstr "Блок с реклами (Извън употреба)"
 
 #: adrotate-widget.php:126
 msgid "Choose what you want to use this widget for"
@@ -320,7 +319,6 @@ msgid "ID:"
 msgstr "ID:"
 
 #: adrotate-widget.php:132
-#, fuzzy
 msgid "Fill in the ID of the type you want to display!"
 msgstr "Попълнете ID-то на типа, който искате да се показва!"
 
@@ -405,9 +403,8 @@ msgid "No data found in selected time period"
 msgstr "Не е намерена информация за избрания период"
 
 #: adrotate.php:266 adrotate.php:362
-#, fuzzy
 msgid "Manage"
-msgstr "Управление на реклами"
+msgstr "Управление"
 
 #: adrotate.php:267 adrotate.php:363
 msgid "Add New"
@@ -479,34 +476,31 @@ msgstr "Права на достъп"
 
 #: adrotate.php:546
 msgid "Who has access to what?"
-msgstr ""
+msgstr "Кой до какво има достъп?"
 
 #: adrotate.php:549
 msgid "Manage/Add/Edit adverts"
 msgstr "Управление/Добавяне/Редакция на обяви"
 
 #: adrotate.php:553
-#, fuzzy
 msgid "Role to see and add/edit ads."
-msgstr "Роля за преглед и добавяне/редакция на обяви."
+msgstr "Роля, позволяваща преглед, добавяне и редакция на реклами."
 
 #: adrotate.php:557
 msgid "Delete/Reset adverts"
 msgstr "Изтриване/Нулиране на реклами"
 
 #: adrotate.php:561
-#, fuzzy
 msgid "Role to delete ads and reset stats."
-msgstr "Роля за изтриване и нулиране на статистика."
+msgstr "Роля, позволяваща изтриване на реклами и нулиране на статистика."
 
 #: adrotate.php:565
 msgid "Manage/Add/Edit groups"
 msgstr "Управление/Добавяне/Редакция на групи"
 
 #: adrotate.php:569
-#, fuzzy
 msgid "Role to see and add/edit groups."
-msgstr "Управление/Добавяне/Редакция на групи"
+msgstr "Роля, позволяваща преглед, добавяне и редакция на групи."
 
 #: adrotate.php:573
 msgid "Delete groups"
@@ -578,20 +572,17 @@ msgid "Banner Folder"
 msgstr "Папка с банери"
 
 #: adrotate.php:635
-#, fuzzy
 msgid "Set a location where your banner images will be stored."
 msgstr ""
-"Задайте местоположение, където да се записват вашите банери. (По "
-"подразбиране: /wp-content/banners/)."
+"Задайте местоположение, където да се записват вашите картинки за банери."
 
 #: adrotate.php:638
-#, fuzzy
 msgid "Location"
-msgstr "Геолокация"
+msgstr "Местоположение"
 
 #: adrotate.php:640
 msgid "(Default: wp-content/banners/)."
-msgstr ""
+msgstr "(По подразбиране: wp-content/banners/)."
 
 #: adrotate.php:641
 msgid ""
@@ -667,9 +658,8 @@ msgstr ""
 "Изпращане на дневен отчет с обявите, чийто статус е различен от нормален."
 
 #: adrotate.php:671
-#, fuzzy
 msgid "Any advertiser saving an advert in your moderation queue."
-msgstr "Всеки рекламодател, добавящ реклама към опашката за одобрение."
+msgstr "Всеки рекламодател, записващ реклама в опашката за одобрение."
 
 #: adrotate.php:672
 msgid "A moderator approved an advert from the moderation queue."
@@ -760,18 +750,16 @@ msgid "Track clicks from logged in users."
 msgstr "Проследяване на кликове от вписани потребители."
 
 #: adrotate.php:724
-#, fuzzy
 msgid "Impressions timer"
-msgstr "Импресии"
+msgstr "Таймер за импресии"
 
 #: adrotate.php:726 adrotate.php:733
 msgid "Seconds."
 msgstr "Секудни."
 
 #: adrotate.php:727
-#, fuzzy
 msgid "Default: 10. Set to 0 to disable this timer."
-msgstr "По подразбиране: 10. Въведете 1, за да изключите таймера."
+msgstr "По подразбиране: 10. Въведете 0, за да изключите таймера."
 
 #: adrotate.php:727
 msgid "This number may not be empty, negative or exceed 3600 (1 hour)."
@@ -780,14 +768,12 @@ msgstr ""
 "стойността му да надвишава 3600 (1 час)."
 
 #: adrotate.php:731
-#, fuzzy
 msgid "Clicks timer"
-msgstr "Кликове"
+msgstr "Таймер за кликове"
 
 #: adrotate.php:734
-#, fuzzy
 msgid "Default: 86400. Set to 0 to disable this timer."
-msgstr "По подразбиране: 86400. Въведете 1, за да изключите таймера."
+msgstr "По подразбиране: 86400. Въведете 0, за да изключите таймера."
 
 #: adrotate.php:734
 msgid "This number may not be empty, negative or exceed 86400 (24 hours)."
@@ -903,10 +889,8 @@ msgid "Admin Bar"
 msgstr "Администраторска лента"
 
 #: adrotate.php:790
-#, fuzzy
 msgid "Enable the AdRotate Quickmenu in the Admin Bar"
-msgstr ""
-"Добавяне на бързо меню AdRotate в Администраторската лента на WordPress."
+msgstr "Включване на бързо меню AdRotate в Администраторската лента."
 
 #: adrotate.php:793
 msgid "Dashboard Notifications"
@@ -936,6 +920,10 @@ msgid ""
 "below line 52 (which defines another hash.) Using the \"late init\" function "
 "needs to be enabled in W3 Total Cache as well too."
 msgstr ""
+"Включили сте поддръжката за W3 Total Caching, но не сте задали сегмент за "
+"сигурност. Трябва да добавите следният код към вашият wp-config.php, близо "
+"до края или под ред 52. Също така функцията \"late init\" трябва да бъде "
+"включена в W3 Total Cache."
 
 #: adrotate.php:808
 msgid "W3 Total Caching"
@@ -951,13 +939,15 @@ msgid ""
 "this function will not work. WP Super Cache has discontinued support for "
 "dynamic content."
 msgstr ""
+"Включили сте поддръжката на WP Super Cache. Ако имате версия 1.4 или по-"
+"нова, тази функция няма да работи. WP Super Cache прекрати поддръжката за "
+"динамично съдържание."
 
 #: adrotate.php:819
 msgid "WP Super Cache"
 msgstr "WP Super Cache"
 
 #: adrotate.php:820
-#, fuzzy
 msgid "Check this box if you use WP Super Cache on your site."
 msgstr "Сложете отметка ако използвате W3 Total Caching на сайта си."
 
@@ -996,13 +986,12 @@ msgstr ""
 "темата ви вече не го е заредила."
 
 #: adrotate.php:836
-#, fuzzy
 msgid "Load Dynamic Groups"
-msgstr "Динамично"
+msgstr "Зареждай Динамични групи"
 
 #: adrotate.php:837
 msgid "Required for Dynamic Groups to rotate ads."
-msgstr ""
+msgstr "Необходимо, за да се сменят рекламите в Динамичните Групи."
 
 #: adrotate.php:840
 msgid "Load jQuery Clicktracking"
@@ -1013,18 +1002,18 @@ msgid ""
 "Required for jQuery Clicktracking. When disabled AdRotate falls back on "
 "Redirect Tracking."
 msgstr ""
+"Необходимо за jQuery проследяването на кликове. Когато е изключено, AdRotate "
+"ще използва проследяване чрез пренасочване."
 
 #: adrotate.php:844
-#, fuzzy
 msgid "Load Ad Blocker Detection"
-msgstr "Зареди jQuery детекция за Ad Blocker-и"
+msgstr "Зареждай детекция за Ad Blocker-и"
 
 #: adrotate.php:845
-#, fuzzy
 msgid "Try to detect Ad Blockers and show your visitors a nag message."
 msgstr ""
-"Библиотеката jquery.adblock засича AdBlocker-и и показва на посетителите Ви "
-"съобщение за няколко секунди. Библиотеката зависи от jQuery."
+"Опит за засичане на AdBlocker-и и показване на досадно съобщение на "
+"посетителите."
 
 #: adrotate.php:849
 msgid "Load in footer?"
@@ -1283,9 +1272,8 @@ msgstr ""
 "за проследяване на кликове."
 
 #: adrotate.php:936
-#, fuzzy
 msgid "Temporarily disable encryption on the redirect url."
-msgstr "Временно изключване на криптирането на препращащия адрес."
+msgstr "Временно изключване на криптирането на пренасочващоя адрес."
 
 #: dashboard/adrotate-info.php:65
 msgid "Currently"
@@ -1379,9 +1367,8 @@ msgstr ""
 "функции, които предлага AdRotate Pro спрямо безплатната версия."
 
 #: dashboard/adrotate-info.php:172
-#, fuzzy
 msgid "or go to the"
-msgstr "Напред"
+msgstr "или отиди"
 
 #: dashboard/adrotate-info.php:176
 msgid "Support AdRotate"
@@ -1412,7 +1399,7 @@ msgstr "Научете повече"
 
 #: dashboard/adrotate-info.php:190
 msgid "Follow"
-msgstr ""
+msgstr "Последвай"
 
 #: dashboard/adrotate-pro.php:60
 msgid "Satisfy your advertisers"
@@ -1450,15 +1437,14 @@ msgid "Get Premium Support almost all year round"
 msgstr "Получете премиум поддръжка почти през цялата година"
 
 #: dashboard/adrotate-pro.php:79
-#, fuzzy
 msgid ""
 "When you activate your AdRotate Pro license you are entitled to ticket "
 "support. AdRotate premium support which takes priority over the Forums and "
 "even email. Get a solution (usually) within a day."
 msgstr ""
-"Когато активирате вашия AdRotate Pro лиценз ще имате достъп до системата за "
-"докладване/отстраняване на проблеми. Премиум поддръжката е с приоритет "
-"спрямо форумите и Email съобщенията. В общия случай ще получите отговор до 1 "
+"Когато активирате вашия AdRotate Pro лиценз ще имате достъп до ticket "
+"системата за поддръжка. AdRotate премиум поддръжката е с приоритет спрямо "
+"форумите и дори Email съобщенията. В общия случай ще получите отговор до 1 "
 "ден."
 
 #: dashboard/adrotate-pro.php:100
@@ -1497,7 +1483,6 @@ msgid "Singe License"
 msgstr "Singe лиценз"
 
 #: dashboard/adrotate-pro.php:119
-#, fuzzy
 msgid "For one WordPress installation."
 msgstr "За една инсталация на WordPress."
 
@@ -1512,18 +1497,16 @@ msgid "Duo License"
 msgstr "Duo лиценз"
 
 #: dashboard/adrotate-pro.php:120
-#, fuzzy
 msgid "For two WordPress installations."
-msgstr "Получете помощ за инсталиране"
+msgstr "За две Wordpress инсталации."
 
 #: dashboard/adrotate-pro.php:121
 msgid "Multi License"
 msgstr "Multi лиценз"
 
 #: dashboard/adrotate-pro.php:121
-#, fuzzy
 msgid " For up to five WordPress installations."
-msgstr "За до 5 Wordpress инсталации."
+msgstr " За до 5 Wordpress инсталации."
 
 #: dashboard/adrotate-pro.php:122
 msgid "Network License"
@@ -1538,7 +1521,6 @@ msgid "Developer License"
 msgstr "Developer лиценз"
 
 #: dashboard/adrotate-pro.php:123
-#, fuzzy
 msgid "Activate AdRotate on unlimited WordPress installations and/or networks."
 msgstr ""
 "Актвирайте AdRotate на неограничен брой Wordpress инсталации и/или мрежи."
@@ -1560,14 +1542,12 @@ msgid "The AdCode cannot be empty!"
 msgstr "AdCode не може да бъде празен!"
 
 #: dashboard/publisher/adrotate-ads-edit.php:49
-#, fuzzy
 msgid "You didn't use %image% in your AdCode but did select an image!"
-msgstr "Не сте използвали %image% в своя AdCode, но сте избрали такава!"
+msgstr "Не сте използвали %image% в своя AdCode, но сте избрали картинка!"
 
 #: dashboard/publisher/adrotate-ads-edit.php:52
-#, fuzzy
 msgid "You did use %image% in your AdCode but did not select an image!"
-msgstr "Използвали сте %image% в своя AdCode, но не сте избрали такава!"
+msgstr "Използвали сте %image% в своя AdCode, но не сте избрали картинка!"
 
 #: dashboard/publisher/adrotate-ads-edit.php:55
 msgid ""
@@ -1585,13 +1565,12 @@ msgstr ""
 "кода на рекламата!"
 
 #: dashboard/publisher/adrotate-ads-edit.php:61
-#, fuzzy
 msgid ""
 "Redirect clicktracking is enabled but the %link% tag was not found in the "
 "adcode!"
 msgstr ""
-"jQuery проследяването на кликове е включено, но не е намерен валиден линк в "
-"кода на рекламата!"
+"Проследяването на кликове чрез пренасочване е включено, но етикета %link%  "
+"не беше намерен в полето AdCode!"
 
 #: dashboard/publisher/adrotate-ads-edit.php:67
 msgid ""
@@ -1789,12 +1768,11 @@ msgstr "Въведете URL адреса за вашата реклама ту�
 
 #: dashboard/publisher/adrotate-ads-edit.php:213
 msgid "Responsive:"
-msgstr ""
+msgstr "Responsive:"
 
 #: dashboard/publisher/adrotate-ads-edit.php:215
-#, fuzzy
 msgid "Enable responsive support for this advert."
-msgstr "Активиране на проследяването на кликове за тази реклама."
+msgstr "Активиране на responsive дизайн за тази реклама."
 
 #: dashboard/publisher/adrotate-ads-edit.php:216
 msgid ""
@@ -1802,12 +1780,18 @@ msgid ""
 "following format; \"imagename.full.ext\". A full set of sized images is "
 "strongly recommended."
 msgstr ""
+"Качете картинките си в папката за банери и се уверете, че имената са в "
+"правилния формат: \"imagename.full.ext\". Пълен набор от правилно оразмерени "
+"картинки е строго препоръчителен."
 
 #: dashboard/publisher/adrotate-ads-edit.php:217
 msgid ""
 "For smaller size images use \".320\", \".480\", \".768\" or \".1024\" in the "
 "filename instead of \".full\" for the various viewports."
 msgstr ""
+"За картинките с по-малки размери (за различните разделителни пособности), "
+"използвайте \".320\", \".480\", \".768\" или \".1024\" в имената на "
+"файловете, вместо \".full\"."
 
 #: dashboard/publisher/adrotate-ads-edit.php:218
 #: dashboard/publisher/adrotate-groups-edit.php:320
@@ -1820,6 +1804,8 @@ msgid ""
 "image.full.jpg, image.320.jpg and image.768.jpg will serve the same advert "
 "for different viewports. Requires jQuery."
 msgstr ""
+"image.full.jpg, image.320.jpg и image.768.jpg ще се използват от една и съща "
+"реклама в различни резолюции на екрана. Изисква jQuery."
 
 #: dashboard/publisher/adrotate-ads-edit.php:222
 msgid "Banner image:"
@@ -1915,27 +1901,20 @@ msgid "Cities:"
 msgstr "Градове:"
 
 #: dashboard/publisher/adrotate-ads-edit.php:276
-#, fuzzy
 msgid "Countries"
-msgstr ""
-"Бъдете представени национално или глобално с реклами по местоположение. "
-"Задайте реклами по определени страни и градове и продавайте импресии по "
-"разположение на банера. Геолокацията се предоставя от FreegeoIP (MaxMind) и "
-"GeoSelect."
+msgstr "Държави"
 
 #: dashboard/publisher/adrotate-ads-edit.php:289
-#, fuzzy
 msgid "Usage:"
-msgstr "Употреба"
+msgstr "Употреба:"
 
 #: dashboard/publisher/adrotate-ads-edit.php:290
-#, fuzzy
 msgid "Select the countries you want the adverts to show in."
-msgstr "Изберете категориите, на които искате да се показват рекламите."
+msgstr "Изберете страните, в които искате да се показват рекламите."
 
 #: dashboard/publisher/adrotate-ads-edit.php:290
 msgid "Cities take priority and will be filtered first."
-msgstr ""
+msgstr "Градовете са с приоритет и ще бъдат филтрирани първи."
 
 #: dashboard/publisher/adrotate-ads-edit.php:318
 msgid "Schedule"
@@ -2020,9 +1999,8 @@ msgstr "Динамично"
 
 #: dashboard/publisher/adrotate-ads-edit.php:422
 #: dashboard/publisher/adrotate-groups-main.php:59
-#, fuzzy
 msgid "second rotation"
-msgstr "Геолокация"
+msgstr "второ завъртане"
 
 #: dashboard/publisher/adrotate-ads-edit.php:423
 #: dashboard/publisher/adrotate-groups-main.php:60
@@ -2032,7 +2010,7 @@ msgstr "Блок"
 #: dashboard/publisher/adrotate-ads-edit.php:423
 #: dashboard/publisher/adrotate-groups-main.php:60
 msgid "grid"
-msgstr ""
+msgstr "решетка"
 
 #: dashboard/publisher/adrotate-ads-edit.php:424
 #: dashboard/publisher/adrotate-groups-edit.php:206
@@ -2064,9 +2042,8 @@ msgstr "Деактивиране на реклами"
 #: dashboard/publisher/adrotate-ads-main-error.php:19
 #: dashboard/publisher/adrotate-ads-main.php:20
 #: dashboard/publisher/adrotate-groups-main.php:20
-#, fuzzy
 msgid "Bulk Actions"
-msgstr "Bulk Actions"
+msgstr "Масови действия"
 
 #: dashboard/publisher/adrotate-ads-main-disabled.php:21
 msgid "Activate"
@@ -2298,13 +2275,12 @@ msgid "Block Mode - Show a block of ads"
 msgstr "Блоков режим - показва се блок от реклами"
 
 #: dashboard/publisher/adrotate-groups-edit.php:71
-#, fuzzy
 msgid ""
 "'Dynamic' and 'Block' mode require 'jQuery' and 'jQuery Dynamic Groups' to "
 "be loaded. You can enable this in AdRotate Settings."
 msgstr ""
-"'Динамичен' и 'Блоков' режим изискват 'jQuery' и 'jQuery Showoff' да бъдат "
-"заредени. Можете да ги включите от настройките на AdRotate."
+"'Динамичен' и 'Блоков' режим изискват 'jQuery' и 'jQuery Динамични групи' да "
+"бъдат заредени. Можете да ги включите от настройките на AdRotate."
 
 #: dashboard/publisher/adrotate-groups-edit.php:77
 #: dashboard/publisher/adrotate-groups-edit.php:122
@@ -2332,7 +2308,6 @@ msgid "Block Mode"
 msgstr "Блоков режим"
 
 #: dashboard/publisher/adrotate-groups-edit.php:113
-#, fuzzy
 msgid ""
 "Make a grid for your ads. Selecting 3 and 2 makes a grid with 2 columns "
 "showing a maximum of 6 ads. Default: 2x2."
@@ -2394,14 +2369,12 @@ msgid "pixel(s)"
 msgstr "пиксел(а)"
 
 #: dashboard/publisher/adrotate-groups-edit.php:181
-#, fuzzy
 msgid "A transparent area outside the advert in pixels. Default: 1."
-msgstr "Прозрачна рамка отвън на рекламата, в пиксели. По подразбиране: 1."
+msgstr "Прозрачна зона около на рекламата, в пиксели. По подразбиране: 1."
 
 #: dashboard/publisher/adrotate-groups-edit.php:181
-#, fuzzy
 msgid "Set to 0 to disable."
-msgstr "По подразбиране: 10. Въведете 1, за да изключите таймера."
+msgstr "Въведете 0 за деактивация."
 
 #: dashboard/publisher/adrotate-groups-edit.php:186
 msgid "Enable GeoTargeting for this group."
@@ -2437,7 +2410,7 @@ msgstr ""
 
 #: dashboard/publisher/adrotate-groups-edit.php:207
 msgid "Insert ads to the begin or end of a post/page."
-msgstr ""
+msgstr "Вмъкване на реклами в началото или в края на публикация/страница."
 
 #: dashboard/publisher/adrotate-groups-edit.php:210
 msgid "Include ads in categories?"
@@ -2465,9 +2438,8 @@ msgstr "Преди и след съдържанието"
 
 #: dashboard/publisher/adrotate-groups-edit.php:218
 #: dashboard/publisher/adrotate-groups-edit.php:259
-#, fuzzy
 msgid "After..."
-msgstr "След съдържанието"
+msgstr "След..."
 
 #: dashboard/publisher/adrotate-groups-edit.php:224
 #: dashboard/publisher/adrotate-groups-edit.php:265
@@ -2476,21 +2448,18 @@ msgstr "първия параграф"
 
 #: dashboard/publisher/adrotate-groups-edit.php:225
 #: dashboard/publisher/adrotate-groups-edit.php:266
-#, fuzzy
 msgid "the 2nd paragraph"
-msgstr "всеки 2-ри параграф"
+msgstr "2-рия параграф"
 
 #: dashboard/publisher/adrotate-groups-edit.php:226
 #: dashboard/publisher/adrotate-groups-edit.php:267
-#, fuzzy
 msgid "the 3rd paragraph"
-msgstr "всеки 3-ти параграф"
+msgstr "3-тия параграф"
 
 #: dashboard/publisher/adrotate-groups-edit.php:227
 #: dashboard/publisher/adrotate-groups-edit.php:268
-#, fuzzy
 msgid "the 4th paragraph"
-msgstr "всеки 4-ти параграф"
+msgstr "4-тия параграф"
 
 #: dashboard/publisher/adrotate-groups-edit.php:229
 #: dashboard/publisher/adrotate-groups-edit.php:270
@@ -2624,7 +2593,6 @@ msgid "Adverts received from server"
 msgstr "Реклами получени от сървър"
 
 #: dashboard/server/adrotate-active.php:13
-#, fuzzy
 msgid ""
 "These adverts are circulating in the pool of active adverts, served from "
 "AdRotate server."
@@ -2642,9 +2610,8 @@ msgid "No ads received yet!"
 msgstr "Все още няма получени реклами!"
 
 #: dashboard/server/adrotate-error.php:12
-#, fuzzy
 msgid "Erroneous ads from server"
-msgstr "Реклами получени от сървър"
+msgstr "Реклами от сървъра с проблеми"
 
 #: dashboard/server/adrotate-error.php:13
 msgid "Adverts served from AdRotate server but having some issues."
@@ -2706,14 +2673,12 @@ msgstr ""
 "Не трябва да споделяте ключа си с никой. Приемайте този ключ като парола!"
 
 #: dashboard/server/adrotate-settings.php:44
-#, fuzzy
 msgid "Make this site a puppet"
 msgstr "Направете този сайт марионетка"
 
 #: dashboard/server/adrotate-settings.php:46
-#, fuzzy
 msgid "Have AdRotate use AdRotate Server adverts exclusively."
-msgstr "Имате AdRotate, използвайте ексклузивни реклами от AdRotate Server."
+msgstr "Накарайте AdRotate да използва ексклузивни реклами от AdRotate Server."
 
 #: dashboard/server/adrotate-settings.php:46
 msgid ""
@@ -2748,44 +2713,6 @@ msgstr "Прекъсване на връзката със сървъра"
 
 #~ msgid "Rate and review"
 #~ msgstr "Оцени и напиши ревю"
-
-#, fuzzy
-#~ msgid "Buy AdRotate Professional here"
-#~ msgstr "Купете AdRotate Professional"
-
-#, fuzzy
-#~ msgid ""
-#~ "It is reported by users that if you have version 1.4 or newer this option "
-#~ "may not work."
-#~ msgstr ""
-#~ "Сложете отметка ако използвате WP Super Cache на сайта си. Потребителите "
-#~ "докладват, че ако имате версия 1.4 или по-нова, тази функция е възможно "
-#~ "да не работи."
-
-#~ msgid "Check the manual of your caching plugin to see how this works."
-#~ msgstr ""
-#~ "Прегледайте упътването на своето разширение за кеширане, за да разберете "
-#~ "как работи това."
-
-#~ msgid "Current Schedules"
-#~ msgstr "Текущи графици"
-
-#~ msgid "From / Until"
-#~ msgstr "От / До"
-
-#, fuzzy
-#~ msgid "Max Clicks"
-#~ msgstr "Максимум импресии"
-
-#~ msgid "This ad used"
-#~ msgstr "Тази реклама използва"
-
-#~ msgid "Max Impressions"
-#~ msgstr "Максимум импресии"
-
-#, fuzzy
-#~ msgid "Fallback"
-#~ msgstr "Резервна група"
 
 #~ msgid "AJdG Solutions"
 #~ msgstr "AJdG Solutions"
@@ -2823,6 +2750,19 @@ msgstr "Прекъсване на връзката със сървъра"
 #~ msgstr "Api Token"
 
 #~ msgid ""
+#~ "Check this box if you use WP Super Cache on your site. It is reported by "
+#~ "users that if you have version 1.4 or newer this option may not work."
+#~ msgstr ""
+#~ "Сложете отметка ако използвате WP Super Cache на сайта си. Потребителите "
+#~ "докладват, че ако имате версия 1.4 или по-нова, тази функция е възможно "
+#~ "да не работи."
+
+#~ msgid "Check the manual of your caching plugin to see how this works."
+#~ msgstr ""
+#~ "Прегледайте упътването на своето разширение за кеширане, за да разберете "
+#~ "как работи това."
+
+#~ msgid ""
 #~ "The jQuery.jshowoff.adrotate library is required for Dynamic Groups. This "
 #~ "library depends on jQuery."
 #~ msgstr ""
@@ -2839,6 +2779,22 @@ msgstr "Прекъсване на връзката със сървъра"
 #~ msgid "This feature is available in AdRotate Pro."
 #~ msgstr "Тази функция е налична в AdRotate Pro."
 
+#~ msgid "Current Schedules"
+#~ msgstr "Текущи графици"
+
+#~ msgid "From / Until"
+#~ msgstr "От / До"
+
+#, fuzzy
+#~ msgid "Max Clicks"
+#~ msgstr "Максимум кликове"
+
+#~ msgid "This ad used"
+#~ msgstr "Тази реклама използва"
+
+#~ msgid "Max Impressions"
+#~ msgstr "Максимум импресии"
+
 #~ msgid "Manage Blocks"
 #~ msgstr "Управление на блокове"
 
@@ -2853,3 +2809,7 @@ msgstr "Прекъсване на връзката със сървъра"
 
 #~ msgid "No blocks created yet!"
 #~ msgstr "Все още не са създадени блокове!"
+
+#, fuzzy
+#~ msgid "Fallback"
+#~ msgstr "Fallback"
