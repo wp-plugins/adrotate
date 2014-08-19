@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8
 Tested up to: 3.9.1
-Stable tag: 3.10.6
+Stable tag: 3.10.7
  
 Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
@@ -78,21 +78,24 @@ If that's not enough you can post on the [forum](https://www.adrotateplugin.com/
 
 == Changelog ==
 
-= 3.10.6 FREE =
+= 3.10.7 FREE =
 * Output changes - You may have to alter your settings or custom CSS a bit
 * [new] Warn about W3TC_DYNAMIC_SECURITY if not defined
-* [tweak] Priority for loading header JS
-* [fix] Transition effect for dynamic groups
-* [fix] Tabindex when editing groups
-* [fix] Undefined notice for some people using Dynamic groups
+* [fix] Ads not always showing in a dynamic group with only 1 advert
+* [fix] Ads not always showing after N paragraph with post injection
+* [tweak] Slightly increased transition delay in dynamic groups
+* [tweak] Cleaner dashboard menus
+* [i18n] Updated strings
+* [i18n] Updated Bulgarian Translation
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://www.adrotateplugin.com/features/).
 
-= 3.10.6 PRO =
+= 3.10.7 PRO =
 * Output changes - You may have to alter your settings a bit
-* [new] Warn about W3TC_DYNAMIC_SECURITY if not defined
-* [tweak] Priority for loading header JS
-* [fix] Transition effect for dynamic groups
+* [fix] Ads not always showing in a dynamic group with only 1 advert
+* [tweak] Slightly increased transition delay in dynamic groups
+* [i18n] Updated strings
+* [i18n] Added Bulgarian Translation
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/)!
@@ -101,13 +104,14 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.10.6 =
+= 3.10.7 =
 * Output changes - You may have to alter your settings or custom CSS a bit
 * [new] Warn about W3TC_DYNAMIC_SECURITY if not defined
-* [tweak] Priority for loading header JS
-* [fix] Transition effect for dynamic groups
-* [fix] Tabindex when editing groups
-* [fix] Undefined notice for some people using Dynamic groups
+* [fix] Ads not always showing in a dynamic group with only 1 advert
+* [fix] Ads not always showing after N paragraph with post injection
+* [tweak] Cleaner dashboard menus
+* [i18n] Updated strings
+* [i18n] Updated Bulgarian Translation
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/)!
