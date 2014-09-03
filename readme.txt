@@ -2,7 +2,7 @@
 Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
-Requires at least: 3.8
+Requires at least: 3.8, PHP5.3
 Tested up to: 3.9.1
 Stable tag: 3.10.8
  
@@ -79,6 +79,7 @@ If that's not enough you can post on the [forum](https://www.adrotateplugin.com/
 == Changelog ==
 
 = 3.10.8 FREE =
+* NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3
 * [tweak] Extended post injection to use multiple view modes
 * [fix] Multi level listing for post injection
 * [fix] Occasional 'jumping' content around dynamic groups
@@ -88,6 +89,7 @@ If that's not enough you can post on the [forum](https://www.adrotateplugin.com/
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://www.adrotateplugin.com/features/).
 
 = 3.10.8 PRO =
+* NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3
 * [tweak] Extended post injection to use multiple view modes
 * [fix] Multi level listing for post injection
 * [fix] Occasional 'jumping' content around dynamic groups
@@ -101,6 +103,7 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 == Upgrade Notice ==
 
 = 3.10.8 =
+* NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3
 * [tweak] Extended post injection to use multiple view modes
 * [fix] Multi level listing for post injection
 * [fix] Occasional 'jumping' content around dynamic groups
