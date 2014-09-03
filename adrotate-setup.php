@@ -153,8 +153,8 @@ function adrotate_check_upgrade() {
 	global $wpdb, $current_user, $userdata;
 	
 	if(version_compare(PHP_VERSION, '5.3.0', '<') == -1) { 
-		deactivate_plugins(plugin_basename('adrotate.php'));
-		wp_die('AdRotate 3.6 and up requires PHP 5.3 or higher. Consider upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
+		deactivate_plugins(plugin_basename('adrotate/adrotate.php'));
+		wp_die('AdRotate 3.10.8 and up requires PHP 5.3 or higher. You have version '.PHP_VERSION.'. Contact your hosting provider about upgrading your server!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
 		return; 
 	} else {
 		$adrotate_db_version = get_option("adrotate_db_version");

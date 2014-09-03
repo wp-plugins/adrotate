@@ -159,9 +159,9 @@ $data = get_option("adrotate_advert_status");
 				<div class="postbox-adrotate">
 					<div class="inside">
 						<p><h4><?php _e('AdRotate Pro', 'adrotate'); ?></h4> <?php _e('Get more features! Get AdRotate Pro.', 'adrotate'); ?> <a href="https://www.adrotateplugin.com/adrotate-pro/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=upgrade_adrotatefree"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
-						<p><h4><?php _e('Get help with installations', 'adrotate'); ?></h4> <?php _e('Not sure how to set up AdRotate? Get me to do it!', 'adrotate'); ?> <a href="https://www.adrotateplugin.com/installations/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=installation_adrotatefree"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
-						<p><h4><?php _e('Premium Support', 'adrotate'); ?></h4> <?php _e("Stuck with AdRotate? I'll help!", 'adrotate'); ?> <a href="https://www.adrotateplugin.com/shop/category/premium-support/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=support_adrotatefree"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
-						<p><a href="https://www.adrotateplugin.com/shop/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=upgrade_adrotatefree"><?php _e('Visit store to see all services and products', 'adrotate'); ?> &raquo;</a></p>
+						<p><h4><?php _e('Get help with installations', 'adrotate'); ?></h4> <?php _e('Not sure how to set up AdRotate? Get me to do it!', 'adrotate'); ?> <a href="https://www.adrotateplugin.com/installations/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=installations"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
+						<p><h4><?php _e('Premium Support', 'adrotate'); ?></h4> <?php _e("Stuck with AdRotate? I'll help!", 'adrotate'); ?> <a href="https://www.adrotateplugin.com/shop/category/premium-support/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=premium_support"><?php _e('More info', 'adrotate'); ?> &raquo;</a></p>
+						<p><a href="https://www.adrotateplugin.com/shop/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=shop"><?php _e('Visit store to see all services and products', 'adrotate'); ?> &raquo;</a></p>
 					</div>
 				</div>
 
@@ -177,7 +177,7 @@ $data = get_option("adrotate_advert_status");
 				<div class="postbox-adrotate">
 					<div class="inside">
 						<p><center><?php _e('Your gift will ensure the continued development of AdRotate!', 'adrotate'); ?></center></p>
-						<p><center><a href="https://www.adrotateplugin.com/donate/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=upgrade_adrotatefree" target="_blank"><img src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" /></a></center></p>
+						<p><center><a href="https://www.adrotateplugin.com/donate/?utm_source=adrotate_info&utm_medium=adrotate_free&utm_campaign=donate" target="_blank"><img src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" /></a></center></p>
 					</div>
 				</div>
 
