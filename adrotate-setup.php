@@ -51,7 +51,7 @@ function adrotate_activate_setup() {
 	global $wpdb, $current_user, $userdata;
 
 	if(!current_user_can('activate_plugins')) {
-		deactivate_plugins(plugin_basename('adrotate.php'));
+		deactivate_plugins(plugin_basename('adrotate/adrotate.php'));
 		wp_die('You do not have appropriate access to activate this plugin! Contact your administrator!<br /><a href="'. get_option('siteurl').'/wp-admin/plugins.php">Back to plugins</a>.'); 
 		return; 
 	} else {
