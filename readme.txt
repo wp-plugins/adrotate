@@ -1,10 +1,10 @@
 === AdRotate ===
 Contributors: adegans
 Donate link: http://meandmymac.net/donate/
-Tags: ads, banner, commercial, admin, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
+Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8, PHP5.3
 Tested up to: 4.0
-Stable tag: 3.10.9
+Stable tag: 3.10.10
  
 Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
@@ -79,19 +79,29 @@ If that's not enough you can post on the [forum](https://www.adrotateplugin.com/
 
 == Changelog ==
 
-= 3.10.9 FREE =
-* NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3
-* [new] Export adverts to XML
-* [fix] Overlapping ads in some cases for Dynamic groups
+= 3.10.10 FREE =
+* NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3 or newer
+* [new] Auto-detect if javascript for dynamic groups is required
+* [fix] Deleting old stats now always works
+* [fix] Welcome message showing too often for some users
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://www.adrotateplugin.com/features/).
 
-= 3.10.8 PRO =
+= 3.11 PRO =
 * NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3
-* [tweak] Extended post injection to use multiple view modes
-* [fix] Multi level listing for post injection
-* [fix] Occasional 'jumping' content around dynamic groups
-* [fix] Month navigation on reports
+* [new] Export adverts to XML
+* [new] Import adverts from XML files
+* [fix] Inconsistent impression limit filtering
+* [fix] Start/end dates for advertiser exports
+* [fix] Overlapping ads in some cases for Dynamic groups
+* [fix] MySQL table *_users not always found in multisite
+* [fix] Deleting old stats now always works
+* [fix] Deleting old schedules now always works
+* [fix] Welcome message showing more than once per update for some users
+* [tweak] Calculated impression spread will never be 0
+* [tweak] More accurate hour impressions
+* [tweak] Updated CSV exports
+* [tweak] Caching compatibility for Dynamic groups
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/)!
@@ -100,10 +110,11 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.10.9 =
-* NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3
-* [new] Export adverts to XML
-* [fix] Overlapping ads in some cases for Dynamic groups
+= 3.10.10 =
+* NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3 or newer
+* [new] Auto-detect if javascript for dynamic groups is required
+* [fix] Deleting old stats now always works
+* [fix] Welcome message showing too often for some users
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/)!
