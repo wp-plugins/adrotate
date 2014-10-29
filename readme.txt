@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8, PHP5.3
 Tested up to: 4.0
-Stable tag: 3.10.11
+Stable tag: 3.10.12
  
 Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
@@ -79,25 +79,16 @@ If that's not enough you can post on the [forum](https://www.adrotateplugin.com/
 
 == Changelog ==
 
-= 3.10.11 FREE =
+= 3.10.12 FREE =
 * NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3 or newer
-* [fix] Exporting adverts to XML or CSV not always working
-* [fix] Group wrapper not always working
-* [tweak] Added more indexes to speed things up
-* [tweak] Some typos in the dashboard
-* [tweak] Better layout on advert and group reports
-* [i18n] Added various missing strings
+* [fix] Post injection in posts
+* [tweak] Made 'hiding' of Pro banner more visible
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://www.adrotateplugin.com/features/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=features).
 
-= 3.11.1 PRO =
+= 3.11.2 PRO =
 * NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3 or newer
-* [fix] Exporting adverts to XML or CSV not always working
-* [fix] Group wrapper not always working
-* [tweak] Added more indexes to speed things up
-* [tweak] Some typos in the dashboard
-* [tweak] Better layout on advert and group reports
-* [i18n] Added various missing strings
+* [fix] Post injection in posts
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=buyadrotatepro)!
@@ -106,14 +97,10 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.10.11 =
+= 3.10.12 =
 * NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3 or newer
-* [fix] Exporting adverts to XML or CSV not always working
-* [fix] Group wrapper not always working
-* [tweak] Added more indexes to speed things up
-* [tweak] Some typos in the dashboard
-* [tweak] Better layout on advert and group reports
-* [i18n] Added various missing strings
+* [fix] Post injection in posts
+* [tweak] Made 'hiding' of Pro banner more visible
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=buyadrotatepro)!
