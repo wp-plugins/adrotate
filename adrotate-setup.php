@@ -364,7 +364,7 @@ function adrotate_database_install() {
 			`schedule` int(5) NOT NULL default '0',
 			PRIMARY KEY  (`id`),
 		    KEY `schedule` (`schedule`),
-		    KEY `ad` (`ad`),
+		    KEY `ad` (`ad`)
 		) ".$charset_collate.$engine.";");
 
 	dbDelta("CREATE TABLE IF NOT EXISTS `".$tables['adrotate_schedule']."` (
@@ -378,7 +378,7 @@ function adrotate_database_install() {
 		  	`hourimpressions` int(15) NOT NULL default '0',
 			PRIMARY KEY  (`id`),
 		    KEY `starttime` (`starttime`),
-		    KEY `stoptime` (`stoptime`),
+		    KEY `stoptime` (`stoptime`)
 		) ".$charset_collate.$engine.";");
 
 	dbDelta("CREATE TABLE IF NOT EXISTS `".$tables['adrotate_stats']."` (
@@ -390,7 +390,7 @@ function adrotate_database_install() {
 			`clicks` int(15) NOT NULL default '0',
 			`impressions` int(15) NOT NULL default '0',
 			PRIMARY KEY  (`id`),
-			INDEX `ad` (`ad`)
+			INDEX `ad` (`ad`),
 			INDEX `group` (`group`)
 		) ".$charset_collate.$engine.";");
 
