@@ -58,11 +58,21 @@ Check out the benefits of AdRotate Pro! [Get AdRotate Pro today](https://www.adr
 
 NOTE: Certain features are exclusive to AdRotate PRO. Learn more about what AdRotate Pro will do for you in the [features list](https://www.adrotateplugin.com/features/).
 
+**AdRotate Switch**
+
+Looking to switch from another plugin? Check out [AdRotate Switch](https://wordpress.org/plugins/adrotate-switch/) and see if your current advertising plugin is compatible for migrating your data!
+
 NOTE: Unsolicited offers, parnterships, job offers, promotional emails or product offers to "enhance" my business or products through this site or any means are not appreciated and will most likely be ignored.
 
 == Installation ==
 
 Find out how AdRotate works, more options and various ways to implement your ads.
+
+**AdRotate Switch**
+
+Looking to switch from another plugin? Check out [AdRotate Switch](https://wordpress.org/plugins/adrotate-switch/) and see if your current advertising plugin is compatible for migrating your data!
+
+**Important links**
 
 * [Manual Installation](https://www.adrotateplugin.com/support/knowledgebase/installing-adrotate-on-your-website/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=manuals)
 * [Upgrade AdRotate Free to Pro](https://www.adrotateplugin.com/support/knowledgebase/upgrade-adrotate-to-adrotate-pro/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=buyadrotatepro)
@@ -70,6 +80,9 @@ Find out how AdRotate works, more options and various ways to implement your ads
 * [AdRotate Store](https://www.adrotateplugin.com/shop/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=shop)
 
 == Frequently Asked Questions ==
+
+= Can I migrate my data from another plugin to AdRotate? =
+**Answer:**Maybe. Take a look at [AdRotate Switch](https://wordpress.org/plugins/adrotate-switch/) and see if your current advertising plugin is compatible for migrating your data!
 
 = I'm getting errors about duplicate entries in the stats or the tracker table! =
 **Answer:** This means your database is full and needs to be "upgraded". More on the how and why in [this article](href="https://www.adrotateplugin.com/support/knowledgebase/duplicate-entry-errors/?utm_source=adrotate_readme&utm_medium=wordpress.org&utm_campaign=support)!
