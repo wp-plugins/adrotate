@@ -4,11 +4,7 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8, PHP5.3
 Tested up to: 4.0.1
-<<<<<<< .mine
-Stable tag: 3.10.15
-=======
-Stable tag: 3.10.14
->>>>>>> .r1040735
+Stable tag: 3.10.16
  
 Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
@@ -96,59 +92,17 @@ If that's not enough you can post on the [forum](https://www.adrotateplugin.com/
 
 == Changelog ==
 
-<<<<<<< .mine
-= 3.10.15 FREE =
-=======
-= 3.10.14 FREE =
->>>>>>> .r1040735
+= 3.10.16 FREE =
 * NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3 or newer
-<<<<<<< .mine
-* [fix] Widget IDs not saving for some users
-* [fix] Removed tracking cookies and 'reverted' to on-server tracking
-* [fix] Notice undefined variable clicktracker for some users
-* [fix] Post Injection missing top or bottom advert for some users
-=======
-* [new] Replaced clicktracker.php with callback
-* [new] Replaced impressiontracker.php with callback
-* [tweak] Better sizing of grid in block mode
-* [tweak] Better sizing of dynamic groups
-* [tweak] Margin in blocks is now padding
-* [tweak] Move cookie check for impressions into jQuery
-* [tweak] Minimum timeout for impressions is now 60 seconds
-* [tweak] Minimum timeout for clicks is now 60 seconds
-* [fix] Excessive file loading of impressiontracker.php
-* [fix] Cookies not generated for Dynamic groups for some users
-* [fix] Cookies not always updated with correct timestamp for some ads
->>>>>>> .r1040735
+* [fix] Widget ID not correctly used in front-end
+* [fix] Block column width set correctly
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://www.adrotateplugin.com/features/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=features).
 
-<<<<<<< .mine
-= 3.11.5 PRO =
-=======
-= 3.11.4 PRO =
->>>>>>> .r1040735
+= 3.11.6 PRO =
 * NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3 or newer
-<<<<<<< .mine
-* [fix] Widget IDs not saving for some users
-* [fix] Removed tracking cookies and 'reverted' to on-server tracking
-* [fix] Notice undefined variable clicktracker for some users
-* [fix] Post Injection missing top or bottom advert for some users
-=======
-* [new] Replaced clicktracker.php with callback
-* [new] Replaced impressiontracker.php with callback
-* [tweak] Better sizing of grid in block mode
-* [tweak] Better sizing of dynamic groups
-* [tweak] Margin in blocks is now padding
-* [tweak] Move cookie check for impressions into jQuery
-* [tweak] URL differentiation for GeoIP City and Country API's
-* [tweak] Remaining Geo Lookups more accurate for MaxMind and GeoBytes
-* [tweak] Minimum timeout for impressions is now 60 seconds
-* [tweak] Minimum timeout for clicks is now 60 seconds
-* [fix] Excessive file loading of impressiontracker.php
-* [fix] Cookies not generated for Dynamic groups for some users
-* [fix] Cookies not always updated with correct timestamp for some ads
->>>>>>> .r1040735
+* [fix] Widget ID not correctly used in front-end
+* [fix] Geo targeting cookie now honors 24h cooldown
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=buyadrotatepro)!
@@ -157,26 +111,10 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.10.15 =
+= 3.10.16 =
 * NOTE: PHP5.3 required - Upgrade your server if you don't have PHP5.3 or newer
-<<<<<<< .mine
-* [fix] Widget IDs not saving for some users
-* [fix] Removed tracking cookies and 'reverted' to on-server tracking
-* [fix] Notice undefined variable clicktracker for some users
-* [fix] Post Injection missing top or bottom advert for some users
-=======
-* [new] Replaced clicktracker.php with callback
-* [new] Replaced impressiontracker.php with callback
-* [tweak] Better sizing of grid in block mode
-* [tweak] Better sizing of dynamic groups
-* [tweak] Margin in blocks is now padding
-* [tweak] Move cookie check for impressions into jQuery
-* [tweak] Minimum timeout for impressions is now 60 seconds
-* [tweak] Minimum timeout for clicks is now 60 seconds
-* [fix] Excessive file loading of impressiontracker.php
-* [fix] Cookies not generated for Dynamic groups for some users
-* [fix] Cookies not always updated with correct timestamp for some ads
->>>>>>> .r1040735
+* [fix] Widget ID not correctly used in front-end
+* [fix] Block column width set correctly
 
 The full changelog can be found on the [AdRotate website](https://www.adrotateplugin.com/development/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://www.adrotateplugin.com/adrotate-pro/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=buyadrotatepro)!
