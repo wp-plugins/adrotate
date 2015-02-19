@@ -3,8 +3,8 @@ Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8, PHP5.3
-Tested up to: 4.1
-Stable tag: 3.11
+Tested up to: 4.1.1
+Stable tag: 3.11.1
  
 Make it easy on yourself and use AdRotate to place your adverts on your site... Make making money easy!
 
@@ -89,37 +89,20 @@ If that's not enough you can post on the [forum](https://ajdg.solutions/forums/?
 
 == Changelog ==
 
-= 3.11 FREE =
+= 3.11.1 FREE =
 * NOTE: Due to an earlier bugfix you may need to open/edit each AdRotate widget and click 'Save'
-* [tweak] Impression timer can be 10 again, default remains 60
-* [tweak] Updated links for new ajdg.solutions website
-* [fix] Impression counting using the right timestamp
+* [tweak] Load max. 10 ads for a dynamic group
+* [tweak] Dynamic groups now hide all ads but one on page load
+* [change] Removed obsolete AdRotate Server code
+* [i18n] New and obsolete strings in translation files
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://ajdg.solutions/products/adrotate-for-wordpress/features/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=features).
 
-= 3.12 PRO =
+= 3.12.3 PRO =
 * NOTE: Due to an earlier bugfix you may need to open/edit each AdRotate widget and click 'Save'
-* [new] BETA AdRotate Geo Service
-* [new] Bot filter now also applied to Geo Data
-* [new] Cookie lifespan configurable from 24 to 168 hours
-* [new] $_SESSION used for initial Geo data
-* [new] Geo Data now includes City Metro ID's
-* [new] Geo status in email notifications
-* [new] Geo status sent in push notifications
-* [new] AdRotate compatibility with new License API on ajdg.solutions
-* [fix] More accurate filtering for mixed city/state adverts
-* [fix] Impressions per day for schedules not accurate
-* [fix] Better check to see if Geo Cookie exists
-* [fix] Impression counting using the right timestamp
-* [fix] Warning undefined offset 'city' and/or 'country' for some adverts
-* [fix] Warning undefined variable '$adrotate_queue' for some users
-* [tweak] Dynamic groups now hide all ads but one on pageload
-* [tweak] Updated links and stuff for new ajdg.solutions website
-* [tweak] 20% smaller geo cookie
-* [tweak] Impression timer can be 10 again, default remains 60
-* [tweak] Load/Check Geo Cookie only on front-end
-* [i18n] Spanish updated
-* [i18n] Russian translation added
+* [tweak] Load max. 10 ads for a dynamic group
+* [change] Removed obsolete AdRotate Server code
+* [i18n] New and obsolete strings in translation files
 
 The full changelog can be found on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=buyadrotatepro)!
@@ -128,11 +111,12 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.11 FREE =
+= 3.11.1 FREE =
 * NOTE: Due to an earlier bugfix you may need to open/edit each AdRotate widget and click 'Save'
-* [tweak] Impression timer can be 10 again, default remains 60
-* [tweak] Updated links for new ajdg.solutions website
-* [fix] Impression counting using the right timestamp
+* [tweak] Load max. 10 ads for a dynamic group
+* [tweak] Dynamic groups now hide all ads but one on page load
+* [change] Removed obsolete AdRotate Server code
+* [i18n] New and obsolete strings in translation files
 
 The full changelog can be found on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=buyadrotatepro)!
