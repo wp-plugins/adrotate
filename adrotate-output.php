@@ -893,7 +893,7 @@ function adrotate_notifications_dashboard() {
 -------------------------------------------------------------*/
 function adrotate_welcome_pointer() {
     $pointer_content = '<h3>AdRotate '.ADROTATE_DISPLAY.'</h3>';
-    $pointer_content .= '<p>'.__('Welcome, and thanks for using AdRotate Pro. Everything related to AdRotate Pro is in this menu. Check out the', 'adrotate').' <a href="http:\/\/ajdg.solutions\/manuals\/adrotate\/" target="_blank">'.__('manuals', 'adrotate').'</a> '.__('and', 'adrotate').' <a href="https:\/\/ajdg.solutions\/forums\/forum\/adrotate-for-wordpress\/" target="_blank">'.__('forums', 'adrotate').'</a>.</p>';
+    $pointer_content .= '<p>'.__('Welcome, and thanks for using AdRotate. Everything related to AdRotate is in this menu. Check out the', 'adrotate').' <a href="http:\/\/ajdg.solutions\/manuals\/adrotate\/" target="_blank">'.__('manuals', 'adrotate').'</a> '.__('and', 'adrotate').' <a href="https:\/\/ajdg.solutions\/forums\/forum\/adrotate-for-wordpress\/" target="_blank">'.__('forums', 'adrotate').'</a>.</p>';
     $pointer_content .= '<p><strong>AdRotate Professional</strong><br />Did you know there is also a premium version of AdRotate? Learn how you can benefit from the <a href="admin.php?page=adrotate-pro" target="_blank">extra features</a>.</p>';
 ?>
 	<script type="text/javascript">
