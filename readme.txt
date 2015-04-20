@@ -4,20 +4,19 @@ Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8, PHP5.3
 Tested up to: 4.1.1
-Stable tag: 3.11.2
+Stable tag: 3.11.3
  
-Used on over a hundred thousand websites and by even more people! AdRotate is the popular choice for monetizing your website with adverts while keeping things simple. Make money with advertising while you do other things. Make making money easy!
+Used on over a hundred thousand websites and by even more people! With over a million downloads AdRotate is the popular choice for monetizing your website with adverts while keeping things simple. Make money with advertising while you do other things. Make making money easy!
 
 == Description ==
 
-Thinking of making some money with your website? Try AdRotate. Using AdRotate you can easy place advertising banners pretty much anywhere on your site while managing almost everything from your dashboard. No fussing with your themes code if you don't want to.
+Thinking of making some money with your website? Try AdRotate. Using AdRotate you can easily place advertising banners pretty much anywhere on your site while managing almost everything from your dashboard. No fussing with your themes code if you don't want to.
 Create your own adverts with basic HTML/Javascript code or use adverts from your favorite Ad Server such as DFP, AdSense, Chitika or other similar services.
 Manage your advertising campaigns with ease, right from your dashboard. Check up on performance and make use of the myriad of features AdRotate has to offer.
-You can host your banners locally, in your CDN or on a remote server.
-AdRotate supports unlimited groups for banners allowing you to tie certain banners to different areas of the website.
+AdRotate supports unlimited groups for banners allowing you to tie banners to different areas of the website.
 
 AdRotate looks and feels similar to the dashboard you already know, so you're already familiar with AdRotate before you've even started.
-The well thought out menu structures and features make advert management very easy and straightforward.
+The thought out menu structure and features make advert management very easy and straightforward.
 
 AdRotate is also available as a premium plugin for a very low price. Offering extra and more extensive features and faster support! 
 Check out the benefits of AdRotate Pro! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=details)!
@@ -90,38 +89,34 @@ If that's not enough you can post on the [forum](https://ajdg.solutions/forums/?
 
 == Changelog ==
 
-= 3.11.2 FREE =
-* NOTE: Due to an earlier bugfix you may need to open/edit each AdRotate widget and click 'Save'
-* [fix] Query error when cleaning database manually
-* [fix] Self-repairing database function now actually works
-* [tweak] Load max. 20 ads for a dynamic group
-* [tweak] Impression counting excluded from popular caching plugins
-* [tweak] Click counting excluded from popular caching plugins
-* [change] Upgrade script cleaned up
-* [change] Removed unnecessary indexes from database
-* [change] Removed obsolete 'block' columns from database
-* [change] Improved INT() unsigned datatypes in MySQL
+= 3.11.3 FREE =
+* [fix] Undefined notice for some setups when using Page Injection
+* [fix] Incorrect path for images on some setups
+* [fix] Max ads wrongly applied to Groups in block mode
+* [fix] Cleaned up irrelevant user roles
+* [change] No longer use 'ORDER BY RAND()' for groups
+* [change] Blocks can now have up to 32 rows
+* [new] More error notices for wrongly configured adverts
+* [new] Revised upgrade routine with manual trigger
+* [new] Revised installer routine better self-healing function
+* [i18n] Updated group settings descriptions and labels
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://ajdg.solutions/products/adrotate-for-wordpress/features/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=features).
 
-= 3.12.4 PRO =
-* NOTE: Due to an earlier bugfix you may need to open/edit each AdRotate widget and click 'Save'
-* [fix] Query error when cleaning database manually
-* [fix] Stats exports not working on certain versions of PHP
-* [fix] Adblock nag countdown not saving
-* [fix] 'Strict standards' error when uploading a file on some systems
-* [fix] Geo Targeting better filtering for locations with capitals
-* [fix] Self-repairing database function now actually works
-* [tweak] Geo Lookups no longer leading in Geo Service availability
-* [tweak] Geo Targeting warning emails removed
-* [tweak] Load max. 20 ads for a dynamic group
-* [tweak] Impression counting excluded from popular caching plugins
-* [tweak] Click counting excluded from popular caching plugins
-* [change] GeoBytes no longer supported for Geo Targeting
-* [change] Upgrade script cleaned up
-* [change] Removed unnecessary indexes from database
-* [change] Removed obsolete 'block' columns from database
-* [change] Improved INT() unsigned datatypes in MySQL
+= 3.12.5 PRO =
+* [fix] Undefined notice for some setups when using Page Injection
+* [fix] Incorrect path for images on some setups
+* [fix] Max ads wrongly applied to Groups in block mode
+* [fix] Access to schedule dashboard properly applied on activation
+* [change] Most dashboards updated, revised and labels updated
+* [change] Merged advert budgets to be in line with market
+* [change] No longer use 'ORDER BY RAND()' for groups
+* [change] Blocks can now have up to 32 rows
+* [new] Advertisers can select groups when creating or editing adverts
+* [new] More error notices for wrongly configured adverts
+* [new] Revised upgrade routine with manual trigger
+* [new] Revised installer routine better self-healing function
+* [i18n] Updated group settings descriptions and labels
 
 The full changelog can be found on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=buyadrotatepro)!
@@ -130,17 +125,17 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.11.2 FREE =
-* NOTE: Due to an earlier bugfix you may need to open/edit each AdRotate widget and click 'Save'
-* [fix] Query error when cleaning database manually
-* [fix] Self-repairing database function now actually works
-* [tweak] Load max. 20 ads for a dynamic group
-* [tweak] Impression counting excluded from popular caching plugins
-* [tweak] Click counting excluded from popular caching plugins
-* [change] Upgrade script cleaned up
-* [change] Removed unnecessary indexes from database
-* [change] Removed obsolete 'block' columns from database
-* [change] Improved INT() unsigned datatypes in MySQL
+= 3.11.3 FREE =
+* [fix] Undefined notice for some setups when using Page Injection
+* [fix] Incorrect path for images on some setups
+* [fix] Max ads wrongly applied to Groups in block mode
+* [fix] Cleaned up irrelevant user roles
+* [change] No longer use 'ORDER BY RAND()' for groups
+* [change] Blocks can now have up to 32 rows
+* [new] More error notices for wrongly configured adverts
+* [new] Revised upgrade routine with manual trigger
+* [new] Revised installer routine better self-healing function
+* [i18n] Updated group settings descriptions and labels
 
 The full changelog can be found on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=buyadrotatepro)!
@@ -149,4 +144,5 @@ NOTE: Certain features are exclusive to AdRotate PRO. If you need these features
 
 == Screenshots ==
 
-Visit [the site](https://ajdg.solutions/products/adrotate-for-wordpress/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=screenshots) for screenshots.
+* Visit [the site](https://ajdg.solutions/products/adrotate-for-wordpress/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=screenshots) for screenshots.
+* [Manuals & Support](https://https://ajdg.solutions/forums/?utm_source=wordpress.org&utm_medium=adrotate_free_readme&utm_campaign=manuals)
