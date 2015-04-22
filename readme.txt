@@ -3,7 +3,7 @@ Contributors: adegans
 Donate link: http://meandmymac.net/donate/
 Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8, PHP5.3
-Tested up to: 4.1.1
+Tested up to: 4.1.2
 Stable tag: 3.11.3
  
 Used on over a hundred thousand websites and by even more people! With over a million downloads AdRotate is the popular choice for monetizing your website with adverts while keeping things simple. Make money with advertising while you do other things. Make making money easy!
