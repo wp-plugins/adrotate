@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/?pk_campaign=adrotatefree-readme&pk_kw
 Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8, PHP5.3
 Tested up to: 4.2.2
-Stable tag: 3.11.5
+Stable tag: 3.11.6
  
 Used on over a hundred thousand websites and by even more people! With over a million downloads AdRotate is the popular choice for monetizing your website with adverts while keeping things simple. Make money with advertising while you do other things. Make making money easy!
 
@@ -90,6 +90,11 @@ If that's not enough you can post on the [forum](https://ajdg.solutions/forums/?
 
 == Changelog ==
 
+= 3.11.6 FREE =
+* [fix] Output of Dynamic groups and Block groups
+* [fix] Notice error on schedules page
+* [fix] Typo on AdRotate Info page
+
 = 3.11.5 FREE =
 * [tweak] Minor tweaks and improvements to dashboards
 * [fix] More accurate regexes for AdRotate Tracker
@@ -97,7 +102,9 @@ If that's not enough you can post on the [forum](https://ajdg.solutions/forums/?
 * [fix] Unwanted advert after content with post injection on some settings
 * [i18n] Updated strings for all language files
 
-NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://ajdg.solutions/products/adrotate-for-wordpress/features/?pk_campaign=adrotatefree-readme&pk_kwd=features).
+= 3.12.8 PRO =
+* [fix] strip_tags error when saving adverts
+* [fix] Typo on AdRotate Info page
 
 = 3.12.7 PRO =
 * [new] Show select adverts on mobile only when in a group
@@ -119,6 +126,11 @@ Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adro
 NOTE: Unsolicited offers, parnterships, job offers, promotional emails or product offers to "enhance" my business or products through this site or any means are not appreciated and will most likely be ignored.
 
 == Upgrade Notice ==
+
+= 3.11.6 FREE =
+* [fix] Output of Dynamic groups and Block groups
+* [fix] Notice error on schedules page
+* [fix] Typo on AdRotate Info page
 
 = 3.11.5 FREE =
 * [tweak] Minor tweaks and improvements to dashboards
