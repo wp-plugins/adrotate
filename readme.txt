@@ -4,7 +4,7 @@ Donate link: http://meandmymac.net/donate/?pk_campaign=adrotatefree-readme&pk_kw
 Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
 Requires at least: 3.8, PHP5.3
 Tested up to: 4.2.2
-Stable tag: 3.11.4
+Stable tag: 3.11.5
  
 Used on over a hundred thousand websites and by even more people! With over a million downloads AdRotate is the popular choice for monetizing your website with adverts while keeping things simple. Make money with advertising while you do other things. Make making money easy!
 
@@ -33,12 +33,14 @@ Check out the benefits of AdRotate Pro! [Get AdRotate Pro today](https://ajdg.so
 * Automated Javascript cycles of ads with Dynamic Groups
 * Have your advertisers add/edit/manage their own ads
 * Geo Targeting for adverts
+* Mobile adverts
 * Detect ad blockers in browser and nag visitors about it
 * Works with Google AdSense, DFP and most other referrer/ad servers
 * Get push notifications right on your iOS or Android device about adverts and important events
 * Get email notifications when your ads need you
 * Perfectly suited for any size of advertisement, including 125x125, 468x60, 729x90, 160x600 and much more
 * Easy to use stats so you can follow how each advert is performing
+* Responsive adverts
 * Daily, monthly and yearly stats
 * Couple ads to users so that user can follow his personalized stats
 * Advertisers can easily contact you from their dashboard
@@ -88,28 +90,28 @@ If that's not enough you can post on the [forum](https://ajdg.solutions/forums/?
 
 == Changelog ==
 
-= 3.11.4 FREE =
-* [fix] New adverts validating properly
-* [fix] Much more accurate post injection filter
-* [fix] Much more accurate page injection filter
-* [fix] Welcome popup 'dismiss' not always working
-* [tweak] Clicktracking counting jQuery on()
-* [tweak] Changed "upgrade" button to "update now"
-* [tweak] Clearer error status for responsive adverts
+= 3.11.5 FREE =
+* [tweak] Minor tweaks and improvements to dashboards
+* [fix] More accurate regexes for AdRotate Tracker
+* [fix] Ambiguous array match in post injection
+* [fix] Unwanted advert after content with post injection on some settings
+* [i18n] Updated strings for all language files
 
 NOTE: Certain features are exclusive to AdRotate PRO. If you need these features please consider upgrading to [AdRotate PRO](https://ajdg.solutions/products/adrotate-for-wordpress/features/?pk_campaign=adrotatefree-readme&pk_kwd=features).
 
-= 3.12.6 PRO =
-* [new] Stats tracking with Piwik Analytics content tracking
-* [new] Stats tracking with Google Analytics event tracking
-* [fix] Time shown correctly when editing schedules
-* [fix] Notification emails not being sent reliably
-* [fix] New adverts validating properly
-* [fix] Much more accurate post injection filter
-* [fix] Much more accurate page injection filter
-* [tweak] Clicktracking counting jQuery on()
-* [tweak] Changed "upgrade" button to "update now"
-* [tweak] Clearer error status for responsive adverts
+= 3.12.7 PRO =
+* [new] Show select adverts on mobile only when in a group
+* [new] Budget, CPC and CPM visible on advert overview
+* [new] Budget, CPC and CPM visible for advertisers
+* [tweak] Minor tweaks and improvements to dashboards
+* [fix] Serialize error when exporting multiple adverts
+* [fix] Geo data not serialized when importing CSV file
+* [fix] Advertiser summary stats navigation now works
+* [fix] Advertiser ads with errors not listed in regular dashboard
+* [fix] More accurate regexes for AdRotate Tracker
+* [fix] Ambiguous array match in post injection
+* [fix] Unwanted advert after content with post injection on some settings
+* [i18n] Updated strings for all language files
 
 The full changelog can be found on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?pk_campaign=adrotatefree-readme&pk_kwd=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?pk_campaign=adrotatefree-readme&pk_kwd=buypro)!
@@ -118,14 +120,12 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.11.4 FREE =
-* [fix] New adverts validating properly
-* [fix] Much more accurate post injection filter
-* [fix] Much more accurate page injection filter
-* [fix] Welcome popup 'dismiss' not always working
-* [tweak] Clicktracking counting jQuery on()
-* [tweak] Changed "upgrade" button to "update now"
-* [tweak] Clearer error status for responsive adverts
+= 3.11.5 FREE =
+* [tweak] Minor tweaks and improvements to dashboards
+* [fix] More accurate regexes for AdRotate Tracker
+* [fix] Ambiguous array match in post injection
+* [fix] Unwanted advert after content with post injection on some settings
+* [i18n] Updated strings for all language files
 
 The full changelog can be found on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?pk_campaign=adrotatefree-readme&pk_kwd=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?pk_campaign=adrotatefree-readme&pk_kwd=buypro)!
