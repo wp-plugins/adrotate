@@ -1,16 +1,16 @@
 === AdRotate ===
 Contributors: adegans
 Donate link: http://meandmymac.net/donate/?pk_campaign=adrotatefree-readme&pk_kwd=donatelink
-Tags: ads, banner, commercial, admin, advertise, adrotator, 2013, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, freegeoip, geoplugin, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages
+Tags: ads, banner, commercial, admin, advertise, adrotator, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, telize, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, popular, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages, 2015
 Requires at least: 3.8, PHP5.3
 Tested up to: 4.2.2
-Stable tag: 3.11.6
+Stable tag: 3.11.7
  
 Used on over a hundred thousand websites and by even more people! With over a million downloads AdRotate is the popular choice for monetizing your website with adverts while keeping things simple. Make money with advertising while you do other things. Make making money easy!
 
 == Description ==
 
-Thinking of making some money with your website? Try AdRotate. Using AdRotate you can easily place advertising banners pretty much anywhere on your site while managing almost everything from your dashboard. No fussing with your themes code if you don't want to.
+Thinking of making some money with your website? Try AdRotate. With AdRotate you can easily place advertising banners pretty much anywhere on your site while managing almost everything from your dashboard. No fussing with your themes code if you don't want to.
 Create your own adverts with basic HTML/Javascript code or use adverts from your favorite Ad Server such as DFP, AdSense, Chitika or other similar services.
 Manage your advertising campaigns with ease, right from your dashboard. Check up on performance and make use of the myriad of features AdRotate has to offer.
 AdRotate supports unlimited groups for banners allowing you to tie banners to different areas of the website.
@@ -75,50 +75,45 @@ Looking to switch from another plugin? Check out [AdRotate Switch](https://wordp
 
 **Important links**
 
-* [Manual Installation](https://ajdg.solutions/manuals/adrotate/installing-adrotate-on-your-website/?pk_campaign=adrotatefree-readme&pk_kwd=installation)
+* [Manual Installation](https://ajdg.solutions/manuals/adrotate-manuals/installing-adrotate-on-your-website/?pk_campaign=adrotatefree-readme&pk_kwd=installation)
 * [Manuals & Support](https://https://ajdg.solutions/forums/?pk_campaign=adrotatefree-readme&pk_kwd=manuals)
 * [AdRotate Store](https://ajdg.solutions/products/adrotate-for-wordpress/?pk_campaign=adrotatefree-readme&pk_kwd=buypro)
 
 == Frequently Asked Questions ==
 
 = Can I migrate my data from another plugin to AdRotate? =
-**Answer:**
 Maybe. Take a look at [AdRotate Switch](https://wordpress.org/plugins/adrotate-switch/) and see if your current advertising plugin is compatible for migrating your data!
 
-There are [manual](https://ajdg.solutions/manuals/adrotate/?pk_campaign=adrotatefree-readme&pk_kwd=manuals) with every feature explained.
+= How do I use AdRotate =
+There are [manuals](https://ajdg.solutions/manuals/adrotate-manuals/?pk_campaign=adrotatefree-readme&pk_kwd=manuals) with every feature explained.
 If that's not enough you can post on the [forum](https://ajdg.solutions/forums/?pk_campaign=adrotatefree-readme&pk_kwd=forum) and ask your question there!
 
 == Changelog ==
 
-= 3.11.6 FREE =
-* [fix] Output of Dynamic groups and Block groups
-* [fix] Notice error on schedules page
-* [fix] Typo on AdRotate Info page
+= 3.11.7 FREE =
+* [new] More 'after paragraph' options for Post Injection
+* [change] Removed all 'every N paragraph' options for post injection
+* [fix] Responsive class overwriting existing html classes
+* [fix] Post Injection cutting off content at the end of posts
+* [fix] Impression timer not always accurate for some users
+* [fix] Timezone notation not always valid
+* [i18n] New and updated strings
 
-= 3.11.5 FREE =
-* [tweak] Minor tweaks and improvements to dashboards
-* [fix] More accurate regexes for AdRotate Tracker
-* [fix] Ambiguous array match in post injection
-* [fix] Unwanted advert after content with post injection on some settings
-* [i18n] Updated strings for all language files
-
-= 3.12.8 PRO =
-* [fix] strip_tags error when saving adverts
-* [fix] Typo on AdRotate Info page
-
-= 3.12.7 PRO =
-* [new] Show select adverts on mobile only when in a group
-* [new] Budget, CPC and CPM visible on advert overview
-* [new] Budget, CPC and CPM visible for advertisers
-* [tweak] Minor tweaks and improvements to dashboards
-* [fix] Serialize error when exporting multiple adverts
-* [fix] Geo data not serialized when importing CSV file
-* [fix] Advertiser summary stats navigation now works
-* [fix] Advertiser ads with errors not listed in regular dashboard
-* [fix] More accurate regexes for AdRotate Tracker
-* [fix] Ambiguous array match in post injection
-* [fix] Unwanted advert after content with post injection on some settings
-* [i18n] Updated strings for all language files
+= 3.13 PRO =
+* [new] Fallback groups now take their parent multisite id into account
+* [new] Manage HTML5 file assets via the AdRotate Media manager
+* [new] Create HTML5 adverts more easily
+* [new] More 'after paragraph' options for Post Injection
+* [change] Removed all 'every N paragraph' options for post injection
+* [tweak] Faster tag adding when using Google Analytics
+* [tweak] Faster tag adding for Piwik Analytics
+* [fix] Responsive and adblock class overwriting existing html classes
+* [fix] Tracking pixel for some adverts that didn't need it
+* [fix] Redirect when advertiser exports stats
+* [fix] Post Injection cutting off content at the end of posts
+* [fix] Impression timer not always accurate for some users
+* [fix] Timezone notation not always valid
+* [i18n] New and updated strings
 
 The full changelog can be found on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?pk_campaign=adrotatefree-readme&pk_kwd=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?pk_campaign=adrotatefree-readme&pk_kwd=buypro)!
@@ -127,17 +122,14 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 
 == Upgrade Notice ==
 
-= 3.11.6 FREE =
-* [fix] Output of Dynamic groups and Block groups
-* [fix] Notice error on schedules page
-* [fix] Typo on AdRotate Info page
-
-= 3.11.5 FREE =
-* [tweak] Minor tweaks and improvements to dashboards
-* [fix] More accurate regexes for AdRotate Tracker
-* [fix] Ambiguous array match in post injection
-* [fix] Unwanted advert after content with post injection on some settings
-* [i18n] Updated strings for all language files
+= 3.11.7 FREE =
+* [new] More 'after paragraph' options for Post Injection
+* [change] Removed all 'every N paragraph' options for post injection
+* [fix] Responsive class overwriting existing html classes
+* [fix] Post Injection cutting off content at the end of posts
+* [fix] Impression timer not always accurate for some users
+* [fix] Timezone notation not always valid
+* [i18n] New and updated strings
 
 The full changelog can be found on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?pk_campaign=adrotatefree-readme&pk_kwd=changelog).
 Get more AdRotate! [Get AdRotate Pro today](https://ajdg.solutions/products/adrotate-for-wordpress/?pk_campaign=adrotatefree-readme&pk_kwd=buypro)!
