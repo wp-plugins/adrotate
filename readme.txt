@@ -2,9 +2,10 @@
 Contributors: adegans
 Donate link: http://meandmymac.net/donate/?pk_campaign=adrotatefree-readme
 Tags: ads, banner, commercial, admin, advertise, adrotator, plugin, random, rotator, ad, advertising, advertisement, block, blocks, advertiser, publisher, adsense, geo, geolocation, geotarget, chitika, clickbank, broadstreet, banner manager,advert manager, campaign manager, export, import, telize, maxmind, referrer, email, menu, statistics, stats, report, advert, adverts, popular, best, great, 2014, geoselect, geobytes, schedules, schedule, monetize, header, widget, javascript, jquery, tracking, clicks, impressions, rotate, zone, zones, sidebar, footer, content, posts, pages, 2015
-Requires at least: 3.8, PHP5.3
+Requires at least: 3.8
 Tested up to: 4.3.1
 Stable tag: 3.13.1
+License: GPLv3
  
 The popular choice for monetizing your website with adverts while keeping things simple. Start making money today!
 
@@ -88,6 +89,8 @@ You can also post your questions on the [forum](https://ajdg.solutions/forums/?p
 
 == Changelog ==
 
+Be a Pro and go Pro. With [AdRotate Pro](https://ajdg.solutions/products/adrotate-for-wordpress/?pk_campaign=adrotatefree-readme)!
+
 = 3.13.1 FREE =
 * [change] Compatibility update for AdRotate Pro 3.17
 * [change] Compatibility update for AdRotate Switch 1.3
@@ -101,8 +104,7 @@ You can also post your questions on the [forum](https://ajdg.solutions/forums/?p
 * [change] Compatibility update for AdRotate Switch 1.3
 * [i18n] New and changed translation strings
 
-Version history on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?pk_campaign=adrotatefree-readme).
-Be a Pro and go Pro. With [AdRotate Pro](https://ajdg.solutions/products/adrotate-for-wordpress/?pk_campaign=adrotatefree-readme)!
+All recent changes are available on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?pk_campaign=adrotatefree-readme).
 
 NOTE: Unsolicited offers, parnterships, job offers, promotional emails or product offers to "enhance" my business or products through this site or any means are not appreciated and will most likely be ignored.
 
@@ -114,8 +116,7 @@ NOTE: Unsolicited offers, parnterships, job offers, promotional emails or produc
 * [change] Small tweaks to the dashboard
 * [i18n] New and changed translation strings
 
-Version history on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?pk_campaign=adrotatefree-readme).
-Be a Pro and go Pro. With [AdRotate Pro](https://ajdg.solutions/products/adrotate-for-wordpress/?pk_campaign=adrotatefree-readme)!
+All recent changes are available on the [AdRotate website](https://ajdg.solutions/products/adrotate-for-wordpress/development/?pk_campaign=adrotatefree-readme).
 
 == Screenshots ==
 
